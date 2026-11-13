@@ -1367,6 +1367,12 @@ const RANGE={kimiko:[5,1.35],uchuu:[5,1.2],kouji:[4,1.3],ryuko:[4,1.25],emi:[4,1
   C.pwr=(C.kit.pow||1)*t.pw*(C.atkM||1);C.spd=s.run/t.sp;
   C.mv.taunt=M('roar',6,24,10,null,{fx:C.kit.fx,lim:'none',onStart(f){burst(f.x,f.y-34,16,[f.C.col,'#ffffff'],2.4,22);FXL.push({k:'txt2',s:f.C.sn+'!',x:f.x,y:f.y-84,t:0,life:40,col:f.C.col});sfx('power');}});});}
 
+/* melee specials show the same quirk effect as the student's normals */
+CH.forEach(C=>{for(const k of['nB','sB','uB','dB']){const d=C.mv[k];if(!d||d.vfx||d.spawn||!d.hits||!d.hits.length||C.kit.el==='food'||C.kit.el==='fish')continue;const b=d.hits[0].b[0];d.vfx={k:'H',el:d.el||C.kit.el,sub:d.sub,x:b[0],y:b[1],r:b[2]};if(!d.fx)d.fx=C.kit.fx;}});
+
+/* smash attacks of the students whose old smash flash was generic now use their quirk effect, scaled up */
+CH.forEach(C=>{if(!['mech','oni','cosmic','tail','mimic','phase','gale'].includes(C.kit.el))return;for(const k of['fsmash','usmash']){const d=C.mv[k];if(!d||!d.hits||!d.hits.length||(d.vfx&&d.vfx.k==='H'))continue;const b=d.hits[0].b[0];d.vfx={k:'H',el:C.kit.el,x:b[0],y:b[1],r:b[2]+6};}});
+
 /* ===================== ENGINE: stage, fighters, combat ===================== */
 const WW=640,WH=360;
 const STAGE={main:{x:60,y:250,w:520,h:26,solid:1},plats:[{x:110,y:165,w:120},{x:410,y:165,w:120},{x:255,y:85,w:130}],temp:[]};
@@ -1876,7 +1882,7 @@ function drawHitFX(el,sub,x,y,d,pr,fx,f,r){const a=1-pr,c0=(fx&&fx[0])||'#ffffff
     if(sub==='sheet'){const L=lerp(8,40,Math.min(1,pr*3));wr('#1e5a98',f.x+d*6,f.y-2,d*L,3);wr('#bff4ff',f.x+d*6,f.y-2,d*L,1);for(let i=1;i<4;i++)crystal(f.x+d*(8+i*L/4),f.y-1,-PI/2+d*.35,6+i,2);break;}
     if(sub==='icicle'){wpoly('#1e5a98',[x-6,y-10,x+6,y-10,x,y+10]);wpoly('#bff4ff',[x-3,y-9,x+3,y-9,x,y+6]);wl('#ffffff',x-1,y-8,x,y+3);break;}
     if(sub==='ring'){for(let i=0;i<6;i++){const an=i*TAU/6+pr*4;crystal(x+Math.cos(an)*16,y+Math.sin(an)*12,an,7,2);}break;}
-    for(let i=0;i<5;i++){const an=(i/5)*TAU+pr*2;crystal(x+Math.cos(an)*pr*6,y+Math.sin(an)*pr*6,an,5+a*5,2);}break;
+    {const R=Math.max(10,r||10);const g=Math.min(1,pr*3.2),b0=d>0?0:PI;for(let i=-2;i<=2;i++){const an=b0+i*.38;crystal(x-d*R*.5+Math.cos(an)*R*.3,y+Math.sin(an)*R*.5,an,(R*.9+6-Math.abs(i)*2.5)*g,3);}X.globalAlpha=.55*a;wdisc(x,y,R*.7,'#e8fdff');X.globalAlpha=1;for(let i=0;i<4;i++)wp('#ffffff',x+(rnd()-.5)*R*2,y+(rnd()-.5)*R*1.6);}break;
   case 'water':
     if(sub==='spout'){for(let i=0;i<14;i++){const yy=y+14-i*3,w=5-i*.2+Math.sin(i+T*.6)*2;wr(i%2?'#2a7ac8':'#5fd0ff',x-w,yy,w*2,3);}wr('#e0faff',x-1,y-26,2,40);break;}
     if(sub==='ring'){wring(x,y,12+pr*8,'#5fd0ff',2);wring(x,y,9+pr*6,'#e0faff');}
@@ -1889,7 +1895,7 @@ function drawHitFX(el,sub,x,y,d,pr,fx,f,r){const a=1-pr,c0=(fx&&fx[0])||'#ffffff
     if(sub==='talon'){for(let i=-1;i<=1;i++){const ox=x+i*4,oy=y+i*2;wl('#7a1020',ox-d*8,oy-7,ox+d*7,oy+6,3);wl('#f0e2c0',ox-d*7,oy-6,ox+d*6,oy+5,1);}break;}
     if(sub==='fanspin'){for(let i=0;i<10;i++){const an=i*TAU/10+pr*5,xe=x+Math.cos(an)*22,ye=y+Math.sin(an)*18;wl('#7a1020',x+Math.cos(an)*8,y+Math.sin(an)*6,xe,ye,2);wdisc(xe,ye,2,'#f0e2c0');wp('#2ab8b0',xe,ye);}break;}
     for(let i=0;i<5;i++){const an=-.8+i*.4+pr,R2=6+pr*14,xe=x+Math.cos(an)*R2*d,ye=y+Math.sin(an)*R2;wl('#7a1020',xe,ye,xe+Math.cos(an)*6*d,ye+Math.sin(an)*6,2);wl('#ff4a5a',xe,ye,xe+Math.cos(an)*5*d,ye+Math.sin(an)*5);}break;
-  case 'phase':{X.globalAlpha=.5*a;wdisc(f.x-d*8,f.y-30,10,'#8a60e0');X.globalAlpha=.3*a;wdisc(f.x-d*16,f.y-30,10,'#c8a0ff');X.globalAlpha=1;wring(x,y,4+pr*12,'#c8a0ff',2);wring(x,y,2+pr*8,'#ffffff');break;}
+  case 'phase':{const R=Math.max(10,r||10);X.globalAlpha=.5*a;wdisc(f.x-d*8,f.y-30,10,'#8a60e0');X.globalAlpha=.3*a;wdisc(f.x-d*16,f.y-30,10,'#c8a0ff');X.globalAlpha=.7*a;for(let i=0;i<6;i++){const yy=y-R+i*R/2.6,off=Math.sin(T*.9+i*2.1)*5;wr(i%2?'#c8a0ff':'#8a60e0',x-R*.8+off,yy,R*1.6,2);}X.globalAlpha=1;wring(x,y,4+pr*(R+4),'#c8a0ff',2);wring(x,y,2+pr*R*.7,'#ffffff');break;}
   case 'rubber':{for(let i=0;i<4;i++){const yy=y-6+i*4;wl('#ffffff',x-d*(6+i*3),yy,x-d*(16+i*3),yy);}star(6+pr*6,'#ffd860');break;}
   case 'venom':
     if(sub==='fang'){const hx=x,hy=y;wpoly('#16161c',[hx-d*10,hy-5,hx+d*6,hy-7,hx+d*12,hy-2,hx+d*6,hy+5,hx-d*10,hy+4]);wp('#ffd040',hx+d*3,hy-4);for(let i=0;i<3;i++){wl('#ffffff',hx+d*(4+i*3),hy-2,hx+d*(4+i*3),hy+2);}for(let i=0;i<3;i++)part(hx+rnd()*8,hy+3,0,1,14,'#a0ff40',2,.08);break;}
@@ -1900,7 +1906,7 @@ function drawHitFX(el,sub,x,y,d,pr,fx,f,r){const a=1-pr,c0=(fx&&fx[0])||'#ffffff
     if(sub==='pillar'){for(let i=0;i<12;i++){const yy=y+12-i*3,w=6-i*.35+Math.sin(i+T*.7)*2;wr(i%2?'#ff6a1a':'#ffb030',x-w,yy,w*2,3);}break;}
     if(sub==='trail'){for(let i=0;i<7;i++){const xx=f.x+d*(8+i*5),h=5+((i*7+T)%5);wr('#a01a08',xx-2,f.y-h,5,h);wr('#ff6a1a',xx-1,f.y-h+1,3,h-1);wp('#ffe060',xx,f.y-h+1);}break;}
     if(sub==='flambe'){for(let i=0;i<14;i++){const an=-PI/2+(rnd()-.5)*1.4,R2=rnd()*20*a+4;wr(rnd()<.5?'#ff6a1a':'#ffe060',x+Math.cos(an)*R2,y+Math.sin(an)*R2,3,3);}break;}
-    for(let i=0;i<10;i++){const an=rnd()*TAU,R2=rnd()*(6+pr*8);wr(rnd()<.5?'#ff6a1a':'#ffe060',x+Math.cos(an)*R2,y+Math.sin(an)*R2,2,2);}wdisc(x,y,fl(4*a)+1,'#ffe060');break;
+    {const R=Math.max(10,r||10);const g=Math.min(1,pr*3);for(let i=0;i<22;i++){const t=rnd(),px=x-d*R*.7+d*t*(R*1.5+6)*g,sp2=(2+t*R*.7),py=y+(rnd()-.5)*2*sp2-t*5*g,z=5-t*3;wr(t<.3?'#fff0a0':t<.65?'#ffb030':i%3?'#ff6a1a':'#a01a08',px-z/2,py-z/2,z,z);}for(let i=0;i<3;i++)wr('#ffe060',x+(rnd()-.5)*R,y-R*.6-rnd()*10*pr,2,2);wdisc(x-d*R*.5,y,3+2*a,'#fff0a0');}break;
   case 'light':
     if(sub==='pillar'){wr('#fff2a0',x-6,y-26,12,44);wr('#ffffff',x-3,y-26,6,44);for(let i=0;i<5;i++)wp('#ffffff',x-10+rnd()*20,y-26+rnd()*44);break;}
     if(sub==='blade'){wpoly('#fff2a0',[f.x+d*8,y-3,x+d*14,y-1,x+d*18,y,x+d*14,y+1,f.x+d*8,y+3]);wl('#ffffff',f.x+d*8,y,x+d*14,y);break;}
@@ -1913,13 +1919,13 @@ function drawHitFX(el,sub,x,y,d,pr,fx,f,r){const a=1-pr,c0=(fx&&fx[0])||'#ffffff
     if(sub==='wing'){for(let i=0;i<5;i++){const an=-1+i*.5,R2=12+pr*8;wl(i%2?'#22337a':'#e8b040',x-d*4+Math.cos(an)*R2*d,y+Math.sin(an)*R2,x-d*4+Math.cos(an)*(R2+6)*d,y+Math.sin(an)*(R2+6),2);}}
     else if(sub==='talon'){for(let i=-1;i<=1;i++){wl('#6a4a10',x-d*7+i*3,y-6,x+d*6+i*3,y+6,3);wl('#ffe8a0',x-d*6+i*3,y-5,x+d*5+i*3,y+5);}}
     else if(sub==='buzz'){wring(x,y,16+pr*4,'#fff4b0');for(let i=0;i<6;i++){const an=i/6*TAU+T*.4;wr('#1a1a1a',x+Math.cos(an)*14,y+Math.sin(an)*10,2,2);wp('#ffc020',x+Math.cos(an)*14+1,y+Math.sin(an)*10);}}
-    for(let i=0;i<3;i++){const R2=6+i*4+pr*6;for(let an=-.8;an<=.8;an+=.2)wp(i%2?'#e8b040':'#ffffff',x+Math.cos(an)*R2*d-d*6,y+Math.sin(an)*R2);}break;
+    {const R=Math.max(10,r||10);for(let i=0;i<3;i++){const R2=R*.5+i*5+pr*8;for(let an=-.9;an<=.9;an+=.3)wl(i%2?'#e8b040':'#ffffff',x-d*R*.6+Math.cos(an)*R2*d,y+Math.sin(an)*R2,x-d*R*.6+Math.cos(an+.3)*R2*d,y+Math.sin(an+.3)*R2,i===1?2:1);}for(let i=0;i<3;i++){const fx2=x+d*(pr*14+i*5)-d*4,fy=y+(i-1)*7+Math.sin(pr*6+i)*3;wpoly(i%2?'#22337a':'#e8b040',[fx2-d*5,fy,fx2,fy-2,fx2+d*5,fy,fx2,fy+2]);wl('#ffffff',fx2-d*4,fy,fx2+d*4,fy);}}break;
   case 'relay':
     if(sub==='blink'){X.globalAlpha=a;wring(f.x-d*24,f.y-28,10,'#8a60ff',2);wring(f.x-d*24,f.y-28,6,'#e0d4ff');X.globalAlpha=1;}
     wring(x,y,6+pr*6,'#8a60ff',2);wring(x,y,3+pr*4,'#e0d4ff');for(let i=0;i<4;i++)wf('#ffffff',x+(rnd()-.5)*24,y+(rnd()-.5)*24);break;
-  case 'mech':{star(7+pr*8,'#ff40c0');for(let i=0;i<3;i++){const an=rnd()*TAU;wl('#ffe060',x,y,x+Math.cos(an)*10,y+Math.sin(an)*10);}break;}
-  case 'oni':{star(10+pr*12,'#7aa8ff');wring(x,y,6+pr*14,'#7aa8ff',2);if(pr<.3)wdisc(x,y,5,'#ffffff');break;}
-  case 'tail':{for(let i=0;i<3;i++){const R2=10+i*4;for(let an=-1.2;an<=.4;an+=.15)wp(i%2?'#1a1a20':'#f0f0f0',x-d*8+Math.cos(an)*R2*d,y+Math.sin(an)*R2);}break;}
+  case 'mech':{const R=Math.max(10,r||10);const cl=Math.min(1,pr*3),gap=R*(1-cl)*.9+1,w=R*1.1;X.globalAlpha=.35*a;wdisc(x,y,R,'#ff40c0');X.globalAlpha=1;for(let i=0;i<5;i++){const tx=x-w+ i*w/2;wpoly('#2a1a3a',[tx-w/4-1,y-gap-7,tx+w/4+1,y-gap-7,tx,y-gap+5]);wpoly('#ffffff',[tx-w/4,y-gap-6,tx+w/4,y-gap-6,tx,y-gap+3]);wpoly('#2a1a3a',[tx-w/4-1,y+gap+7,tx+w/4+1,y+gap+7,tx,y+gap-5]);wpoly('#ffffff',[tx-w/4,y+gap+6,tx+w/4,y+gap+6,tx,y+gap-3]);}wr('#6a3ab0',x-w-2,y-gap-10,w*2+4,4);wr('#6a3ab0',x-w-2,y+gap+6,w*2+4,4);if(pr>.3)for(let i=0;i<4;i++){const an=rnd()*TAU;wl(i%2?'#ffe060':'#ff40c0',x,y,x+Math.cos(an)*(R+6),y+Math.sin(an)*(R+6));}if(T%2===0)part(f.x-d*14,f.y-20,-d*(1+rnd()),-.4,14,rnd()<.5?'#ffb040':'#e8e8f0',2,0);break;}
+  case 'oni':{const R=Math.max(10,r||10);const g=Math.min(1,pr*3.5),S2=R*(.7+.5*g);X.globalAlpha=.75*a+.15;wdisc(x,y,S2+2,'#1e2a5a');wdisc(x,y,S2,'#4a70d8');wdisc(x-d*2,y-2,S2*.7,'#7aa8ff');X.globalAlpha=a;for(let i=-1;i<=2;i++)wr('#1e2a5a',x+d*S2*.35,y-S2*.55+i*S2*.36,d*S2*.5,1.5);for(const s2 of[-1,1])wpoly('#e8f0ff',[x-d*S2*.2,y+s2*S2*.9,x+d*S2*.1,y+s2*(S2+9),x+d*S2*.35,y+s2*S2*.8]);X.globalAlpha=1;wring(x,y,S2+4+pr*12,'#7aa8ff',2);for(let i=0;i<5;i++){const an=(d>0?0:PI)+(i-2)*.5;wl('#e8f0ff',x+Math.cos(an)*(S2+3),y+Math.sin(an)*(S2+3),x+Math.cos(an)*(S2+9+pr*8),y+Math.sin(an)*(S2+9+pr*8),2);}break;}
+  case 'tail':{const R=Math.max(10,r||10);const R2=R+6,sw=Math.min(1,pr*2.6),a0=-1.5,a1=a0+2.6*sw;let k=0;for(let an=a0;an<=a1;an+=.16,k++){const px=x-d*R*.8+Math.cos(an)*R2*d,py=y+Math.sin(an)*R2*.85;wdisc(px,py,3.4,'#101014');wdisc(px,py,2.6,k%2?'#2a2a32':'#f4f4f4');}{const px=x-d*R*.8+Math.cos(a1)*R2*d,py=y+Math.sin(a1)*R2*.85;wdisc(px,py,4.4,'#101014');wdisc(px,py,3.4,'#f4f4f4');}for(let i=0;i<3;i++)wl('#ffffff',x+d*(R2-2),y-6+i*6,x+d*(R2+8+i*2),y-6+i*6);break;}
   case 'fish':{const sw=Math.min(1,pr*2.5),K=(kx,ky,kd,L)=>fishShape(kx,ky,kd,L,'#f4b020','#fff4c0','#8a5a08'),KR=(kx,ky,ang,L)=>{X.save();X.translate(kx,ky);X.rotate(ang);fishShape(0,0,1,L,'#f4b020','#fff4c0','#8a5a08');X.restore();};
     switch(sub){
     case 'koi':K(x+d*4,y,d,14);break;
@@ -1937,7 +1943,7 @@ function drawHitFX(el,sub,x,y,d,pr,fx,f,r){const a=1-pr,c0=(fx&&fx[0])||'#ffffff
   case 'cosmic':
     if(sub==='planets'){const cols=['#c8a8ff','#ffd860','#7ae0ff'];for(let i=0;i<3;i++){const an=i*2.09+pr*7,px=f.x+Math.cos(an)*22,py=f.y-30+Math.sin(an)*14;wdisc(px,py,4,'#1a1030');wdisc(px,py,3,cols[i]);wp('#ffffff',px-1,py-1);wl('#e8d8ff',px-6,py+2,px+6,py-1);}break;}
     if(sub==='meteor'){wdisc(x,y,6,'#3a2a2a');wdisc(x-1,y-1,5,'#7a5a4a');wp('#c8a8a8',x-2,y-3);for(let i=0;i<8;i++)wr(rnd()<.5?'#ff8a3a':'#ffe060',x+(rnd()-.5)*8,y-8-rnd()*14,2,2);break;}
-    for(let i=0;i<6;i++){const an=i/6*TAU+pr*3,R2=6+pr*12;wp('#ffd860',x+Math.cos(an)*R2,y+Math.sin(an)*R2);wf('#ffffff',x+Math.cos(an)*R2+.5,y+Math.sin(an)*R2);}wring(x,y,4+pr*8,'#b890ff');break;
+    {const R=Math.max(15,(r||10)*1.5);const tw=(sx,sy,z,c)=>{wr(c,sx-z,sy-.5,z*2+1,1.6);wr(c,sx-.5,sy-z,1.6,z*2+1);wr('#ffffff',sx-1,sy-1,2.4,2.4);};const hx=f.x+d*8,hy=f.y-38;wl('#5a3ab0',hx,hy,x,y,3);wl('#c8a8ff',hx,hy,x,y,1);for(let i=0;i<5;i++){const an=i/5*TAU+pr*2.4,R2=R*.6+pr*R;tw(x+Math.cos(an)*R2,y+Math.sin(an)*R2*.8,2+(i%3),i%2?'#ffd860':'#c8a8ff');}wdisc(x,y,R*.42+1,'#1a1030');wdisc(x,y,R*.42,'#8a60e0');wdisc(x-1,y-1,R*.22,'#d8c8ff');wl('#ffd860',x-R*.8,y+2,x+R*.8,y-2,1.5);}break;
   case 'dust':
     if(sub==='blade'){wpoly('#7a7468',[f.x+d*8,y-4,x+d*10,y-2,x+d*18,y,x+d*10,y+2,f.x+d*8,y+4]);wpoly('#e8e0d0',[f.x+d*8,y-2,x+d*10,y-1,x+d*15,y,f.x+d*8,y+1]);for(let i=0;i<3;i++)part(x+rnd()*20-10,y+rnd()*6-3,-d,0,12,'#d8d0c0',2,0);break;}
     if(sub==='pillar'){for(let i=0;i<16;i++){const yy=y+14-i*2.6;wr(i%2?'#d8d0c0':'#8a8478',x-6+Math.sin(i+T*.4)*3,yy,12,3);}break;}
@@ -1966,7 +1972,7 @@ function drawHitFX(el,sub,x,y,d,pr,fx,f,r){const a=1-pr,c0=(fx&&fx[0])||'#ffffff
   case 'honey':
     if(sub==='stinger'){wpoly('#1a1a1a',[x-d*8,y-3,x+d*10,y,x-d*8,y+3]);wpoly('#ffc020',[x-d*6,y-2,x+d*6,y,x-d*6,y+2]);break;}
     for(let i=0;i<6;i++){const xx=x-10+i*4;wr('#a86a00',xx,y-2,3,4+((i*3)%4));wr('#ffc020',xx,y-2,2,3+((i*3)%4));}break;
-  case 'mimic':star(8+pr*8,'#e8c040');break;
+  case 'mimic':{const R=Math.max(10,r||10);star(8+pr*8,'#e8c040');for(const s2 of[-1,1]){const mx=x+s2*(4+pr*R*.9),my=y-s2*3;wpoly('#8a6a10',[mx,my-R*.6,mx+R*.3,my,mx,my+R*.6,mx-R*.3,my]);wpoly(s2>0?'#fff4c0':'#e8c040',[mx,my-R*.5,mx+R*.22,my,mx,my+R*.5,mx-R*.22,my]);}break;}
   default:star(6+pr*8,c0);}}
 /* ===================== ZAIR TETHERS (quirk-themed grab-air) ===================== */
 function drawTether(el,x0,y0,x1,y1,fx,f){const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,c0=(fx&&fx[0])||'#fff',c1=(fx&&fx[1])||'#fff',T=FR;
@@ -3478,7 +3484,7 @@ function overlay2D(){const back=new Set(['geyser','vines','storm','smokeplat','h
     X.fillRect(Math.round(ip.x-w),g-1,Math.round(w*2),2);X.fillRect(Math.round(ip.x-w*.7),g-2,Math.round(w*1.4),4);X.globalAlpha=1;}
   for(const f of F)drawTrails(f);
   const order=F.slice().sort((a,b)=>(a.mv?1:0)-(b.mv?1:0));
-  for(const f of order){if(f.dead||f.gone)continue;const ip=interpPos(f),ox=f.x,oy=f.y;f.x=ip.x;f.y=ip.y;if(f.pt)drawPartner(f);drawFighter(f);extrasFX(f);foodFX(f);f.x=ox;f.y=oy;}
+  for(const f of order){if(f.dead||f.gone)continue;const ip=interpPos(f),ox=f.x,oy=f.y;f.x=ip.x;f.y=ip.y;if(f.pt)drawPartner(f);drawFighter(f);extrasFX(f);foodFX(f);quirkFX(f);f.x=ox;f.y=oy;}
   for(const e of ENT)if(!back.has(e.k)&&EK[e.k]&&EK[e.k].draw)EK[e.k].draw(e);
   X.globalCompositeOperation='lighter';for(const p of PS){const sz=p.life<p.max/3?1:p.sz*1.2;X.globalAlpha=Math.min(1,p.life/p.max*1.6);X.fillStyle=p.col;X.fillRect(Math.round(p.x-sz/2),Math.round(p.y-sz/2),Math.ceil(sz),Math.ceil(sz));}
   X.globalAlpha=1;X.globalCompositeOperation='source-over';
@@ -3975,6 +3981,12 @@ EK.dumpling={init(e){e.explode=1;},upd(e){const y=surfY(e.x,e.y-6);if(y!==null&&
 function foodFX(f){if(f.C.id!=='torabi'||f.st!=='grab'||f.stT>16)return;const ext=Math.min(1,f.stT/7)*(f.stT>10?Math.max(0,1-(f.stT-10)/6):1),L=(f.C.grabR||26)*ext,x0=f.x+f.face*8,y0=f.y-36;
   for(let k=0;k<3;k++)for(let s=0;s<=L;s+=2.5){const w=Math.sin(s*.45+k*2.1-FR*.4)*2.4;wdisc(x0+f.face*s,y0+w+(k-1)*2,1.3,k===1?'#fff0b0':'#e8c458');}
   wring(x0+f.face*L,y0,5,'#e8c458',2);}
+
+/* stance auras: counters and buffs read as the student's quirk */
+function quirkFX(f){const m=f.mv;if(!m||f.st!=='move')return;const d=m.d,x=f.x,y=f.y-30,T=FR;
+  if(d.beh==='counter'&&m.t>=d.bp.f0&&m.t<=d.bp.f1){if(f.C.id==='kouji'){for(let i=0;i<20;i++){const an=i/20*TAU+T*.12,rr=22;wdisc(x+Math.cos(an)*rr,y+Math.sin(an)*rr,2,i<10?'#ffffff':'#1a0e2a');}wdisc(x+Math.cos(T*.12)*10,y+Math.sin(T*.12)*10,3,'#1a0e2a');wdisc(x-Math.cos(T*.12)*10,y-Math.sin(T*.12)*10,3,'#ffffff');}
+    else{for(let i=0;i<3;i++){const rr=14+((T*1.4+i*8)%24);X.globalAlpha=1-(rr-14)/24;wring(x,y-16,rr,'#ffffff');}X.globalAlpha=1;wr('#ffe060',x-1,y-52,3,9);wr('#ffe060',x-1,y-41,3,3);wr('#ffe060',x+6,y-50,3,7);wr('#ffe060',x+6,y-41,3,3);}}
+  if(d.beh==='absorb'&&m.t>=d.bp.f0&&m.t<=d.bp.f1){for(let i=0;i<10;i++){const an=i/10*TAU-T*.2,rr=30-((T*1.5+i*3)%26);wdisc(x+Math.cos(an)*rr,y+Math.sin(an)*rr*.8,1.6,i%2?'#ffd860':'#c8a8ff');}wdisc(x,y,6,'#0c0618');wring(x,y,8,'#b890ff',2);}}
 
 /* ===================== MUSIC: original chiptune loops, synthesized live ===================== */
 const MUS={on:true,cur:'',step:0,next:0,g:null,nb:null,vol:.9};
