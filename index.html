@@ -205,6 +205,13 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
 .pfs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}.pf{border-left:3px solid;background:rgba(255,255,255,.04);border-radius:8px;padding:6px 10px;display:grid;gap:3px;font-size:12.5px}
 .pf b{font-family:var(--display);font-size:19px;line-height:1;letter-spacing:.5px}.pf span{display:flex;gap:8px;align-items:center}.pf kbd{font-size:13px;padding:3px 5px 1px;min-width:22px}
 .phint{color:var(--dim);font-size:13px}
+
+#select{grid-template-columns:minmax(0,1fr)}.top,.selmain4,.selfoot{min-width:0}.top .tbtn{flex:none}
+.sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pprow .pp canvas{height:clamp(70px,15vh,180px)}
+.top{flex-wrap:wrap;gap:6px 12px}.sub{flex:1 1 0;min-width:0}.logo{font-size:clamp(22px,2.7vw,46px)}.top .tbtn{font-size:clamp(14px,1.3vw,18px);padding:7px 12px}
+@media (max-width:900px){.sub{display:none}}
+@media (max-height:540px){.pprow .pp canvas{height:44px}.pprow .info{padding:3px 10px 5px}.pprow .info .q,.pprow .info p{display:none}.padhint{display:none}.roster{gap:5px}#select{gap:6px;padding-block:6px}}
 </style>
 
 <div id="app">
@@ -219,7 +226,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
     <div class="selmain4"><div class="roster" id="roster"></div><div class="pprow" id="pprow"></div></div>
     <div class="selfoot">
       <div class="opt"><span class="lab">STOCKS</span><div class="seg" id="stk"><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div></div>
-      <span class="padhint">🎮 <b>A</b> join / lock in · <b>B</b> back · <b>X</b> add/remove CPU · <b>Y</b> CPU level · <b>&minus;</b> / Select: character guide · <b>+</b> / Start: next</span>
+      <span class="padhint">🖱 Click a player box, then a fighter · 🎮 <b>A</b> join / lock in · <b>B</b> back · <b>X</b> add/remove CPU · <b>Y</b> CPU level · <b>&minus;</b> / Select: character guide · <b>+</b> / Start: next</span>
       <button class="fight" id="fight">STAGE &rarr;</button>
     </div>
   </section>
@@ -2723,7 +2730,8 @@ function bigText(c,s,x,y,sz,col){c.save();c.font=Math.round(sz*.48)+'px "Press S
 function drawHUD(c){const n=F.length,sp=n>3?316:n>2?400:420,hs=n>3?.8:n>2?.9:1;F.forEach((f,i)=>{const cx=640+(i-(n-1)/2)*sp,y=612+(1-hs)*84;c.save();c.translate(cx,y);c.scale(hs,hs);
   c.fillStyle='rgba(8,6,26,.72)';c.beginPath();c.moveTo(-150,0);c.lineTo(162,0);c.lineTo(150,84);c.lineTo(-162,84);c.closePath();c.fill();
   c.fillStyle=f.col;c.beginPath();c.moveTo(-150,0);c.lineTo(162,0);c.lineTo(161,6);c.lineTo(-151,6);c.closePath();c.fill();
-  c.save();c.beginPath();c.arc(-104,46,40,0,TAU);c.fillStyle=f.col;c.fill();c.beginPath();c.arc(-104,46,36,0,TAU);c.clip();c.fillStyle='#1c1650';c.fillRect(-140,10,72,72);c.drawImage(HEADS[f.copyT>0&&f.copyCi>=0?f.copyCi:f.ci],-140,10,72,72);c.restore();
+  c.save();c.beginPath();c.arc(-104,46,40,0,TAU);c.fillStyle=f.col;c.fill();c.beginPath();c.arc(-104,46,36,0,TAU);c.clip();c.fillStyle='#1c1650';c.fillRect(-140,10,72,72);c.drawImage(HEADS[f.ci],-140,10,72,72);c.restore();
+  if(f.copyT>0&&f.copyCi>=0){c.save();c.beginPath();c.arc(-74,70,17,0,TAU);c.fillStyle='#e8c040';c.fill();c.beginPath();c.arc(-74,70,14.5,0,TAU);c.clip();c.fillStyle='#1c1650';c.fillRect(-90,54,32,32);c.drawImage(HEADS[f.copyCi],-89,55,30,30);c.restore();}
   c.font='14px "Press Start 2P", monospace';c.textAlign='left';c.textBaseline='alphabetic';c.fillStyle=f.col;c.fillText((f.ctrl==='cpu'?'CPU ':'P'+(f.id+1)+' ')+f.C.sn,-56,32,96);
   const d=fl(f.dmg),sh=f.shakeHUD>0?(rnd()*8-4):0;c.font=(d>=100?34:40)+'px "Press Start 2P", monospace';c.textAlign='right';c.lineJoin='round';c.lineWidth=7;c.strokeStyle='#0c0820';
   const txt=f.gone?'—':d+'%';c.strokeText(txt,150+sh,80+sh*.3);c.fillStyle=dmgCol(d);c.fillText(txt,150+sh,80+sh*.3);
@@ -3042,6 +3050,7 @@ function setStage(i){STI=i;STGD=STAGES[i];stageGeom(i);SKY=mkSky(STGD);LIGHT=mkL
 /* moving platforms (simulation) */
 function stageTick(){for(const p of STAGE.plats){if(!p.mv)continue;const ph=Math.sin(FR*TAU/p.mv.per),nx=p.bx+(p.mv.ax||0)*ph,ny=p.by+(p.mv.ay||0)*ph;p.dx=nx-p.x;p.dy=ny-p.y;p.x=nx;p.y=ny;
     for(const f of F){if(f.ground===p){f.x+=p.dx;f.y=p.y;}}}
+  for(const f of F){if(!f.dead&&!f.gone&&f.st!=='hit'&&f.st!=='respawn'&&f.y<BLAST.t+36){f.y=BLAST.t+36;if(f.vy<0)f.vy=0;}}
   stageMech();}
 function placePlats(){if(!ST3.pg)return;STAGE.plats.forEach((p,i)=>{const g=ST3.pg[i];if(!g)return;const x=p.mv?p.x-p.dx*(1-RA):p.x,y=p.mv?p.y-p.dy*(1-RA):p.y;g.p[0]=X3(x+p.w/2);g.p[1]=Y3(y);});}
 function animStage(){const t=FR;placePlats();if(ST3.ledge)ST3.ledge.forEach(n=>n.vis=(t>>3)%2===0);if(STGD.anim)STGD.anim(t);}
@@ -3466,7 +3475,7 @@ function showResults(){const ov=$('#overlay');ov.hidden=false;ov.innerHTML='';co
 function buildSelect(){const ro=$('#roster');
   CH.forEach((C,i)=>{if(C.hidden)return;const b=document.createElement('button');b.className='card';b.dataset.ci=i;b.style.setProperty('--cc',C.col);const cv=CARDS[i];cv.className='cimg';b.appendChild(cv);
     const s=document.createElement('span');s.textContent=C.card||C.sn;b.appendChild(s);b.setAttribute('aria-label',C.n);
-    b.onclick=()=>{audioInit();const n=SEL.active;if(SEL.mode[n]==='off')SEL.mode[n]='1';SEL.p[n]=i;PREV4[n]=null;sfx('pop');const sl=inSlots();SEL.active=sl[(sl.indexOf(n)+1)%sl.length];refreshSel();};
+    b.onclick=()=>{audioInit();const n=SEL.active;if(SEL.mode[n]==='off')SEL.mode[n]='1';SEL.p[n]=i;PREV4[n]=null;sfx('pop');refreshSel();};
     b.onmouseenter=()=>{renderInfo(SEL.active,i);};b.onmouseleave=()=>{renderInfo(SEL.active,SEL.p[SEL.active]);};ro.appendChild(b);});
   const row=$('#pprow');for(let n=0;n<4;n++){const p=document.createElement('div');p.className='pp p'+(n+1);p.id='pp'+n;
     p.innerHTML='<button class="tag" id="tag'+n+'"></button><canvas id="pc'+n+'" width="220" height="196"></canvas><div class="info" id="info'+n+'"></div>';
