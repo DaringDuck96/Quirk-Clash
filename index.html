@@ -2170,6 +2170,7 @@ function spriteState(f){const m=f.mv,d=m&&m.d;const S={t:f.anim,vx:(f.vx+f.lx)*f
   if(f.glide)S.fanOpen=1;
   if(f.buff&&f.buff.k==='rage'){S.rage=1;S.aura='#7aa8ff';}
   if(f.buff&&f.buff.k==='overheat')S.aura='#ff6a1a';
+  if(f.C.aura&&!S.aura)S.aura=f.C.aura;
   if(f.flash>3&&((f.flash>>1)&1))S.tint=['#ffffff',.85];else if(f.frozen>0)S.tint=['#9fe8ff',.5];else if(f.copyT>0)S.tint=['#e8c040',.16];else if(f.stickT>0)S.tint=['#ffc020',.18];else if(f.buff&&f.buff.k==='rage')S.tint=['#2a3a90',.18];
   if(f.copyT>0)S.mimic=1;return S;}
 
@@ -3484,7 +3485,7 @@ function overlay2D(){const back=new Set(['geyser','vines','storm','smokeplat','h
     X.fillRect(Math.round(ip.x-w),g-1,Math.round(w*2),2);X.fillRect(Math.round(ip.x-w*.7),g-2,Math.round(w*1.4),4);X.globalAlpha=1;}
   for(const f of F)drawTrails(f);
   const order=F.slice().sort((a,b)=>(a.mv?1:0)-(b.mv?1:0));
-  for(const f of order){if(f.dead||f.gone)continue;const ip=interpPos(f),ox=f.x,oy=f.y;f.x=ip.x;f.y=ip.y;if(f.pt)drawPartner(f);drawFighter(f);extrasFX(f);foodFX(f);quirkFX(f);f.x=ox;f.y=oy;}
+  for(const f of order){if(f.dead||f.gone)continue;const ip=interpPos(f),ox=f.x,oy=f.y;f.x=ip.x;f.y=ip.y;if(f.pt)drawPartner(f);drawFighter(f);extrasFX(f);foodFX(f);quirkFX(f);ninjaFX(f);f.x=ox;f.y=oy;}
   for(const e of ENT)if(!back.has(e.k)&&EK[e.k]&&EK[e.k].draw)EK[e.k].draw(e);
   X.globalCompositeOperation='lighter';for(const p of PS){const sz=p.life<p.max/3?1:p.sz*1.2;X.globalAlpha=Math.min(1,p.life/p.max*1.6);X.fillStyle=p.col;X.fillRect(Math.round(p.x-sz/2),Math.round(p.y-sz/2),Math.ceil(sz),Math.ceil(sz));}
   X.globalAlpha=1;X.globalCompositeOperation='source-over';
@@ -4049,7 +4050,39 @@ function setMode(m){MODE=m;const s=$('#modeSub');if(s)s.textContent=m==='surviva
   mk('ninja','NINJA','#2a2c38','#3a3c4a','#8a8ea8',{w:.72,run:4.3,pow:.8,atk:.5,def:1.7});
   mk('ninja2','RED NINJA','#3a1418','#5a1c22','#ff4a4a',{w:.8,run:4.8,pow:.9,atk:.7,def:1.35});
   mk('ninja3','SHADOW ELITE','#1c1430','#2c2050','#b06aff',{w:.9,run:5,pow:1,atk:.9,def:1.1,kbm:.9});
-  mk('ninjaB','NINJA MASTER','#101014','#2a2a30','#f6c94e',{w:1.5,run:4,pow:1.15,atk:1.15,def:.55,kbm:1,look:{size:1.3}});}
+  mk('ninjaB','NINJA MASTER','#101014','#2a2a30','#f6c94e',{w:1.5,run:4,pow:1.15,atk:1.15,def:.55,kbm:1,look:{size:1.3}});
+  /* ---- ninjas with quirk-like powers ---- */
+  const pw=(id,el,eff,aura,fn)=>{const C=CH.find(c=>c.id===id);C.kit.el=el;C.aura=aura;for(const k of['ftilt','utilt','dtilt','dash','fair','bair','uair','dair','fsmash','usmash','dsmash']){const d=C.mv[k];if(!d)continue;if(d.vfx)d.vfx.el=el;if(eff&&(eff==='burn'||eff==='poison'||/smash/.test(k)))d.hits.forEach(h=>{h.eff=h.eff||eff;});}if(fn)fn(C);};
+  const fxOf=C=>C.kit.fx;
+  mk('ninjaF','EMBER NINJA','#3a1408','#6a2410','#ff7a20',{w:.8,run:4.5,pow:.95,atk:.75,def:1.35});
+  pw('ninjaF','fire','burn','#ff6a1a',C=>{C.mv.nB=M('cast',14,1,20,null,{spawn:[[14,{k:'fireball',vx:4.6,life:52,r:7,dmg:7,bkb:4,kbg:.05,ang:40,eff:'burn',explode:1}]],fx:fxOf(C)});
+    C.mv.dB=M('castDown',16,1,22,null,{spawn:[[16,{k:'geyser',dist:70,delay:24,life:28,dmg:9,bkb:5,kbg:.06,ang:84,eff:'burn'}]],fx:fxOf(C)});C.sp=['Fireball','Shadow Lunge','Smoke Step','Flame Pillar'];});
+  mk('ninjaI','FROST NINJA','#16283a','#24445e','#8fe4ff',{w:.8,run:4.3,pow:.9,atk:.7,def:1.35});
+  pw('ninjaI','ice','freeze','#8fe4ff',C=>{C.mv.nB=M('cast',14,1,20,null,{spawn:[[14,{k:'shard',vx:6,life:50,r:6,dmg:5,bkb:3,kbg:.035,ang:30,eff:'freeze'}]],fx:fxOf(C)});
+    C.mv.dB=M('castDown',16,1,24,null,{spawn:[[16,{k:'spikewave',cnt:3,gap:24,dmg:5,eff:'freeze'}]],fx:fxOf(C)});C.sp=['Ice Shard','Shadow Lunge','Smoke Step','Frost Spikes'];});
+  mk('ninjaV','VIPER NINJA','#12301a','#1e4a28','#a0ff40',{w:.78,run:4.7,pow:.9,atk:.7,def:1.4});
+  pw('ninjaV','venom','poison','#a0ff40',C=>{C.mv.nB=M('cast',14,1,20,null,{spawn:[[14,{k:'venom',vx:4,vy:-3,g:.25,life:70,r:6,dmg:4,bkb:2,kbg:.02,ang:40,eff:'poison'}]],fx:fxOf(C)});C.mv.dB=C.mv.nB;
+    C.mv.sB=M('lunge',10,12,20,hit([16,-26,12],7,4,.05,38,{eff:'para'}),{beh:'dash',bp:{spd:5.2,f0:10,f1:22,air:'float'},fx:fxOf(C)});C.sp=['Venom Spit','Paralyzing Fang','Smoke Step','Venom Spit'];});
+  mk('ninjaT','STORM NINJA','#2a2810','#4a4418','#ffe060',{w:.76,run:5.3,pow:.95,atk:.75,def:1.35});
+  pw('ninjaT','light','para','#ffe060',C=>{C.mv.nB=M('cast',16,1,22,null,{spawn:[[16,{k:'ray',len:110,life:10,dmg:7,bkb:3.5,kbg:.05,ang:25}]],fx:['#ffe060','#ffffff']});C.mv.dB=C.mv.nB;
+    C.mv.sB=M('kickF',12,5,18,hit([18,-26,12],8,4.5,.06,40),{beh:'teleBehind',bp:{range:200},fx:['#ffe060','#fff']});C.sp=['Lightning Bolt','Flash Step','Smoke Step','Lightning Bolt'];});
+  mk('ninjaW','CROW NINJA','#101a3a','#1c2c5e','#e8b040',{w:.7,run:4.4,pow:.85,atk:.65,def:1.45});
+  pw('ninjaW','gale',null,null,C=>{C.st.aj=3;C.st.air=3.8;C.st.g*=.85;C.st.fall*=.8;C.mv.nB=M('cast',14,1,20,null,{spawn:[[14,{k:'homing',n:2,spread:.5,vx:4.4,life:70,r:5,dmg:3,bkb:2.5,kbg:.03,ang:30}]],fx:fxOf(C)});C.mv.dB=C.mv.nB;
+    C.mv.uB=M('float',4,50,10,null,{beh:'fly',bp:{dur:50,spd:3.6},helpless:1,fx:fxOf(C)});C.mv.sB=M('dive',8,18,14,hit([16,-30,13],8,4.5,.06,38),{beh:'dash',bp:{spd:6,f0:8,f1:26,air:'float'},fx:fxOf(C)});C.sp=['Homing Feathers','Talon Dive','Flight','Homing Feathers'];});
+  mk('ninjaM','SMOKE NINJA','#4a4a52','#6a6a74','#e8e8f0',{w:.75,run:4.5,pow:.85,atk:.65,def:1.4});
+  pw('ninjaM','dust',null,'#d8d0c0',C=>{C.mv.nB=M('cast',16,1,22,null,{spawn:[[16,{k:'storm',vx:1.2,life:110,r:20,dmg:1.5,bkb:1.5,kbg:.01,ang:70,ri:14,max:1,eff:'haze'}]],fx:fxOf(C)});C.mv.dB=C.mv.nB;
+    C.mv.sB=M('kickF',12,5,18,hit([18,-26,12],7,4.5,.06,40),{beh:'teleBehind',bp:{range:180},fx:['#e8e8f0','#fff']});C.sp=['Smoke Cloud (blinds)','Smoke Ambush','Smoke Step','Smoke Cloud'];});
+  mk('ninjaG','IRON NINJA','#3a4250','#5a6474','#7aa8ff',{w:1.45,run:3.4,pow:1.15,atk:.95,def:.75,kbm:1.1,look:{size:1.2}});
+  pw('ninjaG','oni',null,null,C=>{C.armorSmash=1;C.mv.sB=M('shoulder',12,18,20,hit([20,-32,14],11,5,.07,38),{beh:'dash',bp:{spd:4,f0:12,f1:30,air:'float',armor:1},fx:fxOf(C)});C.mv.nB=C.mv.sB;C.mv.dB=C.mv.sB;C.sp=['Iron Charge (armored)','Iron Charge','Smoke Step','Iron Charge'];});
+  pw('ninja3','relay',null,'#b06aff',C=>{C.mv.sB=M('kickF',10,5,16,hit([18,-26,12],8,4.5,.06,40),{beh:'teleBehind',bp:{range:220},fx:['#b06aff','#fff']});});
+  { /* bosses rotate: master, iron ogre, inferno lord */ }
+  mk('ninjaBG','OGRE NINJA','#2a3040','#4a5468','#7aa8ff',{w:1.9,run:3.4,pow:1.25,atk:1.2,def:.45,kbm:1.15,look:{size:1.5}});
+  pw('ninjaBG','oni',null,'#7aa8ff',C=>{C.armorSmash=1;C.mv.sB=M('shoulder',12,22,22,hit([24,-34,18],14,5.5,.075,38),{beh:'dash',bp:{spd:4.4,f0:12,f1:34,air:'float',armor:1},fx:fxOf(C)});C.mv.nB=M('roar',14,6,22,hit([0,-32,46],6,5,.03,40,{sd:4}),{fx:fxOf(C),spawn:[[14,{k:'roar'}]]});C.mv.dB=C.mv.nB;});
+  mk('ninjaBF','INFERNO NINJA','#3a0c04','#701a08','#ffb030',{w:1.5,run:4.2,pow:1.15,atk:1.1,def:.5,kbm:1.05,look:{size:1.35}});
+  pw('ninjaBF','fire','burn','#ff6a1a',C=>{C.mv.nB=M('cast',12,1,18,null,{spawn:[[12,{k:'fireball',n:3,spread:.35,vx:4.8,life:56,r:7,dmg:7,bkb:4,kbg:.05,ang:40,eff:'burn',explode:1}]],fx:fxOf(C)});
+    C.mv.dB=M('castDown',14,1,22,null,{spawn:[[14,{k:'geyser',dist:60,delay:20,life:28,dmg:11,bkb:5,kbg:.065,ang:84,eff:'burn'}],[14,{k:'geyser',dist:-60,delay:20,life:28,dmg:11,bkb:5,kbg:.065,ang:84,eff:'burn'}]],fx:fxOf(C)});});
+}
+const NINJA_POOL=[['ninja',1,9],['ninja2',2,5],['ninjaF',3,4],['ninjaI',4,4],['ninjaV',5,4],['ninja3',6,3],['ninjaW',6,3],['ninjaT',7,3],['ninjaM',8,3],['ninjaG',8,2]],NINJA_BOSS=['ninjaB','ninjaBG','ninjaBF'];
 /* ---- two extra stages that only these modes use ---- */
 function buildSurv(){SR=111;const r=nd(null),m=STAGE.main,d=deckSlab(r,m,'#5a544c',8);
   bx(r,'#6a4a30',d.cx,-.1,0,d.w+.2,.22,6.9,{mode:6});bx(r,'#4a463e',d.cx,-7,-4.4,d.w,12,8,{mode:8});
@@ -4090,9 +4123,10 @@ function startModeMatch(){const sl=inSlots();if(MODE==='training'){if(SEL.mode[0
   else{const p=newFighter(0,SEL.p[0],'human',1),d=newFighter(1,CH[SEL.p[1]]&&!CH[SEL.p[1]].hidden?SEL.p[1]:0,'dummy',1);p.stocks=d.stocks=99;F=[p,d];p.x=WW/2-60;d.x=WW/2+60;p.face=1;d.face=-1;Object.assign(TR,{combo:0,cdmg:0,last:0,ct:-999,prev:0});}
   ENT=[];PS=[];FXL=[];STAGE.temp=[];LEDGES.forEach(l=>l.occ=null);GS=MODE==='training'?'play':'count';gsT=0;winner=null;shakeA=0;flashA=0;CAM.x=WW/2;CAM.y=WH/2;CAM.z=1.2;
   $('#title').hidden=true;$('#select').hidden=true;$('#stagesel').hidden=true;$('#game').hidden=false;$('#overlay').hidden=true;$('#touch').hidden=!isTouch;paused=false;running=true;}
-function spawnNinja(boss){const m=STAGE.main,w=SV.wave,r=rnd();let id='ninja';if(boss)id='ninjaB';else if(w>=6&&r<Math.min(.45,(w-5)*.06))id='ninja3';else if(w>=3&&r<.4+Math.min(.3,w*.02))id='ninja2';
+function spawnNinja(boss){const m=STAGE.main,w=SV.wave;let id='ninja';if(boss)id=NINJA_BOSS[(fl(w/5)-1)%NINJA_BOSS.length];else{const ok=NINJA_POOL.filter(p=>w>=p[1]).map(p=>[p[0],p[0]==='ninja'?Math.max(2,p[2]-w):p[2]+(w===p[1]?6:0)]),tot=ok.reduce((a,p)=>a+p[1],0);let r=rnd()*tot;for(const p of ok){r-=p[1];if(r<=0){id=p[0];break;}}}
   const f=newFighter(0,CH.findIndex(c=>c.id===id),'cpu',Math.min(2,fl((w-1)/3)));f.id=SV.nid++;f.team=1;f.col=CH[f.ci].col;f.stocks=1;const side=rnd()<.5?-1:1,ps=F.filter(x=>x.team===0&&!x.gone&&!x.dead);
   f.x=clamp((ps.length?ps[fl(rnd()*ps.length)].x:m.x+m.w/2)+side*(150+rnd()*120),m.x+20,m.x+m.w-20);f.y=m.y-150-rnd()*60;f.ground=null;f.st='air';f.vy=1;f.inv=36;f.face=-side;F.push(f);
+  if(id!=='ninja'&&id!=='ninja2')FXL.push({k:'txt',s:f.C.sn,x:f.x,y:f.y-80,t:0,life:70,col:f.col});
   burst(f.x,f.y-30,24,['#8a8a98','#3a3a48','#ffffff'],2.6,26);FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:f.col,r0:6,life:18});sfx('warp');}
 function modeKO(f){if(MODE==='training'){f.stocks=99;return false;}
   if(MODE==='survival'){if(f.team===1){f.dead=0;f.gone=true;SV.kills++;return true;}
@@ -4101,7 +4135,7 @@ function dummyIn(f){const b=TR.beh;if(b==='cpu')return aiInput(f);if(b==='jump')
 function modeTick(){if(MODE==='versus'||typeof GS==='undefined'||GS!=='play')return;
   if(MODE==='survival'){SV.t++;if(F.some(f=>f.team===1&&f.gone))F=F.filter(f=>!(f.team===1&&f.gone));const alive=F.filter(f=>f.team===1).length;
     if(SV.queue<=0&&alive===0){if(SV.rest>0){SV.rest--;return;}SV.wave++;SV.queue=Math.min(40,2+SV.wave+fl(SV.wave*SV.wave/14));SV.boss=SV.wave%5===0;SV.rest=110;
-      FXL.push({k:'txt2',s:'WAVE '+SV.wave,x:CAM.x,y:CAM.y-70,t:0,life:90,col:'#ffd27a'});sfx('go');
+      FXL.push({k:'txt2',s:'WAVE '+SV.wave,x:CAM.x,y:CAM.y-70,t:0,life:90,col:'#ffd27a'});sfx('go');{const nw=NINJA_POOL.filter(p=>p[1]===SV.wave&&p[0]!=='ninja').map(p=>CH.find(c=>c.id===p[0]).sn);if(SV.boss)nw.unshift('BOSS: '+CH.find(c=>c.id===NINJA_BOSS[(fl(SV.wave/5)-1)%NINJA_BOSS.length]).sn);if(nw.length)FXL.push({k:'txt2',s:nw.join(' + '),x:CAM.x,y:CAM.y-44,t:0,life:110,col:'#ff8a5a'});}
       if(SV.wave>1&&SV.wave%3===1)for(const p of F)if(p.team===0&&!p.gone){p.dmg=Math.max(0,p.dmg-25);FXL.push({k:'txt',s:'-25%',x:p.x,y:p.y-74,t:0,life:50,col:'#9aff9a'});}}
     const cap=Math.min(7,2+fl(SV.wave/2));if(SV.queue>0&&alive<cap&&SV.t%Math.max(14,46-SV.wave*2)===0){spawnNinja(SV.boss);SV.boss=false;SV.queue--;}}
   else if(MODE==='training'){const d=F[1],p=F[0];if(!d||!p)return;if(d.dmg>TR.prev+.01){const dl=d.dmg-TR.prev;if(FR-TR.ct>50||d.hitstun<=0&&FR-TR.ct>24){TR.combo=0;TR.cdmg=0;}TR.combo++;TR.cdmg+=dl;TR.last=dl;TR.ct=FR;}
@@ -4129,6 +4163,20 @@ function pauseMenu(){const ov=$('#overlay');ov.hidden=false;ov.innerHTML='';PVIE
     tb('FILL FINAL SMASH',()=>{F[0].fsm=100;});tb('RESET POSITIONS',()=>{const m=STAGE.main;F.forEach((f,i)=>{f.x=WW/2+(i?60:-60);f.y=m.y;f.ground=m;f.vx=f.vy=f.lx=f.ly=0;f.st='idle';f.mv=null;f.hitstun=0;f.dmg=i&&TR.pct!=='keep'?+TR.pct:0;f.face=i?-1:1;});TR.prev=F[1].dmg;TR.combo=0;TR.cdmg=0;});tb('SWAP DUMMY FIGHTER',()=>{const pool=CH.map((c,k)=>k).filter(k=>!CH[k].hidden),d=F[1];const ci=pool[(pool.indexOf(d.ci)+1)%pool.length];d.ci=ci;d.C=CH[ci];d.L=d.C.look;d.mv=null;d.pt=null;SEL.p[1]=ci;});box.appendChild(r);}
   const hint=document.createElement('div');hint.className='phint';hint.textContent='Controller: point and press A · B resumes';box.appendChild(hint);ov.appendChild(box);}
 (function wait(){const cs=document.querySelectorAll('.scard');if(cs.length<STAGES.length){setTimeout(wait,60);return;}STAGES.forEach((s,i)=>{if(s.hidden)cs[i].classList.add('hid');});})();
+
+/* an emblem over each powered ninja shows what it can do */
+function ninjaFX(f){if(f.team!==1||f.dead||f.gone)return;const id=f.C.id;if(id==='ninja'||id==='ninja2')return;const z=(f.L.size||1),x=Math.round(f.x),y=Math.round(f.y-70*z-4+Math.sin(FR*.12+f.id)*1.5),c=f.col;
+  X.globalAlpha=.22;wdisc(f.x,f.y-30*z,20*z,c);X.globalAlpha=1;wdisc(x,y,7,'#0c0820');wring(x,y,7,c);
+  if(id==='ninjaF'||id==='ninjaBF'){wpoly('#ff6a1a',[x-4,y+4,x-3,y-1,x-1,y+1,x,y-5,x+3,y,x+4,y+4]);wpoly('#ffe060',[x-2,y+4,x,y-1,x+2,y+4]);}
+  else if(id==='ninjaI'){wpoly('#8fe4ff',[x,y-5,x+4,y,x,y+5,x-4,y]);wl('#ffffff',x,y-3,x,y+3);wl('#ffffff',x-2,y,x+2,y);}
+  else if(id==='ninjaV'){wpoly('#a0ff40',[x,y-5,x+4,y+1,x+2,y+4,x-2,y+4,x-4,y+1]);wp('#ffffff',x-1,y+1);}
+  else if(id==='ninjaT'){wpoly('#ffe060',[x+1,y-5,x-3,y+1,x,y+1,x-1,y+5,x+3,y-1,x,y-1]);}
+  else if(id==='ninjaW'){wpoly('#e8b040',[x-5,y-2,x,y+1,x+5,y-2,x+3,y+3,x,y+4,x-3,y+3]);}
+  else if(id==='ninjaM'){wdisc(x-2,y+1,3,'#e8e8f0');wdisc(x+2,y+1,3,'#c8c8d4');wdisc(x,y-2,3,'#ffffff');}
+  else if(id==='ninjaG'||id==='ninjaBG'){wpoly('#7aa8ff',[x-4,y-4,x+4,y-4,x+4,y+1,x,y+5,x-4,y+1]);wl('#e8f0ff',x,y-3,x,y+3);}
+  else if(id==='ninja3'){wring(x,y,4,'#b06aff',2);wp('#ffffff',x,y);}
+  else if(id==='ninjaB'){wpoly('#f6c94e',[x-5,y+3,x-5,y-3,x-2,y,x,y-4,x+2,y,x+5,y-3,x+5,y+3]);}
+  if(id==='ninjaB'||id==='ninjaBG'||id==='ninjaBF'){wpoly('#f6c94e',[x-5,y-9,x-5,y-14,x-2,y-11,x,y-15,x+2,y-11,x+5,y-14,x+5,y-9]);const w=34,hp=clamp(1-f.dmg/260,0,1);wr('#0c0820',x-w/2-1,y+10,w+2,5);wr('#ff4a4a',x-w/2,y+11,w*hp,3);}}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
