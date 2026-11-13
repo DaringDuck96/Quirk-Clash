@@ -110,7 +110,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
 
 /* stage select: big live 3D preview (left) + stage cards (right) */
 #stagesel{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:10px;padding-block:10px}
-.ssmain{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px;min-height:0}
+.ssmain{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:12px;min-height:0}
 .sspv{position:relative;border-radius:18px;overflow:hidden;border:2px solid var(--line);background:#000;min-height:0;box-shadow:0 10px 30px rgba(0,0,0,.45)}
 .sspv canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .ssinfo{position:absolute;left:0;right:0;bottom:0;padding:40px 20px 16px;background:linear-gradient(transparent,rgba(6,5,26,.88) 45%);display:flex;flex-direction:column;gap:4px}
@@ -120,7 +120,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
 .ssinfo p{margin:2px 0 0;max-width:60ch;color:#dcdcf4;font-size:13.5px;line-height:1.35}
 .sstags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .sstags span{font-family:var(--display);font-size:16px;line-height:1;padding:4px 9px 2px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
-.ssgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:8px;min-height:0}
+.ssgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:8px;min-height:0}
 .scard{position:relative;border:2px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;padding:0;background:#120e36;min-height:0;text-align:left;transition:transform .12s,border-color .12s}
 .scard canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .scard b{position:absolute;left:0;right:0;bottom:0;padding:14px 10px 4px;font-family:var(--display);font-weight:600;font-size:clamp(15px,1.4vw,21px);line-height:1;letter-spacing:.4px;background:linear-gradient(transparent,rgba(6,5,26,.9) 55%)}
@@ -266,7 +266,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
   <section id="stagesel" hidden>
     <div class="top">
       <h1 class="logo"><small>PU</small>QUIRK CLASH <span>BROS ULTIMATE</span></h1>
-      <span class="sub">Choose a battleground. Every stage is a real place in Japan.</span>
+      <span class="sub">Choose a battleground: landmarks across Japan, or the PU campus training grounds.</span>
       <button class="tbtn" id="ssfs">FULLSCREEN</button>
     </div>
     <div class="ssmain">
@@ -3153,7 +3153,7 @@ const STAGES=[
   main:{x:60,w:520},plats:[{x:215,y:158,w:210}],mech:'ice',wx:'snow',ui:['#3f857a','#eef2f8'],
   sky:{top:'#3a4268',mid:'#7a7e9e',hor:'#c4bccb',sun:[0,0,0],sunC:'#000000',cld:'#9a9ab4',cldA:.85,star:0,neb:0,hz:.5},
   lt:{dir:[.4,.7,.55],key:'#e6ecff',amb:'#6a6c9a',rim:'#bfd8ff',fogC:'#aeb0c6',fog:[45,280,.8]},build:buildOsaka,bg:bgOsaka,anim:animOsaka},
- {id:'orbit',n:'UA Orbital Deck',jp:'宇宙',loc:'Low Earth orbit',d:'The original training deck, high above Japan. Gravity is weak up here: everyone jumps higher and falls slower.',tags:['Low gravity','3 platforms','Medium'],
+ {id:'orbit',n:'PU Orbital Deck',jp:'宇宙',loc:'Low Earth orbit',d:'The original training deck, high above Japan. Gravity is weak up here: everyone jumps higher and falls slower.',tags:['Low gravity','3 platforms','Medium'],
   main:{x:60,w:520},plats:[{x:110,y:165,w:120},{x:410,y:165,w:120},{x:255,y:85,w:130}],mech:'lowg',grav:.6,wx:'none',ui:['#5ff4ff','#b26ad2'],sky:null,lt:null,
   build:()=>buildStage3D(),bg:()=>buildBg3D(),anim:()=>animOrbit()}];
 const _c3=v=>typeof v==='string'?hf(v):v;
@@ -3166,7 +3166,7 @@ function stageGeom(i){const D=STAGES[i],m=STAGE.main;m.x=D.main.x;m.w=D.main.w;S
 function setStage(i){STI=i;STGD=STAGES[i];stageGeom(i);SKY=mkSky(STGD);LIGHT=mkLt(STGD);OUTCOL=STGD.sky?[.06,.04,.1,1]:[.047,.031,.11,1];WX.length=0;hazReset();
   if(GL_OK){let c=STC[i];if(!c){ST3={};const s=STGD.build(),b=STGD.bg();c=STC[i]={s,b,S:ST3};}STAGE3=c.s;BG3=c.b;ST3=c.S;}}
 /* moving platforms (simulation) */
-function stageTick(){for(const p of STAGE.plats){if(!p.mv)continue;const ph=Math.sin(FR*TAU/p.mv.per),nx=p.bx+(p.mv.ax||0)*ph,ny=p.by+(p.mv.ay||0)*ph;p.dx=nx-p.x;p.dy=ny-p.y;p.x=nx;p.y=ny;
+function stageTick(){for(const p of STAGE.plats){if(!p.mv)continue;const ph=Math.sin(FR*TAU/p.mv.per+(p.mv.ph||0)),nx=p.bx+(p.mv.ax||0)*ph,ny=p.by+(p.mv.ay||0)*ph;p.dx=nx-p.x;p.dy=ny-p.y;p.x=nx;p.y=ny;
     for(const f of F){if(f.ground===p){f.x+=p.dx;f.y=p.y;}}}
   for(const f of F){if(!f.dead&&!f.gone&&f.st!=='hit'&&f.st!=='respawn'&&f.y<BLAST.t+36){f.y=BLAST.t+36;if(f.vy<0)f.vy=0;}}
   stageMech();duoTick();}
@@ -3207,7 +3207,7 @@ function renderStageView(i,dest,cx,cy,z,t){if(!GL_OK)return;const keep=STI;setSt
 
 /* ===================== STAGE MECHANICS: one signature element per stage ===================== */
 const HZ={t:0,obj:null,dir:1,lv:0,warn:0,on:0};
-function hazReset(){HZ.t=0;HZ.obj=null;HZ.dir=1;HZ.lv=0;HZ.warn=0;HZ.on=0;if(typeof F!=='undefined')for(const f of F)f.sl=0;}
+function hazReset(){HZ.t=0;HZ.obj=null;HZ.dir=1;HZ.lv=0;HZ.warn=0;HZ.on=0;HZ.rocks=null;HZ.kind=null;HZ.rx=null;if(typeof F!=='undefined')for(const f of F)f.sl=0;}
 function hazTxt(s,col){FXL.push({k:'txt2',s,x:WW/2,y:70,t:0,life:80,col:col||'#ffffff'});}
 function hazFree(f){return !f.dead&&!f.gone&&f.st!=='respawn'&&f.st!=='ledge'&&f.st!=='climb'&&f.st!=='held'&&f.st!=='fs'&&!f.holder;}
 function stageMech(){const k=STGD.mech;if(!k||typeof GS==='undefined'||GS!=='play')return;HZ.t++;const m=STAGE.main,T=HZ.t;
@@ -3242,6 +3242,116 @@ function drawStageMech(){const k=STGD.mech;if(!k)return;const m=STAGE.main,T=HZ.
   else if(k==='wind'){if(HZ.warn&&(T>>3)%2){for(let i=0;i<4;i++){const x=WW/2+(i-1.5)*26,y=96;wr('#ffe0c0',x,y,10,3);wr('#ffe0c0',x+(HZ.dir>0?8:-2),y-3,4,9);}}
     if(HZ.lv>.05){X.globalAlpha=.5*HZ.lv;const span=WW+320;for(let i=0;i<22;i++){const px=-160+(((i*97+T*HZ.dir*11)%span)+span)%span,py=-40+((i*61)%330);wr('#ffffff',px,py,22+(i%3)*10,1);}X.globalAlpha=1;}}
   else if(k==='ice'){X.globalAlpha=.55;for(let i=0;i<16;i++){const px=m.x+10+((i*71)%(m.w-20));if((T+i*9)%60<30)wr('#ffffff',px,m.y+1,3+(i%3)*2,1);}X.globalAlpha=1;}}
+
+/* ===================== PU CAMPUS TRAINING GROUNDS (4 extra stages) ===================== */
+function crowdRows(r,x0,x1,y,z,rows,step){const C=['#e84a5a','#4a8ae8','#f6c94e','#f0f0f4','#5ad88a','#b06ae8','#ff9a3c','#3a3a4a'];for(let k=0;k<rows;k++){const yy=y+k*step,zz=z-k*step*1.3;bx(r,k%2?'#8a8c98':'#9a9ca8',(x0+x1)/2,yy-.5,zz,x1-x0,step,step*1.4,{mode:8,ol:0});
+    for(let x=x0+.6;x<x1;x+=1.25+srn()*.5)bx(r,C[fl(srn()*C.length)],x,yy+.25,zz+.3,.5,.6,.3,{ol:0});}}
+/* ---- 8. TRAINING CITY: crumbling concrete ledges ---- */
+function buildMockCity(){SR=71;const r=nd(null),m=STAGE.main,d=deckSlab(r,m,'#7e7e7c',8);
+  bx(r,'#3a3a3e',d.cx,-.06,0,d.w+.1,.14,6.85,{ol:0});for(let i=0;i<9;i++)bx(r,'#f0e8a0',d.L+1.5+i*(d.w-3)/8,.02,.6,1.1,.02,.16,{ol:0});
+  bx(r,'#6e6e6c',d.cx,-6.5,-4.4,d.w,11,8,{mode:8});
+  for(const sx of[-1,1]){const x=sx>0?d.R-1:d.L+1;cy(r,'#4a4a50',x,1.9,-2.6,.09,3.8);bx(r,'#4a4a50',x-sx*.5,3.75,-2.6,1.1,.1,.12);sph3(r,'#fff4c0',x-sx*1,3.6,-2.6,.2,.14,.2,{mode:3,ol:0});
+    bx(r,'#e84a2a',x-sx*2.4,.45,-2.8,.9,.9,.5);bx(r,'#f0f0f0',x-sx*2.4,.5,-2.52,.7,.18,.02,{ol:0});}
+  platGroups(r,(g,pw)=>{bx(g,'#a2a29e',0,-.16,0,pw,.32,2.5,{mode:8});bx(g,'#6a6a68',0,-.36,0,pw-.3,.1,2.2,{ol:0});for(let k=0;k<4;k++)cy(g,'#8a4a2a',-pw/2+.4+k*(pw-.8)/3,-.7,-.6,.04,.7,{ol:0});
+    bx(g,'#f6c94e',-pw/2+.25,-.02,1.2,.4,.04,.16,{ol:0});bx(g,'#f6c94e',pw/2-.25,-.02,1.2,.4,.04,.16,{ol:0});});
+  ledgeMarks(r,'#f6c94e');return r;}
+function bgMockCity(){SR=72;const r=nd(null);bx(r,'#5a5c60',0,-12,-200,900,.4,600,{mode:8,ol:0});
+  const C=['#8a8c94','#9a9690','#7c8088','#a8a4a0','#6e7078'];city(r,34,-90,90,-14,-70,-12,10,34,C,{});city(r,60,-320,320,-80,-330,-12,10,52,C,{});
+  for(let i=0;i<7;i++){const x=-60+i*20+srn()*6,z=-10-srn()*8;bx(r,'#f6c94e',x,-11.2,z,2.6,.7,.3,{ol:0});bx(r,'#2a2a2e',x,-11.2,z+.16,2.6,.2,.02,{ol:0});}
+  const W=grp(r,0,-12,-74);bx(W,'#b8bcc8',0,9,0,220,18,2,{mode:8,ol:0});bx(W,'#e84a2a',0,18.4,0,220,1,2.2,{ol:0});
+  for(let k=0;k<5;k++)sph3(r,'#8fa0b8',-240+k*120,-12,-520,110,24+srn()*14,50,{mode:10,ol:0});return r;}
+function animMockCity(t){}
+/* ---- 9. FESTIVAL ARENA: flat ring, no platforms ---- */
+function buildArena(){SR=81;const r=nd(null),m=STAGE.main,d=deckSlab(r,m,'#d8d8d4',8,{th:1.6});
+  bx(r,'#f0f0ec',d.cx,-.05,0,d.w+.1,.12,6.85,{ol:0});bx(r,'#e84a2a',d.cx,-.02,3.1,d.w,.06,.5,{ol:0});bx(r,'#e84a2a',d.cx,-.02,-3.1,d.w,.06,.5,{ol:0});
+  for(const sx of[-1,1])bx(r,'#e84a2a',sx>0?d.R-.3:d.L+.3,-.02,0,.5,.06,6.4,{ol:0});
+  const ring=_ad(r,G3.torT,'#3a6ad8',d.cx,-.01,0,3.2,3.2,3.2,{ol:0});rotE(ring,PI/2,0,0);ring.s[1]=.12;
+  bx(r,'#8a8a88',d.cx,-7.2,-4.4,d.w+6,11.6,8,{mode:8});
+  ST3.fl=[];for(const sx of[-1,1]){const x=sx>0?d.R-.7:d.L+.7;bx(r,'#7a7a78',x,.5,-2.9,.9,1,.9,{mode:8});bx(r,'#4a4a4e',x,1.1,-2.9,1.1,.2,1.1);ST3.fl.push(_ad(r,G3.cone,'#ff8a2a',x,2,-2.9,.5,1.6,.5,{mode:3,ol:0}),_ad(r,G3.cone,'#ffe060',x,1.7,-2.9,.28,1,.28,{mode:3,ol:0}));}
+  ledgeMarks(r,'#f6c94e');return r;}
+function bgArena(){SR=82;const r=nd(null);bx(r,'#6a8a5a',0,-12,-200,900,.4,600,{mode:10,ol:0});
+  bx(r,'#7a9a62',0,-11.6,-12,90,.4,30,{mode:10,ol:0});
+  crowdRows(r,-58,58,-9.5,-24,11,1.6);
+  for(const sx of[-1,1]){const g=grp(r,sx*62,-11,-30);rotE(g,0,sx*-.5,0);crowdRows(g,-22,22,1.5,0,10,1.6);}
+  bx(r,'#b8bcc8',0,10.5,-46,150,3,3,{mode:8,ol:0});
+  for(let i=0;i<7;i++){const x=-54+i*18;cy(r,'#9a9ca8',x,6,-46,.5,34,{ol:0});bx(r,i%2?'#e84a2a':'#3a6ad8',x,12,-45.4,5,9,.1,{ol:0});bx(r,'#f6c94e',x,14.5,-45.3,3,1.2,.05,{ol:0});}
+  ST3.sp=[];for(const sx of[-1,1])for(let k=0;k<2;k++){cy(r,'#6a6c78',sx*(40+k*24),14,-40,.4,52,{ol:0});const L=bx(r,'#fffbe0',sx*(40+k*24),27.5,-39.6,6,3,.4,{mode:3,ol:0});ST3.sp.push(L);}
+  for(let k=0;k<5;k++)sph3(r,'#8fb0d8',-240+k*120,-12,-520,110,22+srn()*12,50,{mode:10,ol:0});return r;}
+function animArena(t){if(ST3.fl)ST3.fl.forEach((n,i)=>{const k=1+.18*Math.sin(t*.4+i*1.7)+.08*Math.sin(t*.9+i);n.s[1]=(i%2?1:1.6)*k;});}
+/* ---- 10. RESCUE DOME: fire and falling rubble drills ---- */
+function buildDome(){SR=91;const r=nd(null),m=STAGE.main,d=deckSlab(r,m,'#6a6660',8);
+  bx(r,'#57534e',d.cx,-.06,0,d.w+.1,.14,6.85,{ol:0});for(let i=0;i<14;i++)bx(r,srn()<.5?'#7a756e':'#4a4642',d.L+1+srn()*(d.w-2),.03,-2.6+srn()*5,.5+srn()*.9,.05,.3+srn()*.6,{ol:0});
+  bx(r,'#5a5650',d.cx,-6.6,-4.4,d.w,11.4,8,{mode:8});
+  for(const sx of[-1,1]){const x=sx>0?d.R-1.4:d.L+1.4;bx(r,'#f6c94e',x,.5,-2.8,1.6,1,.3);for(let k=0;k<3;k++)bx(r,'#1e1e22',x-.5+k*.5,.5,-2.63,.22,1,.02,{ol:0});}
+  platGroups(r,(g,pw,i)=>{rotE(g,0,0,i?-.05:.05);bx(g,'#8e8a84',0,-.18,0,pw,.36,2.5,{mode:8});bx(g,'#5a5650',0,-.42,0,pw-.4,.14,2.1,{ol:0});bx(g,'#7a756e',(i?-1:1)*pw*.3,-1.6,-.5,.5,2.4,.5,{mode:8});for(let k=0;k<3;k++)cy(g,'#8a4a2a',-pw/2+.3+k*.3,-.75,.6,.04,.9,{ol:0});});
+  ledgeMarks(r,'#ff8a3a');return r;}
+function bgDome(){SR=92;const r=nd(null);bx(r,'#3e3a38',0,-12,-120,500,.4,360,{mode:8,ol:0});
+  const C=['#5a5650','#6a655e','#4c4844','#746e66'];
+  for(let i=0;i<22;i++){const x=-80+srn()*160,z=-14-srn()*60,h=5+srn()*16,w=4+srn()*5,g=grp(r,x,-12,z);rotE(g,0,srn()*.6,(srn()-.5)*.35);bx(g,C[i%4],0,h/2,0,w,h,w,{mode:4,ol:0});if(srn()<.5)bx(g,C[(i+1)%4],w*.2,h+.6,0,w*.7,1.2,w*.8,{mode:8,ol:0});}
+  ST3.fire=[];for(let i=0;i<9;i++){const x=-70+srn()*50,z=-16-srn()*40;ST3.fire.push(_ad(r,G3.cone,'#ff7a20',x,-9.5,z,1.6,5,1.6,{mode:3,ol:0}),_ad(r,G3.cone,'#ffd040',x,-10.2,z,.9,3,.9,{mode:3,ol:0}));}
+  bx(r,'#2a5a8a',52,-11.7,-34,60,.3,50,{mode:5,ol:0});
+  /* dome lattice */
+  for(let k=0;k<9;k++){const a=-1.3+k*.325,x=Math.sin(a)*150,y=Math.cos(a)*86-22,g=grp(r,x,y,-150);rotE(g,0,0,-a);bx(g,'#8a94a8',0,0,0,2.4,120,2.4,{ol:0});}
+  for(let k=0;k<5;k++)bx(r,'#8a94a8',0,-6+k*17,-152,320-k*k*10,2,2,{ol:0});
+  ST3.lit=[];for(let k=0;k<5;k++){const L=sph3(r,'#fff0c0',-80+k*40,58-Math.abs(k-2)*7,-140,3,2,3,{mode:3,ol:0});ST3.lit.push(L);}return r;}
+function animDome(t){if(ST3.fire)ST3.fire.forEach((n,i)=>{n.s[1]=(i%2?3:5)*(1+.2*Math.sin(t*.35+i*1.3)+.1*Math.sin(t*.8+i));});}
+/* ---- 11. QUIRK GYM: concrete pillars rise and sink ---- */
+function buildGym(){SR=101;const r=nd(null),m=STAGE.main,d=deckSlab(r,m,'#b0aca4',8);
+  bx(r,'#c8c4bc',d.cx,-.05,0,d.w+.1,.12,6.85,{ol:0});for(let i=0;i<=10;i++)bx(r,'#9a968e',d.L+i*d.w/10,.02,0,.06,.02,6.6,{ol:0});
+  bx(r,'#e84a2a',d.cx,.02,2.9,d.w-1,.02,.14,{ol:0});bx(r,'#9a968e',d.cx,-6.6,-4.4,d.w,11.4,8,{mode:8});
+  platGroups(r,(g,pw)=>{bx(g,'#bab6ae',0,-.2,0,pw,.4,2.6,{mode:8});bx(g,'#f6c94e',0,-.03,1.26,pw,.08,.1,{ol:0});bx(g,'#a09c94',0,-8.4,-.1,pw-.5,16,2.2,{mode:8});for(let k=1;k<6;k++)bx(g,'#8a867e',0,-.4-k*1.5,1.02,pw-.5,.06,.02,{ol:0});});
+  ledgeMarks(r,'#f6c94e');return r;}
+function bgGym(){SR=102;const r=nd(null);bx(r,'#a8a49c',0,-12,-60,260,.4,160,{mode:8,ol:0});
+  bx(r,'#c2beb6',0,14,-58,260,56,2,{mode:8,ol:0});
+  for(let i=0;i<9;i++){const x=-96+i*24;bx(r,'#9a968e',x,14,-56.5,2.4,56,1.4,{mode:8,ol:0});if(i<8){bx(r,'#bfe4ff',x+12,24,-56.8,16,9,.2,{mode:3,ol:0});bx(r,'#8a867e',x+12,24,-56.6,.4,9,.3,{ol:0});bx(r,'#8a867e',x+12,24,-56.6,16,.4,.3,{ol:0});}}
+  bx(r,'#e84a2a',0,3,-56.6,260,1.2,.2,{ol:0});bx(r,'#3a6ad8',0,1.4,-56.6,260,.6,.2,{ol:0});
+  for(let i=0;i<8;i++){const x=-70+i*20+srn()*4,z=-16-srn()*30,h=4+srn()*12;bx(r,'#b0aca4',x,-12+h/2,z,4+srn()*2,h,4,{mode:8,ol:0});bx(r,'#f6c94e',x,-12+h-.1,z+2.02,4,.3,.05,{ol:0});}
+  bx(r,'#8a867e',0,43,-30,260,2,60,{mode:8,ol:0});
+  ST3.lit=[];for(let i=0;i<6;i++){const L=bx(r,'#fffbe0',-75+i*30,41.6,-30,10,.4,3,{mode:3,ol:0});ST3.lit.push(L);}
+  for(const sx of[-1,1]){bx(r,'#b8b4ac',sx*120,14,-20,2,56,90,{mode:8,ol:0});}return r;}
+function animGym(t){}
+STAGES.push(
+ {id:'mockcity',n:'PU Training City',jp:'市街地演習場',loc:'PU campus, Ground A',d:'A mock city block built for hero drills. The concrete ledges crack and collapse if anyone stands on them too long, then get rebuilt.',tags:['Crumbling ledges','3 platforms','Medium'],
+  main:{x:70,w:500},plats:[{x:92,y:178,w:112,crumble:1},{x:436,y:178,w:112,crumble:1},{x:258,y:106,w:124,crumble:1}],mech:'crumble',wx:'none',ui:['#f6c94e','#8a8c94'],
+  sky:{top:'#2a66c8',mid:'#86bce8',hor:'#e8eef4',sun:[.78,.8,.04],sunC:'#fff6d8',cld:'#ffffff',cldA:.55,star:0,neb:0,hz:.5},
+  lt:{dir:[.5,.75,.45],key:'#fff6ea',amb:'#7a86b0',rim:'#d8e8ff',fogC:'#d4dfee',fog:[70,520,.8]},build:buildMockCity,bg:bgMockCity,anim:animMockCity},
+ {id:'arena',n:'PU Festival Arena',jp:'体育祭',loc:'PU campus, main stadium',d:'The school tournament ring in front of a full crowd. One flat stage, no platforms, nowhere to hide.',tags:['Flat stage','No platforms','Wide'],
+  main:{x:50,w:540},plats:[],wx:'sakura',ui:['#e84a2a','#3a6ad8'],
+  sky:{top:'#1f5fc8',mid:'#7ab6ec',hor:'#eef2f6',sun:[.3,.86,.04],sunC:'#fff6d8',cld:'#ffffff',cldA:.4,star:0,neb:0,hz:.5},
+  lt:{dir:[.4,.8,.45],key:'#fffaf0',amb:'#8088b4',rim:'#ffe8c8',fogC:'#dde6f2',fog:[80,600,.75]},build:buildArena,bg:bgArena,anim:animArena},
+ {id:'dome',n:'Rescue Training Dome',jp:'救助訓練場',loc:'PU campus, disaster dome',d:'A ruined city under a dome, built for rescue drills. The instructors trigger disasters: watch the floor for fire, and the sky for falling rubble.',tags:['Fire drills','Falling rubble','Medium'],
+  main:{x:70,w:500},plats:[{x:104,y:180,w:124},{x:412,y:150,w:124}],mech:'disaster',wx:'none',ui:['#ff8a3a','#8a94a8'],
+  sky:{top:'#1a1c26',mid:'#3a3c4c',hor:'#6a5a52',sun:[0,0,0],sunC:'#000000',cld:'#4a4850',cldA:.5,star:0,neb:0,hz:.5},
+  lt:{dir:[.3,.8,.5],key:'#ffe8d0',amb:'#5a5468',rim:'#ff9a5a',fogC:'#4a4448',fog:[50,300,.7]},build:buildDome,bg:bgDome,anim:animDome},
+ {id:'gym',n:'Quirk Gym',jp:'体育館',loc:'PU campus, Gym C',d:'The indoor training hall. Three concrete pillars rise out of the floor and sink back in, each on its own timing.',tags:['Rising pillars','Indoor','Small'],
+  main:{x:80,w:480},plats:[{x:108,y:186,w:92,mv:{ay:46,per:420,ph:0}},{x:274,y:150,w:92,mv:{ay:58,per:420,ph:2.1}},{x:440,y:186,w:92,mv:{ay:46,per:420,ph:4.2}}],wx:'none',ui:['#f6c94e','#e84a2a'],
+  sky:{top:'#8a867e',mid:'#a8a49c',hor:'#c2beb6',sun:[0,0,0],sunC:'#000000',cld:'#b0aca4',cldA:0,star:0,neb:0,hz:.5},
+  lt:{dir:[.3,.85,.45],key:'#fffaf0',amb:'#8a8890',rim:'#ffffff',fogC:'#c2beb6',fog:[90,420,.5]},build:buildGym,bg:bgGym,anim:animGym});
+/* ---- mechanics for the campus stages ---- */
+const stageMech0=stageMech,drawStageMech0=drawStageMech;
+function campusMech(){const k=STGD.mech,m=STAGE.main,T=HZ.t;if(GS!=='play')return;
+  if(k==='crumble'){for(const p of STAGE.plats){if(!p.crumble)continue;if(p.gone>0){if(--p.gone===0){p.y=p.by;p.ct=0;burst(p.x+p.w/2,p.y,16,['#c8c4bc','#ffffff'],2,18);sfx('pop');}continue;}
+      const on=F.some(f=>f.ground===p&&!f.dead);p.ct=on?(p.ct||0)+1:Math.max(0,(p.ct||0)-2);
+      if(p.ct>55&&p.ct%6===0)part(p.x+rnd()*p.w,p.y+2,(rnd()-.5),.6,18,'#b0aca4',2,.1);
+      if(p.ct>=110){for(const f of F)if(f.ground===p){f.ground=null;if(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='crouch'||f.st==='shield')f.st='air';}
+        burst(p.x+p.w/2,p.y+4,26,['#a2a29e','#6a6a68','#ffffff'],3,26);sfx('boom');if(!RM)shakeA=Math.max(shakeA,4);p.y=3000;p.gone=330;p.ct=0;}}}
+  else if(k==='disaster'){const c=T%900;
+    if(c===300){HZ.kind=rnd()<.5?'fire':'rubble';HZ.warn=1;if(HZ.kind==='fire'){HZ.dir=rnd()<.5?-1:1;hazTxt('FIRE DRILL: '+(HZ.dir<0?'LEFT':'RIGHT')+' SIDE','#ff8a3a');}else{HZ.rx=[0,1,2].map(i=>m.x+m.w*(.14+.36*i)+rnd()*40-20);hazTxt('RUBBLE INCOMING','#ffd0a0');}sfx('zap');}
+    if(c===400){HZ.warn=0;if(HZ.kind==='fire')HZ.on=1;else{HZ.rocks=HZ.rx.map((x,i)=>({x,y:-220-i*70,vy:0,r:15,hit:{}}));}}
+    if(c===660)HZ.on=0;
+    if(HZ.on&&HZ.kind==='fire'&&T%26===0){const x0=HZ.dir<0?m.x:m.x+m.w/2,x1=x0+m.w/2;for(const f of F){if(!hazFree(f)||f.ground!==m||f.x<x0||f.x>x1||intangible(f))continue;applyHit(f,{dmg:3,bkb:4.6,kbg:.02,ang:84,eff:'burn',fx:['#ff7a20','#ffe060']},f.x<m.x+m.w/2?1:-1,null,{proj:1});}}
+    if(HZ.rocks){for(const o of HZ.rocks){if(o.dead)continue;o.vy=Math.min(o.vy+.4,9);o.y+=o.vy;for(const f of F){if(!hazFree(f)||o.hit[f.id]||intangible(f))continue;if(Math.abs(f.x-o.x)<o.r+8&&f.y-26>o.y-o.r-22&&f.y-26<o.y+o.r+22){o.hit[f.id]=1;applyHit(f,{dmg:13,bkb:6.5,kbg:.08,ang:70,fx:['#c8c4bc','#ffffff']},f.x>=o.x?1:-1,null,{proj:1});}}
+        const gy=surfY(o.x,o.y-20);if((gy!==null&&o.y+o.r>=gy)||o.y>BLAST.b){o.dead=1;if(gy!==null){burst(o.x,gy,20,['#8e8a84','#5a5650','#ffffff'],3,22);sfx('boom');if(!RM)shakeA=Math.max(shakeA,3);}}}
+      if(HZ.rocks.every(o=>o.dead))HZ.rocks=null;}}}
+function drawCampusMech(){const k=STGD.mech,m=STAGE.main,T=HZ.t;
+  if(k==='crumble'){for(const p of STAGE.plats){if(!p.crumble||p.gone>0||!(p.ct>40))continue;const a=Math.min(1,(p.ct-40)/70);X.globalAlpha=.5+.4*a;for(let i=0;i<5+a*8;i++){const cx=p.x+((i*37)%p.w);wr('#1e1e22',cx,p.y+1,1,3+(i%3)*2);wr('#1e1e22',cx-2,p.y+3+(i%3),4,1);}
+      if(p.ct>75&&(T>>2)%2)wr('#ff3a3a',p.x,p.y-2,p.w,2);X.globalAlpha=1;}}
+  else if(k==='disaster'){if(HZ.kind==='fire'&&(HZ.warn||HZ.on)){const x0=HZ.dir<0?m.x:m.x+m.w/2,w=m.w/2;if(HZ.warn){if((T>>3)%2){X.globalAlpha=.5;wr('#ff8a3a',x0,m.y-3,w,4);X.globalAlpha=1;for(let i=0;i<6;i++){const x=x0+w*(i+.5)/6;wr('#ff3a3a',x-1,m.y-22,3,10);wr('#ff3a3a',x-1,m.y-9,3,3);}}}
+      else for(let i=0;i<34;i++){const x=x0+((i*29+T*3)%w),h=6+((i*13+T*2)%14);wr(i%3?'#ff7a20':'#ffd040',x,m.y-h,3,h);if(i%4===0)wr('#fff0a0',x,m.y-h*.5,2,h*.4);}}
+    if(HZ.kind==='rubble'&&HZ.warn&&HZ.rx&&(T>>3)%2)for(const x of HZ.rx){const gy=surfY(x,-100);if(gy===null)continue;wr('#ff3a3a',x-14,gy-2,28,2);wr('#ff3a3a',x-1,gy-24,3,12);wr('#ff3a3a',x-1,gy-9,3,3);}
+    if(HZ.rocks)for(const o of HZ.rocks){if(o.dead)continue;const x=Math.round(o.x),y=Math.round(o.y);wpoly('#2e2c2a',[x-16,y-4,x-8,y-16,x+9,y-15,x+17,y-2,x+11,y+14,x-10,y+15]);wpoly('#8e8a84',[x-13,y-4,x-7,y-13,x+8,y-12,x+14,y-2,x+9,y+11,x-8,y+12]);wpoly('#b0aca4',[x-9,y-6,x-5,y-11,x+5,y-10,x+2,y-3]);X.globalAlpha=.3;wr('#ffffff',x-2,y-40,3,22);X.globalAlpha=1;}}}
+stageMech=function(){stageMech0();if(STGD.mech==='crumble'||STGD.mech==='disaster'){if(typeof GS!=='undefined'&&GS==='play')campusMech();}};
+drawStageMech=function(){drawStageMech0();if(STGD.mech==='crumble'||STGD.mech==='disaster')drawCampusMech();};
 
 /* ===================== COMBAT FEEL & FX v2: parry, DI, finishing-blow zoom, impact FX ===================== */
 let SLOW=0;const ZF={t:0,len:1,f:null,col:'#fff',fin:false};
@@ -3459,7 +3569,7 @@ function sfx(k){if(!AC||muted)return;const now=performance.now();if(SFXT[k]&&now
 const K={};let tapJump=false;
 const P1K={l:'KeyA',r:'KeyD',u:'KeyW',d:'KeyS',J:['Space'],A:['KeyJ'],B:['KeyK'],S:['KeyL','ShiftLeft'],G:['KeyU','KeyI']};
 const P2K={l:'ArrowLeft',r:'ArrowRight',u:'ArrowUp',d:'ArrowDown',J:['Slash','Numpad0'],A:['Comma','Numpad1'],B:['Period','Numpad2'],S:['ShiftRight','Numpad3'],G:['Quote','Numpad6']};
-addEventListener('keydown',e=>{audioInit();if(!$('#stagesel').hidden&&!e.repeat){const n=STAGES.length+1,c=SEL.stage<0?n-1:SEL.stage,mv={ArrowLeft:-1,ArrowRight:1,ArrowUp:-2,ArrowDown:2}[e.code];
+addEventListener('keydown',e=>{audioInit();if(!$('#stagesel').hidden&&!e.repeat){const n=STAGES.length+1,c=SEL.stage<0?n-1:SEL.stage,mv={ArrowLeft:-1,ArrowRight:1,ArrowUp:-3,ArrowDown:3}[e.code];
     if(mv!==undefined){e.preventDefault();let k=(c+mv+n)%n;SEL.stage=k===n-1?-1:k;SEL.hov=SEL.stage;sfx('pop');refreshStage();}else if(e.code==='Enter'&&document.activeElement.tagName!=='BUTTON'){startMatch();}else if(e.code==='Escape')toSelect();}if(!$('#game').hidden){if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','Slash','Quote'].includes(e.code))e.preventDefault();if(e.code==='Escape'&&!e.repeat)togglePause();}K[e.code]=true;});
 addEventListener('keyup',e=>{K[e.code]=false;});addEventListener('blur',()=>{for(const k in K)K[k]=false;});
 function keyIn(m){const any=a=>a.some(c=>K[c]);const x=(K[m.r]?1:0)-(K[m.l]?1:0),y=(K[m.d]?1:0)-(K[m.u]?1:0);return{x,y,J:any(m.J)||(tapJump&&K[m.u]),A:any(m.A),B:any(m.B),S:any(m.S),G:any(m.G)};}
@@ -3853,6 +3963,48 @@ EK.dumpling={init(e){e.explode=1;},upd(e){const y=surfY(e.x,e.y-6);if(y!==null&&
 function foodFX(f){if(f.C.id!=='torabi'||f.st!=='grab'||f.stT>16)return;const ext=Math.min(1,f.stT/7)*(f.stT>10?Math.max(0,1-(f.stT-10)/6):1),L=(f.C.grabR||26)*ext,x0=f.x+f.face*8,y0=f.y-36;
   for(let k=0;k<3;k++)for(let s=0;s<=L;s+=2.5){const w=Math.sin(s*.45+k*2.1-FR*.4)*2.4;wdisc(x0+f.face*s,y0+w+(k-1)*2,1.3,k===1?'#fff0b0':'#e8c458');}
   wring(x0+f.face*L,y0,5,'#e8c458',2);}
+
+/* ===================== MUSIC: original chiptune loops, synthesized live ===================== */
+const MUS={on:true,cur:'',step:0,next:0,g:null,nb:null,vol:.9};
+const NM={pentM:[0,2,4,7,9],pentm:[0,3,5,7,10],insen:[0,1,5,7,10],dor:[0,2,3,5,7,9,10],aeo:[0,2,3,5,7,8,10]};
+/* lead bars: 16 sixteenth-notes each, numbers are steps of the track's scale (5 or 7 per octave), '.' = rest, '-' = hold */
+const BAR=s=>s.split(' ').map(v=>v==='.'?null:v==='-'?-99:+v);
+const TRK={
+ menu:{bpm:112,root:60,sc:NM.pentM,prog:[0,9,5,7,0,9,5,7],min:[0,1,0,0,0,1,0,0],lw:'square',bw:'triangle',
+  bars:{A:BAR('5 - 7 - 8 - 7 5 4 - - - 2 - 4 -'),B:BAR('5 - 5 7 9 - 8 - 7 - 5 - 4 - - -'),C:BAR('7 - 8 - 9 - 10 - 9 - 8 - 7 - 5 -'),D:BAR('4 - 5 - 7 - - - 5 - 4 - 5 - - -')},seq:'ABADABCD',
+  bass:[0,null,0,null,12,null,0,null,0,null,7,null,12,null,7,null],k:'x...x...x...x...',s:'....x.......x...',h:'x.x.x.x.x.x.x.xx',arp:.5},
+ hero:{bpm:156,root:57,sc:NM.aeo,prog:[0,0,8,8,5,5,7,7],min:[1,1,0,0,1,1,1,1],lw:'square',bw:'sawtooth',
+  bars:{A:BAR('7 - - 9 11 - 9 - 7 - - 4 7 - - -'),B:BAR('9 - - 11 12 - 11 - 9 - 7 - 9 - - -'),C:BAR('11 - 12 - 14 - - - 12 - 11 - 9 - 11 -'),D:BAR('12 - 11 - 9 - 7 - 8 - 9 - 11 - - -')},seq:'AABBCCDA',
+  bass:[0,0,12,0,0,12,0,0,0,0,12,0,7,7,12,7],k:'x..x..x.x..x..x.',s:'....x.......x..x',h:'xxxxxxxxxxxxxxxx',arp:1},
+ japan:{bpm:138,root:62,sc:NM.insen,prog:[0,0,5,0,10,5,0,0],min:[1,1,1,1,0,1,1,1],lw:'triangle',bw:'triangle',
+  bars:{A:BAR('5 - . 6 7 - 5 - 4 - . 2 4 - - -'),B:BAR('7 - 8 - 9 - 7 - 6 - 5 - 4 - 5 -'),C:BAR('9 - - 8 7 - - 5 6 - 7 - 5 - - -'),D:BAR('5 . 5 . 4 - 2 - 4 . 5 . 7 - - -')},seq:'ABACABDC',
+  bass:[0,null,null,0,null,null,7,null,0,null,null,0,null,7,12,null],k:'x.....x.x.....x.',s:'....x.......x...',h:'..x...x...x...xx',arp:0,koto:1},
+ clash:{bpm:168,root:52,sc:NM.pentm,prog:[0,0,8,10,0,0,5,7],min:[1,1,0,0,1,1,1,1],lw:'sawtooth',bw:'square',
+  bars:{A:BAR('5 - 5 7 8 - 7 5 . 5 7 - 8 - 9 -'),B:BAR('10 - 9 - 8 - 7 - 8 - 7 - 5 - 4 -'),C:BAR('5 5 . 5 7 7 . 7 8 8 . 8 9 - 10 -'),D:BAR('12 - - - 10 - 9 - 8 - 9 - 10 - - -')},seq:'ABABCDAB',
+  bass:[0,0,0,0,12,0,0,0,0,0,0,7,12,0,7,0],k:'x...x...x...x.x.',s:'....x.......x...',h:'x.xxx.xxx.xxx.xx',arp:1},
+ win:{bpm:126,root:60,sc:NM.pentM,prog:[0,5,7,0],min:[0,0,0,0],lw:'square',bw:'triangle',
+  bars:{A:BAR('5 - 7 - 9 - 10 - 12 - - - 10 - 12 -'),B:BAR('14 - - - 12 - 10 - 9 - 10 - 12 - - -')},seq:'ABAB',
+  bass:[0,null,7,null,12,null,7,null,0,null,7,null,12,null,7,null],k:'x...x...x...x...',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.',arp:.6}};
+const STAGE_TRK={fuji:'japan',inari:'japan',miyajima:'japan',osaka:'japan',shibuya:'clash',tower:'clash',orbit:'clash',mockcity:'hero',arena:'hero',dome:'clash',gym:'hero'};
+const mHz=n=>440*Math.pow(2,(n-69)/12);
+function musNote(type,midi,t,dur,vol,slide){const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(mHz(midi),t);if(slide)o.frequency.exponentialRampToValueAtTime(mHz(midi)*slide,t+dur);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.008);g.gain.setValueAtTime(vol,t+dur*.6);g.gain.exponentialRampToValueAtTime(.0008,t+dur);o.connect(g).connect(MUS.g);o.start(t);o.stop(t+dur+.03);}
+function musDrum(kind,t){if(kind==='k'){const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(42,t+.11);g.gain.setValueAtTime(.5,t);g.gain.exponentialRampToValueAtTime(.001,t+.14);o.connect(g).connect(MUS.g);o.start(t);o.stop(t+.16);return;}
+  const s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=MUS.nb;f.type=kind==='s'?'bandpass':'highpass';f.frequency.value=kind==='s'?1800:7000;const d=kind==='s'?.13:.04;g.gain.setValueAtTime(kind==='s'?.3:.1,t);g.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(f).connect(g).connect(MUS.g);s.start(t,Math.random()*.5,d+.02);}
+function musStep(T,i,t,sd){const bar=fl(i/16)%T.prog.length,st=i%16,root=T.root+T.prog[bar],L=T.bars[T.seq[bar%T.seq.length]],n=T.sc.length;
+  const v=L[st];if(v!==null&&v!==-99){let len=1;while(st+len<16&&L[st+len]===-99)len++;const midi=T.root+12*fl(v/n)+T.sc[v%n];musNote(T.lw,midi,t,sd*len*.95,T.lw==='triangle'?.2:.085);if(T.koto)musNote('square',midi+12,t,sd*.5,.02);}
+  const b=T.bass[st];if(b!==null)musNote(T.bw,root-24+b,t,sd*1.6,T.bw==='triangle'?.24:.07);
+  if(T.arp&&st%2===0){const ch=[0,T.min[bar]?3:4,7,12],a=ch[(st/2)%4];musNote('square',root+a,t,sd*.9,.022*T.arp);}
+  if(T.k[st]==='x')musDrum('k',t);if(T.s[st]==='x')musDrum('s',t);if(T.h[st]==='x')musDrum('h',t);}
+function musWant(){if(typeof curScreen!=='function')return'menu';const s=curScreen();if(s==='play'||s==='pause')return STAGE_TRK[STAGES[STI].id]||'clash';if(s==='results')return'win';if(running&&GS==='over')return'';return'menu';}
+function musTick(){if(!AC)return;if(!MUS.g){MUS.g=AC.createGain();MUS.g.connect(AC.destination);const len=AC.sampleRate,b=AC.createBuffer(1,len,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;MUS.nb=b;}
+  const want=(MUS.on&&!muted&&!document.hidden)?musWant():'';const tv=want?(typeof paused!=='undefined'&&paused?.35:1)*MUS.vol:0;MUS.g.gain.setTargetAtTime(tv,AC.currentTime,.08);
+  if(want!==MUS.cur){MUS.cur=want;MUS.step=0;MUS.next=AC.currentTime+.08;}if(!want)return;if(AC.state==='suspended'){try{AC.resume();}catch(e){}return;}
+  const T=TRK[want],sd=60/T.bpm/4;if(MUS.next<AC.currentTime-.3)MUS.next=AC.currentTime+.05;let n=0;while(MUS.next<AC.currentTime+.16&&n++<16){try{musStep(T,MUS.step,MUS.next,sd);}catch(e){}MUS.step++;MUS.next+=sd;}}
+setInterval(musTick,40);
+function musToggle(){MUS.on=!MUS.on;document.querySelectorAll('.musbtn').forEach(b=>b.textContent=MUS.on?'MUSIC ON':'MUSIC OFF');}
+(function wait(){const gb=document.querySelector('#game .gbar'),tm=document.querySelector('.tmenu');if(!gb||!tm){setTimeout(wait,60);return;}
+  for(const[par,cls]of[[gb,'tbtn'],[tm,'btn']]){const b=document.createElement('button');b.className=cls+' musbtn';b.textContent='MUSIC ON';b.onclick=()=>{audioInit();musToggle();};par.appendChild(b);}})();
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
