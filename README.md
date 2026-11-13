@@ -8,5 +8,6 @@ Play it: open `index.html` in Chrome or Edge, or visit this repo's GitHub Pages 
 Open the GitHub Pages site in Chrome or Edge, click the install icon at the right end of the address bar (or menu > Cast, save and share > Install page as app), and it gets its own window, desktop icon and Start menu / Dock entry. After the first visit it also works offline.
 
 ## Controllers
-Press **A** on each controller to join. **X** adds a CPU, **Y** changes CPU level, **+ / Start** goes to stage select.
-In battle (same as Smash Ultimate defaults): A attack, B special, X/Y or stick-up jump, L/R shield, ZL/ZR grab, right stick smash attacks, + pause.
+Press any button on a controller to get a pointer. Move it with the left stick, press **A** to select and **B** to go back. **X** adds a CPU, **Y** changes CPU level, **+ / Start** moves on.
+
+In battle (Smash Ultimate defaults): A attack, B special, X/Y or stick-up jump, ZL/ZR shield, L/R grab, right stick smash attacks, D-pad taunt, + pause.
