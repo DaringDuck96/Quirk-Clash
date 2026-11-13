@@ -222,13 +222,15 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
   <div id="help" hidden><div class="hbox">
     <h2>HOW TO FIGHT</h2>
     <div class="kt">
-      <b></b><b>Player 1</b><b>Player 2</b><b>Gamepad</b>
-      <span>Move / aim</span><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><span>Arrow keys</span><span>Left stick / D-pad</span>
+      <b></b><b>Player 1</b><b>Player 2</b><b>Controller (Smash layout)</b>
+      <span>Move / aim</span><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><span>Arrow keys</span><span>Left stick / D-pad (push stick up to jump)</span>
       <span>Jump (x2)</span><span><kbd>Space</kbd></span><span><kbd>/</kbd> or <kbd>Num0</kbd></span><span>X / Y</span>
+      <span>Smash attack</span><span>Direction + <kbd>J</kbd> quickly</span><span>Direction + <kbd>,</kbd> quickly</span><span>Right stick</span>
+      <span>Pause</span><span><kbd>Esc</kbd></span><span><kbd>Esc</kbd></span><span>+</span>
       <span>Attack</span><span><kbd>J</kbd></span><span><kbd>,</kbd> or <kbd>Num1</kbd></span><span>A</span>
       <span>Special</span><span><kbd>K</kbd></span><span><kbd>.</kbd> or <kbd>Num2</kbd></span><span>B</span>
-      <span>Shield / dodge</span><span><kbd>L</kbd></span><span><kbd>R-Shift</kbd> or <kbd>Num3</kbd></span><span>LB / triggers</span>
-      <span>Grab</span><span><kbd>U</kbd></span><span><kbd>'</kbd> or <kbd>Num6</kbd></span><span>RB</span>
+      <span>Shield / dodge</span><span><kbd>L</kbd></span><span><kbd>R-Shift</kbd> or <kbd>Num3</kbd></span><span>L / R</span>
+      <span>Grab</span><span><kbd>U</kbd></span><span><kbd>'</kbd> or <kbd>Num6</kbd></span><span>ZL / ZR, or shield + A</span>
     </div>
     <h3 class="mlh">EVERY STUDENT'S FULL MOVE LIST <small>(keyboard P1 shown · A = J, B = K, Shield = L, Grab = U, Jump = Space)</small></h3>
     <div class="ml">
@@ -3340,7 +3342,8 @@ function isNin(gp){return /nintendo|joy-?con|pro controller|057e|switch/i.test(g
 function pads(){try{return navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];}catch(e){return[];}}
 function padIn(i){const gp=pads()[i];if(!gp)return null;const b=k=>gp.buttons[k]&&gp.buttons[k].pressed,ax=gp.axes,n=isNin(gp);
   let x=ax[0]||0,y=ax[1]||0;if(Math.abs(x)<.25)x=0;if(Math.abs(y)<.25)y=0;if(b(14))x=-1;if(b(15))x=1;if(b(12))y=-1;if(b(13))y=1;
-  const r={x,y,A:n?b(1):b(0),B:n?b(0):b(1),J:b(2)||b(3),S:b(4)||b(6)||b(7),G:b(5)};const cx=ax[2]||0,cy=ax[3]||0;if(Math.hypot(cx,cy)>.6){r.x=Math.abs(cx)>Math.abs(cy)?Math.sign(cx):0;r.y=Math.abs(cy)>=Math.abs(cx)?Math.sign(cy):0;r.A=true;r.sm=1;}return r;}
+  /* Smash Ultimate default layout: A attack, B special, X/Y jump, L/R shield, ZL/ZR grab, right stick smash, tap-jump on the left stick */
+  const A=n?b(1):b(0),B=n?b(0):b(1),tap=(ax[1]||0)<-.72&&!A&&!B;const r={x,y,A,B,J:b(2)||b(3)||tap,S:b(4)||b(5),G:b(6)||b(7)};const cx=ax[2]||0,cy=ax[3]||0;if(Math.hypot(cx,cy)>.6){r.x=Math.abs(cx)>Math.abs(cy)?Math.sign(cx):0;r.y=Math.abs(cy)>=Math.abs(cx)?Math.sign(cy):0;r.A=true;r.sm=1;}return r;}
 function humanIn(f){const n=f.id,parts=[padIn(n)];if(n===0){parts.push(keyIn(P1K),TOUCH);if(SEL.mode[1]!=='h')parts.push(keyIn(P2K));}else if(n===1)parts.push(keyIn(P2K));return merge(...parts);}
 const SPREAD={2:[-100,100],3:[-125,0,125],4:[-138,-46,46,138]};
 function startMatch(){const sl=inSlots();if(sl.length<2){toast('Add at least 2 fighters (press X on a controller, or click a player tag)');return;}

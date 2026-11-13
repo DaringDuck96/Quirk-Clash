@@ -6,4 +6,4 @@ Play it: open `index.html` in Chrome or Edge, or visit this repo's GitHub Pages 
 
 ## Controllers
 Press **A** on each controller to join. **X** adds a CPU, **Y** changes CPU level, **+ / Start** goes to stage select.
-In battle: A attack, B special, X/Y jump, L/ZL/ZR shield, R grab, right stick for smash attacks, + to pause.
+In battle (same as Smash Ultimate defaults): A attack, B special, X/Y or stick-up jump, L/R shield, ZL/ZR grab, right stick smash attacks, + pause.
