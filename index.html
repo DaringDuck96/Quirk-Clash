@@ -749,8 +749,9 @@ function drawBack(L,J,S,p){const R=L.R,h=L.h,t=S.t,ex=L.ex||[];
       const xe=cx+Math.cos(a)*rr,ye=cy+Math.sin(a)*rr;feather(cx,cy,xe,ye,1,1.9,pass?rampB('#b81e2e'):cr);if(!pass){ell(xe,ye,3,3.4,a,ce);ell(xe,ye,2,2.4,a,ct,0);sp(xe,ye,cn[2]);sp(xe,ye+1,cn[2]);}}}
   if(ex.includes('wings')){const fl2=p.wing||0,air=S.air;let base=air?-2.45+Math.sin(t*.28)*.5:-2.5+Math.sin(t*.06)*.06;if(fl2===-1)base=-2.6;if(fl2===2)base=-.4;if(fl2===3)base=-1.7;if(fl2===4)base=-.9;
     const nav=ramp('#22337a'),navB=rampB('#22337a'),gd=ramp('#e8b040'),wt=ramp('#e6ecf6');
-    [[-1,navB,.85,-.25],[1,nav,1,0]].forEach(([s2,Pp,sc,off])=>{const rx=J.SB.x-1*h,ry=J.SB.y+1*h,ang=base+off,wx=rx+Math.cos(ang)*14*h*sc,wy=ry+Math.sin(ang)*14*h*sc;
-      for(let i=0;i<9;i++){const tt=i/8,px=lerp(rx,wx,tt),py=lerp(ry,wy,tt),fa=ang-1.75+tt*.95,len=(12+tt*16)*h*sc;feather(px,py,px+Math.cos(fa)*len,py+Math.sin(fa)*len,2.3,1,i%3===0&&s2>0?wt:Pp);}
+    /* two wings: the far one spreads forward behind her, the near one sweeps back */
+    [[-1,navB,.92,0],[1,nav,1,0]].forEach(([s2,Pp,sc,off])=>{const mir=s2<0,rx=mir?J.SF.x+1*h:J.SB.x-1*h,ry=(mir?J.SF.y:J.SB.y)+1*h,ang=mir?(-PI-base+.1):base+off,wx=rx+Math.cos(ang)*14*h*sc,wy=ry+Math.sin(ang)*14*h*sc;
+      for(let i=0;i<9;i++){const tt=i/8,px=lerp(rx,wx,tt),py=lerp(ry,wy,tt),fa=mir?ang+1.75-tt*.95:ang-1.75+tt*.95,len=(12+tt*16)*h*sc;feather(px,py,px+Math.cos(fa)*len,py+Math.sin(fa)*len,2.3,1,i%3===0&&s2>0?wt:Pp);}
       capsule(rx,ry,2.6,wx,wy,1.8,gd);});}
   if(ex.includes('beewings')){const f=Math.sin(t*(S.air?1.6:.25))*.35,rx=J.SB.x,ry=J.SB.y-1;[[-2.3+f,13,.5],[-1.6+f,10,.42]].forEach(([a,len,al])=>{const cx=rx+Math.cos(a)*len*.55,cy=ry+Math.sin(a)*len*.55;
       for(let y=-len;y<=len;y++)for(let x=-len;x<=len;x++){const u=(x*Math.cos(a)+y*Math.sin(a))/(len*.55),v=(-x*Math.sin(a)+y*Math.cos(a))/(len*.22);if(u*u+v*v<=1)spA(cx+x,cy+y,[220,240,255],al+(u*u+v*v>.8?.3:0));}
@@ -1114,9 +1115,9 @@ add({id:'torabi',n:'TORABI SUHARU',sn:'TORABI',q:'Master Chef',ty:'Accumulation'
  sp:["Chef's Special (random dish)",'Knife Flurry','Tako Tentacle','Snack Break (heals 12%)']});
 
 add({id:'suze',n:'SUZUNI HOSHUNO',sn:'SUZE',q:'Queen Bee',ty:'Mutation',col:'#ffc020',
- d:'Bee wings, sticky honey and a loyal swarm. Punk guitar is her weapon of choice.',
- look:Object.assign({h:.95,skin:'#f8e0d0',eye:'#f0b020',hairS:'pigtails',hair:'#f0d070',skirt:'#1e2430',socks:'#1e2430',shoe:'#3a2418',wpn:'guitar',wlen:20,stance:'instrument',blush:1,ex:['beewings']},BLZ),
- st:ST({w:.84,run:3,air:2.6,aj:2,g:.34}),kit:{st:'blade',fx:['#ffc020','#fff4b0'],el:'sound'},
+ d:'Bee wings, sticky honey and a loyal swarm. She fights with stingers, honeycomb and her swarm.',
+ look:Object.assign({h:.95,skin:'#f8e0d0',eye:'#f0b020',hairS:'pigtails',hair:'#f0d070',skirt:'#1e2430',socks:'#1e2430',shoe:'#3a2418',stance:'cast',blush:1,ex:['beewings']},BLZ),
+ st:ST({w:.84,run:3,air:2.6,aj:2,g:.34}),kit:{st:'brawler',fx:['#ffc020','#fff4b0'],el:'honey',fair:'fairK'},
  mv:{fsmash:SMASH('f',{el:'sound',fx:['#ffc020','#ffffff'],an:'slashF',far:38,dmg:15}),usmash:SMASH('u',{el:'sound',fx:['#ff60c0','#ffffff'],an:'slashUp',dmg:14}),dsmash:SMASH('d',{el:'sound',fx:['#ffc020','#ffffff'],an:'slashLow',dmg:12}),
   nB:M('cast',10,1,18,null,{spawn:[[10,{k:'honey',vx:4,vy:-1.2,g:.08,life:60,r:6,dmg:4,bkb:1.5,kbg:.02,ang:30,eff:'stick'}]],fx:['#ffc020','#fff']}),
   sB:M('cast',14,1,20,null,{spawn:[[14,{k:'bees',life:130,r:12,dmg:1.5,bkb:1,kbg:0,ang:60,ri:10,max:1}]],cd:160,fx:['#ffc020','#1a1a1a']}),
@@ -1246,12 +1247,21 @@ torabi:{na:'Normals: frying-pan combos, a pan flip that tosses food, a flambé u
   dair:M('dairS',10,4,18,hit([[8,-4,12]],13,3,.06,-80),{lim:'w',ll:16,sub:'pot'}),
   dB:M('eat',10,40,14,null,{beh:'dish',cd:720,fx:['#ffd060','#fff']})},
   sp:["Chef's Special (random dish)",'Knife Flurry','Tako Tentacle','Signature Dish (heal, power or speed)']},
-suze:{na:'Normals: punk guitar riffs that fire sound waves, a sticky honey sweep, a bee stinger kick and a stage-dive spike. Water attacks wash her honey off rivals.',mv:{
-  utilt:M('slashUp',6,5,15,hit([[8,-64,12]],8,3.6,.06,92),{lim:'w',sub:'notes'}),
-  dtilt:M('kickLow',5,3,11,hit([24,-6,9],6,3,.04,26,{eff:'stick'}),{lim:'fF',el:'honey',sub:'drip'}),
-  bair:M('bairK',6,4,14,hit([-24,-30,10],12,4.5,.075,140),{lim:'fB',ll:10,el:'honey',sub:'stinger'}),
+suze:{na:'Normals: stinger jabs and a long stinger thrust, a honeycomb shield bash, bees swarming overhead, a sticky honey sweep, a wing-buzz spin and a diving stinger spike. Smashes: the Queen’s Lance, a honey geyser and a honey splash that sticks. Water attacks wash her honey off rivals.',mv:{
+  jab1:M('jab1',3,2,8,hit([20,-41,7],3,2,.01,75),{lim:'hF',sub:'sting'}),jab2:M('jab2',3,2,8,hit([20,-39,7],3,2,.01,75),{lim:'hB',sub:'sting'}),
+  jab3:M('palm',4,3,16,hit([22,-36,11],5,4,.05,40),{lim:'hF',sub:'comb'}),
+  ftilt:M('punch',6,4,15,hit([[34,-37,10],[18,-37,8]],9,3.6,.065,36),{lim:'hF',sub:'lance'}),
+  utilt:M('castUp',6,5,14,hit([[4,-68,13]],8,3.8,.06,92),{lim:'hF',sub:'swarm'}),
+  dtilt:M('kickLow',5,3,11,hit([24,-6,9],6,3,.04,26,{eff:'stick'}),{lim:'fF',sub:'drip'}),
+  dash:M('shoulder',7,6,18,hit([[18,-32,13]],10,4.5,.06,45),{lim:'none',imp:[[0,3.4,0]],sub:'comb'}),
   nair:M('spin',4,10,10,hit([0,-32,18],8,3.5,.05,45,{ri:5}),{lim:'none',ll:8,el:'gale',sub:'buzz'}),
-  dair:M('dairS',10,4,18,hit([8,-4,12],13,3,.06,-80),{lim:'w',ll:16,sub:'dive'})},
+  fair:M('fairK',8,4,16,hit([[25,-30,11]],11,4,.07,40),{lim:'fF',ll:12,sub:'stinger'}),
+  bair:M('bairK',6,4,14,hit([-24,-30,10],12,4.5,.075,140),{lim:'fB',ll:10,sub:'stinger'}),
+  uair:M('uairP',5,5,12,hit([[4,-68,13]],9,3.5,.065,86),{lim:'hF',ll:8,sub:'swarm'}),
+  dair:M('dairK',10,4,18,hit([[3,-2,11]],13,3,.06,-80),{lim:'fF',ll:16,sub:'stingD'}),
+  fsmash:M('punch',13,4,24,hit([[42,-38,13],[22,-38,10]],16,4,.1,38),{charge:1,face:'atk',lim:'hF',sub:'lance',fx:['#ffc020','#ffffff']}),
+  usmash:M('castUp',10,6,22,hit([[4,-72,14],[4,-52,11]],14,4,.095,88,{eff:'stick'}),{charge:1,face:'atk',lim:'hF',sub:'geyser',fx:['#ffc020','#ffffff']}),
+  dsmash:M('castDown',8,5,22,[hit([[24,-8,12]],12,3.5,.085,30,{eff:'stick'}),hit([[-24,-8,12]],12,3.5,.085,150,{eff:'stick'})],{charge:1,face:'atk',lim:'hF',sub:'splash',fx:['#ffc020','#ffffff']})},
   sp:['Honey Glob (sticky)','Bee Swarm (homing)','Buzz Flight','Honey Trap (gets tackier)']},
 hake:{na:'Normals: palm strikes through small portals. His forward and up throws relay rivals away through space.',mv:{
   fthrow:M('throwF',8,1,16,hit([20,-36,12],8,5,.06,42,{eff:'relay'}),{lim:'hF',fx:['#9a70ff','#fff']}),
@@ -1262,6 +1272,7 @@ CH.forEach(C=>{const x=NX[C.id];if(x){if(x.mv)Object.assign(C.mv,x.mv);if(x.na)C
   ['jab','jab1','jab2','jab3','ftilt','utilt','dtilt','dash','nair','fair','bair','uair','dair','fthrow','bthrow','uthrow','dthrow'].forEach(k=>{const d=C.mv[k];if(!d||d.vfx||!d.hits||!d.hits.length)return;const b=d.hits[0].b[0];
     d.vfx={k:'H',el:d.el||C.kit.el,sub:d.sub,x:b[0],y:b[1],r:b[2]};if(!d.fx)d.fx=C.kit.fx;});});
 CH.find(c=>c.id==='oro').mv.sB.hits[0].eff='para';
+{const S=CH.find(c=>c.id==='suze');for(const k of['fsmash','usmash','dsmash']){const d=S.mv[k],b=d.hits[0].b[0];d.vfx={k:'H',el:'honey',sub:d.sub,x:b[0],y:b[1],r:b[2]};}}
 CH.find(c=>c.id==='shuko').mv.sB.spawn[0][1].eff='haze';
 
 /* scale movement to the larger stage */
@@ -1352,7 +1363,7 @@ const TUNE={
  uchuu:{role:'Floaty zoner',tip:'Low gravity, high jumps and a charged cosmic shot.',sp:1.04,pw:1,w:.85,run:.92,air:1.1,jump:1.1,g:.72,fall:.7},
  shuko:{role:'Trapper',tip:'Smoke clouds, blinds and a platform he makes himself.',sp:1,pw:.96,g:.92,fall:.9},
  torabi:{role:'Kitchen brawler',tip:'Every attack is food. Burns, bombs and a self-buff.',sp:1.04,pw:1.04,w:1.1,run:.97},
- suze:{role:'Pest',tip:'Fast and sticky: honey slows rivals while the bees chase them.',sp:.86,pw:.86,kb:.9,w:.8,run:1.04,air:1.15},
+ suze:{role:'Pest',tip:'Fast and sticky: stingers, honey that slows rivals and bees that chase them.',sp:.86,pw:.86,kb:.9,w:.8,run:1.04,air:1.15},
  tatsuya:{role:'Mimic',tip:'Average on his own. Copies the whole moveset of whoever he touches.',sp:1,pw:1}};
 /* how far each student can fight from: [range pips shown in the guide, projectile reach multiplier] */
 const RANGE={kimiko:[5,1.35],uchuu:[5,1.2],kouji:[4,1.3],ryuko:[4,1.25],emi:[4,1.2],bara:[4,1.15],marina:[4,1.1],shuko:[4,1],suze:[3,.9],torabi:[3,.9],keanu:[3,1],gomi:[3,.72],oro:[2,.7],soran:[2,.6],hake:[2,.6],zabu:[2,.7],tatsuya:[2,.8],minato:[2,1],tori:[1,1],shiki:[1,1]};
@@ -1969,9 +1980,16 @@ function drawHitFX(el,sub,x,y,d,pr,fx,f,r){const a=1-pr,c0=(fx&&fx[0])||'#ffffff
   case 'sound':
     if(sub==='notes'||!sub){for(let i=0;i<3;i++){const nx=x+(i-1)*8+Math.sin(pr*6+i)*3,ny=y-pr*16-i*4;wr('#1a1a24',nx,ny,3,2);wl('#1a1a24',nx+2,ny,nx+2,ny-7);wl(c0,nx+2,ny-7,nx+5,ny-5);wr(c0,nx,ny-1,2,1);}}
     for(let i=0;i<3;i++){const R2=6+i*5+pr*8;for(let an=-.8;an<=.8;an+=.15){const aa=(d>0?0:PI)+an;wp(i%2?c0:'#ffffff',x-d*6+Math.cos(aa)*R2,y+Math.sin(aa)*R2);}}break;
-  case 'honey':
+  case 'honey':{const bee=(bx,by,k)=>{wr('#1a1a1a',bx-2,by-1,5,3);wr('#ffc020',bx-1,by-1,1,3);wr('#ffc020',bx+1,by-1,1,3);wr('#e8f4ff',bx-1,by-3+(((T>>1)+k)%2),3,2);},hex=(hx,hy,s)=>{wpoly('#7a4a00',[hx-s,hy,hx-s/2,hy-s*.87,hx+s/2,hy-s*.87,hx+s,hy,hx+s/2,hy+s*.87,hx-s/2,hy+s*.87]);wpoly('#ffc020',[hx-s+1.5,hy,hx-s/2+.8,hy-s*.87+1.5,hx+s/2-.8,hy-s*.87+1.5,hx+s-1.5,hy,hx+s/2-.8,hy+s*.87-1.5,hx-s/2+.8,hy+s*.87-1.5]);wr('#fff0a0',hx-s*.3,hy-s*.4,s*.4,2);};
+    if(sub==='sting'){const x0=f.x+d*10;wpoly('#1a1a1a',[x0,y-3,x+d*8,y,x0,y+3]);wpoly('#ffc020',[x0,y-2,x+d*5,y,x0,y+2]);wr('#1a1a1a',x0+d*4,y-2,2,4);break;}
+    if(sub==='lance'){const g=Math.min(1,pr*3),x0=f.x+d*10,x1=x0+d*(20+(r||10)*2.2)*g;wpoly('#1a1a1a',[x0,y-6,x1-d*8,y-5,x1+d*4,y,x1-d*8,y+5,x0,y+6]);wpoly('#ffc020',[x0,y-4.5,x1-d*8,y-3.5,x1,y,x1-d*8,y+3.5,x0,y+4.5]);for(let k=1;k<5;k++)wr('#1a1a1a',x0+d*(k*(x1-x0)*d/6)-1,y-4,3,8);wl('#fff4b0',x0+d*2,y-2,x1-d*8,y-2);bee(x0+d*6,y-12,0);bee(x1-d*10,y+11,1);break;}
+    if(sub==='comb'){const g=Math.min(1,pr*4);hex(x+d*2,y,9*g);hex(x-d*8,y-9,6*g);hex(x-d*8,y+9,6*g);break;}
+    if(sub==='swarm'){for(let k=0;k<9;k++){const an=k/9*TAU+T*.35*(k%2?1:-1),rr=(r||12)*(.5+(k%3)*.3);bee(x+Math.cos(an)*rr,y+Math.sin(an)*rr*.7,k);}break;}
+    if(sub==='stingD'){wpoly('#1a1a1a',[x-5,y-12,x+5,y-12,x,y+12]);wpoly('#ffc020',[x-3.5,y-11,x+3.5,y-11,x,y+8]);wr('#1a1a1a',x-4,y-7,8,2);wr('#1a1a1a',x-3,y-2,6,2);break;}
+    if(sub==='geyser'){const g=Math.min(1,pr*2.6);for(let k=0;k<7;k++){const xx=x-9+k*3,hh=(20+((k*5)%9)*3)*g;wr('#a86a00',xx,f.y-hh-30,4,hh+30-8);wr('#ffc020',xx+1,f.y-hh-30,2,hh+30-8);}wdisc(x,f.y-56*g-30,8,'#a86a00');wdisc(x,f.y-56*g-30,7,'#ffc020');wdisc(x-2,f.y-58*g-30,2,'#fff0a0');for(let k=0;k<4;k++)bee(x+Math.cos(T*.3+k*1.6)*16,y+Math.sin(T*.3+k*1.6)*10,k);break;}
+    if(sub==='splash'){for(const s2 of[-1,1])for(let k=0;k<8;k++){const xx=f.x+s2*(8+k*4.2),hh=5+Math.sin(k*.9+pr*8)*3+(8-k)*.9;wr('#a86a00',xx-2,f.y-hh,5,hh);wr('#ffc020',xx-1,f.y-hh,3,hh-1);if(k%3===0)wr('#fff0a0',xx,f.y-hh,1,2);}break;}
     if(sub==='stinger'){wpoly('#1a1a1a',[x-d*8,y-3,x+d*10,y,x-d*8,y+3]);wpoly('#ffc020',[x-d*6,y-2,x+d*6,y,x-d*6,y+2]);break;}
-    for(let i=0;i<6;i++){const xx=x-10+i*4;wr('#a86a00',xx,y-2,3,4+((i*3)%4));wr('#ffc020',xx,y-2,2,3+((i*3)%4));}break;
+    for(let i=0;i<6;i++){const xx=x-10+i*4;wr('#a86a00',xx,y-2,3,4+((i*3)%4));wr('#ffc020',xx,y-2,2,3+((i*3)%4));}break;}
   case 'mimic':{const R=Math.max(10,r||10);star(8+pr*8,'#e8c040');for(const s2 of[-1,1]){const mx=x+s2*(4+pr*R*.9),my=y-s2*3;wpoly('#8a6a10',[mx,my-R*.6,mx+R*.3,my,mx,my+R*.6,mx-R*.3,my]);wpoly(s2>0?'#fff4c0':'#e8c040',[mx,my-R*.5,mx+R*.22,my,mx,my+R*.5,mx-R*.22,my]);}break;}
   default:star(6+pr*8,c0);}}
 /* ===================== ZAIR TETHERS (quirk-themed grab-air) ===================== */
@@ -2017,11 +2035,11 @@ const FSD={
  uchuu:{name:'BIG BANG',type:'zone',r:200,dur:100,tick:1.5,ri:8,pull:1,fin:[14,10,.12,65],col:['#b890ff','#ffd860'],vis:'bigbang'},
  shuko:{name:'TOTAL WHITEOUT',type:'zone',r:999,dur:95,tick:2,ri:8,eff:'haze',fin:[12,9.5,.11,75],col:['#d8d0c0','#8a8478'],vis:'whiteout'},
  torabi:{name:'FULL-COURSE FEAST',type:'zone',r:150,dur:85,tick:2.5,ri:8,heal:15,fin:[12,9.5,.11,55],col:['#ffd060','#ff8a30'],vis:'feast'},
- suze:{name:"QUEEN BEE'S ENCORE",type:'zone',r:180,dur:95,tick:2,ri:7,eff:'stick',fin:[11,9,.11,60],col:['#ffc020','#ff60c0'],vis:'encore'},
+ suze:{name:"QUEEN'S ROYAL SWARM",type:'zone',r:180,dur:95,tick:2,ri:7,eff:'stick',fin:[11,9,.11,60],col:['#ffc020','#ff60c0'],vis:'encore'},
  hake:{name:'RELAY EXILE',type:'rush',spd:6.5,win:24,dur:60,tick:3.2,ri:10,fin:[14,11.5,.12,90],col:['#9a70ff','#ffffff'],vis:'exile'},
  tatsuya:{name:'PERFECT MIMIC',type:'mimic'}};
 /* bigger, longer, harder-hitting: a Final Smash should end a stock from mid damage */
-const FSCALL={kimiko:'SHATTER!',keanu:'ERUPTION!',bara:'FULL DISPLAY!',tori:'PHASED OUT!',minato:'SNAP BACK!',oro:'VENOM STRIKE!',gomi:'BURN IT ALL!',kouji:'ECLIPSE!',emi:'DIVE!',soran:'RELAY FINISH!',ryuko:'OMEGA BLAST!',shiki:'ONI CRUSH!',zabu:'TAIL SLAM!',marina:'DRAGON GATE!',uchuu:'SUPERNOVA!',shuko:'VANISH!',torabi:'ORDER UP!',suze:'ENCORE!',hake:'EXILED!'};
+const FSCALL={kimiko:'SHATTER!',keanu:'ERUPTION!',bara:'FULL DISPLAY!',tori:'PHASED OUT!',minato:'SNAP BACK!',oro:'VENOM STRIKE!',gomi:'BURN IT ALL!',kouji:'ECLIPSE!',emi:'DIVE!',soran:'RELAY FINISH!',ryuko:'OMEGA BLAST!',shiki:'ONI CRUSH!',zabu:'TAIL SLAM!',marina:'DRAGON GATE!',uchuu:'SUPERNOVA!',shuko:'VANISH!',torabi:'ORDER UP!',suze:'LONG LIVE THE QUEEN!',hake:'EXILED!'};
 for(const id in FSD){const d=FSD[id];if(d.type==='mimic')continue;d.dur=Math.round(d.dur*1.3);d.tick=Math.round(d.tick*1.15*10)/10;if(d.type==='zone'&&d.r<999)d.r=Math.round(d.r*1.25);if(d.type==='beam'){d.h=Math.round(d.h*1.4);d.len=Math.round(d.len*1.3);}if(d.type==='wave'){d.h=Math.round(d.h*1.25);d.w=Math.round(d.w*1.2);}
   d.fin=[d.fin[0]+5,d.fin[1]+1.6,d.fin[2]+.018,d.fin[3]];d.call=FSCALL[id];}
 FSD.torabi.heal=25;FSD.uchuu.r=270;FSD.ryuko.h=120;FSD.minato.ri=6;FSD.keanu.tick=2.2;FSD.ryuko.tick=2.2;
@@ -3823,7 +3841,7 @@ marina:['Sends a golden koi swimming forward.','A giant golden koi charges along
 uchuu:['Hold B to charge a cosmic blast and release to fire. Press Shield or Jump while charging to store it for later.','Opens a gravity well ahead that drags rivals in.','Floats freely for a second. Steer with the stick.','Absorbs incoming projectiles to fill his cosmic charge, then pulses.','A Big Bang pulls everyone in and detonates.'],
 shuko:['Flicks three fast soot shuriken.','A slow storm cloud (one at a time) that blinds and slows rivals inside it.','Leaps up and leaves a smoke platform behind to stand on for a few seconds.','A giant smoke hand rises from the ground ahead and launches rivals upward.','A whiteout smothers everything around him.'],
 torabi:['Swallows a lump of wasabi and breathes a long cone of green fire. Hits many times and burns.','Lobs two gyoza in an arc. Each one explodes on impact.','Leaps with a rope of ramen noodles that hits above him and can grab a ledge.','Eats his signature dish for a random bonus: heal 12%, hit harder, or move faster. Long cooldown.','Serves a full-course feast that damages everyone nearby and heals him.'],
-suze:['Spits a honey glob. Stuck rivals move slowly and jump lower.','Releases a bee swarm (one at a time) that chases rivals and stings repeatedly.','Buzzes through the air in any direction.','Lays a honey puddle (one at a time) that roots whoever steps in it. It gets stickier the longer it sits.','The Queen Bee plays an encore and a swarm engulfs everyone nearby.'],
+suze:['Spits a honey glob. Stuck rivals move slowly and jump lower.','Releases a bee swarm (one at a time) that chases rivals and stings repeatedly.','Buzzes through the air in any direction.','Lays a honey puddle (one at a time) that roots whoever steps in it. It gets stickier the longer it sits.','The Queen calls her whole hive: a swarm engulfs everyone nearby and leaves them coated in honey.'],
 tatsuya:['A golden orb. While he is copying a rival, this becomes their neutral special.','A quick lunge. While copying, their side special.','A rising leap. While copying, their up special.','A palm touch that copies the rival for 10 seconds instead of 7.','Copies the Final Smash of the nearest rival.']};
 const GD={ci:0,tw:0,on:false};
 function gList(){return CH.map((c,i)=>i).filter(i=>!CH[i].hidden);}
