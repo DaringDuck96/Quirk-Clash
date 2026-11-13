@@ -237,6 +237,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
 .scard.hid{display:none}
 .trow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center}.trow span{font-family:var(--display);font-size:18px;color:var(--dim);letter-spacing:.5px;min-width:120px;text-align:right}
 .trow button{font-family:var(--display);font-size:19px;line-height:1;padding:8px 14px 4px;background:var(--panel);border:2px solid var(--line);border-radius:10px;letter-spacing:.5px}.trow button.on{border-color:var(--gold);color:var(--gold);background:var(--panel2)}
+.tmchip{position:absolute;right:8px;top:46px;z-index:3;font-family:"Press Start 2P",monospace;font-size:10px;line-height:1;color:#0c0820;padding:6px 8px 5px;border-radius:6px;border:2px solid #0c0820}
 </style>
 
 <div id="app">
@@ -261,6 +262,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
     </div>
     <div class="selmain4"><div class="roster" id="roster"></div><div class="pprow" id="pprow"></div></div>
     <div class="selfoot">
+      <div class="opt" id="teamOpt"><span class="lab">TEAMS</span><div class="seg" id="tm"><button data-v="0" class="on">OFF</button><button data-v="1">ON</button></div></div>
       <div class="opt"><span class="lab">STOCKS</span><div class="seg" id="stk"><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div></div>
       <span class="padhint"><b class="padcount" style="color:var(--gold)"></b><br>🎮 <b>Stick</b> moves your pointer · <b>A</b> pick · <b>B</b> back · <b>X</b> add/remove CPU · <b>Y</b> CPU level · <b>&minus;</b> guide · <b>+</b> next. Point at a CPU box and press A to choose its fighter.</span>
       <button class="fight" id="fight">STAGE &rarr;</button>
@@ -305,7 +307,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
     <div class="kt">
       <b></b><b>Player 1</b><b>Player 2</b><b>Controller (Smash layout)</b>
       <span>Move / aim</span><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><span>Arrow keys</span><span>Left stick (push up to jump)</span>
-      <span>Jump (x2)</span><span><kbd>Space</kbd></span><span><kbd>/</kbd> or <kbd>Num0</kbd></span><span>X / Y</span>
+      <span>Jump (x2)</span><span><kbd>Space</kbd></span><span><kbd>/</kbd> or <kbd>Num0</kbd></span><span>X / Y (both together: short hop), or flick the stick up</span>
       <span>Smash attack</span><span>Direction + <kbd>J</kbd> quickly</span><span>Direction + <kbd>,</kbd> quickly</span><span>Right stick</span>
       <span>Pause</span><span><kbd>Esc</kbd></span><span><kbd>Esc</kbd></span><span>+</span>
       <span>Attack</span><span><kbd>J</kbd></span><span><kbd>,</kbd> or <kbd>Num1</kbd></span><span>A</span>
@@ -1418,7 +1420,10 @@ function armored(f){const m=f.mv;if(!m)return false;const d=m.d;if(d.bp&&d.bp.ar
 /* ---------- input processing (shared by humans + AI) ---------- */
 function procIn(f,r){const p=f.pi;const I={x:r.x||0,y:r.y||0,A:!!r.A,B:!!r.B,J:!!r.J,S:!!r.S,G:!!r.G,T:!!r.T};
   I.sm=!!r.sm;I.tP=I.T&&!p.T;I.aP=I.A&&!p.A;I.bP=I.B&&!p.B;I.jP=I.J&&!p.J;I.sP=I.S&&!p.S;I.gP=I.G&&!p.G;
-  if(Math.abs(I.x)>.6&&Math.abs(p.x||0)<.3)f.fxT=FR;if(I.y<-.6&&(p.y||0)>-.3)f.fuT=FR;if(I.y>.6&&(p.y||0)<.3)f.fdT=FR;
+  /* a flick = the stick left neutral and reached the edge within 4 frames (analog sticks pass through the middle) */
+  if(Math.abs(I.x)<.3)f.nxT=FR;if(Math.abs(I.x)>.72&&Math.abs(p.x||0)<=.72&&FR-(f.nxT===undefined?-99:f.nxT)<=4)f.fxT=FR;
+  if(I.y>-.3)f.nuT=FR;if(I.y<-.72&&(p.y||0)>=-.72&&FR-(f.nuT===undefined?-99:f.nuT)<=4)f.fuT=FR;
+  if(I.y<.3)f.ndT=FR;if(I.y>.72&&(p.y||0)<=.72&&FR-(f.ndT===undefined?-99:f.ndT)<=4)f.fdT=FR;I.sh=!!r.SH;
   I.flX=FR-f.fxT<=5;I.flU=FR-f.fuT<=5;I.flD=FR-f.fdT<=5;if(r.sm){I.flX=Math.abs(I.x)>.5;I.flU=I.y<-.5;I.flD=I.y>.5;}
   if(I.aP)f.lastA=FR;if(I.bP)f.lastB=FR;if(I.jP)f.lastJ=FR;if(I.sP)f.lastS=FR;
   f.pi=I;f.raw=I;return I;}
@@ -1444,8 +1449,9 @@ function endMove(f){const d=f.mv.d;f.mv=null;
   if(d.helpless&&!f.ground){if(d.bp&&d.bp.glide){f.st='glide';f.glide=true;}else f.st='helpless';}
   else f.st=f.ground?'idle':'air';}
 function groundAttack(f,I){
-  if(f.st==='run'&&Math.abs(f.vx)>1.8&&!I.sm)return startMove(f,'dash');
+  /* flick + attack together is a smash; attack once you are already running is a dash attack */
   if(I.flX&&Math.abs(I.x)>.6){f.face=Math.sign(I.x);return startMove(f,'fsmash');}
+  if(f.st==='run'&&Math.abs(f.vx)>1.8&&!I.sm)return startMove(f,'dash');
   if(I.flU)return startMove(f,'usmash');if(I.flD)return startMove(f,'dsmash');
   if(Math.abs(I.x)>.5&&Math.abs(I.x)>=Math.abs(I.y)){f.face=Math.sign(I.x);return startMove(f,'ftilt');}
   if(I.y<-.5)return startMove(f,'utilt');if(I.y>.5)return startMove(f,'dtilt');
@@ -1615,7 +1621,7 @@ function update(f,I){
   else if(st==='airdodge'){if(f.stT<14){if(f.adDir){grav=false;f.vx=f.adDir[0]*6*Math.pow(.86,f.stT);f.vy=f.adDir[1]*6*Math.pow(.86,f.stT);}}if(f.stT>=28)f.st='air';}
   else if(st==='shieldstun'){f.vx*=.85;if(--f.ssT<=0)f.st=I.S?'shield':'idle';}
   else if(st==='land'||st==='jsq'){f.vx*=.75;
-    if(st==='jsq'&&f.stT>=4){f.st='air';f.ground=null;f.vy=I.J?S.jump*(f.stickT?0.7:1):S.sj;f.vx=clamp(f.vx+I.x*.8,-S.air,S.air);dust(f.x,f.y,4);sfx('jump');if(I.A&&!f.rootT){f.vy=S.sj;aerial(f,I);}}
+    if(st==='jsq'&&f.stT>=4){f.st='air';f.ground=null;f.vy=(I.J&&!I.sh)?S.jump*(f.stickT?0.7:1):S.sj;f.vx=clamp(f.vx+I.x*.8,-S.air,S.air);dust(f.x,f.y,4);sfx('jump');if(I.A&&FR-f.lastA<=6&&!f.rootT){f.vy=S.sj;aerial(f,I);}}
     else if(st==='land'&&f.stT>=f.landLen)f.st='idle';}
   else if(st==='grab'){f.vx*=.75;if(f.stT>=6&&f.stT<=8){const gr=C.grabR||26;const box=[f.face>0?f.x+6:f.x-6-gr,f.y-46,gr,40];for(const o of F){if(o===f||intangible(o)||o.holder||o.st==='ledge'||(f.team!==undefined&&o.team===f.team))continue;const R=hurtR(o);
       if(R[0]<box[0]+box[2]&&R[0]+R[2]>box[0]&&R[1]<box[1]+box[3]&&R[1]+R[3]>box[1]){releaseHolds(o);f.held=o;o.holder=f;o.st='held';o.mv=null;f.st='hold';f.holdT=0;sfx('grab');if(C.id==='tatsuya'&&o.C.id!=='tatsuya')mimicCopy(f,o,600);break;}}}
@@ -1723,7 +1729,7 @@ function ko(f){if(f.dead||f.gone)return;releaseHolds(f);if(f.ledge)leaveLedge(f)
   f.stocks--;f.falls++;f.fsm=(f.fsm||0)*.6;const o=(f.lastBy&&FR-f.lastHurt<600&&F.includes(f.lastBy))?f.lastBy:opp(f);f.lastBy=null;if(o&&o!==f)o.kos++;f.dead=70;f.x=WW/2;f.y=-400;f.vx=f.vy=f.lx=f.ly=0;f.mv=null;f.st='dead';
   ENT.forEach(e=>{if(e.owner===f&&e.attached)e.alive=false;});
   if(MODE!=='versus'&&modeKO(f))return;
-  if(f.stocks<=0){f.dead=0;f.gone=true;f.place=F.filter(x=>!x.gone).length+1;const left=F.filter(x=>!x.gone);if(left.length<=1){GS='over';gsT=0;winner=left[0]||F.find(x=>x!==f);if(winner)winner.place=1;}}}
+  if(f.stocks<=0){f.dead=0;f.gone=true;f.place=F.filter(x=>!x.gone).length+1;const left=F.filter(x=>!x.gone),done=TEAMS_ON()?new Set(left.map(x=>x.team)).size<=1:left.length<=1;if(done){GS='over';gsT=0;winner=left.slice().sort((a,b)=>b.kos-a.kos)[0]||(TEAMS_ON()?F.find(x=>x.team!==f.team):F.find(x=>x!==f));if(winner)winner.place=1;if(TEAMS_ON())for(const x of left)x.place=1;}}}
 
 function mimicCopy(a,t,dur){const fresh=a.copyT<=0||a.copyCi!==t.ci;a.copyT=dur;a.copyCi=t.ci;a.buf=null;if(fresh){burst(a.x,a.y-30,22,['#e8c040','#ffffff',t.C.col],2.4,22);FXL.push({k:'txt',s:'MIMIC: '+t.C.sn,x:a.x,y:a.y-76,t:0,life:60,col:'#e8c040'});sfx('power');}}
 
@@ -3630,7 +3636,7 @@ function keyIn(m){const any=a=>a.some(c=>K[c]);const x=(K[m.r]?1:0)-(K[m.l]?1:0)
 function padIn(i){try{const ps=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];const gp=ps[i];if(!gp)return null;const b=k=>gp.buttons[k]&&gp.buttons[k].pressed,ax=gp.axes;
   let x=ax[0]||0,y=ax[1]||0;if(Math.abs(x)<.25)x=0;if(Math.abs(y)<.25)y=0;if(b(14))x=-1;if(b(15))x=1;if(b(12))y=-1;if(b(13))y=1;
   const r={x,y,A:b(0),B:b(1),J:b(2)||b(3),S:b(4)||b(6)||b(7),G:b(5)};const cx=ax[2]||0,cy=ax[3]||0;if(Math.hypot(cx,cy)>.6){r.x=Math.abs(cx)>Math.abs(cy)?Math.sign(cx):0;r.y=Math.abs(cy)>=Math.abs(cx)?Math.sign(cy):0;r.A=true;r.sm=1;}return r;}catch(e){return null;}}
-function merge(...a){const o={x:0,y:0,J:0,A:0,B:0,S:0,G:0,T:0,sm:0};for(const s of a){if(!s)continue;if(Math.abs(s.x||0)>Math.abs(o.x))o.x=s.x;if(Math.abs(s.y||0)>Math.abs(o.y))o.y=s.y;for(const k of['J','A','B','S','G','T','sm'])o[k]=o[k]||s[k];}return o;}
+function merge(...a){const o={x:0,y:0,J:0,A:0,B:0,S:0,G:0,T:0,SH:0,sm:0};for(const s of a){if(!s)continue;if(Math.abs(s.x||0)>Math.abs(o.x))o.x=s.x;if(Math.abs(s.y||0)>Math.abs(o.y))o.y=s.y;for(const k of['J','A','B','S','G','T','SH','sm'])o[k]=o[k]||s[k];}return o;}
 const TOUCH={x:0,y:0,J:0,A:0,B:0,S:0,G:0};
 function humanIn(f){if(f.id===0){const n=SEL.mode[1]==='h'?0:null;return merge(keyIn(P1K),TOUCH,padIn(0),SEL.mode[1]!=='h'?keyIn(P2K):null);}return merge(keyIn(P2K),padIn(1));}
 
@@ -3728,23 +3734,27 @@ function isNin(gp){return /nintendo|joy-?con|pro controller|057e|switch/i.test(g
 function pads(){try{return navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];}catch(e){return[];}}
 const PADMAP=[null,null,null,null];
 function padOf(n){const k=PADMAP[n];if(k===null)return null;return pads().find(g=>g.index===k)||null;}
-function padIn(i){const gp=padOf(i);if(!gp)return null;const b=k=>gp.buttons[k]&&gp.buttons[k].pressed,ax=gp.axes,n=isNin(gp);
-  let x=ax[0]||0,y=ax[1]||0;if(Math.abs(x)<.25)x=0;if(Math.abs(y)<.25)y=0;
+const TAPS={};
+function padIn(i){const gp=padOf(i);if(!gp)return null;const b=k=>!!(gp.buttons[k]&&(gp.buttons[k].pressed||gp.buttons[k].value>.35)),ax=gp.axes,n=isNin(gp);
+  /* radial deadzone, rescaled so a full push is exactly 1 */
+  let x=ax[0]||0,y=ax[1]||0;{const m=Math.hypot(x,y);if(m<.22){x=0;y=0;}else{const k=Math.min(1,(m-.22)/.7)/m;x*=k;y*=k;}}
+  /* tap jump needs a quick flick up, so holding up for an up-tilt or up-special does not jump */
+  const tp=TAPS[gp.index]||(TAPS[gp.index]={n:0,on:false}),now=performance.now();if(y>-.3){tp.n=now;tp.on=false;}else if(y<-.74&&!tp.on&&now-tp.n<110)tp.on=true;if(y>-.5)tp.on=false;
   /* Smash Ultimate default layout: A attack, B special, X/Y jump, ZL/ZR shield, L/R grab, right stick smash, D-pad taunt, tap-jump on the left stick */
-  const A=n?b(1):b(0),B=n?b(0):b(1),tap=(ax[1]||0)<-.72&&!A&&!B;const r={x,y,A,B,J:b(2)||b(3)||tap,S:b(6)||b(7),G:b(4)||b(5),T:b(12)||b(13)||b(14)||b(15)};const cx=ax[2]||0,cy=ax[3]||0;if(Math.hypot(cx,cy)>.6){r.x=Math.abs(cx)>Math.abs(cy)?Math.sign(cx):0;r.y=Math.abs(cy)>=Math.abs(cx)?Math.sign(cy):0;r.A=true;r.sm=1;}return r;}
+  const A=n?b(1):b(0),B=n?b(0):b(1),tap=tp.on&&!A&&!B;const r={x,y,A,B,J:b(2)||b(3)||tap,SH:b(2)&&b(3),S:b(6)||b(7),G:b(4)||b(5),T:b(12)||b(13)||b(14)||b(15)};const cx=ax[2]||0,cy=ax[3]||0;if(Math.hypot(cx,cy)>.55){r.x=Math.abs(cx)>Math.abs(cy)?Math.sign(cx):0;r.y=Math.abs(cy)>=Math.abs(cx)?Math.sign(cy):0;r.A=true;r.sm=1;}return r;}
 function humanIn(f){const n=f.id,parts=[padIn(n)];if(n===0){parts.push(keyIn(P1K),TOUCH,{x:0,y:0,T:K.KeyT});if(SEL.mode[1]!=='h')parts.push(keyIn(P2K));}else if(n===1)parts.push(keyIn(P2K));return merge(...parts);}
 const SPREAD={2:[-100,100],3:[-125,0,125],4:[-138,-46,46,138]};
-function startMatch(){if(MODE!=='versus'){startModeMatch();return;}const sl=inSlots();if(sl.length<2){toast('Add at least 2 fighters (press X on a controller, or click a player tag)');return;}
+function startMatch(){if(MODE!=='versus'){startModeMatch();return;}const sl=inSlots();if(!teamCheck(sl))return;if(sl.length<2){toast('Add at least 2 fighters (press X on a controller, or click a player tag)');return;}
   audioInit();MATCH.stocks=SEL.stocks;setStage(SEL.stage<0?fl(rnd()*STAGES.filter(s=>!s.hidden).length):SEL.stage);SLOW=0;ZF.t=0;
   F=sl.map(n=>{const md=SEL.mode[n];return newFighter(n,SEL.p[n],md==='h'?'human':'cpu',md==='h'?1:(isNaN(+md)?2:+md));});
-  const sp=SPREAD[F.length];F.forEach((f,i)=>{f.x=WW/2+sp[i];f.face=sp[i]>0?-1:1;});
+  const sp=SPREAD[F.length];F.forEach((f,i)=>{f.x=WW/2+sp[i];f.face=sp[i]>0?-1:1;});teamSetup();
   ENT=[];PS=[];FXL=[];STAGE.temp=[];LEDGES.forEach(l=>l.occ=null);GS='count';gsT=0;winner=null;shakeA=0;flashA=0;CAM.x=WW/2;CAM.y=WH/2;CAM.z=1.2;
   $('#title').hidden=true;$('#select').hidden=true;$('#stagesel').hidden=true;$('#game').hidden=false;$('#overlay').hidden=true;$('#touch').hidden=!isTouch;paused=false;running=true;
   if(isTouch){try{const el=document.documentElement;if(el.requestFullscreen&&!document.fullscreenElement)el.requestFullscreen().then(()=>{try{screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}).catch(()=>{});}catch(e){}}}
 function toast(msg){let t=$('#toast');if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);}t.textContent=msg;t.classList.add('on');clearTimeout(toast.T);toast.T=setTimeout(()=>t.classList.remove('on'),2200);}
-function toStageSel(){if(MODE!=='versus'){startModeMatch();return;}if(inSlots().length<2){toast('Add at least 2 fighters (press X on a controller, or click a player tag)');return;}audioInit();running=false;paused=false;$('#overlay').hidden=true;$('#game').hidden=true;$('#title').hidden=true;$('#select').hidden=true;$('#stagesel').hidden=false;
+function toStageSel(){if(MODE!=='versus'){startModeMatch();return;}if(!teamCheck(inSlots()))return;if(inSlots().length<2){toast('Add at least 2 fighters (press X on a controller, or click a player tag)');return;}audioInit();running=false;paused=false;$('#overlay').hidden=true;$('#game').hidden=true;$('#title').hidden=true;$('#select').hidden=true;$('#stagesel').hidden=false;
   $('#ssvs').textContent=inSlots().map(n=>slotLabel(n)+' '+CH[SEL.p[n]].sn).join('  vs  ')+'  ·  '+SEL.stocks+' stocks';SEL.hov=SEL.stage;refreshStage();}
-function showResults(){if(MODE==='survival'){showSurvResults();return;}const ov=$('#overlay');ov.hidden=false;ov.innerHTML='';const box=document.createElement('div');box.className='ovc res';const w=winner;
+function showResults(){if(MODE==='survival'){showSurvResults();return;}if(TEAMS_ON()){showTeamResults();return;}const ov=$('#overlay');ov.hidden=false;ov.innerHTML='';const box=document.createElement('div');box.className='ovc res';const w=winner;
   const who=f=>(f.ctrl==='cpu'?'CPU':'P'+(f.id+1));
   const h=document.createElement('h2');h.textContent=who(w)+' WINS!';h.style.color=w.col;box.appendChild(h);
   const c=mk(130,130);c.className='rsprite';portrait(w.ci,c,'full','win');box.appendChild(c);
@@ -4212,6 +4222,28 @@ function ninjaFX(f){if(f.team!==1||f.dead||f.gone)return;const id=f.C.id;if(id==
   else if(id==='ninja3'){wring(x,y,4,'#b06aff',2);wp('#ffffff',x,y);}
   else if(id==='ninjaB'){wpoly('#f6c94e',[x-5,y+3,x-5,y-3,x-2,y,x,y-4,x+2,y,x+5,y-3,x+5,y+3]);}
   if(id==='ninjaB'||id==='ninjaBG'||id==='ninjaBF'){wpoly('#f6c94e',[x-5,y-9,x-5,y-14,x-2,y-11,x,y-15,x+2,y-11,x+5,y-14,x+5,y-9]);const w=34,hp=clamp(1-f.dmg/260,0,1);wr('#0c0820',x-w/2-1,y+10,w+2,5);wr('#ff4a4a',x-w/2,y+11,w*hp,3);}}
+
+/* ===================== TEAM BATTLES (2v2, 1v3, three teams...) ===================== */
+SEL.teams=false;SEL.team=[0,1,0,1];
+const TCOL=['#ff5a5a','#5a9aff','#5ae87a'],TNAME=['RED','BLUE','GREEN'];
+function TEAMS_ON(){return MODE==='versus'&&!!SEL.teams;}
+function teamCheck(sl){if(!TEAMS_ON())return true;if(new Set(sl.map(n=>SEL.team[n])).size<2){toast('Teams: put fighters on at least two different teams');return false;}return true;}
+function teamSetup(){if(!TEAMS_ON()){for(const f of F)if(f.team!==undefined&&MODE==='versus')delete f.team;return;}
+  for(const f of F){f.team=SEL.team[f.id];f.col=TCOL[f.team];}
+  /* line the teams up on opposite sides */
+  const ord=F.slice().sort((a,b)=>a.team-b.team||a.id-b.id),sp=SPREAD[F.length];ord.forEach((f,i)=>{f.x=WW/2+sp[i];f.face=sp[i]>0?-1:1;});}
+function showTeamResults(){const ov=$('#overlay');ov.hidden=false;ov.innerHTML='';const box=document.createElement('div');box.className='ovc res';const w=winner,wt=w?w.team:0;
+  const h=document.createElement('h2');h.textContent=TNAME[wt]+' TEAM WINS!';h.style.color=TCOL[wt];box.appendChild(h);
+  const pr=document.createElement('div');pr.className='row';F.filter(f=>f.team===wt).forEach(f=>{const c=mk(110,110);c.className='rsprite';portrait(f.ci,c,'full','win');pr.appendChild(c);});box.appendChild(pr);
+  const tb=document.createElement('div');tb.className='stats';F.slice().sort((a,b)=>(a.team===wt?0:1)-(b.team===wt?0:1)||a.team-b.team||b.kos-a.kos).forEach(x=>{const r=document.createElement('div');r.innerHTML='<b></b><span></span>';r.querySelector('b').textContent=TNAME[x.team]+'  '+(x.ctrl==='cpu'?'CPU':'P'+(x.id+1))+' '+x.C.sn;r.querySelector('b').style.color=TCOL[x.team];
+    r.querySelector('span').textContent=x.kos+' KO · '+x.falls+' falls · '+fl(x.dealt)+'% dealt';tb.appendChild(r);});box.appendChild(tb);
+  const row=document.createElement('div');row.className='row';const mkb=(t,cls,fn)=>{const b=document.createElement('button');b.className='btn'+(cls?' '+cls:'');b.textContent=t;b.onclick=fn;row.appendChild(b);};
+  mkb('REMATCH','pri',startMatch);mkb('STAGES','',toStageSel);mkb('FIGHTERS','',toSelect);box.appendChild(row);ov.appendChild(box);}
+function teamDecor(){const opt=$('#teamOpt');if(opt)opt.hidden=MODE!=='versus';for(let n=0;n<4;n++){const p=$('#pp'+n);if(!p)continue;let c=p.querySelector('.tmchip');const show=TEAMS_ON()&&SEL.mode[n]!=='off';
+    if(!c){c=document.createElement('button');c.className='tmchip';c.onclick=e=>{e.stopPropagation();SEL.team[n]=(SEL.team[n]+1)%3;sfx('pop');};p.appendChild(c);}
+    c.hidden=!show;if(show){const t=SEL.team[n],tx=TNAME[t]+' TEAM';if(c.textContent!==tx)c.textContent=tx;c.style.background=TCOL[t];}}}
+setInterval(()=>{try{if(!$('#select').hidden)teamDecor();}catch(e){}},120);
+(function wait(){const seg=$('#tm');if(!seg||!document.querySelector('.card')){setTimeout(wait,60);return;}seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{SEL.teams=b.dataset.v==='1';if(SEL.teams)toast('Teams on: use the coloured tag in each box to pick a side');}));})();
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
