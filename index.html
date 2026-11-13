@@ -226,7 +226,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
     <div class="selmain4"><div class="roster" id="roster"></div><div class="pprow" id="pprow"></div></div>
     <div class="selfoot">
       <div class="opt"><span class="lab">STOCKS</span><div class="seg" id="stk"><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div></div>
-      <span class="padhint">🖱 Click a player box, then a fighter · 🎮 <b>A</b> join / lock in · <b>B</b> back · <b>X</b> add/remove CPU · <b>Y</b> CPU level · <b>&minus;</b> / Select: character guide · <b>+</b> / Start: next</span>
+      <span class="padhint"><b id="padcount" style="color:var(--gold)"></b><br>🖱 Click a player box, then a fighter · 🎮 <b>A</b> join / lock in · <b>B</b> back · <b>X</b> add/remove CPU · <b>Y</b> CPU level · <b>&minus;</b> / Select: character guide · <b>+</b> / Start: next</span>
       <button class="fight" id="fight">STAGE &rarr;</button>
     </div>
   </section>
@@ -3444,7 +3444,9 @@ function inSlots(){return[0,1,2,3].filter(n=>SEL.mode[n]&&SEL.mode[n]!=='off'&&S
 /* Nintendo pads put "A" on the right face button; swap so A always means confirm/attack */
 function isNin(gp){return /nintendo|joy-?con|pro controller|057e|switch/i.test(gp.id||'');}
 function pads(){try{return navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];}catch(e){return[];}}
-function padIn(i){const gp=pads()[i];if(!gp)return null;const b=k=>gp.buttons[k]&&gp.buttons[k].pressed,ax=gp.axes,n=isNin(gp);
+const PADMAP=[null,null,null,null];
+function padOf(n){const k=PADMAP[n];if(k===null)return null;return pads().find(g=>g.index===k)||null;}
+function padIn(i){const gp=padOf(i);if(!gp)return null;const b=k=>gp.buttons[k]&&gp.buttons[k].pressed,ax=gp.axes,n=isNin(gp);
   let x=ax[0]||0,y=ax[1]||0;if(Math.abs(x)<.25)x=0;if(Math.abs(y)<.25)y=0;if(b(14))x=-1;if(b(15))x=1;if(b(12))y=-1;if(b(13))y=1;
   /* Smash Ultimate default layout: A attack, B special, X/Y jump, L/R shield, ZL/ZR grab, right stick smash, tap-jump on the left stick */
   const A=n?b(1):b(0),B=n?b(0):b(1),tap=(ax[1]||0)<-.72&&!A&&!B;const r={x,y,A,B,J:b(2)||b(3)||tap,S:b(4)||b(5),G:b(6)||b(7)};const cx=ax[2]||0,cy=ax[3]||0;if(Math.hypot(cx,cy)>.6){r.x=Math.abs(cx)>Math.abs(cy)?Math.sign(cx):0;r.y=Math.abs(cy)>=Math.abs(cx)?Math.sign(cy):0;r.A=true;r.sm=1;}return r;}
@@ -3487,7 +3489,7 @@ function buildSelect(){const ro=$('#roster');
   $('#fight').onclick=toStageSel;$('#pauseBtn').onclick=togglePause;$('#muteBtn').onclick=e=>{muted=!muted;e.currentTarget.textContent=muted?'SOUND OFF':'SOUND ON';};
   $('#helpBtn').onclick=()=>{$('#help').hidden=!$('#help').hidden;};$('#helpClose').onclick=()=>{$('#help').hidden=true;};
   $('#fsBtn').onclick=()=>{try{if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen();}catch(e){}};}
-function renderInfo(n,ci){const el=$('#info'+n);el.innerHTML='';if(SEL.mode[n]==='off'){const p=document.createElement('p');p.className='join';p.textContent='Press A on controller '+(n+1)+' to join';el.appendChild(p);return;}
+function renderInfo(n,ci){const el=$('#info'+n);el.innerHTML='';if(SEL.mode[n]==='off'){const p=document.createElement('p');p.className='join';p.textContent='Press any button on another controller to join';el.appendChild(p);return;}
   const C=CH[ci];const h=document.createElement('h2');h.textContent=C.card||C.n;h.style.color=C.col;const q=document.createElement('div');q.className='q';q.textContent=C.q;el.append(h,q);
   if(SEL.ready[n]){const r=document.createElement('div');r.className='rdy';r.textContent='READY!';el.appendChild(r);}}
 function normSel(){for(let n=0;n<4;n++){if(SEL.mode[n]===undefined)SEL.mode[n]='off';if(SEL.p[n]===undefined||!CH[SEL.p[n]])SEL.p[n]=[0,6,11,17][n];if(SEL.ready[n]===undefined)SEL.ready[n]=false;}}
@@ -3501,16 +3503,20 @@ function prevTick(){for(let n=0;n<4;n++){if(SEL.mode[n]==='off')continue;let pv=
     if(SEL.ready[n]&&!pv.mv&&pv.clock%60===0){pv.st='win';}renderPreview(n,pv);}}
 /* ---------- controller menu navigation ---------- */
 const PADP=[{},{},{},{}];
-function padBtns(i){const gp=pads()[i];if(!gp)return null;const n=isNin(gp),b=k=>!!(gp.buttons[k]&&gp.buttons[k].pressed),ax=gp.axes;
+function padBtns(gp){if(!gp)return null;const n=isNin(gp),b=k=>!!(gp.buttons[k]&&gp.buttons[k].pressed),ax=gp.axes;
   return{A:n?b(1):b(0),B:n?b(0):b(1),X:n?b(3):b(2),Y:n?b(2):b(3),ST:b(9),SE:b(8),L:b(14)||(ax[0]||0)<-.55,R:b(15)||(ax[0]||0)>.55,U:b(12)||(ax[1]||0)<-.55,D:b(13)||(ax[1]||0)>.55};}
-function padEdges(i){const s=padBtns(i),p=PADP[i];if(!s){PADP[i]={};return null;}const e={};
+function padEdges(gp){const i=gp.index,s=padBtns(gp),p=PADP[i]||(PADP[i]={});if(!s){PADP[i]={};return null;}const e={};
   for(const k of['A','B','X','Y','ST','SE'])e[k]=s[k]&&!p[k];
   for(const k of['L','R','U','D']){const held=s[k]?(p['h'+k]||0)+1:0;e[k]=held===1||(held>16&&held%5===0);s['h'+k]=held;}PADP[i]=s;return e;}
 function cardStep(ci,dx,dy){const cards=[...document.querySelectorAll('.card')],cur=cards.find(c=>+c.dataset.ci===ci);if(!cur)return ci;const r0=cur.getBoundingClientRect(),x0=r0.left+r0.width/2,y0=r0.top+r0.height/2;
   let best=null,bs=1e9;for(const c of cards){if(c===cur)continue;const r=c.getBoundingClientRect(),vx=r.left+r.width/2-x0,vy=r.top+r.height/2-y0,along=vx*dx+vy*dy;if(along<4)continue;const side=Math.abs(vx*dy-vy*dx),sc=along+side*2.2;if(sc<bs){bs=sc;best=c;}}
   return best?+best.dataset.ci:ci;}
 function stageStep(dx,dy){const n=STAGES.length+1,c=SEL.stage<0?n-1:SEL.stage;let k=(c+dx+dy*2+n)%n;SEL.stage=k===n-1?-1:k;SEL.hov=SEL.stage;sfx('pop');refreshStage();}
-function menuPads(){const np=Math.min(4,pads().length);for(let i=0;i<np;i++){const e=padEdges(i);if(!e)continue;audioInit();
+function padSlot(gp,e){let i=PADMAP.indexOf(gp.index);if(i>=0)return i;if(!(e.A||e.B||e.X||e.Y||e.ST||e.SE||e.L||e.R||e.U||e.D))return -1;if(running)return -1;
+  let n=[0,1,2,3].find(k=>PADMAP[k]===null&&(k===0?SEL.mode[0]==='h':SEL.mode[k]!=='h'));if(n===undefined)n=[0,1,2,3].find(k=>PADMAP[k]===null);if(n===undefined)return -1;
+  PADMAP[n]=gp.index;if(SEL.mode[n]!=='h'){SEL.mode[n]='h';SEL.ready[n]=false;PREV4[n]=null;}toast('Controller joined as P'+(n+1));sfx('pop');if(!$('#select').hidden)refreshSel();return -2;}
+function padStatus(){const el=$('#padcount');if(!el)return;const ps=pads(),t=ps.length?ps.length+' controller'+(ps.length>1?'s':'')+' detected':'No controller detected yet (press a button on it)';if(el.textContent!==t)el.textContent=t;}
+function menuPads(){padStatus();for(const gp of pads()){const e=padEdges(gp);if(!e)continue;const i=padSlot(gp,e);if(i<0)continue;audioInit();
     const ovOn=!$('#overlay').hidden,helpOn=!$('#help').hidden;
     if(GD.on){guidePad(e);continue;}
     if(helpOn){if(e.B||e.A||e.ST)$('#help').hidden=true;continue;}
@@ -3530,7 +3536,8 @@ function frame(ts){requestAnimationFrame(frame);const dt=Math.min(100,ts-(last||
   if(running){if(!paused){acc+=dt*(SLOW>0?.28:1);let n=0;while(acc>=1000/60&&n<4){step();acc-=1000/60;n++;}if(n===4)acc=0;}else acc=0;RA=paused?1:clamp(acc/(1000/60),0,1);RDT=dt||16.7;renderScreen();}
   else if(!$('#select').hidden){pacc+=dt;if(pacc>=33){pacc=0;prevTick();}}
   else if(!$('#stagesel').hidden){pacc+=dt;if(pacc>=33){pacc=0;stageTick2();}}}
-addEventListener('gamepadconnected',e=>{toast('Controller '+(e.gamepad.index+1)+' connected: '+(e.gamepad.id||'').split('(')[0].trim().slice(0,40));});
+addEventListener('gamepaddisconnected',e=>{const k=PADMAP.indexOf(e.gamepad.index);if(k>=0){PADMAP[k]=null;toast('P'+(k+1)+' controller disconnected');}delete PADP[e.gamepad.index];});
+addEventListener('gamepadconnected',e=>{toast('Controller found: '+(e.gamepad.id||'').split('(')[0].trim().slice(0,40));});
 
 /* ===================== CHARACTER GUIDE + PAUSE CONTROLS ===================== */
 const GTXT={
