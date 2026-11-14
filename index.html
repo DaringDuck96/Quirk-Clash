@@ -1202,25 +1202,27 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   look:U({skin:'#f0c8a8',eye:'#3a9a4a',hairS:'spiky',hair:'#b8b4d8',stance:'cool',ex:[]}),st:ST({w:.82,run:3.3,air:2.6}),kit:{st:'brawler',fx,el:'mini',pow:.92},
   mv:Object.assign(SM('mini',fx),{nB:M('dashF',5,14,12,hit([0,-30,13],7,4,.05,40),{beh:'dash',bp:{spd:6,f0:5,f1:19,air:'float',intang:1},fx}),
    sB:M('kickF',10,5,16,hit([18,-26,12],8,4.5,.06,40),{beh:'teleBehind',bp:{range:140},fx}),
-   uB:M('uppercut',5,10,18,hit([4,-56,14],7,5,.05,85),{beh:'leapUp',bp:{vy:-11.2,vx:1.8},helpless:1,fx}),
+   uB:M('uppercut',5,10,18,hit([4,-56,14],7,5,.05,85),{beh:'leapUp',bp:{vy:-11.2,vx:1.8},helpless:1,fx,onStart(f){f.inv=Math.max(f.inv,18);}}),
    dB:M('counter',6,2,10,null,{beh:'mini',cd:420,fx}),regrow:M('uppercut',3,7,20,hit([[6,-52,20],[6,-26,16]],15,5,.1,84),{fx,lim:'hF'})}),
   sp:['Pinpoint Dash (shrink and zip through)','Flea Hop (reappear behind a rival)','Springboard','Minimize (tiny for 4s; attack to regrow)']});
- fx=['#5aa84a','#ffb030'];add({id:'sanshou',n:'SANSHOU SEISHU',sn:'SANSHOU',q:'Body Armor',ty:'Mutation',col:'#5aa84a',hurt:[26,65],d:'His skin is iron plate. Nearly eight feet tall, slow, and almost impossible to launch. Carries a flamethrower that also vacuums.',
-  na:'Normals: crushing iron fists and stomps. The slowest fighter in the school, but he does not flinch while charging a smash and takes much less damage.',
-  look:U({head:'armor',skin:'#3e7a3a',glove:'#2e5a2c',stance:'guard',bw:1.2,size:1.27,ex:[]}),st:ST({w:1.6,run:2.45,air:2,jump:-8,g:.44,fall:6.2}),kit:{st:'heavy',fx,el:'iron',pow:1.15,reach:1.15},
-  mv:Object.assign(SM('iron',fx,{f:{dmg:18}}),{nB:M('cast',12,30,16,hit([[30,-40,13],[54,-40,15],[78,-40,17]],1.4,1.6,0,30,{ri:5,eff:'burn'}),{finisher:hit([[56,-40,24]],4,4.5,.06,40,{eff:'burn'}),lim:'none',fx:['#ff7a20','#ffe060'],sub:'flamer'}),
-   sB:M('cast',14,1,22,null,{spawn:[[14,GP({sh:'vac',c:'#ffb030',vx:1.5,life:66,r:13,dmg:1,bkb:1,kbg:0,ang:0,ri:12,multi:1,pull:1,eat:1,max:1})]],cd:220,fx}),
-   uB:M('castUp',8,10,20,hit([0,-10,18],9,5.5,.06,85,{eff:'burn'}),{beh:'leapUp',bp:{vy:-9.6,vx:1.2},helpless:1,fx:['#ff7a20','#ffe060']}),
-   dB:M('counter',6,36,14,hit([0,-32,24],5,4.5,.04,50,{ri:18}),{beh:'reflect',bp:{f0:6,f1:42,armor:1},fx,sub:'wall'})}),
-  sp:['Flamethrower (long burning stream)','Vacuum (pulls rivals in, eats projectiles)','Jet Burst','Iron Wall (armored, reflects)']});
+ fx=['#5aa84a','#c8ffb0'];add({id:'sanshou',n:'SANSHOU SEISHU',sn:'SANSHOU',q:'Body Armor',ty:'Mutation',col:'#5aa84a',hurt:[26,65],d:'His skin is iron plate. A huge, bulky, green iron man who wins with his fists: no projectiles, just the hardest punches in the school.',
+  na:'Normals: enormous iron fists, elbows and stomps with long arms. Slow to start, but small hits do not make him flinch and he does not budge while charging a smash.',
+  look:U({head:'armor',skin:'#3e7a3a',glove:'#2e5a2c',stance:'guard',bw:1.2,size:1.27,ex:[]}),st:ST({w:1.6,run:2.6,air:2.2,jump:-8.6,g:.44,fall:6.2}),kit:{st:'heavy',fx,el:'iron',pow:1.15,reach:1.2},
+  mv:Object.assign(SM('iron',fx,{f:{dmg:19},u:{dmg:16},d:{dmg:15}}),{
+   nB:M('punch',24,5,28,hit([[32,-40,19],[14,-40,15]],23,5.5,.115,42),{beh:'dash',bp:{spd:2.2,f0:22,f1:28,air:'float',armor:1},fx,lim:'hF'}),
+   sB:M('shoulder',16,5,24,hit([[24,-46,16],[12,-30,13]],11,2.5,.03,80,{eff:'root'}),{fx,lim:'none',imp:[[12,3,0],[20,0,0]]}),
+   uB:M('spin',6,30,20,hit([0,-36,27],2.2,2.6,.02,70,{ri:6}),{finisher:hit([0,-36,29],5,5.5,.08,60),beh:'leapUp',bp:{vy:-8.2,vx:3.6,sustain:22},helpless:1,fx,lim:'none'}),
+   dB:M('castDown',11,6,24,[hit([[36,-6,23]],13,4.5,.085,78),hit([[-36,-6,23]],13,4.5,.085,102)],{fx,sub:'slap',lim:'hF'})}),
+  sp:['Iron Haymaker (huge armored wind-up punch)','Headbutt (buries a grounded rival)','Spinning Iron (travels sideways, hits many times)','Hand Slap (shakes the ground on both sides)']});
+ CH[CH.length-1].grabR=34;
  fx=['#ff8ac8','#e8f4ff'];add({id:'kairi',n:'KAIRI SUGIMOTO',sn:'KAIRI',q:'Jellyfish',ty:'Mutation',col:'#ff8ac8',d:'Floats, glows and stings with long tentacles. Immune to poison.',
   na:'Normals: long stinging tentacle lashes with great reach. Very floaty with three jumps. Poison does nothing to her.',
   look:U({skin:'#c88a6a',eye:'#e060a0',hairS:'long',hair:'#e87aa8',hx:['tent'],stance:'cast',blush:1,ex:[]},1),st:ST({w:.8,run:2.7,air:2.7,aj:2,g:.3,fall:4.2}),kit:{st:'brawler',fx,el:'jelly',pow:.9,reach:1.25},
   mv:Object.assign(SM('jelly',fx,{f:{an:'cast',far:40,eff:'para'},u:{an:'castUp'},d:{an:'castDown'}}),{nB:M('cast',9,5,18,hit([[78,-38,9],[56,-38,9],[32,-38,9]],7,3,.04,35,{eff:'para'}),{lim:'none',sub:'lash',fx}),
    sB:M('cast',12,1,18,null,{spawn:[[12,GP({sh:'jelly',c:'#ff8ac8',vx:1.6,life:300,r:9,dmg:6,bkb:3,kbg:.03,ang:80,eff:'stun',max:1,slow:1})]],fx}),
    uB:M('float',4,60,12,hit([0,-2,16],2,2.5,0,270,{ri:9,eff:'para'}),{beh:'fly',bp:{dur:60,spd:2.9},helpless:1,fx,sub:'bell'}),
-   dB:M('roar',14,8,22,hit([0,-36,48],3,2,0,70,{eff:'stun',sd:2}),{cd:300,fx:['#fff0ff','#ff8ac8'],sub:'glow'})}),
-  sp:['Sting Lash (long tentacle, paralyzes)','Drifting Bloom (jellyfish mine, stuns)','Bell Float (stings below)','Biolume Flash (dazes rivals nearby)']});
+   dB:M('roar',14,8,22,hit([0,-36,52],3,2,0,70,{eff:'haze',sd:2}),{cd:260,fx:['#fff0ff','#ff8ac8'],sub:'glow'})}),
+  sp:['Sting Lash (long tentacle, paralyzes)','Drifting Bloom (jellyfish mine, stuns)','Bell Float (stings below)','Biolume Flash (blinds and slows rivals nearby)']});
  CH[CH.length-1].noPoison=1;
  fx=['#c8c8d8','#ffffff'];add({id:'kichi',n:'KICHI ARIGATSU',sn:'KICHI',q:'Chains',ty:'Emitter',col:'#c8c8d8',d:'Creates and controls chains from anywhere on his body. Whips, yanks and binds from mid range.',
   na:'Normals: chain whips with long reach. His grab is a chain lasso that reaches a third of the stage.',
@@ -1244,7 +1246,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   look:U({skin:'#f8e0d0',eye:'#e05a5a',hairS:'wavy',hair:'#f0d890',stance:'cool',blush:1,ex:[]},1),st:ST({w:.86,run:3.25,air:2.6}),kit:{st:'brawler',fx,el:'speed',pow:.9},
   mv:Object.assign(SM('speed',fx),{nB:M('throwF',8,1,14,null,{spawn:[[8,GP({sh:'card',c:'#ff5a8a',n:3,spread:.14,vx:8.5,life:30,r:4,dmg:3.2,bkb:2,kbg:.02,ang:30})]],fx}),
    sB:M('cast',14,1,20,null,{spawn:[[14,GP({sh:'clock',c:'#5a8aff',vx:1,life:130,r:22,dmg:1.2,bkb:1,kbg:0,ang:70,ri:16,multi:1,eff:'haze',max:1})]],cd:220,fx}),
-   uB:M('uppercut',5,10,18,hit([4,-56,14],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-11.4,vx:2.4},helpless:1,fx}),
+   uB:M('uppercut',5,10,14,hit([4,-56,14],5,4.5,.045,85),{beh:'leapUp',bp:{vy:-11.4,vx:2.6},fx}),
    dB:M('roar',12,2,16,null,{beh:'buff',bp:{k:'tea',dur:300},cd:660,fx})}),
   sp:['Card Trick (three cards at bullet speed)','Slow Zone (rivals inside crawl)','Velocity Jump','Overclock (5s speed boost)']});
  fx=['#ff7a20','#5fd0ff'];add({id:'taru',n:'TARU NISHIKAWA',sn:'TARU',q:'Elemental',ty:'Emitter',col:'#ff7a20',d:'Each limb commands an element: fire in his right arm, water in his left, rock in one leg and vines in the other.',
@@ -1253,16 +1255,16 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   mv:{fsmash:SMASH('f',{el:'fire',fx:['#ff7a20','#ffe060'],an:'punch',far:30,dmg:17,eff:'burn'}),usmash:SMASH('u',{el:'water',fx:['#5fd0ff','#ffffff'],an:'uppercut',dmg:14}),dsmash:SMASH('d',{el:'rock',fx:['#a08868','#e8d8c0'],an:'sweep',dmg:14}),
    nB:M('cast',12,1,18,null,{spawn:[[12,{k:'fireball',vx:4.6,life:60,r:7,dmg:8,bkb:4,kbg:.05,ang:40,eff:'burn',explode:1}]],fx:['#ff7a20','#ffe060']}),
    sB:M('cast',14,1,22,null,{spawn:[[14,{k:'wave',vx:3.4,life:70,r:16,dmg:2,bkb:2.5,kbg:.01,ang:30,ri:8,carry:1}]],fx:['#5fd0ff','#fff']}),
-   uB:M('uppercut',6,12,20,hit([6,-60,16],10,5.5,.06,85),{beh:'leapUp',bp:{vy:-9.8,vx:1.5},helpless:1,el:'rock',fx:['#a08868','#e8d8c0']}),
-   dB:M('castDown',12,8,20,hit([[22,-10,14],[-22,-10,14]],6,3,.02,80,{eff:'root'}),{spawn:[[12,{k:'vines'}]],fx:['#6adf6a','#ffd0f0']})},
-  sp:['Right Arm: Fireball','Left Arm: Riptide (carries rivals)','Left Leg: Stone Pillar','Right Leg: Vine Snare (roots)']});
+   uB:M('uppercut',6,12,20,[hit([6,-60,16],8,5.5,.06,85),hit([[18,-8,18],[-18,-8,18]],9,5,.07,60,{f0:6,f1:9})],{beh:'leapUp',bp:{vy:-9.8,vx:1.5},helpless:1,el:'rock',fx:['#a08868','#e8d8c0']}),
+   dB:M('kickUp',14,1,22,null,{spawn:[[14,GP({sh:'rock',c:'#a08868',vx:3.2,vy:-5.2,g:.3,life:90,r:10,dmg:13,bkb:5,kbg:.075,ang:60,gnd:1})]],fx:['#a08868','#e8d8c0']})},
+  sp:['Right Arm: Fireball','Left Arm: Riptide (carries rivals)','Left Leg: Stone Pillar (also erupts at his feet)','Right Leg: Boulder Punt (heavy lobbed rock)']});
  {const C=CH[CH.length-1],E=(ks,el,f2)=>ks.forEach(k=>{const d=C.mv[k];if(d){d.el=el;d.fx=f2;}});E(['jab2','utilt','uair','bair'],'water',['#5fd0ff','#ffffff']);E(['dtilt','dair','dash'],'rock',['#a08868','#e8d8c0']);E(['nair'],'vine',['#6adf6a','#d8ffb0']);C.mv.ftilt.hits.forEach(h=>h.eff='burn');}
  fx=['#8affc8','#ffffff'];add({id:'sai',n:'SAI FUJII',sn:'SAI',q:'Duplicate',ty:'Emitter',col:'#8affc8',d:'Duplicates any object he touches. One thrown knife becomes five.',
   na:'Normals: strikes that leave a doubled after-image. His real damage comes from walls of copied projectiles.',
   look:U({skin:'#f4dcc4',eye:'#4ac88a',hairS:'short',hair:'#2a2030',stance:'cool',ex:[]}),st:ST({w:.92,run:3,aj:2}),kit:{st:'brawler',fx,el:'dup',pow:.95},
   mv:Object.assign(SM('dup',fx),{nB:M('throwF',12,1,20,null,{spawn:[[12,GP({sh:'drone',c:'#8affc8',bm:1,vx:6,life:70,r:8,dmg:7,bkb:3.5,kbg:.05,ang:40})]],fx}),
    sB:M('throwF',9,1,16,null,{spawn:[[9,GP({sh:'knife',c:'#d8dce8',n:2,spread:.1,vx:7.5,life:36,r:4,dmg:5,bkb:2.5,kbg:.03,ang:30})]],fx}),
-   uB:M('uppercut',5,10,18,hit([4,-56,14],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-10.2,vx:1.6},helpless:1,fx}),
+   uB:M('uppercut',5,10,18,hit([4,-56,14],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-10.2,vx:1.6},helpless:1,fx,spawn:[[6,GP({sh:'knife',c:'#d8dce8',n:2,spread:.5,vx:.01,vy:6.5,life:34,r:5,dmg:4,bkb:3,kbg:.03,ang:-80})]]}),
    dB:M('throwF',16,1,22,null,{spawn:[[16,GP({sh:'knife',c:'#d8dce8',n:5,spread:.22,vx:6.4,life:42,r:5,dmg:3,bkb:2,kbg:.025,ang:25})]],fx})}),
   sp:['Drone Boomerang (flies out and back)','Double Shot (two knives)','Copy Leap (he also gets a third jump)','Copy Storm (one knife becomes five)']});
  fx=['#5ad8ff','#ffffff'];add({id:'tenmetsu',n:'TENMETSU KAYAMA',sn:'TENMETSU',q:'Aura Blink',ty:'Emitter',col:'#5ad8ff',d:'Infuses things with his aura, then teleports them, or himself, when he blinks.',
@@ -1279,8 +1281,8 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   mv:Object.assign(SM('venom',fx,{f:{eff:'para'},u:{eff:'para'},d:{eff:'para'}}),{nB:M('cast',12,1,18,null,{spawn:[[12,{k:'venom',vx:4.4,vy:-3,g:.25,life:70,r:6,dmg:5,bkb:2,kbg:.02,ang:40,eff:'para'}]],fx:['#a0ff40','#e8ffd0']}),
    sB:M('dive',6,16,14,hit([16,-28,13],9,4.5,.06,38),{beh:'dash',bp:{spd:6,f0:6,f1:22,air:'float'},fx}),
    uB:M('uppercut',5,10,18,hit([4,-56,14],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-13.4,vx:2},helpless:1,fx}),
-   dB:M('counter',4,22,20,null,{beh:'counter',bp:{f0:4,f1:26,mode:'shadow',mult:1.2},fx})}),
-  sp:['Toxin Spit (paralyzes)','Frog Lunge','Super Jump (highest in the school)','Toxic Skin (counter)']});
+   dB:M('roar',12,10,20,hit([0,-32,44],1.5,1.5,0,70,{ri:5,eff:'poison'}),{cd:200,fx:['#a0ff40','#e8ffd0'],sub:'mist'})}),
+  sp:['Toxin Spit (paralyzes)','Frog Lunge','Super Jump (highest in the school)','Toxic Sweat (poison cloud around him)']});
  CH[CH.length-1].wjMax=6;
  fx=['#d8dce8','#5a8ab8'];add({id:'hari',n:'HARI UDE',sn:'HARI',q:'Stinger',ty:'Transformation',col:'#5a8ab8',d:'Morphs his hands and forearms into extendable lances. Out-reaches almost everyone, but must keep rivals at the tip.',
   na:'Normals: lance thrusts with the longest melee reach in the school. Hits at the tip are sweet spots; up close he is weak.',
@@ -1311,7 +1313,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    bair:M('bairK',6,4,14,hit([-24,-30,12],13,4.5,.075,140),{lim:'none',fx,ll:10,sub:'item'}),
    nB:M('throwF',12,1,18,null,{spawn:[[12,{k:'dish',vx:3.4,vy:-3.6,g:.22,life:90,r:6,dmg:7,bkb:3.5,kbg:.05,ang:50}]],fx}),
    sB:M('punch',9,12,18,hit([22,-32,15],10,5,.065,40),{beh:'dash',bp:{spd:5,f0:9,f1:21,air:'float'},fx}),
-   uB:M('uppercut',5,10,18,hit([4,-56,14],7,4.5,.05,85),{beh:'leapUp',bp:{vy:-12.6,vx:1.8},helpless:1,fx}),
+   uB:M('uppercut',5,10,20,hit([[6,-58,15],[8,-36,12]],11,5,.085,84),{beh:'leapUp',bp:{vy:-12.6,vx:1.8},helpless:1,fx}),
    dB:M('eat',10,40,14,null,{beh:'heal',bp:{amt:10},cd:840,fx})},
   sp:['Pouch Surprise (throws a random snack)','Dash Punch (lunging straight)','Rising Uppercut (huge hop)','Snack Break (heals 10%)']});
  fx=['#b06aff','#ffe060'];add({id:'maho',n:'MAHO MOTOKONOKO',sn:'MAHO',q:'Magic',ty:'Emitter',col:'#b06aff',d:'Channels real magic through his encyclopedic knowledge of tabletop spells.',
@@ -1325,25 +1327,25 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
  fx=['#f0b040','#ffffff'];add({id:'raion',n:'RAION TAKAO',sn:'RAION',q:'Leonin',ty:'Mutation',col:'#f0b040',hurt:[20,60],d:'Everything a lion can do: claws, a pounce, crushing jaws and a roar that rattles the stage.',
   na:'Normals: raking claw swipes and heavy paws. Big, strong and faster than he looks.',
   look:U({head:'lion',skin:'#e0a050',hair:'#8a3a18',glove:'#e0a050',stance:'guard',bw:1.15,size:1.18,tailC:'#e0a050',tailC2:'#d89848',ex:['tail']}),st:ST({w:1.25,run:3.3,air:2.4}),kit:{st:'heavy',fx,el:'claw',pow:1.08},
-  mv:Object.assign(SM('claw',fx,{f:{dmg:17}}),{nB:M('roar',12,6,20,hit([0,-32,46],6,5.5,.03,40,{sd:4}),{fx,spawn:[[12,{k:'roar'}]]}),
+  mv:Object.assign(SM('claw',fx,{f:{dmg:17}}),{nB:M('slashF',6,16,16,hit([[26,-34,14],[12,-34,11]],2.6,2,.01,30,{ri:5}),{finisher:hit([[28,-34,17]],5,4.5,.07,42),imp:[[6,2.4,0],[22,0,0]],fx,lim:'hF'}),
    sB:M('dive',8,18,16,hit([20,-30,15],12,5,.07,40),{beh:'dash',bp:{spd:5.6,f0:8,f1:26,air:'grav',armor:1},fx}),
    uB:M('uppercut',6,12,20,hit([6,-60,16],10,5.5,.06,85),{beh:'leapUp',bp:{vy:-10.2,vx:1.6},helpless:1,fx}),
    dB:M('lunge',8,6,22,null,{beh:'cgrab',bp:{box:[4,-46,30,40],mode:'constrict',eff:null},fx})}),
-  sp:['Roar (pushes everyone back, shreds shields)','Pounce (armored)','Lion Leap','Maul (command grab, beats shields)']});
+  sp:['Claw Flurry (advancing triple rake)','Pounce (armored)','Lion Leap','Maul (command grab, beats shields)']});
  fx=['#5fd0ff','#ffffff'];add({id:'tsuki',n:'TSUKI TSUNAMI',sn:'TSUKI',q:'Water Bending',ty:'Emitter',col:'#5fd0ff',d:'Controls water in every form: its shape, its density and its temperature.',
   na:'Normals: flowing water strikes with good reach. She can freeze her water into ice spikes.',
   look:U({skin:'#d8a078',eye:'#7ad8ff',hairS:'bun',hair:'#5a3424',stance:'cast',ex:[]},1),st:ST({w:.9,run:3,air:2.6}),kit:{st:'brawler',fx,el:'water',pow:.95,reach:1.2},
   mv:Object.assign(SM('water',fx,{f:{an:'cast',far:40},u:{an:'castUp'},d:{an:'castDown'}}),{nB:M('cast',9,5,18,hit([[80,-38,10],[56,-38,9],[32,-38,9]],8,3.4,.05,35),{lim:'none',fx,el:'jelly',sub:'whip'}),
    sB:M('cast',14,1,22,null,{spawn:[[14,{k:'wave',vx:3.6,life:70,r:16,dmg:2,bkb:2.5,kbg:.01,ang:30,ri:8,carry:1}]],fx}),
    uB:M('castUp',5,24,18,hit([0,-20,15],2,3,.01,88,{ri:6}),{beh:'leapUp',bp:{vy:-9.6,vx:1.4,sustain:16},helpless:1,trailK:'water',fx}),
-   dB:M('castDown',14,1,22,null,{spawn:[[14,{k:'spikewave',cnt:3,gap:26,dmg:6,eff:'freeze'}]],airAlt:{spawn:[[10,{k:'icicle',vy:5,life:60,r:7,dmg:9,bkb:3,kbg:.05,ang:-70}]]},fx:['#8fe4ff','#fff']})}),
-  sp:['Water Whip (long reach)','Tidal Wave (carries rivals)','Waterspout','Flash Freeze (ice spikes; icicle in the air)']});
+   dB:M('cast',14,1,20,null,{spawn:[[14,GP({sh:'bubble',c:'#5fd0ff',vx:2.2,vy:-.4,life:130,r:12,dmg:5,bkb:3,kbg:.03,ang:80,eff:'stick',max:1,slow:1})]],fx})}),
+  sp:['Water Whip (long reach)','Tidal Wave (carries rivals)','Waterspout','Waterlog Bubble (soaked rivals move slowly)']});
  fx=['#ffffff','#c8a0ff'];add({id:'rei',n:'REI RAMAKATA',sn:'REI',q:'Battle Mind',ty:'Emitter',col:'#c8a0ff',d:'Thinks and reacts in bullet time. Reads every attack before it lands.',
   na:'Normals: fast, precise martial arts with no wasted motion. No projectiles at all. His parry window is twice as long as anyone else’s.',
   look:U({skin:'#c89a78',eye:'#3a3a48',hairS:'messy',hair:'#2a2428',sleepy:1,stance:'low',ex:[]}),st:ST({w:.96,run:3.3,air:2.6}),kit:{st:'brawler',fx,el:'mind'},
   mv:Object.assign(SM('mind',fx,{f:{an:'kickF'},u:{an:'kickUp'}}),{nB:M('counter',3,24,16,null,{beh:'counter',bp:{f0:3,f1:27,mode:'dodge',mult:1.3},fx}),
    sB:M('kickF',7,5,14,hit([18,-26,12],8,4.5,.06,40),{beh:'teleBehind',bp:{range:95},fx}),
-   uB:M('uppercut',5,12,18,hit([6,-60,15],9,5.5,.06,85),{beh:'leapUp',bp:{vy:-10.4,vx:1.6},helpless:1,fx}),
+   uB:M('uppercut',3,14,18,[hit([10,-34,13],4,3,.01,88,{f0:3,f1:6}),hit([6,-62,15],7,5.5,.07,85,{f0:9,f1:14})],{beh:'leapUp',bp:{vy:-10.4,vx:1.6},helpless:1,fx}),
    dB:M('roar',10,6,20,hit([0,-32,70],1,1,0,70,{eff:'haze'}),{cd:420,fx,sub:'time'})}),
   sp:['Read (dodge and counter)','Step In (slip behind a nearby rival)','Rising Knee','Bullet Time (slows everyone nearby)']});
  CH[CH.length-1].parryW=10;
@@ -1352,27 +1354,27 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   look:U({skin:'#f4dcc8',eye:'#3a9a7a',hairS:'messy',hair:'#2e2a2a',stance:'cool',ex:[]}),st:ST({w:.98,run:2.95}),kit:{st:'brawler',fx,el:'heal',pow:.95},
   mv:Object.assign(SM('heal',fx),{nB:M('cast',10,1,16,null,{spawn:[[10,GP({sh:'orb',c:'#7aff9a',vx:5,life:60,r:6,dmg:6,bkb:3,kbg:.04,ang:35})]],fx}),
    sB:M('palm',8,5,18,hit([[26,-36,12],[12,-36,10]],9,4,.055,40),{beh:'siphon',imp:[[4,4.5,0],[12,0,0]],fx}),
-   uB:M('uppercut',5,10,18,hit([4,-56,14],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-10.4,vx:1.6},helpless:1,fx}),
+   uB:M('uppercut',5,10,18,hit([4,-56,14],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-10.4,vx:1.6},helpless:1,fx,onStart(f){if(f.dmg>0){f.dmg=Math.max(0,f.dmg-3);FXL.push({k:'txt',s:'-3%',x:f.x,y:f.y-74,t:0,life:40,col:'#9aff9a'});}}}),
    dB:M('eat',14,6,20,null,{beh:'mend',cd:480,fx})}),
-  sp:['Vital Spark (energy orb)','Siphon Palm (heals him for half the damage)','Second Wind','Mend (heal 8%, or 14% to a teammate beside him)']});
+  sp:['Vital Spark (energy orb)','Siphon Palm (heals him for half the damage)','Second Wind (heals 3% as he jumps)','Mend (heal 8%, or 14% to a teammate beside him)']});
  CH[CH.length-1].regen=1;
  fx=['#b04aff','#ff7ae8'];add({id:'hatsuko',n:'HATSUKO NAGASAKI',sn:'HATSUKO',q:'Necro-Rage',ty:'Emitter',col:'#b04aff',d:'Shapes weapons from the necrotic energy inside her. The more damage she has taken, the harder they hit.',
   na:'Normals: sweeping cuts with spectral blades. Every attack grows stronger as her own damage rises, up to 50% more at 150%.',
   look:U({skin:'#e8d0c8',eye:'#b04aff',hairS:'bun',hair:'#1e1a22',stance:'low',ex:[]},1),st:ST({w:.94,run:3.1}),kit:{st:'blade',fx,el:'necro',reach:1.2},
   mv:Object.assign(SM('necro',fx,{f:{an:'slashF',far:36},u:{an:'slashUp'},d:{an:'slashLow'}}),{nB:M('slashF',10,1,18,null,{spawn:[[10,GP({sh:'blade',c:'#b04aff',vx:6.4,life:46,r:7,dmg:8,bkb:3.5,kbg:.055,ang:35})]],fx}),
    sB:M('slashF',8,14,16,hit([20,-32,16],10,4.5,.065,40),{beh:'dash',bp:{spd:5.4,f0:8,f1:22,air:'float'},fx}),
-   uB:M('slashUp',6,12,20,hit([6,-60,16],9,5.5,.06,85),{beh:'leapUp',bp:{vy:-10.2,vx:1.6},helpless:1,fx}),
+   uB:M('slashUp',6,12,20,hit([[6,-60,16],[24,-36,14],[-24,-36,14]],9,5.5,.06,85),{beh:'leapUp',bp:{vy:-10.2,vx:1.6},helpless:1,fx}),
    dB:M('roar',12,2,14,null,{onStart(f){f.dmg+=8;},beh:'buff',bp:{k:'spice',dur:360},cd:600,fx})}),
   sp:['Spectral Blade (thrown)','Reaper Dash','Rising Scythe','Bloodletting (take 8%, hit 20% harder for 6s)']});
  CH[CH.length-1].necro=1;
  fx=['#ffb020','#fff4b0'];add({id:'ginko',n:'GINKO KASAKABE',sn:'GINKO',q:'Celestial',ty:'Mutation',col:'#ffb020',d:'Flies, shrugs off punishment and has no limit to how strong she can become.',
   na:'Normals: heavy solar-charged blows. Three jumps and the longest flight in the school make her the best in the air among the heavyweights.',
   look:U({skin:'#7a4a30',eye:'#f0a020',hairS:'wavy',hair:'#2a2a3a',stance:'guard',ex:[]},1),st:ST({w:1.25,run:3.1,air:3,aj:2}),kit:{st:'heavy',fx,el:'sun',pow:1.08},
-  mv:Object.assign(SM('sun',fx,{f:{dmg:17}}),{nB:M('cast',12,1,18,null,{spawn:[[12,{k:'ray',len:120,life:10,dmg:8,bkb:3.5,kbg:.05,ang:25}]],fx}),
+  mv:Object.assign(SM('sun',fx,{f:{dmg:17}}),{nB:M('cast',18,1,22,null,{spawn:[[18,GP({sh:'sun',c:'#ffb020',vx:3,life:80,r:12,dmg:13,bkb:5,kbg:.07,ang:45,ex:1})]],fx}),
    sB:M('dashF',8,20,16,hit([24,-32,16],12,5,.07,40),{beh:'dash',bp:{spd:6,f0:8,f1:28,air:'float',armor:1},fx}),
    uB:M('float',4,70,12,null,{beh:'fly',bp:{dur:70,spd:3.9},helpless:1,fx}),
    dB:M('castDown',14,5,22,[hit([[28,-8,18]],12,4,.085,60),hit([[-28,-8,18]],12,4,.085,120)],{fx,sub:'nova'})}),
-  sp:['Sunbeam (instant ray)','Comet Punch (armored flying punch)','Flight (longest in the school)','Solar Quake (shockwave on both sides)']});
+  sp:['Miniature Sun (slow, heavy, explodes)','Comet Punch (armored flying punch)','Flight (longest in the school)','Solar Quake (shockwave on both sides)']});
 }
 const NX={
 kimiko:{na:'Normals: frost-knuckle jabs, Ice Spear, Frost Crown, Frost Slide, ice-blade aerials, Icicle Drop spike.',mv:{
@@ -1598,7 +1600,7 @@ const TUNE={
 const RANGE={kimiko:[5,1.35],uchuu:[5,1.2],kouji:[4,1.3],ryuko:[4,1.25],emi:[4,1.2],bara:[4,1.15],marina:[4,1.1],shuko:[4,1],suze:[3,.9],torabi:[3,.9],keanu:[3,1],gomi:[3,.72],oro:[2,.7],soran:[2,.6],hake:[2,.6],zabu:[2,.7],tatsuya:[2,.8],minato:[2,1],tori:[1,1],shiki:[1,1]};
 Object.assign(TUNE,{
  riku:{role:'Trickster',tip:'Shrinks out of danger, then regrows fist-first.',sp:.84,pw:.92,kb:.94,def:1.05},
- sanshou:{role:'Iron wall',tip:'Slowest and toughest. Flamethrower and vacuum control the ground.',sp:1.3,pw:1.1,kb:1.12,def:.8,armor:1},
+ sanshou:{role:'Iron brawler',tip:'A giant with long arms and the hardest punches. No projectiles at all.',sp:1.26,pw:1.1,kb:1.12,def:.8,armor:1},
  kairi:{role:'Floaty stinger',tip:'Three jumps, long tentacles, paralysis and stuns.',sp:1,pw:.95},
  kichi:{role:'Mid-range binder',tip:'Chains that yank, root and grab from far away.',sp:1.02,pw:1},
  tamashi:{role:'Puppet zoner',tip:'Homing objects from range. Fragile up close.',sp:1.06,pw:.92,def:1.08},
@@ -1617,7 +1619,7 @@ Object.assign(TUNE,{
  tai:{role:'Support',tip:'Regenerates, drains health and heals teammates.',sp:1,pw:.96},
  hatsuko:{role:'Comeback',tip:'Hits harder the more damage she has taken.',sp:.96,pw:.92},
  ginko:{role:'Flying powerhouse',tip:'A heavyweight with three jumps and the longest flight.',sp:1.14,pw:1.06,kb:1.08,def:.92}});
-Object.assign(RANGE,{riku:[1,1],sanshou:[3,1],kairi:[3,1],kichi:[3,1],tamashi:[5,1.2],akemi:[4,1.1],taru:[3,1],sai:[5,1.15],tenmetsu:[2,.8],yado:[2,.8],hari:[3,1],toguchi:[4,1],pitto:[2,.9],maho:[5,1.2],raion:[1,1],tsuki:[4,1],rei:[1,1],tai:[3,.9],hatsuko:[2,.8],ginko:[3,1]});
+Object.assign(RANGE,{riku:[1,1],sanshou:[1,1],kairi:[3,1],kichi:[3,1],tamashi:[5,1.2],akemi:[4,1.1],taru:[3,1],sai:[5,1.15],tenmetsu:[2,.8],yado:[2,.8],hari:[3,1],toguchi:[4,1],pitto:[2,.9],maho:[5,1.2],raion:[1,1],tsuki:[4,1],rei:[1,1],tai:[3,.9],hatsuko:[2,.8],ginko:[3,1]});
 {const NK=['jab','jab1','jab2','jab3','ftilt','utilt','dtilt','dash','fsmash','usmash','dsmash','nair','fair','bair','uair','dair','fthrow','bthrow','uthrow','dthrow'];
  CH.forEach(C=>{const t=TUNE[C.id];if(!t)return;C.role=t.role;C.tip=t.tip;const s=C.st;
   if(t.w)s.w=t.w;if(t.run){s.run*=t.run;s.walk*=t.run;}if(t.air)s.air*=t.air;if(t.jump){s.jump*=t.jump;s.dj*=t.jump;s.sj*=t.jump;}if(t.g)s.g*=t.g;if(t.fall){s.fall*=t.fall;s.ff*=t.fall;}if(t.armor)C.armorSmash=1;
@@ -2302,7 +2304,7 @@ const FSD={
  tatsuya:{name:'PERFECT MIMIC',type:'mimic'}};
 Object.assign(FSD,{
  riku:{name:'GIANT KILLER',type:'rush',spd:8,win:22,dur:70,tick:2,ri:6,fin:[12,9.5,.11,70],col:['#b8b4d8','#ffffff'],vis:'gen'},
- sanshou:{name:"REDEMPTOR'S FLAME",type:'beam',len:240,h:60,dur:85,tick:2.2,ri:6,eff:'burn',fin:[13,9.5,.11,40],col:['#ff7a20','#ffe060'],vis:'gen'},
+ sanshou:{name:'IRON AVALANCHE',type:'rush',spd:6.5,win:28,dur:76,tick:2.4,ri:6,fin:[14,10,.12,50],col:['#5aa84a','#c8ffb0'],vis:'gen'},
  kairi:{name:'MEDUSA BLOOM',type:'zone',r:160,dur:90,tick:2,ri:8,eff:'para',fin:[11,9,.11,65],col:['#ff8ac8','#e8f4ff'],vis:'gen'},
  kichi:{name:'THOUSAND LINKS',type:'beam',len:280,h:50,dur:80,tick:2,ri:7,fin:[12,9,.11,45],col:['#c8c8d8','#ffffff'],vis:'gen'},
  tamashi:{name:'PUPPET PARADE',type:'zone',r:170,dur:90,tick:2,ri:8,fin:[11,9,.11,55],col:['#c88aff','#a8d0f0'],vis:'gen'},
@@ -2323,7 +2325,7 @@ Object.assign(FSD,{
  ginko:{name:'SUPERNOVA DRIVE',type:'rush',spd:9,win:22,dur:70,tick:2.4,ri:6,fin:[14,10,.12,55],col:['#ffb020','#fff4b0'],vis:'gen'}});
 /* bigger, longer, harder-hitting: a Final Smash should end a stock from mid damage */
 const FSCALL={kimiko:'SHATTER!',keanu:'ERUPTION!',bara:'FULL DISPLAY!',tori:'PHASED OUT!',minato:'SNAP BACK!',oro:'VENOM STRIKE!',gomi:'BURN IT ALL!',kouji:'ECLIPSE!',emi:'DIVE!',soran:'RELAY FINISH!',ryuko:'OMEGA BLAST!',shiki:'ONI CRUSH!',zabu:'TAIL SLAM!',marina:'DRAGON GATE!',uchuu:'SUPERNOVA!',shuko:'VANISH!',torabi:'ORDER UP!',suze:'LONG LIVE THE QUEEN!',hake:'EXILED!'};
-Object.assign(FSCALL,{riku:'FULL SIZE!',sanshou:'PURGE!',kairi:'STUNG!',kichi:'BOUND!',tamashi:'CURTAIN CALL!',akemi:'FULL STOP!',taru:'ALL FOUR!',sai:'TIMES A THOUSAND!',tenmetsu:'BLINK!',yado:'PARALYZED!',hari:'PIERCED!',toguchi:'CLOSED!',pitto:'KNOCKOUT!',maho:'NATURAL 20!',raion:'ROAR!',tsuki:'HIGH TIDE!',rei:'CHECKMATE!',tai:'OVERFLOW!',hatsuko:'REQUIEM!',ginko:'SUPERNOVA!'});
+Object.assign(FSCALL,{riku:'FULL SIZE!',sanshou:'IRON FIST!',kairi:'STUNG!',kichi:'BOUND!',tamashi:'CURTAIN CALL!',akemi:'FULL STOP!',taru:'ALL FOUR!',sai:'TIMES A THOUSAND!',tenmetsu:'BLINK!',yado:'PARALYZED!',hari:'PIERCED!',toguchi:'CLOSED!',pitto:'KNOCKOUT!',maho:'NATURAL 20!',raion:'ROAR!',tsuki:'HIGH TIDE!',rei:'CHECKMATE!',tai:'OVERFLOW!',hatsuko:'REQUIEM!',ginko:'SUPERNOVA!'});
 for(const id in FSD){const d=FSD[id];if(d.type==='mimic')continue;d.dur=Math.round(d.dur*1.3);d.tick=Math.round(d.tick*1.15*10)/10;if(d.type==='zone'&&d.r<999)d.r=Math.round(d.r*1.25);if(d.type==='beam'){d.h=Math.round(d.h*1.4);d.len=Math.round(d.len*1.3);}if(d.type==='wave'){d.h=Math.round(d.h*1.25);d.w=Math.round(d.w*1.2);}
   d.fin=[d.fin[0]+5,d.fin[1]+1.6,d.fin[2]+.018,d.fin[3]];d.call=FSCALL[id];}
 FSD.torabi.heal=25;FSD.uchuu.r=270;FSD.ryuko.h=120;FSD.minato.ri=6;FSD.keanu.tick=2.2;FSD.ryuko.tick=2.2;
@@ -4193,26 +4195,26 @@ addEventListener('DOMContentLoaded',()=>{});
 (function(){const gb=$('#guideBtn');if(gb)gb.onclick=()=>openGuide(SEL.p[SEL.active||0]);const gc=$('#guideClose');if(gc)gc.onclick=closeGuide;const pb=$('#pauseBtn');if(pb)pb.onclick=()=>togglePause();})();
 
 Object.assign(GTXT,{
-riku:['Shrinks and zips forward, passing through attacks and rivals, hitting as he goes.','Hops like a flea to just behind a nearby rival and kicks. Short range.','A rising uppercut that carries him upward.','Shrinks to almost nothing for about 4 seconds: a tiny target that moves freely. Press any attack to regrow with a launching uppercut. Getting hit ends it. Cooldown.','Rushes in; if he connects he batters his rival at every size before the final blow.'],
-sanshou:['A long stream of fire that hits many times and burns, ending in a burst.','Reverses the flamethrower: a vacuum drifts forward, dragging rivals toward it and swallowing projectiles.','Fires the flamethrower downward to lift his huge frame. Burns rivals at takeoff. A short recovery.','Braces his iron skin: shrugs off hits, shoves rivals away and reflects projectiles.','A torrent of flame fills the lane in front of him.'],
-kairi:['Lashes a tentacle a long way forward. Paralyzes.','Releases a jellyfish that drifts forward and hangs in the air (one at a time). It stuns whoever touches it.','Floats freely for a second, stinging anyone beneath her bell.','A blinding flash of bioluminescence that dazes rivals nearby and hurts shields. Cooldown.','A bloom of glowing tentacles paralyzes everyone around her.'],
+riku:['Shrinks and zips forward, passing through attacks and rivals, hitting as he goes.','Hops like a flea to just behind a nearby rival and kicks. Short range.','A rising uppercut. He shrinks for an instant as he jumps, so he cannot be hit on the way up.','Shrinks to almost nothing for about 4 seconds: a tiny target that moves freely. Press any attack to regrow with a launching uppercut. Getting hit ends it. Cooldown.','Rushes in; if he connects he batters his rival at every size before the final blow.'],
+sanshou:['Winds up for a long moment, then throws the hardest single punch in the school. He does not flinch during the wind-up.','A headbutt that drives a grounded rival into the floor, leaving them stuck for a moment.','Spins with his arms out, hitting many times. Travels far sideways but gains little height.','Slaps the ground with both hands, launching anyone standing on either side.','Charges in; if he connects he buries his rival under an avalanche of iron fists.'],
+kairi:['Lashes a tentacle a long way forward. Paralyzes.','Releases a jellyfish that drifts forward and hangs in the air (one at a time). It stuns whoever touches it.','Floats freely for a second, stinging anyone beneath her bell.','A blinding flash of bioluminescence: rivals nearby are blinded and slowed, and shields take extra damage. Cooldown.','A bloom of glowing tentacles paralyzes everyone around her.'],
 kichi:['Fires a chain that drags the first rival it hits right to him.','Reels himself forward on a chain, striking on the way.','Throws a chain upward that hits above him and can grab a ledge from a distance.','Chains burst from the ground on both sides and root rivals in place.','A storm of chains fills the lane in front of him.'],
 tamashi:['Sends an object after the nearest rival. It keeps turning to follow them.','Flings two objects at once in a narrow spread.','Has an object carry her through the air in any direction.','Drops something heavy from above a short way ahead. Slow, but it hits hard.','Everything not nailed down joins the parade and batters everyone nearby.'],
-akemi:['Throws three cards at bullet speed. Fast, short-lived, light damage.','Leaves a slow zone drifting forward (one at a time). Rivals inside move at a crawl.','Accelerates herself upward. A fast, far-travelling leap.','Speeds herself up for 5 seconds. Long cooldown.','Brings everyone on the stage to a standstill, then lets it all hit at once.'],
-taru:['Right arm: a fireball that explodes and burns.','Left arm: a wave that rolls along the ground carrying rivals with it.','Left leg: a stone-shod leaping uppercut.','Right leg: vines burst out on both sides and root rivals in place.','All four elements surge forward in a single wave.'],
-sai:['Throws a drone that flies out and curves back to him, hitting on both trips.','Throws a knife and its copy side by side.','A rising strike. He also has a third jump.','Throws one knife that becomes five in a wide fan. Slow to start.','An endless stream of copied blades fills the lane in front of him.'],
+akemi:['Throws three cards at bullet speed. Fast, short-lived, light damage.','Leaves a slow zone drifting forward (one at a time). Rivals inside move at a crawl.','Accelerates herself upward. Unlike other recoveries, she can still act afterwards.','Speeds herself up for 5 seconds. Long cooldown.','Brings everyone on the stage to a standstill, then lets it all hit at once.'],
+taru:['Right arm: a fireball that explodes and burns.','Left arm: a wave that rolls along the ground carrying rivals with it.','Left leg: a leaping uppercut, with a burst of stone at his feet that hits rivals beside him.','Right leg: punts a boulder in a high arc. Slow, heavy, and it shatters on landing.','All four elements surge forward in a single wave.'],
+sai:['Throws a drone that flies out and curves back to him, hitting on both trips.','Throws a knife and its copy side by side.','A rising strike that drops two copied knives straight down. He also has a third jump.','Throws one knife that becomes five in a wide fan. Slow to start.','An endless stream of copied blades fills the lane in front of him.'],
 tenmetsu:['Throws an aura-charged shuriken. Press B again while it flies to blink to it.','Blinks behind the nearest rival within range and kicks.','Blinks a long way in the direction you hold.','Swaps places with the nearest rival, leaving them stunned for a moment. Cooldown.','Blinks around his rival landing strike after strike from every side.'],
-yado:['Spits a glob of toxin in an arc. Paralyzes.','A long, fast frog lunge.','The highest jump in the school.','Counter stance: if he is hit, the toxin on his skin strikes back.','Leaps in; if he connects he pumps his rival full of toxin.'],
+yado:['Spits a glob of toxin in an arc. Paralyzes.','A long, fast frog lunge.','The highest jump in the school.','Sweats a cloud of toxin around himself that poisons anyone close. Cooldown.','Leaps in; if he connects he pumps his rival full of toxin.'],
 hari:['Extends a lance a third of the way across the stage. Slow to start.','Charges forward lance-first.','Vaults upward on a lance, striking above.','Stabs both lances into the ground on either side.','A lance of light spears the whole lane in front of him.'],
 toguchi:['Opens a portal that catches an incoming projectile. Press B again to send it back.','Punches through a portal: the fist appears far in front of her. It does not hit rivals who are close.','Steps through a portal in the direction you hold.','First press leaves a doorway where she stands. Press again anywhere to step back to it.','Portals open all around and collapse on everyone nearby.'],
-pitto:['Pulls a random snack from his pouch and throws it: exploding takoyaki, a fast burning chili, or ramen that splashes.','A lunging straight punch that carries him forward.','An uppercut with a very high kangaroo hop behind it.','Eats a snack from the pouch to heal 10%. Long cooldown.','Rushes in; if he connects he lands a full boxing combo and a knockout blow.'],
+pitto:['Pulls a random snack from his pouch and throws it: exploding takoyaki, a fast burning chili, or ramen that splashes.','A lunging straight punch that carries him forward.','A very high kangaroo hop led by a real knockout uppercut.','Eats a snack from the pouch to heal 10%. Long cooldown.','Rushes in; if he connects he lands a full boxing combo and a knockout blow.'],
 maho:['Three glowing darts that home in on rivals.','A slow-cast fireball that explodes and burns. His hardest hit.','A short teleport in the direction you hold.','A ward that shrugs off hits and reflects projectiles, then bursts.','Meteors rain on everything around him.'],
-raion:['A roar that hits all around him, pushes rivals back and shreds shields.','An armored pounce that does not flinch.','A leaping claw uppercut.','Command grab that beats shields: bites down several times, then throws.','A roar so loud it launches everyone nearby.'],
-tsuki:['A whip of water with very long reach.','A wave that rolls along the ground carrying rivals with it.','Rides a waterspout upward, dragging rivals with her.','Freezes her water: three ice spikes race along the ground and freeze. In the air it drops an icicle that spikes.','A dragon of water surges across the stage.'],
-rei:['Counter stance: if he is hit he slips the blow and strikes back harder.','Slips behind a rival who is close and kicks. Very fast, very short range.','A rising knee.','Everyone nearby is slowed for a couple of seconds while he moves normally. Cooldown.','Rushes in; if he connects, every hit lands exactly where it hurts most.'],
-tai:['Fires an orb of vital energy.','A lunging palm strike that heals him for half the damage it deals.','A rising strike.','Heals himself 8%. With a teammate beside him, heals them 14% and himself 4% instead. Cooldown.','His pool overflows: heals him 20% and blasts everyone nearby.'],
-hatsuko:['Throws a spectral blade.','Dashes forward with a wide scythe cut.','A rising scythe slash.','Takes 8% damage to hit 20% harder for 6 seconds, on top of her rage bonus. Cooldown.','A beam of necrotic energy tears down the lane in front of her.'],
-ginko:['An instant ray of sunlight with good range.','An armored flying punch that does not flinch.','The longest free flight in the school. Steer with the stick.','Slams the ground, sending a shockwave out on both sides.','Flies in at full speed; if she connects she carries her rival into a supernova.']});
+raion:['Steps forward raking with both claws several times, ending in a launching swipe.','An armored pounce that does not flinch.','A leaping claw uppercut.','Command grab that beats shields: bites down several times, then throws.','A roar so loud it launches everyone nearby.'],
+tsuki:['A whip of water with very long reach.','A wave that rolls along the ground carrying rivals with it.','Rides a waterspout upward, dragging rivals with her.','Sends out a big slow bubble (one at a time). Whoever it hits is waterlogged: slower, with lower jumps.','A dragon of water surges across the stage.'],
+rei:['Counter stance: if he is hit he slips the blow and strikes back harder.','Slips behind a rival who is close and kicks. Very fast, very short range.','A knee into a rising kick: two hits, and the fastest up-special to come out.','Everyone nearby is slowed for a couple of seconds while he moves normally. Cooldown.','Rushes in; if he connects, every hit lands exactly where it hurts most.'],
+tai:['Fires an orb of vital energy.','A lunging palm strike that heals him for half the damage it deals.','A rising strike that also heals him 3%.','Heals himself 8%. With a teammate beside him, heals them 14% and himself 4% instead. Cooldown.','His pool overflows: heals him 20% and blasts everyone nearby.'],
+hatsuko:['Throws a spectral blade.','Dashes forward with a wide scythe cut.','A rising scythe slash that also cuts wide on both sides.','Takes 8% damage to hit 20% harder for 6 seconds, on top of her rage bonus. Cooldown.','A beam of necrotic energy tears down the lane in front of her.'],
+ginko:['Throws a miniature sun: slow to cast and slow to travel, but it explodes for big damage.','An armored flying punch that does not flinch.','The longest free flight in the school. Steer with the stick.','Slams the ground, sending a shockwave out on both sides.','Flies in at full speed; if she connects she carries her rival into a supernova.']});
 
 /* ===================== SMASH-STYLE CONTROLLER POINTERS + TITLE SCREEN ===================== */
 const CUR=[null,null,null,null],EDIT=[0,1,2,3];let CLICKER=-1;
@@ -4657,6 +4659,9 @@ EK.gp={init(e,f,s){if(s.hm)e.target=opp(f);if(s.ex)e.explode=1;if(s.multi)e.mult
     case 'jelly':{const p=Math.sin(t*.15);wpoly('#a04a7a',[x-9,y+2,x-8,y-6,x,y-10-p,x+8,y-6,x+9,y+2]);wpoly(c,[x-7,y+1,x-6,y-5,x,y-8-p,x+6,y-5,x+7,y+1]);wp('#ffffff',x-2,y-5);for(let i=-2;i<=2;i++)wl('#ffc0e0',x+i*3,y+2,x+i*3+Math.sin(t*.2+i)*2,y+11+Math.abs(i));if(t%20<3)wring(x,y-2,13,'#fff0ff');break;}
     case 'clock':{X.globalAlpha=.16;wdisc(x,y,e.r,c);X.globalAlpha=.8;wring(x,y,e.r,c,2);for(let i=0;i<12;i++){const a=i/12*TAU;wp('#ffffff',x+Math.cos(a)*(e.r-3),y+Math.sin(a)*(e.r-3));}wl('#ffffff',x,y,x+Math.cos(t*.03)*e.r*.7,y+Math.sin(t*.03)*e.r*.7,2);wl('#ffe060',x,y,x+Math.cos(t*.004)*e.r*.45,y+Math.sin(t*.004)*e.r*.45,2);X.globalAlpha=1;break;}
     case 'vac':{for(let i=0;i<10;i++){const a=i/10*TAU-t*.3,rr=34-((t*2+i*4)%30);wdisc(x+Math.cos(a)*rr,y+Math.sin(a)*rr*.7,1.6,i%2?c:'#ffffff');}wring(x,y,10,c,2);wdisc(x,y,5,'#1a1008');break;}
+    case 'rock':X.save();X.translate(x,y);X.rotate(t*.2);wpoly('#3a2e22',[-11,-4,-4,-11,8,-9,12,2,5,11,-8,9]);wpoly('#a08868',[-9,-4,-3,-9,7,-7,10,2,4,9,-6,7]);wpoly('#c8b090',[-5,-5,0,-8,4,-3,-2,0]);X.restore();break;
+    case 'bubble':{const w=Math.sin(t*.2)*1.5;X.globalAlpha=.3;wdisc(x,y,e.r+w,'#5fd0ff');X.globalAlpha=1;wring(x,y,e.r+w,'#bfe8ff',2);wdisc(x-e.r*.4,y-e.r*.4,2.5,'#ffffff');wp('#ffffff',x+e.r*.3,y+e.r*.2);break;}
+    case 'sun':{for(let i=0;i<10;i++){const a2=i/10*TAU+t*.1;wpoly(i%2?'#ffb020':'#fff4b0',[x+Math.cos(a2-.16)*e.r,y+Math.sin(a2-.16)*e.r,x+Math.cos(a2)*(e.r+7),y+Math.sin(a2)*(e.r+7),x+Math.cos(a2+.16)*e.r,y+Math.sin(a2+.16)*e.r]);}wdisc(x,y,e.r+1,'#c86a00');wdisc(x,y,e.r,'#ffb020');wdisc(x-2,y-2,e.r*.55,'#fff4b0');break;}
     default:wdisc(x,y,e.r+1,'#0c0820');wdisc(x,y,e.r,c);wdisc(x-1,y-1,Math.max(1,e.r-3),'#ffffff');if(t%2===0)part(x-d*e.r,y,0,0,12,c,2,0);}}};
 EK.kchain=Object.assign({},EK.chain,{draw(e){const o=e.owner,sx=o.x+o.face*10;for(let i=0;i<=e.cur;i+=4){const x=sx+o.face*i;wdisc(x,e.y+((i>>2)%2?1:-1),2.4,'#3a3a44');wdisc(x,e.y+((i>>2)%2?1:-1),1.4,(i>>2)%2?'#e8e8f0':'#9a9aa8');}wpoly('#e8e8f0',[e.x-o.face*2,e.y-5,e.x+o.face*7,e.y,e.x-o.face*2,e.y+5]);}});
 /* ---- quirk-themed hit effects ---- */
@@ -4664,8 +4669,15 @@ const NEWFX=(()=>{const arm=(f,d,x,y,c0,c1,w)=>{const x0=f.x+d*8,y0=f.y-38;wl(c0
   return{
   mini(sub,x,y,d,pr,fx,f,R){const g=Math.min(1,pr*3);wring(x,y,3+g*R,'#b8b4d8',2);wring(x,y,1+g*R*.6,'#ffffff');for(let i=0;i<3;i++){const s=2+i*3*g;wr('#b8b4d8',x-d*(12-i*5)-s/2,y-s/2,s,s);}},
   iron(sub,x,y,d,pr,fx,f,R,T){if(sub==='flamer'){const x0=f.x+d*16,y0=f.y-40;for(let i=0;i<28;i++){const t=rnd(),s2=3+t*15,px=x0+d*t*74,py=y0+(rnd()-.5)*2*s2,z=2+t*5;wr(['#a01a08','#ff6a1a','#ffb030','#fff0a0'][fl(rnd()*4)],px-z/2,py-z/2,z,z);}wr('#2e5a2c',x0-d*8,y0-3,d*10,6);return;}
+    if(sub==='slap'){for(const s2 of[-1,1]){const xx=f.x+s2*36;wring(xx,f.y-2,8+pr*18,'#c8ffb0',2);for(let i=0;i<6;i++){const hx=xx+(i-2.5)*7,hh=5+Math.sin(i*1.3+pr*9)*4+(1-pr)*8;wr('#5a5650',hx-2,f.y-hh,5,hh);wr('#8e8a84',hx-1,f.y-hh,3,2);}}return;}
     if(sub==='wall'){X.globalAlpha=.35;wdisc(f.x,f.y-34,30,'#5aa84a');X.globalAlpha=1;for(let i=0;i<6;i++){const a=i/6*TAU+T*.05;wr('#9ad88a',f.x+Math.cos(a)*30-2,f.y-34+Math.sin(a)*30-2,5,5);}wring(f.x,f.y-34,30,'#9ad88a',2);return;}
-    const g=Math.min(1,pr*3.5),S=R*(.7+.4*g);wr('#16301a',x-S-1,y-S-1,S*2+2,S*2+2);wr('#3e7a3a',x-S,y-S,S*2,S*2);wr('#6ab05a',x-S,y-S,S*2,S*.5);for(let i=0;i<3;i++)wr('#16301a',x+d*S*.2,y-S*.5+i*S*.5,d*S*.7,1.5);wring(x,y,S+4+pr*10,'#ffb030',2);},
+    if(sub==='spin'){const cy=f.y-36;for(let k=0;k<2;k++){const a0=T*.55+k*Math.PI;for(let i=0;i<7;i++){const a2=a0-i*.16,rr=30;X.globalAlpha=1-i*.13;wr(i?'#6ab05a':'#16301a',f.x+Math.cos(a2)*rr-5,cy+Math.sin(a2)*rr*.34-5,10,10);if(!i)wr('#3e7a3a',f.x+Math.cos(a2)*rr-4,cy+Math.sin(a2)*rr*.34-4,8,8);}}X.globalAlpha=1;wring(f.x,cy,32+Math.sin(T*.4)*2,'#c8ffb0',1);return;}
+    if(sub==='head'){for(let i=0;i<8;i++){const a2=i/8*TAU;wl(i%2?'#c8ffb0':'#ffffff',x+Math.cos(a2)*5,y+Math.sin(a2)*5,x+Math.cos(a2)*(10+pr*12),y+Math.sin(a2)*(10+pr*12),2);}wdisc(x,y,4+(1-pr)*3,'#c8ffb0');return;}
+    const big=sub==='fist',g=Math.min(1,pr*3.5),S=(big?R*.62:Math.min(R,15)*.6)*(.8+.3*g);
+    wr('#16301a',x-d*S*2.4,y-S*.6-1,d*S*1.6,S*1.2+2);wr('#2e5a2c',x-d*S*2.4,y-S*.6,d*S*1.6,S*1.2);
+    wr('#16301a',x-S-1,y-S-1,S*2+2,S*2+2);wr('#3e7a3a',x-S,y-S,S*2,S*2);wr('#6ab05a',x-S,y-S,S*2,S*.45);for(let i=1;i<4;i++)wr('#16301a',x+d*S*.15,y-S+i*S*.5,d*S*.8,1.5);
+    if(big){for(let i=0;i<5;i++)wl('#c8ffb0',x-d*(S*2.6+i*4),y-S+i*S*.5,x-d*(S*2.6+18+i*5),y-S+i*S*.5,2);wring(x+d*S,y,S+6+pr*22,'#ffffff',3);}
+    wring(x+d*S*.6,y,S+3+pr*9,'#c8ffb0',2);},
   jelly(sub,x,y,d,pr,fx,f,R,T){if(sub==='glow'){X.globalAlpha=.5*(1-pr);wdisc(f.x,f.y-34,46,'#fff0ff');X.globalAlpha=1;for(let i=0;i<10;i++){const a=i/10*TAU;wl('#ff8ac8',f.x+Math.cos(a)*20,f.y-34+Math.sin(a)*20,f.x+Math.cos(a)*(30+pr*20),f.y-34+Math.sin(a)*(30+pr*20),2);}return;}
     if(sub==='bell'){wpoly('#ff8ac8',[f.x-16,f.y-52,f.x,f.y-66,f.x+16,f.y-52,f.x+12,f.y-48,f.x-12,f.y-48]);for(let i=-2;i<=2;i++)wl('#ffc0e0',f.x+i*5,f.y+2,f.x+i*5+Math.sin(T*.3+i)*3,f.y+18,2);return;}
     const blue=sub==='whip',c0=blue?'#1a6aa8':'#a04a7a',c1=blue?'#5fd0ff':'#ff8ac8',x0=f.x+d*8,y0=f.y-38,L=Math.hypot(x-x0,y-y0)*Math.min(1,pr*3+.3),n=14,ux=(x-x0)/(Math.hypot(x-x0,y-y0)||1),uy=(y-y0)/(Math.hypot(x-x0,y-y0)||1);let px=x0,py=y0;
@@ -4714,7 +4726,7 @@ function genFS(e,f,d,t,a){const c0=d.col[0],c1=d.col[1],F2=e.face,cx=e.x,cy=e.y;
   else{for(let i=0;i<4;i++)glow(f.x-F2*i*14,f.y-30,24,c0,.5*a*(1-i*.2));for(const o of e.caught){glow(o.x,o.y-20,44,c0,.6*a);wring(o.x,o.y-20,18+Math.sin(t*.5)*8,c1,2);X.globalCompositeOperation='source-over';for(let i=0;i<3;i++){const an=t*.4+i*2.1;sym(o.x+Math.cos(an)*22,o.y-24+Math.sin(an)*18,i+t);}X.globalCompositeOperation='lighter';}}}
 /* ---- sweet spots ---- */
 {const S=(id,keys,kind)=>{const C=CH.find(c=>c.id===id);if(C)for(const k of keys){const d=C.mv[k];if(d&&d.hits&&d.hits.length)d.sweet=kind;}};
-  S('hari',['jab1','jab2','jab3','ftilt','fsmash','fair','utilt','nB'],'tip');S('kichi',['ftilt','fsmash'],'tip');S('kairi',['ftilt','nB'],'tip');S('tsuki',['nB'],'tip');S('sanshou',['fsmash','ftilt'],'close');S('raion',['fsmash','ftilt'],'close');S('pitto',['fsmash'],'close');S('ginko',['fsmash'],'close');}
+  S('hari',['jab1','jab2','jab3','ftilt','fsmash','fair','utilt','nB'],'tip');S('kichi',['ftilt','fsmash'],'tip');S('kairi',['ftilt','nB'],'tip');S('tsuki',['nB'],'tip');S('sanshou',['fsmash','nB'],'close');S('raion',['fsmash','ftilt'],'close');S('pitto',['fsmash'],'close');S('ginko',['fsmash'],'close');}
 /* smashes of the new students use their quirk effect */
 {const ids=['riku','sanshou','kairi','kichi','tamashi','akemi','sai','tenmetsu','hari','pitto','maho','raion','rei','tai','hatsuko','ginko'];CH.forEach(C=>{if(!ids.includes(C.id))return;for(const k of['fsmash','usmash','dsmash']){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)continue;const b=d.hits[0].b[0];d.vfx={k:'H',el:d.el||C.kit.el,sub:d.sub||(k==='dsmash'&&C.id==='hari'?'twin':undefined),x:b[0],y:b[1],r:b[2]+5};}});}
 /* ===================== every stage gets its own theme ===================== */
@@ -4746,7 +4758,7 @@ function genFS(e,f,d,t,a){const c0=d.col[0],c1=d.col[1],F2=e.face,cx=e.x,cy=e.y;
  shiki:['Slow, with a poor recovery.','Yokai Form trades his shield for power.'],zabu:['Tiny reach and the weakest hits.','Three jumps and the fastest run.'],marina:['Slow on foot and floaty, so she is easy to juggle.','Koi do the hitting, so her body stays out of reach.'],
  uchuu:['Light, and slow on the ground.','Low personal gravity; hold Jump in the air to drift.'],shuko:['Low damage; wins by confusing, not by hitting.',''],torabi:['Average speed and nothing fast up close.','Burns with half his kitchen.'],
  suze:['Light, with low knockback; struggles to finish.','Hold Jump in the air to hover on her wings.'],tatsuya:['Plain and weak until he copies someone.','Becomes whoever he touches.'],
- riku:['Light, short reach, and no projectile.','Tiny while Minimized.'],sanshou:['The slowest runner, a huge target and a poor recovery.','Iron skin: hits under 6% do not make him flinch.'],kairi:['Light and slow; easy to launch.','Immune to poison. Hold Jump in the air to float.'],
+ riku:['Light, short reach, and no projectile.','Tiny while Minimized.'],sanshou:['No projectiles, a huge target, and a recovery that barely gains height.','Iron skin: hits under 6% do not make him flinch.'],kairi:['Light and slow; easy to launch.','Immune to poison. Hold Jump in the air to float.'],
  kichi:['Weak up close, inside his chains.','His grab reaches a third of the stage.'],tamashi:['Frail, with weak normals.','Objects fight for her.'],akemi:['Light hits and low knockback.','Speed lines trail her; Overclock makes her the fastest in the school.'],
  taru:['Slow, and a big target.','A different element in every limb.'],sai:['Little to offer up close.','A third jump from a duplicated foothold.'],tenmetsu:['Average damage; every teleport is punishable if read.','Four ways to teleport.'],
  yado:['Short reach and light.','Six wall jumps and the highest leap.'],hari:['Weak up close: his lances only hurt at the tip.','The longest melee reach.'],toguchi:['Light, and her best punch misses rivals who are close.','Leaves a door she can return to.'],
@@ -4778,6 +4790,53 @@ function rollRandom(){const pool=CH.map((c,i)=>i).filter(i=>!CH[i].hidden);for(l
   b.onclick=()=>{audioInit();const who=CLICKER,n=who>=0?EDIT[who]:SEL.active;if(SEL.mode[n]==='off')SEL.mode[n]='1';SEL.rnd[n]=true;rollRandom();if(who>=0){if(n===who){SEL.ready[n]=true;sfx('power');}else{EDIT[who]=who;sfx('pop');}}else sfx('pop');refreshSel();};
   $('#roster').appendChild(b);
   setInterval(()=>{try{if($('#select').hidden)return;for(let n=0;n<4;n++){const p=$('#pp'+n);if(!p)continue;let c=p.querySelector('.rndchip');const on=SEL.rnd[n]&&SEL.mode[n]!=='off';if(on&&!c){c=document.createElement('div');c.className='rndchip';c.innerHTML='<em>?</em><b>RANDOM</b><span>picked when the match starts</span>';p.appendChild(c);}if(c)c.hidden=!on;}}catch(e){}},150);})();
+
+/* ===================== UNIQUENESS PASS: no two specials play the same ===================== */
+(function(){const c=id=>CH.find(x=>x.id===id),m=(id,k)=>c(id).mv[k];
+ const T=(id,i,sp,tx)=>{const C=c(id);if(sp)C.sp[i]=sp;if(tx&&typeof GTXT!=='undefined'&&GTXT[id])GTXT[id][i]=tx;};
+ let d;
+ /* Sanshou: grounded spin stays on the floor and slides, the air version is the recovery */
+ d=m('sanshou','uB');d.hits[0].dmg=2.4;Object.assign(d,{beh:null,bp:null,helpless:0,imp:[[6,2.6,0],[30,.6,0]],airAlt:{beh:'leapUp',bp:{vy:-8.2,vx:3.6,sustain:22},helpless:1,imp:null}});
+ d=m('sanshou','nB');d.hits[0].dmg=20.5;d.hits[0].kbg=.1;
+ m('sanshou','nB').vfx={k:'H',el:'iron',sub:'fist',x:32,y:-40,r:20};m('sanshou','sB').vfx={k:'H',el:'iron',sub:'head',x:24,y:-48,r:14};m('sanshou','uB').vfx={k:'H',el:'iron',sub:'spin',x:0,y:-36,r:27};m('sanshou','dB').vfx={k:'H',el:'iron',sub:'slap',x:0,y:-6,r:20};
+ /* side specials */
+ d=m('emi','sB');d.bp.jumpCancel=1;d.bp.spd=6.6;T('emi',1,'Talon Dive (jump to cancel)','A fast talon dive. Press jump at any point to break out of it and keep moving.');
+ d=m('kichi','sB');d.hits=[hit([[46,-30,10],[70,-30,9]],3,1.5,0,170,{f0:3,f1:7}),d.hits[0]];T('kichi',1,'Reel In (chain snags, then he reels himself in)','Throws his chain ahead: it clips a rival toward him, then he reels himself in with a tackle.');
+ d=m('yado','sB');d.bp.air='grav';d.onStart=f=>{f.vy=-4.2;f.ground=null;};d.hits[0].eff='poison';T('yado',1,'Frog Lunge (arcing hop, poisons)','A hopping lunge in a low arc. Goes over low attacks and poisons on contact.');
+ d=m('pitto','sB');d.hits[0].sd=4;T('pitto',1,'Dash Punch (lunging straight, cracks shields)','A lunging straight punch. Plain and honest, but it does heavy damage to shields.');
+ d=m('hatsuko','sB');d.hits[0].b=[[20,-32,16],[-6,-32,14]];d.hits[0].ang=132;d.bp.spd=6;T('hatsuko',1,'Reaper Dash (cuts through, sends them behind her)','Slashes straight through her rival and sends them flying back the way she came.');
+ d=m('raion','sB');d.onStart=f=>{f.vy=-5;f.ground=null;};T('raion',1,'Pounce (armored leap)','Leaps in a high arc and lands on his rival. Armored while he is in the air.');
+ d=m('ginko','sB');d.hits[0].eff='burn';
+ d=m('shiki','sB');d.hits[0].sd=5;
+ d=m('rei','sB');Object.assign(d.hits[0],{dmg:6,bkb:5.2,kbg:.025,ang:96});T('rei',1,'Step In (slips behind, pops them up)','Slips behind a nearby rival and pops them straight up, ready for a follow-up.');
+ d=m('riku','sB');d.onStart=f=>{f.inv=Math.max(f.inv,14);};
+ /* flying up specials */
+ d=m('emi','uB');d.hits=[hit([[0,2,20]],5,4,.05,270,{f0:4,f1:9})];T('emi',2,'Falcon Flight (takeoff gust spikes below)','Free flight. The first wingbeat blasts a gust downward that spikes rivals under her.');
+ d=m('uchuu','uB');d.helpless=0;d.bp.spd=2.5;T('uchuu',2,'Zero-G Float (slow, but he can act after)','A slow weightless drift. Unlike other flights he can still attack when it ends.');
+ d=m('suze','uB');d.hits=[hit([[0,-30,22]],1.2,1.5,0,90,{ri:9,eff:'stick'})];T('suze',2,'Buzz Flight (honey drips slow rivals)','Flies on buzzing wings, dripping honey that slows anyone she brushes past.');
+ d=m('tamashi','uB');d.bp.spd=4.3;d.bp.dur=34;d.a=34;T('tamashi',2,'Carried Away (short, very fast)','Her puppets yank her through the air: the fastest flight, and the shortest.');
+ /* teleports */
+ d=m('kouji','uB');d.hits=[hit([[0,-30,24]],6,4.2,.05,72)];T('kouji',2,'Umbral Step (bursts on arrival)','Sinks into shadow and reappears in any direction with a burst of darkness that hits.');
+ d=m('tenmetsu','uB');d.s=4;T('tenmetsu',2,'Blink (instant, any direction)','The longest and by far the quickest teleport: almost no warning at all.');
+ d=m('toguchi','uB');d.helpless=0;d.bp.dist=78;T('toguchi',2,'Step Through (short, can act after)','Steps through a doorway a short distance away, and can still act when she comes out.');
+ d=m('maho','uB');d.hits=[hit([[0,-30,30]],1,1,0,80,{eff:'haze'})];T('maho',2,'Misty Step (leaves blinding mist)','A short teleport that arrives in a puff of mist, blinding rivals right next to her.');
+ /* waves, spouts, fireballs */
+ d=m('taru','sB');d.s=10;d.spawn=[[10,{k:'wave',vx:5.6,life:34,r:10,dmg:7,bkb:4,kbg:.05,ang:35}]];T('taru',1,'Left Arm: Water Jet (fast, short)','Left arm: a fast, short jet of water. One clean hit instead of a carrying wave.');
+ d=m('tsuki','sB');Object.assign(d.spawn[0][1],{vx:2.5,life:100,r:22,dmg:1.6});T('tsuki',1,'Tidal Wave (huge, slow, carries far)','A huge slow wall of water that carries rivals most of the way across the stage.');
+ d=m('keanu','uB');d.finisher=hit([[0,-24,20]],6,5.5,.075,80);T('keanu',2,'Waterspout (launches at the top)','Rides a waterspout upward. The burst at the top launches whoever it carried.');
+ d=m('tsuki','uB');Object.assign(d.bp,{vy:-8.4,vx:2.8,sustain:24});d.a=30;T('tsuki',2,'Waterspout (long, steerable)','Bends a spout she can steer a long way sideways, dragging rivals along.');
+ d=m('taru','nB');d.s=9;Object.assign(d.spawn[0][1],{vx:6.4,life:36,r:5,dmg:6,explode:0});d.spawn[0][0]=9;T('taru',0,'Right Arm: Ember Shot (quick, small)','Right arm: a small, quick ember. Weak, but it comes out fast and can be fired often.');
+ d=m('minato','uB');d.hits=[hit([[0,-2,20]],7,4.5,.05,65,{f0:8,f1:11})];T('minato',2,'Spring Launch (springs off anyone below)','Coils and springs very high. The launch itself kicks away anyone standing next to him.');
+ /* leaps */
+ d=m('shiki','uB');d.hits[0].dmg=12.5;Object.assign(d.bp,{vy:-9.4,armor:1,f0:4,f1:18});T('shiki',2,'Demon Leap (armored)','A heavy rising blow. He cannot be knocked out of it on the way up.');
+ d=m('raion','uB');d.hits[0].b=[[18,-46,16]];d.hits[0].ang=58;Object.assign(d.bp,{vy:-9.2,vx:3.4});T('raion',2,'Lion Leap (long forward bound)','A long bounding leap that goes forward as much as up, claws first.');
+ d=m('kichi','uB');d.hits[0].b=[[0,-62,12],[0,-86,10]];d.bp.vy=-9.4;T('kichi',2,'Anchor Chain (very long reach, grabs ledges)','Hurls his chain straight up: lower jump than most, but the chain reaches far and grabs ledges.');
+ d=m('ginko','dB');d.hits.forEach(h=>h.eff='burn');
+ /* balance table from CPU-vs-CPU sampling: [power dealt, knockback taken] */
+ const BALT={kimiko:[1.10,0.90],gomi:[0.91,1.10],uchuu:[1.20,0.85],akemi:[1.04,0.96],tai:[1.02,0.98],shiki:[0.80,1.22],tenmetsu:[0.98,1.02],sai:[1.04,0.96],soran:[1.14,0.87],raion:[0.91,1.09],sanshou:[0.80,1.22],keanu:[0.95,1.05],maho:[1.19,0.86],kouji:[1.01,0.99],shuko:[0.99,1.01],taru:[0.88,1.14],hatsuko:[0.97,1.03],zabu:[1.08,0.92],yado:[1.04,0.96],ryuko:[0.81,1.22],tsuki:[1.07,0.93],kairi:[1.20,0.85],bara:[1.03,0.97],emi:[1.13,0.88],torabi:[0.87,1.14],ginko:[0.84,1.18],marina:[1.11,0.90],hari:[1.10,0.91],rei:[0.95,1.05],kichi:[1.02,0.98],tori:[1.08,0.92],suze:[1.20,0.86],toguchi:[1.08,0.92],tamashi:[1.20,0.86],minato:[1.20,0.86],tatsuya:[1.02,0.98],pitto:[0.92,1.08],oro:[0.95,1.05],riku:[1.06,0.94]};
+ for(const id in BALT){const C=c(id),t=BALT[id];if(!C)continue;C.atkM=(C.atkM||1)*t[0];C.kbM=(C.kbM||1)*Math.sqrt(t[0]);C.defKb=(C.defKb||1)*t[1];}
+ {const S=c('sanshou');S.st.w=1.44;S.defM=(S.defM||1)*1.12;S.iron=5;}
+})();
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
