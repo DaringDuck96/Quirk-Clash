@@ -967,7 +967,7 @@ add({id:'keanu',n:'KEANU MAKOA',sn:'KEANU',q:'Vassal of the Islands',ty:'Emitter
  d:'Commands seawater and lava with a carved island hook. Plants bloom around him.',
  look:{h:1.07,bw:1.12,skin:'#a86a40',eye:'#3a2414',hairS:'wavy',hair:'#1e1626',beard:'#1e1626',smile:1,outfit:'sweater',top:'#b8362a',acc:'#ecd9a8',sl:'none',tattoo:1,pants:'#cdb88f',pw:1.05,shoe:'#6a4a30',wpn:'hook',wlen:26,stance:'shoulder',ex:[]},
  st:ST({w:1.15,run:2.75,air:2.2,jump:-8.3,dj:-7.6,g:.4,fall:5.8}),kit:{st:'blade',fx:['#5fd0ff','#e0faff'],el:'water',reach:1.15,pow:1.1},
- mv:{fsmash:SMASH('f',{el:'water',fx:['#5fd0ff','#ffffff'],an:'slashDown',far:32,dmg:18,ang:45}),usmash:SMASH('u',{el:'water',fx:['#5fd0ff','#ffffff'],an:'slashUp',dmg:15}),dsmash:SMASH('d',{el:'lava',fx:['#ff7a20','#ffe060'],an:'slashLow',dmg:14,eff:'burn'}),
+ mv:{fsmash:SMASH('f',{el:'water',fx:['#5fd0ff','#ffffff'],an:'slashDown',far:32,dmg:15.5,ang:45}),usmash:SMASH('u',{el:'water',fx:['#5fd0ff','#ffffff'],an:'slashUp',dmg:15}),dsmash:SMASH('d',{el:'lava',fx:['#ff7a20','#ffe060'],an:'slashLow',dmg:14,eff:'burn'}),
   nB:M('castDown',14,1,20,null,{spawn:[[14,{k:'geyser',dist:70,delay:24,life:28,dmg:12,bkb:5,kbg:.06,ang:84,eff:'burn'}]],fx:['#ff7a20','#ffe060']}),
   sB:M('cast',14,1,22,null,{spawn:[[14,{k:'wave',vx:3.4,life:70,r:16,dmg:2,bkb:2.5,kbg:.01,ang:30,ri:8,carry:1}]],fx:['#5fd0ff','#fff']}),
   uB:M('castUp',5,24,18,hit([0,-20,15],2,3,.01,88,{ri:6}),{beh:'leapUp',bp:{vy:-9.6,vx:1.4,sustain:16},helpless:1,trailK:'water',fx:['#5fd0ff','#fff']}),
@@ -1042,7 +1042,7 @@ add({id:'kouji',n:'KOUJI GO',sn:'KOUJI',q:'Yin Yang',ty:'Emitter',col:'#f0f0f0',
  st:ST({w:.95,run:3}),kit:{st:'brawler',fx:['#ffffff','#fff6c0'],el:'light',utilt:'kickUp'},
  mv:{fsmash:SMASH('f',{el:'light',fx:['#ffffff','#ffe890'],an:'cast',far:38,dmg:16}),usmash:SMASH('u',{el:'light',fx:['#ffffff','#ffe890'],an:'castUp',dmg:14}),dsmash:SMASH('d',{el:'dark',fx:['#9a60e0','#1a0e2a'],an:'castDown',dmg:13}),
   nB:M('cast',10,1,18,null,{spawn:[[10,{k:'ray',len:130,life:10,dmg:8,bkb:3.5,kbg:.05,ang:25}]],fx:['#ffffff','#ffe890']}),
-  sB:M('cast',12,1,20,null,{spawn:[[12,{k:'void',vx:1.8,life:110,r:9,dmg:1,bkb:1,kbg:0,ang:0,ri:10,pull:1}]],fx:['#9a60e0','#1a0e2a']}),
+  sB:M('cast',12,1,20,null,{spawn:[[12,{k:'void',vx:1.8,life:90,r:9,dmg:1,bkb:1,kbg:0,ang:0,ri:12,pull:1,max:1}]],cd:200,fx:['#9a60e0','#1a0e2a']}),
   uB:M('float',8,6,14,null,{beh:'teleDir',bp:{dist:90},helpless:1,fx:['#9a60e0','#ffffff']}),
   dB:M('counter',4,22,20,null,{beh:'counter',bp:{f0:4,f1:26,mode:'shadow',mult:1.35},fx:['#9a60e0','#1a0e2a']})},
  sp:['Light Ray','Yin Void (pulls)','Umbral Step','Shadow Counter']});
@@ -1106,7 +1106,7 @@ add({id:'zabu',n:'ZABU MAFU',sn:'ZABU',q:'Ringtail',ty:'Mutation',col:'#d8d8d8',
   utilt:M('tailUp',5,5,14,hit([[-2,-66,12],[-4,-50,9]],8,4,.06,95),{lim:'tail',fx:['#f0f0f0','#fff']}),
   nair:M('tailSpin',4,12,10,hit([0,-30,22],9,3.5,.05,45,{ri:6}),{lim:'tail',fx:['#f0f0f0','#fff'],ll:8}),
   fsmash:SMASH('f',{el:'tail',fx:['#f0f0f0','#ffffff'],an:'tailF',far:36,dmg:15,vfx:false}),usmash:SMASH('u',{el:'tail',fx:['#f0f0f0','#ffffff'],an:'tailUp',dmg:13,vfx:false}),dsmash:SMASH('d',{el:'tail',fx:['#f0f0f0','#ffffff'],an:'tailSpin',dmg:12,vfx:false}),
-  nB:M('throwF',12,1,18,null,{spawn:[[12,{k:'boba',vx:3,vy:-4.4,g:.24,life:90,r:6,dmg:5,bkb:3,kbg:.04,ang:50}]],fx:['#c8a070','#fff']}),
+  nB:M('throwF',12,1,18,null,{spawn:[[12,{k:'boba',vx:3,vy:-4.4,g:.24,life:90,r:6,dmg:4,bkb:3,kbg:.04,ang:50}]],fx:['#c8a070','#fff']}),
   sB:M('tailSpin',6,24,14,hit([0,-30,18],2,2.5,.01,50,{ri:6}),{beh:'dash',bp:{spd:3.8,f0:6,f1:30,air:'float'},finisher:hit([10,-30,18],5,4.5,.05,45),cd:70,spinDir:1,fx:['#f0f0f0','#fff']}),
   uB:M('tailSpin',4,40,12,hit([0,-40,18],1.5,2,0,90,{ri:6}),{beh:'fly',bp:{dur:40,spd:2.4,up:1},helpless:1,fx:['#f0f0f0','#fff']}),
   dB:M('counter',4,20,18,null,{beh:'counter',bp:{f0:4,f1:24,mode:'dodge',mult:1},fx:['#f0f0f0','#fff']})},
@@ -1129,7 +1129,7 @@ add({id:'uchuu',n:'UCHUUJIN SEI',sn:'UCHUU',q:'Orbit',ty:'Accumulation',col:'#a8
  st:ST({w:.88,run:2.85,g:.3,fall:4.4,jump:-8.2}),kit:{st:'blade',fx:['#b890ff','#f0e8ff'],el:'cosmic',pow:.95},
  mv:{fsmash:SMASH('f',{el:'cosmic',fx:['#b890ff','#ffffff'],an:'slashF',far:40,dmg:15}),usmash:SMASH('u',{el:'cosmic',fx:['#b890ff','#ffd860'],an:'castUp',dmg:14}),dsmash:SMASH('d',{el:'cosmic',fx:['#b890ff','#ffffff'],an:'slashLow',dmg:13}),
   nB:M('cast',8,1,16,null,{beh:'charge',fx:['#b890ff','#fff']}),
-  sB:M('cast',14,1,20,null,{spawn:[[14,{k:'hole',dist:64,life:140,r:10,dmg:1,bkb:1,kbg:0,ang:0,ri:14,pull:1}]],cd:120,fx:['#b890ff','#1a0e2a']}),
+  sB:M('cast',14,1,20,null,{spawn:[[14,{k:'hole',dist:64,life:110,r:10,dmg:1,bkb:1,kbg:0,ang:0,ri:14,pull:1,max:1}]],cd:220,fx:['#b890ff','#1a0e2a']}),
   uB:M('float',4,60,12,null,{beh:'fly',bp:{dur:60,spd:2.8},helpless:1,fx:['#b890ff','#fff']}),
   dB:M('castUp',10,1,16,null,{spawn:[[10,{k:'planet',n:3,life:320}]],cd:420,fx:['#b890ff','#ffd860']})},
  sp:['Cosmic Charge (hold)','Gravity Well','Zero-G Float','Orbit (3 planets)']});
@@ -1140,7 +1140,7 @@ add({id:'shuko',n:'SHUKOJI SHUKOGA',sn:'SHUKO',q:'Whiteout',ty:'Emitter',col:'#d
  st:ST({w:1}),kit:{st:'brawler',fx:['#d8d0c0','#ffffff'],el:'dust',fair:'fairP'},
  mv:{fsmash:SMASH('f',{el:'dust',fx:['#d8d0c0','#ffffff'],an:'punch',far:36,dmg:16}),usmash:SMASH('u',{el:'dust',fx:['#d8d0c0','#ffffff'],an:'castUp',dmg:14}),dsmash:SMASH('d',{el:'dust',fx:['#d8d0c0','#ffffff'],an:'castDown',dmg:13}),
   nB:M('cast',10,1,16,null,{spawn:[[10,{k:'grit',n:3,spread:.12,vx:7.4,life:30,r:4,dmg:3,bkb:2,kbg:.02,ang:30}]],fx:['#d8d0c0','#fff']}),
-  sB:M('cast',14,1,20,null,{spawn:[[14,{k:'storm',vx:1.1,life:130,r:20,dmg:2,bkb:1.5,kbg:.01,ang:70,ri:14,max:1}]],fx:['#d8d0c0','#fff']}),
+  sB:M('cast',14,1,20,null,{spawn:[[14,{k:'storm',vx:1.1,life:130,r:20,dmg:2,bkb:1.5,kbg:.01,ang:70,ri:14,max:1}]],cd:200,fx:['#d8d0c0','#fff']}),
   uB:M('castUp',6,10,18,hit([0,-10,14],5,4,.04,85),{beh:'leapUp',bp:{vy:-10,vx:1.4},helpless:1,spawn:[[6,{k:'smokeplat',life:160}]],fx:['#d8d0c0','#fff']}),
   dB:M('castDown',16,1,22,null,{spawn:[[16,{k:'smokehand',dist:56,life:30,dmg:12,bkb:4.5,kbg:.07,ang:85}]],fx:['#d8d0c0','#fff']})},
  sp:['Grit Shot','Whiteout Storm','Smoke Bridge (platform)','Smoke Hand']});
@@ -1206,8 +1206,8 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
  fx=['#5aa84a','#ffb030'];add({id:'sanshou',n:'SANSHOU SEISHU',sn:'SANSHOU',q:'Body Armor',ty:'Mutation',col:'#5aa84a',hurt:[26,65],d:'His skin is iron plate. Nearly eight feet tall, slow, and almost impossible to launch. Carries a flamethrower that also vacuums.',
   na:'Normals: crushing iron fists and stomps. The slowest fighter in the school, but he does not flinch while charging a smash and takes much less damage.',
   look:U({head:'armor',skin:'#3e7a3a',glove:'#2e5a2c',stance:'guard',bw:1.2,size:1.27,ex:[]}),st:ST({w:1.6,run:2.45,air:2,jump:-8,g:.44,fall:6.2}),kit:{st:'heavy',fx,el:'iron',pow:1.15,reach:1.15},
-  mv:Object.assign(SM('iron',fx,{f:{dmg:18}}),{nB:M('cast',12,30,16,hit([[30,-40,13],[54,-40,15],[78,-40,17]],1.8,1.6,0,30,{ri:5,eff:'burn'}),{finisher:hit([[56,-40,24]],5,4.5,.06,40,{eff:'burn'}),lim:'none',fx:['#ff7a20','#ffe060'],sub:'flamer'}),
-   sB:M('cast',14,1,22,null,{spawn:[[14,GP({sh:'vac',c:'#ffb030',vx:1.5,life:72,r:13,dmg:1,bkb:1,kbg:0,ang:0,ri:10,multi:1,pull:1,eat:1})]],fx}),
+  mv:Object.assign(SM('iron',fx,{f:{dmg:18}}),{nB:M('cast',12,30,16,hit([[30,-40,13],[54,-40,15],[78,-40,17]],1.4,1.6,0,30,{ri:5,eff:'burn'}),{finisher:hit([[56,-40,24]],4,4.5,.06,40,{eff:'burn'}),lim:'none',fx:['#ff7a20','#ffe060'],sub:'flamer'}),
+   sB:M('cast',14,1,22,null,{spawn:[[14,GP({sh:'vac',c:'#ffb030',vx:1.5,life:66,r:13,dmg:1,bkb:1,kbg:0,ang:0,ri:12,multi:1,pull:1,eat:1,max:1})]],cd:220,fx}),
    uB:M('castUp',8,10,20,hit([0,-10,18],9,5.5,.06,85,{eff:'burn'}),{beh:'leapUp',bp:{vy:-9.6,vx:1.2},helpless:1,fx:['#ff7a20','#ffe060']}),
    dB:M('counter',6,36,14,hit([0,-32,24],5,4.5,.04,50,{ri:18}),{beh:'reflect',bp:{f0:6,f1:42,armor:1},fx,sub:'wall'})}),
   sp:['Flamethrower (long burning stream)','Vacuum (pulls rivals in, eats projectiles)','Jet Burst','Iron Wall (armored, reflects)']});
@@ -1241,7 +1241,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   na:'Normals: fast, light strikes that leave speed lines. One of the quickest fighters, and quicker still while Overclocked.',
   look:U({skin:'#f8e0d0',eye:'#e05a5a',hairS:'wavy',hair:'#f0d890',stance:'cool',blush:1,ex:[]},1),st:ST({w:.86,run:3.25,air:2.6}),kit:{st:'brawler',fx,el:'speed',pow:.9},
   mv:Object.assign(SM('speed',fx),{nB:M('throwF',8,1,14,null,{spawn:[[8,GP({sh:'card',c:'#ff5a8a',n:3,spread:.14,vx:8.5,life:30,r:4,dmg:3.2,bkb:2,kbg:.02,ang:30})]],fx}),
-   sB:M('cast',14,1,20,null,{spawn:[[14,GP({sh:'clock',c:'#5a8aff',vx:1,life:150,r:22,dmg:1.2,bkb:1,kbg:0,ang:70,ri:16,multi:1,eff:'haze',max:1})]],cd:120,fx}),
+   sB:M('cast',14,1,20,null,{spawn:[[14,GP({sh:'clock',c:'#5a8aff',vx:1,life:130,r:22,dmg:1.2,bkb:1,kbg:0,ang:70,ri:16,multi:1,eff:'haze',max:1})]],cd:220,fx}),
    uB:M('uppercut',5,10,18,hit([4,-56,14],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-11.4,vx:2.4},helpless:1,fx}),
    dB:M('roar',12,2,16,null,{beh:'buff',bp:{k:'tea',dur:300},cd:660,fx})}),
   sp:['Card Trick (three cards at bullet speed)','Slow Zone (rivals inside crawl)','Velocity Jump','Overclock (5s speed boost)']});
@@ -1308,7 +1308,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dash:M('punch',7,6,18,hit([20,-32,13],10,4.5,.06,45),{lim:'hF',fx,imp:[[0,3.6,0]]}),
    bair:M('bairK',6,4,14,hit([-24,-30,12],13,4.5,.075,140),{lim:'none',fx,ll:10,sub:'item'}),
    nB:M('throwF',12,1,18,null,{spawn:[[12,{k:'dish',vx:3.4,vy:-3.6,g:.22,life:90,r:6,dmg:7,bkb:3.5,kbg:.05,ang:50}]],fx}),
-   sB:M('punch',9,12,18,hit([22,-32,15],12,5,.07,40),{beh:'dash',bp:{spd:5,f0:9,f1:21,air:'float'},fx}),
+   sB:M('punch',9,12,18,hit([22,-32,15],10,5,.065,40),{beh:'dash',bp:{spd:5,f0:9,f1:21,air:'float'},fx}),
    uB:M('uppercut',5,10,18,hit([4,-56,14],7,4.5,.05,85),{beh:'leapUp',bp:{vy:-12.6,vx:1.8},helpless:1,fx}),
    dB:M('eat',10,40,14,null,{beh:'heal',bp:{amt:10},cd:840,fx})},
   sp:['Pouch Surprise (throws a random snack)','Dash Punch (lunging straight)','Rising Uppercut (huge hop)','Snack Break (heals 10%)']});
@@ -1556,11 +1556,11 @@ CH.forEach(C=>{const s=C.st;s.walk*=1.2;s.run*=1.35;s.air*=1.15;s.jump*=1.16;s.s
   T.mv.nair=V(M('spinW',4,14,10,hit([0,-32,22],2.3,2.4,.02,50,{ri:5}),{lim:'none',ll:8}),'naruto');
   T.mv.fair=V(M('fairS',7,4,15,hit([[31,-34,11],[16,-36,9]],11,4,.07,40),{lim:'none',ll:11}),'tempura');
   T.mv.bair=V(M('bairK',6,4,14,hit([-24,-30,12],12,4.5,.075,140),{lim:'none',ll:10}),'bao');
-  T.mv.fsmash=V(M('slashF',14,4,26,hit([[40,-38,15],[20,-38,11]],19,4.5,.105,40),{charge:1,lim:'none',face:'atk'}),'tuna');
+  T.mv.fsmash=V(M('slashF',14,4,26,hit([[40,-38,15],[20,-38,11]],16.5,4.5,.105,40),{charge:1,lim:'none',face:'atk'}),'tuna');
   T.mv.usmash=V(M('castUp',10,8,22,hit([[4,-74,14],[4,-52,11]],14,4,.095,88,{eff:'burn'}),{charge:1,lim:'none',face:'atk',fx:['#f8c838','#fff0a0']}),'oil');
   T.mv.dsmash=V(M('castDown',8,6,22,[hit([[26,-8,13]],13,3.5,.085,30,{eff:'burn'}),hit([[-26,-8,13]],13,3.5,.085,150,{eff:'burn'})],{charge:1,lim:'none',face:'atk',fx:['#ff7a30','#ffe060']}),'hotpot');
   T.mv.nB=V(M('roar',12,26,16,hit([[28,-42,12],[50,-42,14],[72,-42,16]],1.7,1.6,0,30,{ri:5,eff:'burn'}),{finisher:hit([[52,-42,22]],4,4.5,.06,40,{eff:'burn'}),lim:'none',fx:['#8adf3a','#e8ffb0']}),'wasabi');
-  T.mv.sB=M('throwF',10,1,20,null,{spawn:[[10,{k:'dumpling',n:2,spread:.3,vx:3.7,vy:-3.9,g:.24,life:90,r:6,dmg:8,bkb:4,kbg:.055,ang:55}]],fx});
+  T.mv.sB=M('throwF',10,1,20,null,{spawn:[[10,{k:'dumpling',n:2,spread:.3,vx:3.7,vy:-3.9,g:.24,life:90,r:6,dmg:6,bkb:4,kbg:.055,ang:55}]],fx});
   T.mv.uB=M('castUp',6,12,18,hit([0,-62,14],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-10.4,vx:1.4,tether:1},helpless:1,tentacle:1,fx:['#e8c458','#fff0b0']});
   T.mv.fthrow=M('throwF',8,1,16,hit([20,-36,12],9,5,.06,42,{eff:'burn'}),{fx:['#ff7a30','#ffe060'],lim:'hF'});
   T.mv.utilt=V(M('castUp',6,5,15,hit([[6,-64,12]],8,3.5,.06,92),{lim:'none'}),'flip');
@@ -1573,7 +1573,7 @@ CH.forEach(C=>{const s=C.st;s.walk*=1.2;s.run*=1.35;s.air*=1.15;s.jump*=1.16;s.s
 /* ===================== ARCHETYPES: every student leans into a different way to fight ===================== */
 const TUNE={
  kimiko:{role:'Zoner',tip:'Freezes rivals from range and controls space with ice. Light and easy to launch.',sp:1,pw:.96,w:.86},
- keanu:{role:'Bruiser',tip:'Heavy hook swings with lava and water traps. Falls fast.',sp:1.1,pw:1.05,kb:1.06,w:1.2,run:.95,g:1.08,fall:1.1},
+ keanu:{role:'Bruiser',tip:'Heavy hook swings with lava and water traps. Falls fast.',sp:1.1,pw:.94,kb:1,w:1.2,run:.95,g:1.08,fall:1.1},
  bara:{role:'Fencer',tip:'Long feather-blade reach and a glide. Wins by spacing.',sp:.92,pw:1,g:.86,fall:.8,air:1.08},
  tori:{role:'Assassin',tip:'Very fast and slips through shields, but her hits are light.',sp:.78,pw:.88,kb:.88,w:.8,run:1.1,fall:1.1,def:1.05},
  minato:{role:'Long-range brawler',tip:'Stretching limbs reach across the stage, with huge jumps.',sp:1.06,pw:1,jump:1.12},
@@ -1767,7 +1767,7 @@ function applyHit(t,h,dirX,a,o){o=o||{};
     if(a&&!o.proj){a.hl=Math.max(a.hl,4);}t.hl=4;sfx('block');burst(t.x,t.y-30,6,['#9ad8ff','#ffffff'],1.6,10);
     if(t.shp<=0){t.shp=0;t.st='dizzy';t.dz=200;t.vy=-7;t.ground=null;sfx('break');FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#9ad8ff',r0:20,life:16});t.shp=30;}return 'shield';}
   const rage=a&&a.buff&&a.buff.k==='rage',heat=a&&a.buff&&a.buff.k==='overheat',spice=a&&a.buff&&a.buff.k==='spice';
-  let sw=1;if(a&&a!==t&&a.mv&&a.mv.d.sweet&&!o.proj&&!o.force){const hb=a.mv.d.hits[0].b[0],reach=Math.abs(hb[0])+hb[2],far=Math.abs(t.x-a.x)>reach*.6,good=a.mv.d.sweet==='tip'?far:!far;sw=good?1.22:.86;if(good&&a.mv.swT!==FR){a.mv.swT=FR;FXL.push({k:'txt',s:'SWEET SPOT!',x:t.x,y:t.y-78,t:0,life:34,col:'#ffe060'});sfx('hitH');}}
+  let sw=1;if(a&&a!==t&&a.mv&&a.mv.d.sweet&&!o.proj&&!o.force){const hb=a.mv.d.hits[0].b[0],reach=Math.abs(hb[0])+hb[2],far=Math.abs(t.x-a.x)>reach*.6,good=a.mv.d.sweet==='tip'?far:!far;sw=good?1.15:.88;if(good&&a.mv.swT!==FR){a.mv.swT=FR;FXL.push({k:'txt',s:'SWEET SPOT!',x:t.x,y:t.y-78,t:0,life:34,col:'#ffe060'});sfx('hitH');}}
   let stale=1;if(a&&a!==t&&a.mv&&!o.proj&&!o.force){const q=a.stq||(a.stq=[]),k=a.mv.k,n=q.filter(x=>x===k).length;stale=n?Math.max(.7,1-n*.07):1.05;if(a.mv.stm!==1){a.mv.stm=1;q.push(k);if(q.length>8)q.shift();}}
   const dmg=(a&&a!==t&&a.C.necro?1+Math.min(a.dmg,150)/300:1)*sw*stale*h.dmg*(o.cm||1)*(rage?1.25:1)*(spice?1.2:1)*(a&&a!==t&&a.C.atkM||1)*(t.C.defM||1);
   t.dmg=Math.min(999,t.dmg+dmg);t.lastHurt=FR;if(a&&a!==t)t.lastBy=a;t.kd=false;if(a&&a!==t&&a.st!=='fs')a.fsm=Math.min(100,(a.fsm||0)+dmg*.13);if(t.st!=='fs')t.fsm=Math.min(100,(t.fsm||0)+dmg*.075);if(a){a.dealt+=dmg;a.hitsN=(a.hitsN||0)+1;a.best=Math.max(a.best||0,dmg);if(a.C.id==='tatsuya'&&a!==t&&t.C.id!=='tatsuya'&&(a.copyT<=0||h.eff==='copy'))mimicCopy(a,t,h.eff==='copy'?600:420);
@@ -1776,10 +1776,12 @@ function applyHit(t,h,dirX,a,o){o=o||{};
   const col=(h.fx&&h.fx[0])||(a&&a.mv&&a.mv.d.fx&&a.mv.d.fx[0])||'#ffffff';
   const hx=t.x-dirX*3,hy=t.y-30;FXL.push({k:'spark',x:hx,y:hy,t:0,col,big:dmg>=12});burst(hx,hy,8+fl(dmg/2),[col,'#ffffff'],2.6,16);
   let eff=h.eff;if(heat&&!eff)eff='burn';
+  /* crowd control cannot be chained: after being frozen, rooted, stunned, slowed or yanked you are immune to those for 4 seconds */
+  if(eff==='freeze'||eff==='root'||eff==='stun'||eff==='para'||eff==='haze'||eff==='stick'||eff==='yank'){if(!o.force&&t.ccT&&FR-t.ccT<240&&!(eff==='haze'&&FR-t.ccT<150))eff=null;else if(!(t.ccT&&FR-t.ccT<240))t.ccT=FR;}
   if((t.C.iron&&dmg<t.C.iron&&!o.force&&t.st!=='hit')||(t.C.armorSmash&&t.mv&&t.mv.d.charge&&dmg<12&&!o.force)||armored(t)||(t.buff&&t.buff.k==='rage'&&dmg<9&&!o.force)){if(!armored(t))FXL.push({k:'txt',s:'NUMB',x:t.x,y:t.y-66,t:0,life:30,col:'#7aa8ff'});t.hl=Math.min(10,fl(3+dmg*.4));if(a&&!o.proj)a.hl=t.hl;sfx('hit');return 'armor';}
   releaseHolds(t);
   t.taken=(t.taken||0)+dmg;
-  let kb=(sw>1?1.12:sw<1?.92:1)*(h.bkb+h.kbg*t.dmg*(.7+dmg/20))*(rage?1.15:1)/t.C.st.w*(o.km||1)*1.07*(a&&a!==t?1+clamp((a.dmg-35)/115,0,1)*.1:1)*(a&&a!==t&&a.C.kbM||1)*(t.C.defKb||1);
+  let kb=(sw>1?1.07:sw<1?.94:1)*(h.bkb+h.kbg*t.dmg*(.7+dmg/20))*(rage?1.15:1)/t.C.st.w*(o.km||1)*1.07*(a&&a!==t?1+clamp((a.dmg-35)/115,0,1)*.1:1)*(a&&a!==t&&a.C.kbM||1)*(t.C.defKb||1);
   if(eff==='freeze'||eff==='stick'||eff==='root'||eff==='stun'||eff==='haze')kb*=.55;if(eff==='blind')kb*=.2;
   let ang=(h.ang===undefined?40:h.ang)*PI/180,dx=dirX;
   if(eff==='relay'){const away=t.x<WW/2?-1:1;burst(t.x,t.y-30,18,['#9a70ff','#fff'],2,20);t.x+=away*34;t.y-=56;t.ground=null;burst(t.x,t.y-30,18,['#9a70ff','#fff'],2,20);dx=away;sfx('warp');}
@@ -2025,9 +2027,9 @@ const EK={
   laser:{init(e,f,s){e.attached=1;e.len=s.len;e.r=6;},upd(e){const o=e.owner;if(o.hitstun>0||o.dead){e.alive=false;return;}e.face=o.face;e.y=o.y-46;e.x=o.x+o.face*(34+e.len*.5);},
     hitTest(e,R){const x0=e.x-e.len/2;return R[0]<x0+e.len&&R[0]+R[2]>x0&&R[1]<e.y+6&&R[1]+R[3]>e.y-6;},
     draw(e){const k=Math.max(1,fl(8*e.life/12)),x0=e.x-e.len/2;wr('#a01a80',x0,e.y-k-2,e.len,2*k+4);wr('#ff40c0',x0,e.y-k,e.len,2*k);wr('#ffffff',x0,e.y-1,e.len,2);for(let i=0;i<6;i++)wp('#ffd0f0',x0+rnd()*e.len,e.y-7+rnd()*14);}},
-  void:{init(e){e.multi=1;},upd(e){for(const o of ENT){if(!o.alive||o===e||o.owner===e.owner||!o.proj)continue;if(Math.hypot(o.x-e.x,o.y-e.y)<16){o.alive=false;e.r=Math.min(18,e.r+2);burst(o.x,o.y,10,['#b070ff','#1a0e2a'],1.6,14);}}for(const t of F){if(t===e.owner||t.dead||intangible(t))continue;const dx=e.x-t.x,dy=e.y-(t.y-28),l=Math.hypot(dx,dy);if(l<80&&l>6){t.x+=dx/l*.9;if(!t.ground)t.y+=dy/l*.6;}}},
+  void:{init(e){e.multi=1;},upd(e){for(const o of ENT){if(!o.alive||o===e||o.owner===e.owner||!o.proj)continue;if(Math.hypot(o.x-e.x,o.y-e.y)<16){o.alive=false;e.r=Math.min(18,e.r+2);burst(o.x,o.y,10,['#b070ff','#1a0e2a'],1.6,14);}}for(const t of F){if(t===e.owner||t.dead||intangible(t)||(e.owner.team!==undefined&&t.team===e.owner.team))continue;const dx=e.x-t.x,dy=e.y-(t.y-28),l=Math.hypot(dx,dy);if(l<80&&l>6&&e.t<70){t.x+=dx/l*.9;if(!t.ground)t.y+=dy/l*.6;}}},
     draw(e){wdisc(e.x,e.y,9,'#0e0a18');for(let i=0;i<10;i++){const a=i*.63+e.t*.18,r=10+Math.sin(e.t*.2+i)*2;wp('#b070ff',e.x+Math.cos(a)*r,e.y+Math.sin(a)*r);wp('#5a2a9a',e.x+Math.cos(a+.3)*(r+3),e.y+Math.sin(a+.3)*(r+3));}wring(e.x,e.y,7,'#ffffff');}},
-  hole:{init(e,f){e.multi=1;e.vx=0;},upd(e){for(const t of F){if(t===e.owner||t.dead||intangible(t))continue;const dx=e.x-t.x,dy=e.y-(t.y-28),l=Math.hypot(dx,dy);if(l<100&&l>5){t.x+=dx/l*1.3;if(!t.ground)t.y+=dy/l*.9;}}if(e.t%2===0){const a=rnd()*TAU;part(e.x+Math.cos(a)*40,e.y+Math.sin(a)*40,-Math.cos(a)*1.6,-Math.sin(a)*1.6,22,rnd()<.5?'#b890ff':'#ffffff',1,0);}},
+  hole:{init(e,f){e.multi=1;e.vx=0;},upd(e){for(const t of F){if(t===e.owner||t.dead||intangible(t)||(e.owner.team!==undefined&&t.team===e.owner.team))continue;const dx=e.x-t.x,dy=e.y-(t.y-28),l=Math.hypot(dx,dy);if(l<100&&l>5&&e.t<80){t.x+=dx/l*1.3;if(!t.ground)t.y+=dy/l*.9;}}if(e.t%2===0){const a=rnd()*TAU;part(e.x+Math.cos(a)*40,e.y+Math.sin(a)*40,-Math.cos(a)*1.6,-Math.sin(a)*1.6,22,rnd()<.5?'#b890ff':'#ffffff',1,0);}},
     draw(e){const s=Math.min(1,e.t/10)*(e.life<15?e.life/15:1);for(let r=fl(20*s);r>0;r-=3)wring(e.x,e.y,r,r>12?'#3a1a6a':'#7a4ac8');wdisc(e.x,e.y,fl(7*s),'#000000');wring(e.x,e.y,fl(8*s),'#ffd860');}},
   homing:{init(e,f){e.target=opp(f);},upd(e){const t=e.target;if(t&&!t.dead&&e.t>8){const dx=t.x-e.x,dy=(t.y-30)-e.y,a=Math.atan2(dy,dx),c=Math.atan2(e.vy,e.vx);let da=a-c;while(da>PI)da-=TAU;while(da<-PI)da+=TAU;const na=c+clamp(da,-.08,.08),sp=Math.hypot(e.vx,e.vy);e.vx=Math.cos(na)*sp;e.vy=Math.sin(na)*sp;}},
     draw(e){const a=Math.atan2(e.vy,e.vx),c=Math.cos(a),s=Math.sin(a);wl('#6a4a10',e.x-8*c,e.y-8*s,e.x+7*c,e.y+7*s,3);wl('#e8b040',e.x-7*c,e.y-7*s,e.x+7*c,e.y+7*s,2);wl('#ffffff',e.x,e.y,e.x+7*c,e.y+7*s,1);if(e.t%2===0)part(e.x-6*c,e.y-6*s,0,0,10,'#fff4c8',1,0);}},
@@ -2078,6 +2080,7 @@ function updEnts(){for(const e of ENT){if(!e.alive)continue;e.t++;const k=EK[e.k
         const hit2=k&&k.hitTest?k.hitTest(e,R):circRect(e.x,hy,e.r,R)||((t.st==='shield'||t.st==='shieldstun')&&Math.hypot(e.x-t.x,hy-(t.y-30))<e.r+shieldR(t));if(!hit2)continue;
         const last=e.hits[t.id];if(last!==undefined&&(!e.ri||e.t-last<e.ri))continue;
         const dirX=e.attached?e.face:(e.vx?Math.sign(e.vx):(t.x>e.x?1:-1));
+        if(e.ri){const hn=e.hn||(e.hn={});if((hn[t.id]||0)>=5)continue;hn[t.id]=(hn[t.id]||0)+1;}
         const res=applyHit(t,e,dirX,e.owner,{proj:1});if(res==='miss')continue;e.hits[t.id]=e.t;
         if(k&&k.onHit){k.onHit(e,t);continue;}
         if(e.explode){explodeE(e);break;}
@@ -4757,6 +4760,13 @@ function genFS(e,f,d,t,a){const c0=d.col[0],c1=d.col[1],F2=e.face,cx=e.x,cy=e.y;
    if(C.trail&&(f.st==='run'||(C.id==='ginko'&&!f.ground))&&FR%3===0)part(f.x-f.face*8+rnd()*8-4,f.y-2-rnd()*(C.id==='akemi'?40:8),-f.vx*.2,-rnd()*.6,16,C.trail[fl(rnd()*2)],2,0);
    if(C.necro&&f.dmg>50&&FR%4===0)part(f.x+rnd()*20-10,f.y-rnd()*50,0,-.8,16,rnd()<.5?'#b04aff':'#ff7ae8',f.dmg>110?2:1,0);
    if(C.noPoison&&FR%9===0)part(f.x+rnd()*18-9,f.y-30-rnd()*30,0,-.3,18,'#ffd0ee',1,0);}};}
+
+/* ===================== anti-lock: nobody can be held helpless for more than about 2.5 seconds ===================== */
+{const mt2=modeTick;modeTick=function(){mt2();if(typeof GS==='undefined'||GS!=='play')return;for(const f of F){if(f.dead||f.gone){f.lockN=0;continue;}
+   const stuck=f.st==='hit'||f.st==='dizzy'||f.st==='held'||f.frozen>0||f.rootT>0,fs=ENT.some(e=>e.k==='fs'&&e.alive&&e.caught&&e.caught.has(f));
+   if(fs){f.lockN=0;continue;}f.lockN=stuck?(f.lockN||0)+1:Math.max(0,(f.lockN||0)-4);
+   if(f.lockN>150){f.lockN=0;releaseHolds(f);f.hitstun=0;f.frozen=0;f.rootT=0;f.dz=0;f.tumble=false;f.lx*=.4;f.ly*=.4;f.st=f.ground?'idle':'air';f.inv=Math.max(f.inv,45);f.ccT=FR;
+     FXL.push({k:'txt',s:'BREAK FREE!',x:f.x,y:f.y-78,t:0,life:44,col:'#ffffff'});FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:'#ffffff',r0:8,life:18});sfx('tech');}}};}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
