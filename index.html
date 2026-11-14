@@ -332,6 +332,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
       <span>Special</span><span><kbd>K</kbd></span><span><kbd>.</kbd> or <kbd>Num2</kbd></span><span>B</span>
       <span>Shield / dodge</span><span><kbd>L</kbd></span><span><kbd>R-Shift</kbd> or <kbd>Num3</kbd></span><span>ZL / ZR</span>
       <span>Grab</span><span><kbd>U</kbd></span><span><kbd>'</kbd> or <kbd>Num6</kbd></span><span>L / R, or shield + A</span>
+      <span>Single Joy-Con</span><span></span><span></span><span>SL / SR shield · shield + A grab · stick click grab · + or − pause</span>
       <span>Taunt</span><span><kbd>T</kbd></span><span></span><span>D-pad</span>
     </div>
     <h3 class="mlh">EVERY STUDENT'S FULL MOVE LIST <small>(keyboard P1 shown · A = J, B = K, Shield = L, Grab = U, Jump = Space)</small></h3>
@@ -4005,6 +4006,8 @@ function slotLabel(n){const m=SEL.mode[n];return m==='h'?'P'+(n+1):m==='off'?'OF
 function inSlots(){return[0,1,2,3].filter(n=>SEL.mode[n]&&SEL.mode[n]!=='off'&&SEL.p[n]!==undefined);}
 /* Nintendo pads put "A" on the right face button; swap so A always means confirm/attack */
 function isNin(gp){return /nintendo|joy-?con|pro controller|057e|switch/i.test(gp.id||'');}
+/* a single Joy-Con held sideways only has SL / SR on its inner rail, so those become shield */
+function isJoy(gp){const id=gp.id||'';return /joy-?con/i.test(id)&&!/L\s*[+\/]\s*R/i.test(id);}
 function pads(){try{return navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];}catch(e){return[];}}
 const PADMAP=[null,null,null,null];
 function padOf(n){const k=PADMAP[n];if(k===null)return null;return pads().find(g=>g.index===k)||null;}
@@ -4015,7 +4018,7 @@ function padIn(i){const gp=padOf(i);if(!gp)return null;const b=k=>!!(gp.buttons[
   /* tap jump needs a quick flick up, so holding up for an up-tilt or up-special does not jump */
   const tp=TAPS[gp.index]||(TAPS[gp.index]={n:0,on:false}),now=performance.now();if(y>-.3){tp.n=now;tp.on=false;}else if(y<-.74&&!tp.on&&now-tp.n<110)tp.on=true;if(y>-.5)tp.on=false;
   /* Smash Ultimate default layout: A attack, B special, X/Y jump, ZL/ZR shield, L/R grab, right stick smash, D-pad taunt, tap-jump on the left stick */
-  const A=n?b(1):b(0),B=n?b(0):b(1),tap=tp.on&&!A&&!B;const r={x,y,A,B,J:b(2)||b(3)||tap,SH:b(2)&&b(3),S:b(6)||b(7),G:b(4)||b(5),T:b(12)||b(13)||b(14)||b(15)};const cx=ax[2]||0,cy=ax[3]||0;if(Math.hypot(cx,cy)>.55){r.x=Math.abs(cx)>Math.abs(cy)?Math.sign(cx):0;r.y=Math.abs(cy)>=Math.abs(cx)?Math.sign(cy):0;r.A=true;r.sm=1;}return r;}
+  const A=n?b(1):b(0),B=n?b(0):b(1),tap=tp.on&&!A&&!B;const r={x,y,A,B,J:b(2)||b(3)||tap,SH:b(2)&&b(3),S:b(6)||b(7),G:b(4)||b(5),T:b(12)||b(13)||b(14)||b(15)};if(isJoy(gp)){r.S=b(4)||b(5);r.G=b(6)||b(7)||b(10);r.T=false;}const cx=ax[2]||0,cy=ax[3]||0;if(Math.hypot(cx,cy)>.55){r.x=Math.abs(cx)>Math.abs(cy)?Math.sign(cx):0;r.y=Math.abs(cy)>=Math.abs(cx)?Math.sign(cy):0;r.A=true;r.sm=1;}return r;}
 function humanIn(f){const n=f.id,parts=[padIn(n)];if(n===0){parts.push(keyIn(P1K),TOUCH,{x:0,y:0,T:K.KeyT});if(SEL.mode[1]!=='h')parts.push(keyIn(P2K));}else if(n===1)parts.push(keyIn(P2K));return merge(...parts);}
 const SPREAD={2:[-100,100],3:[-125,0,125],4:[-138,-46,46,138]};
 function startMatch(){if(MODE!=='versus'){startModeMatch();return;}const sl=inSlots();if(!teamCheck(sl))return;if(sl.length<2){toast('Add at least 2 fighters (press X on a controller, or click a player tag)');return;}
@@ -4070,7 +4073,7 @@ function prevTick(){for(let n=0;n<4;n++){if(SEL.mode[n]==='off')continue;let pv=
 /* ---------- controller menu navigation ---------- */
 const PADP=[{},{},{},{}];
 function padBtns(gp){if(!gp)return null;const n=isNin(gp),b=k=>!!(gp.buttons[k]&&gp.buttons[k].pressed),ax=gp.axes;
-  return{A:n?b(1):b(0),B:n?b(0):b(1),X:n?b(3):b(2),Y:n?b(2):b(3),ST:b(9),SE:b(8),L:b(14)||(ax[0]||0)<-.55,R:b(15)||(ax[0]||0)>.55,U:b(12)||(ax[1]||0)<-.55,D:b(13)||(ax[1]||0)>.55,LB:b(4)||b(6),RB:b(5)||b(7)};}
+  const jc=isJoy(gp);return{A:n?b(1):b(0),B:n?b(0):b(1),X:n?b(3):b(2),Y:n?b(2):b(3),ST:jc?(b(9)||b(8)):b(9),SE:jc?(b(16)||b(17)):b(8),L:b(14)||(ax[0]||0)<-.55,R:b(15)||(ax[0]||0)>.55,U:b(12)||(ax[1]||0)<-.55,D:b(13)||(ax[1]||0)>.55,LB:b(4)||b(6),RB:b(5)||b(7)};}
 function padEdges(gp){const i=gp.index,s=padBtns(gp),p=PADP[i]||(PADP[i]={});if(!s){PADP[i]={};return null;}const e={};
   for(const k of['A','B','X','Y','ST','SE','LB','RB'])e[k]=s[k]&&!p[k];
   for(const k of['L','R','U','D']){const held=s[k]?(p['h'+k]||0)+1:0;e[k]=held===1||(held>16&&held%5===0);s['h'+k]=held;}PADP[i]=s;return e;}
