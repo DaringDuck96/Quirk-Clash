@@ -1876,14 +1876,16 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    uB:M('uppercut',5,10,15,hit([[0,-6,22]],7,6,.05,80),{beh:'leapUp',bp:{vy:-12,vx:1.6},helpless:1,fx}),
    dB:M('counter',3,24,16,hit([[0,-30,30]],6,8,.04,45),{beh:'counter',bp:{f0:3,f1:26,mode:'dodge',mult:1},fx})}),
   sp:['Sidearm (a fast pistol shot)','Airbag Punch (little damage, huge shove; the recoil pushes him back)','Eject (an airbag under his feet launches him and hits below)','Crash Guard (an airbag catches the hit and bursts)']});
- fx=['#e83a3a','#ffe060'];add({id:'akio',n:'AKIO AOKI',sn:'AKIO',q:'HedgeHog 2.0',ty:'Mutant',col:'#e83a3a',d:'Spines down his back, absurd speed, and static electricity that builds as he runs. He can curl into a ball and roll.',
-  na:'Normals: blurry kicks and spine swipes. One of the fastest runners in the school; his dash attack and aerials come out of a ball.',
-  look:K({skin:'#f0cca8',eye:'#c83a3a',hairS:'spiky',hair:'#c8282e',outfit:'jacketS',top:'#f0f0f4',acc:'#c8282e',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#c8282e',glove:'#f0f0f4',stance:'cool',ex:[]}),st:ST({w:.9,run:4.3,walk:2.2,air:3,jump:-9.2}),kit:{st:'brawler',fx,el:'spine',pow:.96},
-  mv:Object.assign(SM('spine',fx,{d:{an:'spin'}}),{nB:M('cast',9,1,16,null,{spawn:[[9,GP({sh:'star',c:'#ffe060',vx:6.4,life:50,r:5,dmg:5,bkb:2.5,kbg:.035,ang:40,eff:'para'})]],cd:150,fx}),
-   sB:M('spin',8,20,14,hit([[0,-24,16]],3.2,2.5,.02,50,{ri:5}),{beh:'dash',bp:{spd:7.8,f0:8,f1:28,air:'float'},fx,lim:'none'}),
-   uB:M('spin',5,12,14,hit([[0,-30,18]],6,4.5,.05,86),{beh:'leapUp',bp:{vy:-11,vx:2},helpless:1,fx,lim:'none'}),
-   dB:M('roar',14,3,12,null,{cd:420,fx,onStart(f){f.qhype=FR+420;say(f,'STATIC CHARGE','#ffe060');sfx('power');}})}),
-  sp:['Static Spark (stuns; cooldown)','Spin Dash (rolls across the stage hitting many times)','Spring Ball','Static Charge (his next hit lands 30% harder)']});
+ fx=['#4a8aff','#ffe060'];add({id:'akio',n:'AKIO AOKI',sn:'AKIO',q:'HedgeHog 2.0',ty:'Mutant',col:'#4a8aff',d:'Short, blue, covered in spines and faster than anyone in the school. He curls into a ball, and static builds on him as he runs.',
+  na:'Normals: blurry kicks and spinning-ball attacks. The fastest runner in the school by a distance; small, light, and everything he does comes out of a roll.',
+  look:K({skin:'#6a9af0',eye:'#2a2a40',hairS:'spiky',hair:'#2a4ad0',outfit:'jacketS',top:'#f0f0f4',acc:'#c8282e',sleeve:'#c8282e',pants:'#1c1c22',shoe:'#22222a',glove:'#22222a',stance:'cool',smile:1,size:.8,ex:[]}),st:ST({w:.88,run:4.6,walk:2.4,air:3.1,jump:-9,dj:-8.6,g:.4,fall:5.8}),kit:{st:'brawler',fx,el:'spine',pow:.96},
+  mv:Object.assign(SM('spine',fx,{u:{an:'spin',dmg:13},d:{dmg:12}}),{dash:M('spin',5,10,12,hit([[4,-22,15]],2.6,2.5,.02,60,{ri:4}),{fx,lim:'none',imp:[[4,6.5]]}),
+   nair:M('spin',4,14,8,hit([[0,-28,17]],8,3.5,.05,45),{fx,lim:'none',land:8}),
+   nB:M('spin',16,24,14,hit([[0,-26,17]],8,4.5,.06,45),{beh:'homing',bp:{spd:9.5,range:230},fx,lim:'none'}),
+   sB:M('spin',12,22,12,hit([[0,-22,16]],3,2.5,.02,50,{ri:5}),{beh:'dash',bp:{spd:8.6,f0:12,f1:34,air:'float'},fx,lim:'none',imp:[[11,0,-3.6]]}),
+   uB:M('spin',4,12,10,hit([[0,-30,17]],4,4,.04,86),{beh:'leapUp',bp:{vy:-12.4,vx:2},fx,lim:'none',spawn:[[4,GP({sh:'rock',c:'#c8282e',vx:.01,vy:5,life:44,r:7,dmg:4,bkb:3,kbg:.03,ang:80,gnd:1})]]}),
+   dB:M('spin',20,24,14,hit([[0,-20,17]],3.4,2.5,.02,55,{ri:5}),{beh:'dash',bp:{spd:9.6,f0:20,f1:44,air:'grav',armor:1},fx,lim:'none'})}),
+  sp:['Homing Attack (curls up, hangs for a beat, then shoots at the nearest rival)','Spin Dash (a hop, then a fast roll that hits many times)','Spring Jump (very high; he can still attack afterwards, and the spring drops on anyone below)','Spin Charge (revs up on the spot, then rolls faster and further, shrugging off hits)']});
  fx=['#5ab8ff','#ffffff'];add({id:'sata',n:'SATA SATAMI',sn:'SATA',q:'Cyborg',ty:'Mutant',col:'#5ab8ff',d:'From the neck down she is made of nanites. Serious, competitive, and built to do a bit of everything.',
   na:'Normals: precise machine strikes with no real weakness. The all-rounder of her class.',
   look:K({skin:'#f6e2d6',eye:'#4a9ae8',hairS:'bob',hair:'#3a6ad8',outfit:'plate',top:'#f0f2f8',acc:'#3a6ad8',sleeve:'#f0f2f8',pants:'#e0e4ee',shoe:'#3a6ad8',boots:1,glove:'#f0f2f8',stance:'guard',ex:[]},1),st:ST({w:1,run:3.2,air:2.8}),kit:{st:'brawler',fx,el:'mech',pow:1},
@@ -2253,7 +2255,7 @@ Object.assign(TUNE,{dawson:{role:'Quirkless technician',tip:'Nothing has a coold
  evona:{role:'Ice architect',tip:'Wall them off, slide in, pillar out.',sp:1.02,pw:1,kb:1},jack:{role:'Four-flame all-rounder',tip:'Down-B changes the flame: burn, speed, heal or slow.',sp:1,pw:1,kb:1},
  kal:{role:'Precognitive brawler',tip:'Every eight seconds one hit misses him. Swing first.',sp:1.04,pw:1,kb:1},kora:{role:'Winged skirmisher',tip:'Four jumps and a hover. Fight from above.',sp:1,pw:1,kb:1},ash:{role:'Long-limbed heavy',tip:'His arm reaches half the stage. Keep them at the end of it.',sp:.96,pw:1,kb:1}});
 Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be hit at all. Slip through, whip them back.',sp:1,pw:1,kb:1},sato:{role:'Knockback specialist',tip:'Low damage, huge shove. Win at the edge.',sp:1,pw:1,kb:1},
- akio:{role:'Speedster',tip:'Run, spin through them, run again.',sp:1.2,pw:1,kb:1},sata:{role:'All-rounder',tip:'A tool for every range and a self-repair.',sp:1,pw:1,kb:1},kitsu:{role:'Hard-light bruiser',tip:'Constructs do the hitting. The hammer breaks shields.',sp:1,pw:1,kb:1},
+ akio:{role:'Speedster',tip:'Homing Attack to start, Spin Dash to chase, Spring Jump to get home.',sp:1.2,pw:1,kb:1},sata:{role:'All-rounder',tip:'A tool for every range and a self-repair.',sp:1,pw:1,kb:1},kitsu:{role:'Hard-light bruiser',tip:'Constructs do the hitting. The hammer breaks shields.',sp:1,pw:1,kb:1},
  uzi:{role:'Resilient grappler',tip:'Melt under their attacks, Engulf them when they shield.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest.',sp:.96,pw:1,kb:1},
  bentou:{role:'Fortune teller',tip:'Curse them, bless yourself, counter what is left.',sp:.98,pw:1,kb:1},okane:{role:'Gilded duelist',tip:'Save Gilded for when it matters; it has a long cooldown.',sp:1,pw:1,kb:1},
  goiru:{role:'Flying heavyweight',tip:'Four jumps and armour. Drop the hammer from above.',sp:.9,pw:1,kb:1,armor:1},aya:{role:'Crystal caster',tip:'A different crystal on every button.',sp:1,pw:1,kb:1},
@@ -4920,7 +4922,7 @@ addEventListener('DOMContentLoaded',()=>{});
 Object.assign(GTXT,{
 moya:['A long tendril of mist that drags whoever it touches toward him.','Turns to vapor and rushes forward. He cannot be hit while he does.','Drifts upward as mist. He cannot be hit on the way.','Dissolves into fog: unseen for two seconds. Attacking or being hit ends it. Long cooldown.','A bank of fog rolls over everything near him.'],
 sato:['A quick pistol shot.','An airbag bursts off his fist: little damage, a very large shove, and the recoil pushes him backward.','An airbag under his feet launches him upward and hits anyone below.','An airbag catches the next hit and bursts in the attacker\'s face.','Every airbag he has goes off at once.'],
-akio:['A spark of stored static. Stuns. Cooldown.','Curls up and rolls across the stage, hitting again and again.','Springs upward as a ball.','Stores up static: his next hit within seven seconds lands 30% harder.','Runs through everyone faster than they can see.'],
+akio:['Curls into a ball, hangs in the air for a beat, then shoots straight at the nearest rival.','Hops, then rolls across the stage at speed, hitting again and again.','Bounces off a spring: very high, and he can still attack on the way down. The spring falls on anyone below.','Revs up on the spot, then rolls further and faster than Spin Dash and does not flinch while rolling.','Runs through everyone faster than they can see.'],
 sata:['An arm-cannon shot. Hold B to charge it.','Fires her forearm. It flies out fast, then slows and lingers.','Thrusters carry her in any direction for a moment.','Her nanites repair her: heals 7%. Long cooldown.','Opens every weapon port and fires down the lane.'],
 kitsu:['Throws a spinning blade of solid light.','Builds a giant hammer and brings it down. Slow, strong, and it cracks shields.','Runs up a stair of light.','A wall of hard light that reflects projectiles and shoves rivals.','A parade of constructs sweeps the stage. He takes a bow.'],
 uzi:['Lobs a glob of slime that sticks to whoever it hits.','Lunges and swallows a rival whole: squeezes them inside her, then spits them out. Shields do not stop it.','A geyser of slime erupts under her and throws her upward.','Melts into a puddle and pours across the floor. She cannot be hit, slows anyone she passes under, and leaves a sticky pool that roots.','Becomes a wave of slime taller than the stage.'],
@@ -5677,7 +5679,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
 
 /* ---- traits, weaknesses, smash effects, sweet spots ---- */
 (function(){const c=id=>CH.find(x=>x.id===id);
- const W2={moya:['Light, and his damage is low.','Two of his specials cannot be hit at all.'],sato:['The lowest damage of any brawler.','AIRBAGS: his smash attacks send rivals 12% further.'],akio:['Light, and overshoots everything.','The fastest runner in the school.'],
+ const W2={moya:['Light, and his damage is low.','Two of his specials cannot be hit at all.'],sato:['The lowest damage of any brawler.','AIRBAGS: his smash attacks send rivals 12% further.'],akio:['Small, light, and he overshoots: a missed roll leaves him wide open.','The fastest runner in the school, and Spring Jump does not leave him helpless.'],
   sata:['Excellent at nothing.','No real weakness.'],kitsu:['His constructs are slow to build.','Constructs keep his body out of his attacks.'],uzi:['Slow, and a big soft target.','SLIME: launched 12% less, and regenerates slowly when left alone.'],
   ichigo:['Weak up close and easy to launch.','Mines, drones and grenades all at once.'],bentou:['Without his blessings he hits softly.','A parry window half again as long as normal.'],okane:['Gilded has a sixteen-second cooldown, and he is ordinary without it.','GILDED: 20% more damage and 30% less knockback taken for eight seconds.'],
   goiru:['A huge target with a slow start to everything.','Four jumps. Hits under 5% do not make him flinch.'],aya:['Light, with little knockout power.','A different crystal on every special.'],hikari:['Short reach for a blade fighter and light.','SHOCK: every fourth hit she lands holds the rival a moment longer.'],
@@ -6212,7 +6214,7 @@ const ING_MAX=6;
  {const C=c('hana');for(const L of new Set([C.look,...(C.looks||[])])){if(L&&L.scarfC){L.scarfC='#f08a20';delete L._r;delete L.R;}}}
  const H3={
   sato:{outfit:'jacketS',top:'#f4f0e8',acc:'#1c1c22',sleeve:'#8a8078',pants:'#5a6a80',shoe:'#2a2a30'},
-  akio:{outfit:'stealth',top:'#1c1c22',acc:'#c8282e',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#c8282e',boots:1,glove:'#1c1c22',hair:'#c8282e'},
+  akio:{outfit:'stealth',top:'#1c1c22',acc:'#c8282e',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#1c1c22',boots:1,glove:'#c8282e'},
   uzi:{outfit:'stealth',top:'#1c1c26',acc:'#7ae04a',sleeve:'#f0f0f4',pants:'#5a6a8a',shoe:'#1c1c26',boots:1,glove:'#1c1c26',hx:[],ex:['cape'],capeC:'#1c1c26',capeT:'#7ae04a'},
   ichigo:{outfit:'coat',top:'#f0f0f4',acc:'#5ab8ff',sleeve:'#f0f0f4',pants:'#3a3a48',shoe:'#c8282e',boots:1,glove:'#5a6a8a',hx:['hoodup','goggles'],hoodC:'#f0f0f4',ex:['pack']},
   aya:{outfit:'dress',top:'#6a3ac8',acc:'#9affea',sleeve:'#5ab8e8',sl:'long',skirt:'#6a3ac8',socks:'#f0f0f8',shoe:'#c8a0ff'},
@@ -6640,6 +6642,13 @@ if(B){const fx=['#5aa03a','#e8f0c0'];
 {const H=c('hatsuko');if(H){const fx=H.kit.fx||['#b04aff','#ff7ae8'];H.mv.nB=M('cast',10,1,18,null,{fx,chg:1,chgMax:80,spawn:[[10,{k:'gp',sh:'skull',c:'#b04aff',vx:4.6,life:70,r:7,dmg:6,bkb:3.2,kbg:.05,ang:42}]]});
   H.sp[0]='Grudge Skull (hold B to charge: the longer, the bigger and stronger)';if(typeof GTXT!=='undefined'&&GTXT.hatsuko)GTXT.hatsuko[0]='Launches a purple skull. Hold B to charge it for up to a second and a third: it grows to twice the size and more than double the damage.';}
  const g0=EK.gp.draw;EK.gp.draw=function(e){if(e.spec&&e.spec.sh==='skull'){const r=e.r||7,d=Math.sign(e.vx)||e.face;X.globalAlpha=.35;wdisc(e.x,e.y,r*1.5,'#b04aff');X.globalAlpha=1;FSG.skull(e.x,e.y,r*.85,'#d8a8ff','#b04aff');wdisc(e.x-r*.34,e.y-r*.17,r*.14,'#ff7ae8');wdisc(e.x+r*.34,e.y-r*.17,r*.14,'#ff7ae8');if(e.t%2===0)part(e.x-d*r,e.y+rnd()*r-r/2,-d*.5,-.3,12,'#b04aff',2,0);return;}return g0(e);};}
+/* ---- Akio: homing attack ---- */
+BEH.homing={tick(f,m,I){const d=m.d,p=d.bp;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.vy,-.6);if(f.ground&&m.t===2){f.vy=-4.5;f.ground=null;}}
+  else if(m.t===d.s){const o=F.filter(t=>t!==f&&!t.dead&&!t.gone&&t.st!=='respawn'&&(f.team===undefined||t.team!==f.team)&&Math.hypot(t.x-f.x,t.y-f.y)<p.range).sort((a,b)=>Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y))[0];
+    let dx=f.face,dy=.35;if(o){dx=o.x-f.x;dy=(o.y-18)-(f.y-18);const l=Math.hypot(dx,dy)||1;dx/=l;dy/=l;f.face=dx>=0?1:-1;}m.v.hx=dx*p.spd;m.v.hy=dy*p.spd;sfx('warp');}
+  if(m.t>=d.s&&m.t<d.s+d.a){if(m.hit&&Object.keys(m.hit).length){f.vx=-f.face*1.5;f.vy=-5;m.t=d.s+d.a;}else{f.vx=m.v.hx;f.vy=m.v.hy;if(m.t%2===0)part(f.x,f.y-20,0,0,10,'#4a8aff',2,0);}}
+  if(m.t===d.s+d.a){f.vx*=.25;if(f.vy>0)f.vy*=.3;}}};
+{const A=c('akio');if(A)A.hurt=[13,46];}
 /* ---- hooks ---- */
 const p0=preHit;preHit=function(t,h,a,o){const id=t.C.id;if(a&&a!==t&&!(o&&o.force)){
     if(id==='aria'&&rnd()<1/6){t.inv=Math.max(t.inv||0,10);FXL.push({k:'txt',s:'LUCKY!',x:t.x,y:t.y-78,t:0,life:34,col:'#ffd84a'});sfx('counter');return true;}
@@ -7303,7 +7312,7 @@ for(const C of CH){const S=C.st,id=C.id,w=S.w,hv=w>1.15?-1:w<.9?1:0;if(KEEP.has(
   const run=.86+u(id,'run')*.3+hv*.05,air=.88+u(id,'air')*.26+hv*.03,jmp=.9+u(id,'jmp')*.22+hv*.04,gr=.9+u(id,'g')*.22,fl=.9+u(id,'fall')*.24;
   S.run*=run;S.walk*=.9+u(id,'walk')*.25;S.air*=air;S.jump*=jmp;S.sj*=jmp;S.dj*=.92+u(id,'dj')*.2;S.g*=gr;S.fall*=fl;S.ff*=fl;}
 {const mx=Math.max(...CH.filter(C=>!KEEP.has(C.id)).map(C=>C.st.run)),mj=Math.min(...CH.filter(C=>!KEEP.has(C.id)).map(C=>C.st.jump));const A=c('akio'),Z=c('zabu'),Y=c('yado'),So=c('sota');
-  if(A)A.st.run=Math.max(A.st.run,mx+.35);if(Z)Z.st.run=Math.max(Z.st.run,mx+.15);if(Y)Y.st.jump=Math.min(Y.st.jump,mj-.6);if(So)So.st.jump=Math.min(So.st.jump,mj-.2);}
+  if(A)A.st.run=Math.max(A.st.run,mx+.6);if(Z)Z.st.run=Math.max(Z.st.run,mx+.15);if(Y)Y.st.jump=Math.min(Y.st.jump,mj-.6);if(So)So.st.jump=Math.min(So.st.jump,mj-.2);}
 /* grab reach */
 const GR={minato:64,kichi:62,ivan:56,suzume:54,kuragari:52,ash:50,moya:48,uzi:46,dawson:44,oliver:44,zabu:44,tamashi:42,keanu:40,hari:36,kongu:33,goiru:32,sanshou:30,ryuko:30,tomi:31,koki:30,shiki:30,bryson:24,
   conor:17,riku:19,akio:22,hana:22,maho:22,aya:22,makiko:21,kairi:23,emi:23,tori:22};
