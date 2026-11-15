@@ -97,7 +97,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
 .tb.a{width:78px;height:78px;right:0;bottom:0;background:rgba(201,144,42,.6)}
 .tb.b{width:70px;height:70px;right:88px;bottom:30px;background:rgba(79,196,232,.55)}
 .tb.j{width:60px;height:60px;right:14px;bottom:96px;background:rgba(106,208,138,.5);font-size:18px}
-.tb.s{width:52px;height:52px;right:160px;bottom:0;background:rgba(154,106,240,.5);font-size:15px}
+.tb.s{width:52px;height:52px;right:160px;bottom:52px;background:rgba(154,106,240,.5);font-size:15px}
 .tb.g{width:46px;height:46px;right:86px;bottom:118px;font-size:15px}
 #rotate{display:none}
 @media (pointer:coarse) and (orientation:portrait){#rotate{position:fixed;inset:0;display:grid;place-items:center;background:var(--void);z-index:50;text-align:center;padding:24px}
@@ -255,6 +255,45 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
 .grole i{font-style:normal;color:var(--p1);font-family:var(--display);font-size:15px;letter-spacing:.5px;text-transform:uppercase;margin-right:5px}.grole{max-width:70ch}
 .rcard{display:grid;place-items:center;background:repeating-linear-gradient(135deg,#2a2468 0 10px,#1c174e 10px 20px)!important}.rcard em{font-style:normal;font-family:var(--display);font-weight:700;font-size:clamp(26px,3.2vw,48px);color:var(--gold);line-height:1;margin-bottom:12px}
 .rndchip{pointer-events:none;position:absolute;inset:38px 0 0 0;z-index:2;display:grid;place-content:center;justify-items:center;gap:2px;background:repeating-linear-gradient(135deg,#2a2468 0 12px,#1c174e 12px 24px);text-align:center}.rndchip em{font-style:normal;font-family:var(--display);font-weight:700;font-size:64px;line-height:.9;color:var(--gold)}.rndchip b{font-family:var(--display);font-size:26px;letter-spacing:1px}.rndchip span{font-size:12px;color:var(--dim)}
+
+/* ---- roster viewer ---- */
+.gart.live{background:none;align-self:flex-start}.gart.live canvas{width:min(315px,42vw);height:auto;aspect-ratio:63/40;border-radius:12px;border:2px solid var(--line);image-rendering:pixelated}
+.gmv{margin-top:10px}.gmvbar{display:flex;align-items:center;gap:12px}.gmvbar h4{margin:8px 0 6px;flex:1}
+#gauto{font-family:var(--display);font-size:16px;line-height:1;padding:6px 12px 3px;border-radius:999px;border:1px solid var(--line);background:var(--panel);letter-spacing:.5px}#gauto.on{background:var(--gold);color:#07061a;border-color:var(--gold)}
+#gmvinfo{display:grid;grid-template-columns:auto auto 1fr;gap:2px 10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+#gmvinfo b{font-family:var(--display);font-size:22px;line-height:1;color:var(--gold);font-weight:600}#gmvinfo kbd{font-family:var(--display);font-size:15px;background:#07061a;border:1px solid var(--line);border-radius:6px;padding:3px 7px 1px;white-space:nowrap}
+#gmvinfo .st{font-size:12px;color:var(--dim);text-align:right}#gmvinfo p{grid-column:1/-1;margin:2px 0 0;font-size:13px;line-height:1.35;color:var(--ink)}#gmvinfo p:empty{display:none}
+#gmoves{display:grid;gap:5px}.gmg{display:flex;flex-wrap:wrap;gap:5px;align-items:center}.gmg i{font-style:normal;font-family:var(--display);font-size:14px;color:var(--dim);width:62px;letter-spacing:.5px}
+#gmoves button{display:flex;gap:6px;align-items:baseline;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 9px 4px;font-size:13px;min-height:32px}#gmoves button b{font-weight:500}#gmoves button s{text-decoration:none;color:var(--p1);font-size:11px}
+#gmoves button.on{border-color:var(--gold);background:var(--panel2);box-shadow:0 0 0 1px var(--gold)}
+html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipulation}
+/* ---- phones held sideways ---- */
+@media (max-height:520px){
+ #app{padding-inline:calc(8px + env(safe-area-inset-left,0px)) calc(8px + env(safe-area-inset-right,0px))}
+ .tin{gap:6px;padding:6px;margin-bottom:9vh}.tlogo{font-size:clamp(28px,6.6vw,54px)!important}.ttag,.tpress,.tpads{display:none}
+ .tmenu{gap:6px 8px}.tmenu .fight{font-size:28px;padding:8px 36px 3px}.tmenu .btn{font-size:17px;padding:8px 14px 4px}.tline canvas{height:40px}
+ #select,#stagesel{gap:5px;padding-block:5px;overflow-y:auto;height:100%;grid-template-rows:auto auto auto}
+ .top{flex-wrap:nowrap;gap:6px;overflow:hidden}.logo{font-size:19px}.top .sub{display:none}.top .tbtn,.tbtn{font-size:13px;padding:6px 10px 5px}
+ .selmain4{grid-template-rows:auto auto;gap:5px}
+ .roster{grid-template-columns:none!important;grid-auto-flow:column;grid-template-rows:repeat(2,58px);grid-auto-columns:74px;gap:4px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding-bottom:3px}
+ .card{scroll-snap-align:start;border-radius:9px}.card span:not(.bd){font-size:11px;padding:6px 2px 2px}.card .cimg{height:calc(100% - 13px);inset:1px 0 12px 0}
+ .pprow{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.pprow .pp{border-radius:10px}.pprow .pp canvas{height:50px;min-height:50px}.pp .tag{font-size:15px;padding:5px 8px 2px}
+ .pprow .info{padding:2px 8px 4px}.pprow .info h2{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pprow .info .q,.pprow .info p{display:none}
+ .lvchip{top:2px;right:3px}.lvchip button{min-width:24px;height:22px;font-size:13px}.lvchip b{font-size:12px;min-width:30px}
+ .selfoot{gap:5px 8px;flex-wrap:nowrap}.selfoot .lab,.padhint{display:none}.seg button{padding:6px 9px;font-size:12px}.fight{font-size:22px;padding:8px 22px 3px;white-space:nowrap}.ssvs{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.btn{font-size:17px;padding:8px 14px 4px}
+ #stagesel{grid-template-rows:minmax(0,1fr) auto auto}#stagesel .top{display:none}.ssmain{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:6px;min-height:150px}
+ .ssgrid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:54px;overflow-y:auto;gap:4px;align-content:start}.scard b{font-size:12px;padding:10px 5px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.scard i{display:none}
+ .ssinfo p,.sstags,.ssjp{display:none}.ssinfo h2{font-size:20px}.ssopts{flex-wrap:nowrap;overflow-x:auto;gap:8px}.ssopts .lab{display:none}
+ #guide{padding:0}.gbox{height:100%;max-width:none;border-radius:0;padding:5px calc(8px + env(safe-area-inset-right,0px)) 5px calc(8px + env(safe-area-inset-left,0px));gap:5px;grid-template-rows:auto minmax(0,1fr)}
+ .gtop h2{font-size:20px}.gtop span{display:none}.gtop{justify-content:space-between}.gtop .btn{font-size:15px;padding:6px 14px 3px}.gfoot{display:none}
+ .gmain{grid-template-columns:150px minmax(0,1fr)!important;grid-template-rows:none!important;gap:8px}.gros{grid-template-columns:repeat(2,1fr)!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;overflow-y:auto!important;overflow-x:hidden!important;gap:4px}
+ .gros button canvas{width:34px;height:34px}.gros button span{font-size:11px}
+ .ghead{gap:10px;align-items:flex-start}.gart.live canvas{width:min(250px,34vw)}.gid h3{font-size:22px!important}.gstats{display:none!important}.grole{font-size:11.5px!important}
+ #gmvinfo b{font-size:18px}#gmoves button{min-height:34px}
+ .jhint{display:none}.gbar button{font-size:12px;padding:5px 9px 4px;opacity:.7}
+ .ovc h2{font-size:40px}
+}
+@media (pointer:coarse){.gros button,.card,.scard{-webkit-tap-highlight-color:transparent}.tb{-webkit-tap-highlight-color:transparent}}
 </style>
 
 <div id="app">
@@ -263,7 +302,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
     <div class="tin">
       <h1 class="logo tlogo"><small>PU</small>QUIRK CLASH <span>BROS ULTIMATE</span></h1>
       <p class="ttag">Arcade quirk brawler for 1 to 4 players. Launch your rivals off a stage in Japan.</p>
-      <div class="tmenu"><button class="fight" id="tFight">FIGHT!</button><button class="btn tmode" id="tSurv">SURVIVAL</button><button class="btn tmode" id="tTrain">TRAINING</button><span class="tbrk"></span><button class="btn" id="tGuide">CHARACTER GUIDE</button><button class="btn" id="tHelp">HOW TO PLAY</button><button class="btn" id="tFs">FULLSCREEN</button></div>
+      <div class="tmenu"><button class="fight" id="tFight">FIGHT!</button><button class="btn tmode" id="tSurv">SURVIVAL</button><button class="btn tmode" id="tTrain">TRAINING</button><span class="tbrk"></span><button class="btn" id="tGuide">ROSTER &amp; MOVES</button><button class="btn" id="tHelp">HOW TO PLAY</button><button class="btn" id="tFs">FULLSCREEN</button></div>
       <p class="tpress">PRESS ANY BUTTON ON A CONTROLLER TO GRAB A POINTER</p>
       <p class="tpads"><b class="padcount"></b> · or use the mouse · Enter to start</p>
     </div>
@@ -318,7 +357,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
   </section>
 
   <div id="guide" hidden><div class="gbox">
-    <div class="gtop"><h2>CHARACTER GUIDE</h2><span id="gdesc"></span><button class="btn pri" id="guideClose">CLOSE</button></div>
+    <div class="gtop"><h2>ROSTER</h2><span id="gdesc"></span><button class="btn pri" id="guideClose">CLOSE</button></div>
     <div class="gmain"><div class="gros" id="gros"></div><div class="gdet" id="gdet"></div></div>
     <div class="gfoot">Point and press <b>A</b> · <b>L</b> / <b>R</b> or ← →: change student · <b>Y</b> / <b>Tab</b>: swap brother · right stick scrolls · <b>B</b> / <b>Esc</b>: close</div>
   </div></div>
@@ -5396,6 +5435,57 @@ function platEdges(){if(!STAGE||!STAGE.main)return;const ac=(STGD&&STGD.ui&&STGD
     X.globalAlpha=1;wr('#fff6d8',x,y,w,1.5);wr(ac,x,y+1.5,w,soft?1.5:1);
     wr('#fff6d8',x,y,2,soft?3:2.5);wr('#fff6d8',x+w-2,y,2,soft?3:2.5);X.globalAlpha=1;};
   edge(m,0);for(const p of STAGE.plats||[])edge(p,1);}
+
+/* ===================== ROSTER VIEWER: watch any fighter perform any attack ===================== */
+const RV={cv:null,f:null,ci:-1,key:'nB',wait:0,ents:[],auto:false,ai:0,raf:0,n:0};
+const RVM=[['jab','Jab','A','GROUND'],['ftilt','Forward tilt','→ + A','GROUND'],['utilt','Up tilt','↑ + A','GROUND'],['dtilt','Down tilt','↓ + A','GROUND'],['dash','Dash attack','run + A','GROUND'],
+ ['fsmash','Forward smash','flick → + A','SMASH'],['usmash','Up smash','flick ↑ + A','SMASH'],['dsmash','Down smash','flick ↓ + A','SMASH'],
+ ['nair','Neutral air','A in the air','AIR'],['fair','Forward air','→ + A in the air','AIR'],['bair','Back air','← + A in the air','AIR'],['uair','Up air','↑ + A in the air','AIR'],['dair','Down air','↓ + A in the air','AIR'],
+ ['nB','','B','SPECIAL'],['sB','','← → + B','SPECIAL'],['uB','','↑ + B','SPECIAL'],['dB','','↓ + B','SPECIAL'],
+ ['fthrow','Forward throw','grab, then →','THROW'],['bthrow','Back throw','grab, then ←','THROW'],['uthrow','Up throw','grab, then ↑','THROW'],['dthrow','Down throw','grab, then ↓','THROW'],['taunt','Taunt','D-pad','OTHER']];
+function rvKeys(C,key){if(key==='jab')return C.mv.jab?['jab']:['jab1','jab2','jab3'].filter(k=>C.mv[k]);return C.mv[key]?[key]:[];}
+function rvDmg(C,key){let s=0;for(const k of rvKeys(C,key)){const d=C.mv[k];if(!d)continue;let m=0;(d.hits||[]).forEach(h=>{const n=h.ri?Math.max(1,Math.floor(d.a/h.ri)):1;m=Math.max(m,h.dmg*n);});if(d.finisher)m+=d.finisher.dmg;(d.spawn||[]).forEach(q=>{m+=(q[1].dmg||0)*(q[1].n||1);});s+=m;}return Math.round(s*10)/10;}
+function rvStart(key){const f=RV.f;if(!f)return;const C=f.C;RV.key=key;RV.seq=rvKeys(C,key);RV.si=0;RV.ents.length=0;rvNext();rvInfo();
+  document.querySelectorAll('#gmoves button').forEach(b=>b.classList.toggle('on',b.dataset.k===key));}
+function rvNext(){const f=RV.f,k=RV.seq[RV.si++];if(!k){f.mv=null;return false;}let d=f.C.mv[k];if(!d)return false;if(d.cyc)d=d.cyc[(RV.n++)%d.cyc.length];
+  const air=/air$/.test(k);if(air&&d.airAlt)d=Object.assign({},d,d.airAlt);
+  f.ground=air?null:STAGE.main;f.y=STAGE.main.y-(air?30:0);f.mv={k,d,t:0,hit:{},charging:false,chargeT:0,v:{},trail:[]};f.st='move';return true;}
+function rvStep(){const f=RV.f;if(!f)return;f.anim++;
+  for(let i=RV.ents.length-1;i>=0;i--){const e=RV.ents[i];e.t++;e.x+=e.vx;e.y+=e.vy;e.vy+=e.g||0;if(e.t>Math.min(e.life,150)||Math.abs(e.x-f.x)>130||e.y>f.y+40)RV.ents.splice(i,1);}
+  const m=f.mv;if(m){m.t++;const d=m.d;
+    for(const q of(d.spawn||[]))if(m.t===q[0]){try{spawnEnt(f,q[1]);}catch(e){}for(let i=ENT.length-1;i>=0;i--)if(ENT[i].owner===f){RV.ents.push(ENT[i]);ENT.splice(i,1);}}
+    if(m.t>d.s+d.a+d.r){if(!rvNext()){f.mv=null;f.ground=STAGE.main;f.y=STAGE.main.y;f.st='idle';RV.wait=34;}}}
+  else if(RV.wait>0&&--RV.wait===0){if(RV.auto){const C=f.C,ks=RVM.map(x=>x[0]).filter(k=>rvKeys(C,k).length);RV.ai=(ks.indexOf(RV.key)+1)%ks.length;rvStart(ks[RV.ai]);}else rvStart(RV.key);}}
+function rvDraw(){const cv=RV.cv,f=RV.f;if(!cv||!f)return;const g=cv.getContext('2d'),W=cv.width,H=cv.height,S=W/158,X0=X;g.setTransform(1,0,0,1,0,0);g.imageSmoothingEnabled=false;
+  const bg=g.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#1a1450');bg.addColorStop(1,'#0c0a2a');g.fillStyle=bg;g.fillRect(0,0,W,H);
+  g.strokeStyle='rgba(255,255,255,.05)';g.lineWidth=1;for(let x=0;x<W;x+=S*14){g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke();}for(let y=0;y<H;y+=S*14){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();}
+  const gx=50,gy=86;g.setTransform(S,0,0,S,(gx-f.x)*S,(gy-f.y)*S);
+  try{setX(g);const y0=f.ground?f.y:STAGE.main.y;wr('#2a2470',f.x-90,y0,240,2);wr('#fff6d8',f.x-90,y0,240,1);wr('#120e36',f.x-90,y0+2,240,40);
+    X.globalAlpha=.4;wr('#05050f',f.x-13,y0-1,26,2);X.globalAlpha=1;
+    for(const e of RV.ents){try{const k=EK[e.k];if(k&&k.draw)k.draw(e);else{wdisc(e.x,e.y,(e.r||6)+1,'#0c0820');wdisc(e.x,e.y,e.r||6,f.C.col);}}catch(er){}}
+    f.S=null;drawFighter(f);
+    const m=f.mv;if(m){const d=m.d;const act=h=>m.t>=(h.f0!==undefined?h.f0:d.s)&&m.t<=(h.f1!==undefined?h.f1:d.s+d.a);
+      g.lineWidth=1/S*1.5;for(const h of(d.hits||[])){if(!act(h))continue;for(const b of h.b){g.beginPath();g.arc(f.x+f.face*b[0],f.y+b[1],b[2],0,TAU);g.fillStyle='rgba(255,70,70,.16)';g.fill();g.strokeStyle='rgba(255,110,110,.75)';g.stroke();}}
+      if(d.finisher&&m.t>=d.s+d.a-3&&m.t<=d.s+d.a+1)for(const b of d.finisher.b){g.beginPath();g.arc(f.x+f.face*b[0],f.y+b[1],b[2]+8,0,TAU);g.fillStyle='rgba(255,200,70,.16)';g.fill();g.strokeStyle='rgba(255,210,90,.8)';g.stroke();}}
+  }catch(er){RV.err=String(er);}
+  setX(X0);g.setTransform(1,0,0,1,0,0);}
+function rvLoop(){if(!GD.on){RV.raf=0;return;}try{rvStep();rvDraw();}catch(e){RV.err=String(e);}RV.raf=requestAnimationFrame(rvLoop);}
+function rvInfo(){const el=document.getElementById('gmvinfo'),f=RV.f;if(!el||!f)return;const C=f.C,r=RVM.find(x=>x[0]===RV.key),si=['nB','sB','uB','dB'].indexOf(RV.key),ks=rvKeys(C,RV.key),d=C.mv[ks[0]];
+  const name=si>=0?C.sp[si]:r[1],dmg=rvDmg(C,RV.key),tx=si>=0&&GTXT[C.id]?GTXT[C.id][si]:(RV.key==='taunt'?'Shows off. Leaves you wide open.':r[3]==='THROW'?'Thrown after a grab (L / R, or GRAB).':'');
+  el.innerHTML='<b></b><kbd></kbd><span class="st"></span><p></p>';el.querySelector('b').textContent=name;el.querySelector('kbd').textContent=r[2];
+  el.querySelector('.st').textContent=(dmg?dmg+'% damage · ':'')+(d?'starts on frame '+d.s+' · '+(d.s+d.a+d.r)+' frames total'+(ks.length>1?' per hit':''):'');el.querySelector('p').textContent=tx;}
+{const rg0=renderGuide;renderGuide=function(){rg0();try{const det=document.getElementById('gdet'),art=det.querySelector('.gart');if(!art)return;
+    const list=gList(),ci0=list[GD.ci],C0=CH[ci0],tw=C0.twin?CH.findIndex(c=>c.id===C0.twin):-1,ci=tw>=0&&GD.tw?tw:ci0,C=CH[ci];
+    if(!RV.cv){RV.cv=document.createElement('canvas');RV.cv.width=630;RV.cv.height=400;RV.cv.id='gpv';}
+    art.innerHTML='';art.appendChild(RV.cv);art.classList.add('live');
+    RV.f=Object.assign(dummyF(ci),{id:0,x:STAGE.main.x+STAGE.main.w/2,y:STAGE.main.y,col:C.col,dmg:0,fsm:0,cds:{},mini:0,big:0,hitstun:0,stT:0});RV.ci=ci;RV.ents.length=0;
+    const head=det.querySelector('.ghead'),box=document.createElement('div');box.className='gmv';
+    let h='<div id="gmvinfo"></div><div class="gmvbar"><h4>ALL ATTACKS <small>tap one to watch it · red circles are where it hits</small></h4><button id="gauto" class="'+(RV.auto?'on':'')+'">PLAY ALL</button></div><div id="gmoves">',grp='';
+    for(const r of RVM){if(!rvKeys(C,r[0]).length)continue;if(r[3]!==grp){h+=(grp?'</div>':'')+'<div class="gmg"><i>'+r[3]+'</i>';grp=r[3];}const si=['nB','sB','uB','dB'].indexOf(r[0]),nm=si>=0?C.sp[si].replace(/\s*\(.*\)$/,''):r[1],dm=rvDmg(C,r[0]);h+='<button data-k="'+r[0]+'"><b>'+gEsc(nm)+'</b>'+(dm?'<s>'+dm+'%</s>':'')+'</button>';}
+    box.innerHTML=h+'</div></div>';head.after(box);
+    box.querySelectorAll('#gmoves button').forEach(b=>b.onclick=()=>{RV.auto=false;document.getElementById('gauto').classList.remove('on');sfx('tick');rvStart(b.dataset.k);});
+    document.getElementById('gauto').onclick=e=>{RV.auto=!RV.auto;e.currentTarget.classList.toggle('on',RV.auto);sfx('tick');};
+    rvStart(rvKeys(C,RV.key).length?RV.key:'nB');if(!RV.raf)RV.raf=requestAnimationFrame(rvLoop);}catch(e){RV.err=String(e);}};}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
