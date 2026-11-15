@@ -1741,13 +1741,14 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
  /* ===================== NHA transfer class: fifteen more students ===================== */
  {const heal=(f,a)=>{f.dmg=Math.max(0,f.dmg-a);for(let i=0;i<8;i++)part(f.x+rnd()*20-10,f.y-20-rnd()*40,0,-.7,22,'#7af0a0',2,0);sfx('power');};
  fx=['#3a5a9a','#c8d8f0'];add({id:'dawson',n:'DAWSON GREY',sn:'DAWSON',q:'Quirkless',ty:'None',col:'#3a5a9a',d:'No quirk at all. Eight years of gymnastics, self-defence and stubbornness, plus a belt full of tools and a talent for scaring people.',
-  na:'Normals: the cleanest, fastest punches and kicks in the school. No quirk means no cooldowns on anything he does.',
+  na:'Normals: the cleanest, fastest punches and kicks in the school. No quirk, so he brings tools: shuriken, a grapple hook, snare traps and a glider cape (hold Jump while falling to glide).',
   look:K({skin:'#f0d2b8',eye:'#4a8ae0',hairS:'messy',hair:'#1c1c26',outfit:'sweater',top:'#22222a',acc:'#34343e',sleeve:'#22222a',pants:'#1c1c24',shoe:'#2a2a32',stance:'guard',ex:[]}),st:ST({w:.94,run:3.5,air:2.9,jump:-9}),kit:{st:'brawler',fx,el:'night',pow:.98},
-  mv:Object.assign(SM('night',fx),{nB:M('throwF',7,1,13,null,{spawn:[[7,GP({sh:'knife',c:'#c8d8f0',n:2,spread:.08,vx:8.6,life:34,r:4,dmg:4.5,bkb:2.5,kbg:.03,ang:30})]],fx}),
-   sB:M('dashF',6,14,13,hit([[0,-30,14]],8,4.5,.06,38),{beh:'dash',bp:{spd:7,f0:6,f1:20,air:'float'},fx}),
-   uB:M('uppercut',4,10,15,hit([[4,-58,13]],6,4.5,.05,86),{beh:'leapUp',bp:{vy:-11.6,vx:2},helpless:1,fx}),
-   dB:M('counter',4,24,16,hit([[20,-34,18]],10,5,.07,40),{beh:'counter',bp:{f0:4,f1:26,mode:'shadow',mult:1.3},fx})}),
-  sp:['Night Blades (two fast throwing blades)','Grapple Rush (a line pulls him across the stage)','Grapple Hook (the highest tool-assisted jump)','Smoke Counter (vanishes and strikes back)']});
+  mv:Object.assign(SM('night',fx),{nB:M('throwF',6,1,11,null,{spawn:[[6,GP({sh:'star',c:'#c8d8f0',vx:8.8,life:36,r:4,dmg:4,bkb:2.2,kbg:.025,ang:28})]],fx}),
+   sB:M('dashF',8,12,13,hit([[0,-30,14]],8,4.5,.06,38),{beh:'dash',bp:{spd:8.4,f0:8,f1:20,air:'float'},fx}),
+   uB:M('uppercut',4,10,15,hit([[4,-58,13]],6,4.5,.05,86),{beh:'leapUp',bp:{vy:-11.2,vx:2,glide:1},helpless:1,fx}),
+   dB:M('castDown',10,1,14,null,{spawn:[[10,GP({sh:'star',c:'#3a5a9a',vx:.01,life:420,r:9,dmg:4,bkb:2,kbg:.02,ang:80,eff:'root',dy:-5,dx:22})]],cd:150,fx})}),
+  sp:['Shuriken (fast, flat and no cooldown)','Grapple Hook (the line fires and drags him across the stage into a kick)','Grapple Rise (hooks the ledge from a distance; hold Jump afterwards to glide)','Snare Trap (planted on the floor; roots whoever steps on it)']});
+
  fx=['#5ad8b0','#f4e0b0'];add({id:'maya',n:'MAYA SEWAK',sn:'MAYA',q:'Essence Transfer',ty:'Emitter',col:'#5ad8b0',d:'Moves the essence and energy of one living thing into another. She would rather give than take.',
   na:'Normals: calm, flowing palm strikes. Her tilts quietly draw a little health out of whoever they touch.',
   look:K({skin:'#a8683c',eye:'#4a3020',hairS:'long',hair:'#3a2418',outfit:'sweater',top:'#6a7a4a',acc:'#f0ece0',sleeve:'#6a7a4a',pants:'#3a3a48',shoe:'#8a6a4a',stance:'cast',earring:1,ex:[]},1),st:ST({w:.9,run:3,air:2.8}),kit:{st:'brawler',fx,el:'essence',pow:.94},
@@ -2248,7 +2249,7 @@ Object.assign(TUNE,{
  tai:{role:'Support',tip:'Regenerates, drains health and heals teammates.',sp:1,pw:.96},
  hatsuko:{role:'Comeback',tip:'Hits harder the more damage she has taken.',sp:.96,pw:.92},
  ginko:{role:'Flying powerhouse',tip:'A heavyweight with three jumps and the longest flight.',sp:1.14,pw:1.06,kb:1.08,def:.92}});
-Object.assign(TUNE,{dawson:{role:'Quirkless technician',tip:'Nothing has a cooldown. Out-fundamentals everyone.',sp:1.12,pw:1,kb:1},
+Object.assign(TUNE,{dawson:{role:'Quirkless tactician',tip:'Trap the floor, shuriken the air, then grapple in and box.',sp:1.12,pw:1,kb:1},
  maya:{role:'Drain support',tip:'Her touch heals her. Give Essence heals teammates more.',sp:.98,pw:1,kb:1},sarah:{role:'Shadow assassin',tip:'Get behind them. Shadow Step and Lights Out both put you there.',sp:1.04,pw:1,kb:1},
  aria:{role:'Lucky wildcard',tip:'One hit in six is LUCKY; one hit in six misses her.',sp:.98,pw:1,kb:1},bryson:{role:'Reluctant berserker',tip:'Weak as himself. Fill the meter and everything changes.',sp:1,pw:1,kb:1},
  conor:{role:'Tiny trickster',tip:'The smallest target. Coins bounce; the pot of gold hurts.',sp:1.1,pw:1,kb:1},ray:{role:'Beam zoner',tip:'Laser for reach, heat for pressure, X-Ray before a smash.',sp:1,pw:1,kb:1},
