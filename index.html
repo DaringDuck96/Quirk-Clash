@@ -1828,7 +1828,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('roar',12,10,20,hit([[0,-28,40]],1.6,1.5,0,75,{ri:5,eff:'freeze'}),{cd:260,fx,sub:'mist'})}),
   sp:['Ice Wall (a wall that blocks shots and shoves rivals; one at a time)','Ice Slide (skates across the stage on her own ice)','Ice Pillar (rides a pillar upward)','Flurry (a freezing burst all around her; cooldown)']});
  fx=['#ff7a30','#ffe060'];add({id:'jack',n:'JACK STRATTON',sn:'JACK',q:'Sacred Flame',ty:'Emitter',col:'#ff7a30',d:'Makes flame in different colours, and every colour does something different. From a long line of fire heroes.',
-  na:'Normals: disciplined flaming punches and kicks. His specials use whichever flame colour is lit; Down-B changes it.',
+  na:'Normals: disciplined flaming punches and kicks. Everything he does burns in whichever colour is lit, one colour at a time. Red: 8% more damage and leaves a burn. Blue: he runs faster and hits 8% softer. Green: each hit heals him a little. Violet: each hit slows the rival. Down-B changes the colour.',
   look:K({skin:'#f2d6bc',eye:'#2a2a30',hairS:'spiky',hair:'#16141a',outfit:'tee',top:'#f4f4f8',sl:'short',pants:'#1c2030',shoe:'#1c1c22',glove:'#1c1c22',stance:'guard',ex:[]}),st:ST({w:1,run:3.1,air:2.7}),kit:{st:'brawler',fx,el:'fire',pow:1},
   mv:Object.assign(SM('fire',fx),{nB:M('cast',10,1,17,null,{fx,cyc:[
      M('cast',10,1,17,null,{fx,spawn:[[10,{k:'fireball',vx:4.8,life:54,r:7,dmg:9,bkb:4,kbg:.06,ang:42,eff:'burn',explode:1}]]}),
@@ -5695,7 +5695,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   aria:['Nothing about her is reliable, including the luck.','LUCKY: one hit in six does 50% more. One hit in six aimed at her misses.'],bryson:['As himself he is the weakest hitter in the school.','TANTRUM: a full meter turns him into the beast for twelve seconds: huge, armoured against small hits, 35% stronger, and he cannot shield.'],
   conor:['The shortest reach in the school and very light.','The smallest target in the school.'],ray:['His beams leave him standing still; get inside and he struggles.','The longest instant-hit attack in the school.'],
   oliver:['Weak up close and has no kill move without space.','His arrows home.'],chris:['No projectile, average speed.','HEALING FACTOR: after a second and a half without being hit he regenerates about 1.5% per second.'],
-  evona:['Low knockout power; she controls rather than finishes.','Her wall blocks projectiles.'],jack:['Master of none: each flame is weaker than a specialist\'s.','Four flames on one button.'],
+  evona:['Low knockout power; she controls rather than finishes.','Her wall blocks projectiles.'],jack:['Master of none: each flame is weaker than a specialist\'s.','Four flames, one at a time: the lit colour changes every attack he has, not just his fireball.'],
   kal:['When Danger Sense is on cooldown he is an ordinary brawler.','DANGER SENSE: every eight seconds the next hit aimed at him misses.'],kora:['Floaty and a big target with her wings out.','Four jumps, and holding Jump in the air hovers.'],
   ash:['Slow, his long limbs are slow to pull back, and his up-special barely lifts him.','Wood: burning attacks do 20% more to him, but everything else launches him 10% less.'],
   makiko:['Very light, and almost harmless against a rival who is awake.','Sleep lasts longer the more damage the sleeper has.'],
@@ -6707,16 +6707,19 @@ BEH.homing={tick(f,m,I){const d=m.d,p=d.bp;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.
 /* ---- Bentou: the jinx ---- */
 function jinx(t,n,by){if(!t||t.dead)return;if(!(t.jinxT>FR))FXL.push({k:'txt',s:'JINXED',x:t.x,y:t.y-92,t:0,life:40,col:'#c83a5a'});t.jinxT=Math.max(t.jinxT||0,FR+n);FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#c83a5a',r0:8,life:16});}
 {const h0=hurtR;hurtR=function(f){const r=h0(f);if(f.jinxT>FR){const w=r[2]*.26,h=r[3]*.18;return[r[0]-w/2,r[1]-h,r[2]+w,r[3]+h];}return r;};}
+/* ---- Jack: the lit flame colours everything he does (one colour at a time, never mixed) ---- */
+const JK=[{n:'RED',fx:['#ff5a30','#ffe060'],el:'fire'},{n:'BLUE',fx:['#5ab8ff','#ffffff'],el:'ice'},{n:'GREEN',fx:['#6adf6a','#e0ffe0'],el:'heal'},{n:'VIOLET',fx:['#b070ff','#f0e0ff'],el:'magic'}];
 /* ---- hooks ---- */
 const p0=preHit;preHit=function(t,h,a,o){const id=t.C.id;if(a&&a!==t&&!(o&&o.force)){
     if(id==='aria'&&rnd()<1/6){t.inv=Math.max(t.inv||0,10);FXL.push({k:'txt',s:'LUCKY!',x:t.x,y:t.y-78,t:0,life:34,col:'#ffd84a'});sfx('counter');return true;}
     if(id==='kal'&&FR-(t.dsT===undefined?-999:t.dsT)>=480){t.dsT=FR;t.inv=Math.max(t.inv||0,12);FXL.push({k:'txt',s:'DANGER SENSE',x:t.x,y:t.y-78,t:0,life:36,col:'#a0ff40'});FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#a0ff40',r0:10,life:16});sfx('counter');return true;}}
   return p0(t,h,a,o);};
 const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a.C.id==='aria'&&rnd()<1/6){m*=1.5;FXL.push({k:'txt',s:'LUCKY HIT!',x:t.x,y:t.y-88,t:0,life:30,col:'#ffd84a'});}
-  if(a.jinxT>FR)m*=.88;if(a.C.id==='sarah'&&!(o&&o.proj)&&(t.x-a.x)*t.face>0)m*=1.3;if(t.C.id==='ash'&&h.eff==='burn')m*=1.2;if(a.form==='gold')m*=1.2;return m;};
+  if(a.jinxT>FR)m*=.88;if(a.C.id==='jack'&&!(o&&o.proj)){const k=(a.cycN||0)%4;m*=k===0?1.08:k===1?.92:1;}if(a.C.id==='sarah'&&!(o&&o.proj)&&(t.x-a.x)*t.face>0)m*=1.3;if(t.C.id==='ash'&&h.eff==='burn')m*=1.2;if(a.form==='gold')m*=1.2;return m;};
 const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);const id=t.C.id;if(id==='ash'&&h.eff!=='burn')m*=.9;if(t.form==='rage')m*=.7;if(t.form==='gold')m*=.7;if(id==='uzi')m*=.88;const ai=a.C.id;if(ai==='sato'&&a.mv&&/smash/.test(a.mv.k))m*=1.12;else if(ai==='ayame')m*=1.1;return m;};
 const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t.dmg,sh0=t.shp,res=ah(t,h,dirX,a,o);try{if(t.jinxT>FR&&t.shp<sh0&&t.shp>0)t.shp=Math.max(0,t.shp-(sh0-t.shp)*.5);const jx=h&&(h.jinx||(h.spec&&h.spec.jinx));if(jx&&a&&a!==t&&(t.dmg>hp||t.shp<sh0))jinx(t,jx,a);const dd=t.dmg-hp;if(dd>0){
   if(t.C.id==='bryson'&&!t.form){const g=t.gm||(t.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.5);}
+  if(a&&a!==t&&a.C.id==='jack'&&!(o&&o.proj)){const k=(a.cycN||0)%4;if(k===0){if(!t.qdot)t.qdot={n:3,d:.5,col:'#ff5a30',by:a,next:FR+30};}else if(k===2){a.dmg=Math.max(0,a.dmg-.8);part(a.x,a.y-50,0,-.6,16,'#6adf6a',2,0);}else if(k===3)t.qslow=Math.max(t.qslow||0,FR+70);}
   if(a&&a!==t&&a.C.id==='hikari'&&!(o&&o.proj)&&t.st==='hit'){const g=a.gm||(a.gm={});g.hk=(g.hk||0)+1;if(g.hk>=4){g.hk=0;t.hitstun+=14;FXL.push({k:'txt',s:'SHOCK!',x:t.x,y:t.y-88,t:0,life:28,col:'#6aff6a'});for(let i=0;i<10;i++)part(t.x,t.y-30,rnd()*4-2,rnd()*4-2,10,i%2?'#6aff6a':'#ffffff',1,0);}}
   if(a&&a!==t&&a.C.id==='bryson'&&!a.form){const g=a.gm||(a.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.2);}}}catch(e){}return res;};
 const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.gone)continue;const id=f.C.id;if(f.confT>60)f.confT=60;{const dn=!!(f.pi&&f.pi.y>.7);if(dn&&!f._dnP&&!f.ground&&f.vy>-1&&!f.ff&&(f.st==='air'||f.st==='helpless'||(f.st==='move'&&f.mv&&!f.mv.d.beh))){f.ff=true;for(let i=0;i<3;i++)part(f.x+i*5-5,f.y-50,0,-1.2,8,'#ffffff',1,0);}f._dnP=dn;if(f.ground)f._ffB=0;else if(f.ff&&!f._ffB&&f.vy>-1){f._ffB=1;f.vy=Math.max(f.vy,(f.C.st.ff||8)*.85);}}if(f.jinxT&&(f.dead||f.st==='respawn'))f.jinxT=0;if(f.jinxT>FR&&FR%7===0)part(f.x+rnd()*24-12,f.y-70-rnd()*10,0,.5,14,'#c83a5a',2,0);
@@ -6734,7 +6737,8 @@ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for
   else if(id==='ash'){if(f.tallT>FR&&f.ground&&(f.st==='run'||f.st==='walk'))f.x+=f.vx*.14;}
   else if(id==='dawson'){if(f.ground)f.glF=0;else if(f.pi&&f.pi.J&&f.vy>1.3&&(f.glF||0)<120&&(f.st==='air'||f.st==='helpless')){f.vy=1.3;f.x+=f.face*1.7;f.glF=(f.glF||0)+1;if(FR%4===0)part(f.x-f.face*10,f.y-44,-f.face*.6,.2,10,'#3a5a9a',1,0);}}
   else if(id==='kora'){if(f.ground)f.hovF=0;else if(f.pi&&f.pi.J&&f.vy>.8&&(f.hovF||0)<80&&f.st!=='hit'){f.vy=.8;f.hovF=(f.hovF||0)+1;if(FR%5===0)part(f.x+rnd()*24-12,f.y-30,0,.6,12,'#ffffff',1,0);}}
-  else if(id==='jack'&&f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&rnd()<.003)startMove(f,'dB');}};
+  else if(id==='jack'){const k=(f.cycN||0)%4,m=f.mv;if(m&&!m._jc&&m.k!=='dB'&&m.k!=='nB'){m._jc=1;const J=JK[k],d=m.d;m.d=Object.assign({},d,{fx:J.fx,vfx:d.vfx&&d.vfx.k==='H'?Object.assign({},d.vfx,{el:J.el}):d.vfx});}if(k===1&&f.ground&&(f.st==='run'||f.st==='walk'))f.x+=f.vx*.14;if(FR%9===0)part(f.x+rnd()*14-7,f.y-30-rnd()*30,0,-.6,12,JK[k].fx[0],1,0);if(f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&rnd()<.003)startMove(f,'dB');}
+  else if(id==='__jack_old'&&f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&rnd()<.003)startMove(f,'dB');}};
 const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.gone||f.invis)continue;const id=f.C.id,x=Math.round(f.x),y=Math.round(f.y)+5;
   if(f.jinxT>FR){const R=hurtR(f);X.globalAlpha=.5+.2*Math.sin(FR*.3);X.strokeStyle='#c83a5a';X.lineWidth=1;X.setLineDash([3,3]);X.strokeRect(R[0],R[1],R[2],R[3]);X.setLineDash([]);X.globalAlpha=1;wtri('#c83a5a',x-4,Math.round(f.y)-96,x+4,Math.round(f.y)-96,x,Math.round(f.y)-90);}
   const bar=(v,col,full)=>{wr('#0c0820',x-13,y-1,26,5);wr('#3a3660',x-12,y,24,3);wr(v>=1&&full?(FR%10<5?'#ffffff':full):col,x-12,y,Math.round(24*clamp(v,0,1)),3);};
