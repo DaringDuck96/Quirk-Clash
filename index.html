@@ -1067,6 +1067,7 @@ function drawDino(L,J0,S,p){const t=S.t,P=ramp(L.dP||'#6a3ab0'),PB=rampB(L.dP||'
 /* ---- top-level: paint fighter into sprite buffer ---- */
 function paintSprite(buf,L,p,S){setT(buf);clearT();prepLook(L);
   if(L.body==='dino'){drawDino(L,null,S,p);S.J=null;}
+  else if(typeof BEAST!=='undefined'&&BEAST[L.body]){BEAST[L.body](L,S,p);S.J=null;}
   else{const J=joints(p,L);drawHumanBody(L,J,S,p);S.J=J;}
   if(S.aura){const a=S.aura;for(let i=0;i<14;i++){const ang=(S.t*.1+i*.45)%TAU,r=14+Math.sin(S.t*.2+i)*4;spA(Math.cos(ang)*r,-30+Math.sin(ang)*r*1.6,hex2(a),.5);}}
   outlinePass();
@@ -2036,7 +2037,7 @@ const consume=(f,k)=>{f['last'+k]=-99;};
 
 /* ---------- moves ---------- */
 function scaled(d,k){const c='_s'+k;if(d[c])return d[c];const o=Object.assign({},d);if(d.hits)o.hits=d.hits.map(h=>Object.assign({},h,{dmg:h.dmg*k}));return d[c]=o;}
-function resolveDef(f,key){let src=f.C;if(f.copyT>0&&f.copyCi>=0&&key!=='ledgeAtk')src=CH[f.copyCi];let d=(src===f.C&&f.hound&&src.dmv&&src.dmv[key])||(src===f.C&&f.hero&&src.hmv&&src.hmv[key])||src.mv[key];if(!d)return null;let mc=-1;
+function resolveDef(f,key){let src=f.C;if(f.copyT>0&&f.copyCi>=0&&key!=='ledgeAtk')src=CH[f.copyCi];let d=(src===f.C&&f.form&&src.fmv&&src.fmv[f.form]&&src.fmv[f.form][key])||(src===f.C&&f.hero&&src.hmv&&src.hmv[key])||src.mv[key];if(!d)return null;let mc=-1;
   if(src!==f.C)d=scaled(d,.85);
   if(d.cyc)d=d.cyc[(f.cycN||0)%d.cyc.length];
   if(d.airAlt&&!f.ground)d=Object.assign({},d,d.airAlt);
@@ -2874,7 +2875,7 @@ function spriteState(f){const m=f.mv,d=m&&m.d;const S={t:f.anim,vx:(f.vx+f.lx)*f
 function limbTip(f,lim,S,L){const J=S.J,sc=1;if(!J&&lim!=='tail'&&lim!=='none'){const hp=S.mouth||S.hand;return hp?{x:hp.x,y:hp.y}:null;}
   switch(lim){case 'hF':return S.hand;case 'hB':return J.WB;case 'fF':return J.TF;case 'fB':return J.TB;case 'tail':return S.tailTip;case 'w':return L.wpn?weaponTip(L,J,S.hand):S.hand;}return null;}
 
-function lookOf(f){return(f.copyT>0&&f.copyCi>=0)?CH[f.copyCi].look:f.L;}
+function lookOf(f){return f.formL||((f.copyT>0&&f.copyCi>=0)?CH[f.copyCi].look:f.L);}
 function drawFighter(f){if(f.dead||f.gone)return;const L=lookOf(f);
   const p=exaggerate(poseOf(f),f),S=spriteState(f);
   if(f.invis){if(f.anim%3===0)wring(f.x,f.y,6+Math.sin(f.anim*.3)*2,'#c8a0ff');return;}
@@ -2892,7 +2893,7 @@ function drawFighter(f){if(f.dead||f.gone)return;const L=lookOf(f);
   if(m&&m.v.board){wr('#2a6aa8',-14,-2,28,4);wr('#bff4ff',-13,-2,26,2);wp('#ffffff',10,-2);}
   if(m&&m.d.koi&&m.t<m.d.s+m.d.a){const d=f.face,wg=Math.sin(f.anim*.5)*2;fishShape(d*4,5+wg*.4,d,64,'#f4b020','#fff4c0','#8a5a08');wpoly('#ffd860',[-d*6,-4,d*2,-13,d*10,-5]);wp('#ffffff',d*22,0);if(f.anim%3===0)part(f.x-d*30,f.y+4,-f.vx*.3,0,16,rnd()<.5?'#ffe890':'#bfe8ff',2,0);}
   if(p.rot){const ry=30*(L.size||1);X.translate(0,-ry);X.rotate(p.rot*f.face);X.translate(0,ry);}
-  if(f.hound&&typeof drawHound==='function'){X.globalAlpha=alpha;X.scale(f.face,1);drawHound(f);X.globalAlpha=1;}else{X.scale(f.face*sc/RS,sc/RS);X.globalAlpha=alpha;X.drawImage(B.cv,-B.ox,-B.oy);}X.restore();
+  X.scale(f.face*sc/RS,sc/RS);X.globalAlpha=alpha;X.drawImage(B.cv,-B.ox,-B.oy);X.restore();
   if(m){const d=m.d,lim=d.lim||(ANIM[d.an]&&ANIM[d.an].lim);if(lim&&lim!=='none'&&m.t>=d.s-1&&m.t<=d.s+d.a+2){const tp=limbTip(f,lim,Sd,L);if(tp){m.trail.push({x:f.x+tp.x*f.face*sc,y:f.y+tp.y*sc});if(m.trail.length>7)m.trail.shift();}}
     if(d.tentacle&&m.t>=d.s&&m.t<d.s+d.a+4){const hx=f.x+f.face*6;for(let i=0;i<10;i++){const yy=f.y-50-i*5,xx=hx+Math.sin(i*.8+f.anim*.3)*4;wdisc(xx,yy,2.4-i*.1,'#e8c458');wdisc(xx+2,yy+2,1.6,'#fff0b0');}}
     if(d.gatling&&m.t>=d.s&&m.t<d.s+d.a){for(let i=0;i<3;i++){const fx2=f.x+f.face*(20+rnd()*28),fy=f.y-44+rnd()*14;wr(L.R.skin[2]?rgbOf(L.R.skin):'#f3d4ba',fx2-3,fy-3,6,6);wl('#ffffff',fx2-f.face*8,fy,fx2-f.face*14,fy);}}
@@ -5367,7 +5368,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
  d=m('kichi','uB');d.hits[0].b=[[0,-62,12],[0,-86,10]];d.bp.vy=-9.4;T('kichi',2,'Anchor Chain (very long reach, grabs ledges)','Hurls his chain straight up: lower jump than most, but the chain reaches far and grabs ledges.');
  d=m('ginko','dB');d.hits.forEach(h=>h.eff='burn');
  /* balance table from CPU-vs-CPU sampling: [power dealt, knockback taken] */
- const BALT={kimiko:[1.10,0.90],gomi:[0.91,1.10],uchuu:[1.20,0.85],akemi:[1.04,0.96],tai:[1.02,0.98],shiki:[0.80,1.22],tenmetsu:[0.98,1.02],sai:[1.04,0.96],soran:[1.14,0.87],raion:[0.91,1.09],sanshou:[0.80,1.22],keanu:[1.08,0.94],maho:[1.19,0.86],kouji:[1.01,0.99],shuko:[0.99,1.01],taru:[0.88,1.14],hatsuko:[0.97,1.03],zabu:[1.08,0.92],yado:[1.04,0.96],ryuko:[0.81,1.22],tsuki:[1.07,0.93],kairi:[1.20,0.85],bara:[1.03,0.97],emi:[1.13,0.88],torabi:[0.87,1.14],ginko:[0.84,1.18],marina:[1.11,0.90],hari:[1.10,0.91],rei:[0.95,1.05],kichi:[1.02,0.98],tori:[1.08,0.92],suze:[1.20,0.86],toguchi:[1.08,0.92],tamashi:[1.20,0.86],minato:[1.20,0.86],tatsuya:[1.02,0.98],pitto:[0.92,1.08],oro:[0.95,1.05],riku:[1.06,0.94],kuragari:[1.03,0.97],ivan:[0.95,1.05],bisu:[1.02,0.98],shi:[1.02,0.98],kurai:[1.02,0.98],makiko:[1.11,0.90],koki:[0.90,1.12],ali:[1.06,0.94],hana:[1.04,0.96],tomi:[0.91,1.09],kongu:[0.93,1.08],yoko:[1.10,0.91],hippo:[0.89,1.12],yurei:[1.08,0.93]};
+ const BALT={kimiko:[1.10,0.90],gomi:[0.91,1.10],uchuu:[1.20,0.85],akemi:[1.04,0.96],tai:[1.02,0.98],shiki:[0.80,1.22],tenmetsu:[0.98,1.02],sai:[1.04,0.96],soran:[1.14,0.87],raion:[0.91,1.09],sanshou:[0.80,1.22],keanu:[1.08,0.94],maho:[1.19,0.86],kouji:[1.01,0.99],shuko:[0.99,1.01],taru:[0.88,1.14],hatsuko:[0.97,1.03],zabu:[1.08,0.92],yado:[1.04,0.96],ryuko:[0.81,1.22],tsuki:[1.07,0.93],kairi:[1.20,0.85],bara:[1.03,0.97],emi:[1.13,0.88],torabi:[0.87,1.14],ginko:[0.84,1.18],marina:[1.11,0.90],hari:[1.10,0.91],rei:[0.95,1.05],kichi:[1.02,0.98],tori:[1.08,0.92],suze:[1.20,0.86],toguchi:[1.16,0.87],daku:[0.88,1.12],tamashi:[1.20,0.86],minato:[1.20,0.86],tatsuya:[1.02,0.98],pitto:[0.92,1.08],oro:[0.95,1.05],riku:[1.06,0.94],kuragari:[1.03,0.97],ivan:[0.95,1.05],bisu:[1.08,0.94],shi:[1.02,0.98],kurai:[1.02,0.98],makiko:[1.11,0.90],koki:[0.90,1.12],ali:[1.06,0.94],hana:[1.04,0.96],tomi:[0.91,1.09],kongu:[0.93,1.08],yoko:[1.10,0.91],hippo:[0.89,1.12],yurei:[1.08,0.93]};
  for(const id in BALT){const C=c(id),t=BALT[id];if(!C)continue;C.atkM=(C.atkM||1)*t[0];C.kbM=(C.kbM||1)*Math.sqrt(t[0]);C.defKb=(C.defKb||1)*t[1];}
  {const S=c('sanshou');S.st.w=1.44;S.defM=(S.defM||1)*1.12;S.iron=5;}
 })();
@@ -5473,7 +5474,7 @@ function aiInput(f){const I={x:0,y:0,A:0,B:0,J:0,S:0,G:0};const o=opp(f),L=clamp
   return I;}
 
 /* ---- hurtboxes follow the body: size, crouch, and an outstretched limb can be hit ---- */
-function hurtR(f){const hb=f.C.hurt||[16,HH];let h=hb[1];if(f.st==='crouch')h*=.62;else if(f.st==='climb')h*=.75;if(f.mv&&f.mv.d.beh==='reflect'&&f.mv.d.bp.scale)h*=1.15;if(f.mini>0)return[f.x-4,f.y-h*.3,8,h*.3];if(f.big>0)return[f.x-hb[0]*.7,f.y-h*1.4,hb[0]*1.4,h*1.4];if(f.hound)return[f.x-19,f.y-34,38,34];return[f.x-hb[0]/2,f.y-h,hb[0],h];}
+function hurtR(f){const hb=f.C.hurt||[16,HH];let h=hb[1];if(f.st==='crouch')h*=.62;else if(f.st==='climb')h*=.75;if(f.mv&&f.mv.d.beh==='reflect'&&f.mv.d.bp.scale)h*=1.15;if(f.mini>0)return[f.x-4,f.y-h*.3,8,h*.3];if(f.big>0)return[f.x-hb[0]*.7,f.y-h*1.4,hb[0]*1.4,h*1.4];if(f.form&&typeof FORMBOX!=='undefined'&&FORMBOX[f.form]){const b=FORMBOX[f.form];return[f.x-b[0]/2,f.y-b[1],b[0],b[1]];}return[f.x-hb[0]/2,f.y-h,hb[0],h];}
 const LIMBK=/^(jab[123]|ftilt|utilt|dtilt|dash|fsmash|usmash|dsmash|nair|fair|bair|uair|dair)$/;
 function limbR(f){const m=f.mv;if(!m||f.st!=='move'||!LIMBK.test(m.k)||f.mini>0||intangible(f))return null;const d=m.d;if(f.C.disjoint||(f.hero&&f.C.heroDisjoint)||m.t<d.s||m.t>d.s+d.a+2||!d.hits.length)return null;
   let b=null;for(const h of d.hits)for(const q of h.b)if(!b||Math.abs(q[0])+Math.abs(q[1]+30)>Math.abs(b[0])+Math.abs(b[1]+30))b=q;if(!b)return null;
@@ -5974,6 +5975,97 @@ const ING_MAX=6;
 })();
 function skinLabel(n){if((SEL.skin[n]||0)>=skinCount(n))SEL.skin[n]=0;const s=SEL.skin[n]||0,C=CH[SEL.p[n]],L=C&&C.looks&&C.looks[s];return L&&L.cname?L.cname:'COLOR '+(s+1);}
 
+/* ===================== ANIMAL FORMS painted in the same sprite style as the fighters ===================== */
+const BEASTLOOK={hound:{body:'hound',size:1.08},cheetah:{body:'cheetah',size:1},elephant:{body:'elephant',size:1.22},snake:{body:'snake',size:1.1}};
+const FORMBOX={hound:[38,36],cheetah:[38,30],elephant:[52,62],snake:[56,26]};
+const BEAST=(function(){
+ const leg=(hx,hy,fx,fy,a,b,r0,r1,P,sign)=>{const[kn,ft]=ik(hx,hy,fx,fy,a,b,sign);capsule(hx,hy,r0,kn.x,kn.y,(r0+r1)/2,P);capsule(kn.x,kn.y,(r0+r1)/2,ft.x,ft.y,r1,P);return ft;};
+ const gait=S=>{const run=Math.abs(S.vx)>.6&&!S.air;return{run,ph:S.t*(run?.55:0),air:S.air};};
+ const foot=(g,x,ph,stride,lift)=>g.air?{x:x+(ph>2?5:-4),y:-5}:g.run?{x:x+Math.sin(g.ph+ph)*stride,y:-Math.max(0,Math.cos(g.ph+ph))*lift}:{x,y:0};
+ function hound(L,S,p){const t=S.t,g=gait(S),atk=S.face==='atk',hurt=S.face==='hurt'||S.face==='dizzy',F=ramp('#3c2a30'),FB=rampB('#3c2a30'),BL=ramp('#5a3e40'),FL=ramp('#ff6a1a'),FY=ramp('#ffd040'),W=ramp('#f2f2f6'),bob=(g.run?Math.sin(g.ph*2)*1.2:Math.sin(t*.1)*.5)+(p.py||0)*.4,by=-24+bob;
+  for(let i=0;i<6;i++){const u=i/5;capsule(-17-u*10,by-2-u*10+Math.sin(t*.3+i)*1.5,3.6-u*2.4,-19-u*12,by-5-u*11+Math.sin(t*.3+i+1)*1.5,3-u*2.4,i%2?FY:FL,0);}
+  for(const[x,ph]of[[-12,0],[10,1.6]]){const f=foot(g,x,ph,7,5);leg(x,by+4,f.x,f.y,12,12,3.6,2.4,FB,x<0?1:-1);capsule(f.x,f.y-1,2.4,f.x+4,f.y-.6,2,FB);}
+  ell(-2,by,16,8.4,-.05,F);ell(9,by-2,9.6,9.2,0,F);ell(0,by+3,11,4,0,BL,0);
+  for(let i=0;i<6;i++){const x=-13+i*5,h=4+((t>>1)+i*3)%5;capsule(x,by-7,2.2,x-1.5,by-8-h,.8,i%2?FL:FY,0);}
+  for(const[x,ph]of[[-8,3.1],[14,4.7]]){const f=foot(g,x,ph,7,5);leg(x,by+4,f.x,f.y,12,12,3.8,2.6,F,x<0?1:-1);capsule(f.x,f.y-1,2.6,f.x+4.4,f.y-.6,2.1,F);for(let k=0;k<3;k++)sp(f.x+3+k*1.4,f.y+.4,W[3]);}
+  const head=(nx,ny,ang,open,P)=>{const hx=16+nx,hy=by-10+ny,c=Math.cos(ang),s=Math.sin(ang),at=(a,b)=>[hx+a*c-b*s,hy+a*s+b*c];capsule(12,by-5,5,hx,hy,4.4,P);ell(hx,hy,6.2,5.6,ang,P);
+   const sn=at(9,1-open*.25),jw=at(8,3.4+open*.9);capsule(...at(3,.5),3.6,sn[0],sn[1],2.6,P);capsule(...at(3,3),2.4,jw[0],jw[1],1.9,P);if(open>1){poly([...at(4,2.4),...at(10,1.6-open*.2),...at(9.4,3.4+open*.8)],ramp('#8a1a24'),'g',0);for(let k=0;k<3;k++){const q=at(6+k*1.6,1.6);sp(q[0],q[1],W[4]);const r2=at(6+k*1.6,3+open*.7);sp(r2[0],r2[1],W[4]);}}
+   const nz=at(11.2,.2-open*.25);sp(nz[0],nz[1],ramp('#16101a')[1]);poly([...at(-2,-4),...at(-.6,-11),...at(2.6,-4.6)],P,'g');poly([...at(1.6,-4.4),...at(4,-9.6),...at(5.2,-3.8)],P,'g');
+   const e=at(3.4,-1.6);sp(e[0],e[1],FY[4]);sp(e[0]+1,e[1],FL[4]);sp(e[0],e[1]-1,ramp('#16101a')[1]);};
+  const sw=Math.sin(t*.12)*1.4,o=k=>atk?(((t>>1)+k)%3===0?5:1.4):hurt?1.2:(Math.sin(t*.08+k)>.75?2:0);
+  head(1,-13+sw,-.62,o(0),FB);head(7,3-sw,.34,o(1),FB);head(9,-5,-.12,o(2),F);}
+ function cheetah(L,S,p){const t=S.t,g=gait(S),atk=S.face==='atk',hurt=S.face==='hurt'||S.face==='dizzy',C0=L.fc||'#6ac86a',F=ramp(C0),FB=rampB(C0),BL=ramp('#d8f4c8'),SP=ramp('#1e5a2a'),W=ramp('#f2f2f6'),str=g.run?Math.sin(g.ph)*2:0,bob=(g.run?Math.abs(Math.sin(g.ph))*-2:Math.sin(t*.1)*.5)+(p.py||0)*.4,by=-22+bob;
+  let px=-17,py=by-2;for(let i=1;i<=8;i++){const u=i/8,x=-17-u*22,y=by-2+Math.sin(u*3+t*.12)*4-u*(g.run?8:-3);capsule(px,py,2.4-u*.8,x,y,2.2-u*.8,i%2?F:SP);px=x;py=y;}
+  for(const[x,ph]of[[-12,0],[11,1.2]]){const f=foot(g,x,ph,11,6);leg(x,by+3,f.x,f.y,12.5,12.5,3,1.8,FB,x<0?1:-1);capsule(f.x,f.y-1,1.9,f.x+4,f.y-.6,1.6,FB);}
+  ell(-1,by,17,6.4+str*.2,-.04,F);ell(9,by-1,8.6,7.4,0,F);ell(-10,by+.5,7.4,6,0,F);ell(0,by+3.6,12,2.8,0,BL,0);
+  for(let i=0;i<16;i++){const x=-15+((i*7)%30),y=by-4+((i*5)%7);sp(x,y,SP[2]);sp(x+1,y,SP[1]);if(i%3===0)sp(x,y+1,SP[2]);}
+  for(const[x,ph]of[[-8,3.1],[14,4.3]]){const f=foot(g,x,ph,11,6);leg(x,by+3,f.x,f.y,12.5,12.5,3.2,1.9,F,x<0?1:-1);capsule(f.x,f.y-1,2,f.x+4.4,f.y-.6,1.7,F);}
+  const hx=21,hy=by-8+(atk?1:0);capsule(14,by-3,4.4,hx,hy,3.8,F);ell(hx,hy,5.6,5,0,F);capsule(hx+2,hy+1.4,3,hx+7,hy+2,2.2,BL);const op=atk?3:hurt?1:0;if(op){poly([hx+2,hy+3,hx+8,hy+2.4,hx+7,hy+3+op],ramp('#8a1a24'),'g',0);sp(hx+6,hy+2.8,W[4]);sp(hx+4.4,hy+2.8,W[4]);}
+  sp(hx+8.4,hy+1,SP[1]);ell(hx-2.6,hy-4.6,2.2,2.4,0,F);ell(hx+1.4,hy-5,2,2.2,0,FB);sp(hx+2.6,hy-1.2,ramp('#16101a')[1]);sp(hx+3.4,hy-1.6,W[4]);lineP(hx+3.6,hy,hx+5.4,hy+3.4,SP[1]);
+  if(g.run)for(let i=0;i<3;i++)lineP(-30-i*5,by-6+i*5,-38-i*5,by-6+i*5,W[2]);}
+ function elephant(L,S,p){const t=S.t,g=gait(S),atk=S.face==='atk',hurt=S.face==='hurt'||S.face==='dizzy',C0=L.fc||'#5aa870',F=ramp(C0),FB=rampB(C0),DK=ramp('#2e6a44'),W=ramp('#f4f0e0'),bob=(g.run?Math.sin(g.ph*2)*1:Math.sin(t*.07)*.5)+(p.py||0)*.4,by=-40+bob;
+  capsule(-22,by-2,1.6,-27,by+12+Math.sin(t*.15)*2,1,FB);ell(-27,by+13+Math.sin(t*.15)*2,1.8,2.2,0,DK,0);
+  for(const[x,ph]of[[-13,0],[10,1.6]]){const f=foot(g,x,ph,5,3);capsule(x,by+8,6.2,f.x,f.y-3,5.6,FB);for(let k=0;k<3;k++)sp(f.x-3+k*3,f.y-.6,W[3]);}
+  ell(-2,by,22,15.5,0,F);ell(6,by+2,13,12,0,F);ell(-2,by+10,15,5,0,ramp('#8ad0a0'),0);
+  for(const[x,ph]of[[-8,3.1],[15,4.7]]){const f=foot(g,x,ph,5,3);capsule(x,by+8,6.6,f.x,f.y-3,6,F);capsule(f.x,f.y-3,6,f.x,f.y-1.6,6.2,F);for(let k=0;k<3;k++)sp(f.x-2+k*3,f.y-.4,W[4]);}
+  const hx=21,hy=by-7+(hurt?2:0),flap=Math.sin(t*.14)*1.6;ell(hx-7,hy-1,9+flap*.4,12.5,-.18,FB);ell(hx-6.4,hy-.4,6.4,9.4,-.18,ramp('#8ad0a0'),0);ell(hx,hy,10.6,11.4,0,F);
+  const up=atk?1:0,curl=Math.sin(t*.1)*.25;let px=hx+8,py=hy+2;for(let i=1;i<=8;i++){const u=i/8,a=up?(-.2-u*1.9):(1.35+curl*u+u*.5),x=px+Math.cos(a)*4.4,y=py+Math.sin(a)*4.4;capsule(px,py,4.4-u*2.4,x,y,4.1-u*2.4,i%2?F:FB);px=x;py=y;}
+  poly([hx+5,hy+5,hx+16,hy+9+(atk?-3:0),hx+15,hy+11+(atk?-3:0),hx+5,hy+7.6],W,'g');sp(hx+4,hy-2.6,ramp('#16101a')[1]);sp(hx+5,hy-3.2,W[4]);lineP(hx+1,hy-6,hx+6,hy-5,DK[1]);
+  for(let i=0;i<5;i++)lineP(-14+i*6,by-13+Math.abs(i-2),-13+i*6,by-9+Math.abs(i-2),DK[2]);}
+ function snake(L,S,p){const t=S.t,g=gait(S),atk=S.face==='atk',hurt=S.face==='hurt'||S.face==='dizzy',C0=L.fc||'#4a9a4a',F=ramp(C0),FB=rampB(C0),BL=ramp('#d8e8a0'),PT=ramp('#1e4a24'),W=ramp('#f2f2f6'),sl=g.run?g.ph*1.3:t*.06;
+  const pts=[];for(let i=0;i<=14;i++){const u=i/14,x=-44+u*52,y=-5-Math.max(0,Math.sin(u*Math.PI*2.4+sl))*5-u*2;pts.push([x,y,4.2+Math.sin(u*Math.PI)*3.4]);}
+  /* a big resting coil behind, then the body running forward along the ground */
+  ell(-22,-11,15,10,0,FB);ell(-22,-11,9,5.4,0,rampB('#1e4a24'),0);ell(-22,-13,13,7,0,F,0);
+  for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1];capsule(a[0],a[1],a[2],b[0],b[1],b[2],i%2?F:FB);}
+  for(let i=1;i<pts.length-1;i++){const a=pts[i];poly([a[0]-2.4,a[1]-a[2]+1,a[0]+2.4,a[1]-a[2]+1,a[0]+1.4,a[1]-a[2]+4.4,a[0]-1.4,a[1]-a[2]+4.4],PT,'g',0);sp(a[0],a[1]+a[2]-1.4,BL[3]);sp(a[0]+2,a[1]+a[2]-1.2,BL[3]);}
+  /* raised neck and head: rears back at rest, lunges forward when striking */
+  const reach=atk?17:0,sway=Math.sin(t*.1)*2*(atk?0:1),nk=[[8,-9],[12-reach*.1,-20],[10+sway+reach*.5,-31+reach*.4],[15+sway+reach,-39+reach*.75]];
+  for(let i=0;i<nk.length-1;i++)capsule(nk[i][0],nk[i][1],6.4-i*.6,nk[i+1][0],nk[i+1][1],5.8-i*.6,i%2?FB:F);for(let i=0;i<nk.length-1;i++)capsule(nk[i][0]+2.6,nk[i][1]+1,2.4,nk[i+1][0]+2.6,nk[i+1][1]+1,2.2,BL,0);
+  const hx=nk[3][0],hy=nk[3][1],op=atk?5:hurt?2:0;ell(hx+3,hy,8,5.6,-.1,F);capsule(hx+5,hy-1,4.2,hx+12,hy-.6-op*.25,3,F);capsule(hx+4,hy+2.6,3.2,hx+11,hy+2.6+op*.8,2.3,BL);
+  if(op){poly([hx+4,hy+1.4,hx+12,hy+.6-op*.2,hx+11,hy+2.6+op*.7],ramp('#8a1a24'),'g',0);lineP(hx+9.6,hy+.8,hx+9.2,hy+3.4,W[4]);lineP(hx+11,hy+.8,hx+10.8,hy+3,W[4]);}
+  else if((t>>3)%5===0){lineP(hx+12.6,hy+1,hx+17,hy+1.4,ramp('#e02a4a')[3]);lineP(hx+17,hy+1.4,hx+19,hy,ramp('#e02a4a')[3]);lineP(hx+17,hy+1.4,hx+19,hy+2.8,ramp('#e02a4a')[3]);}
+  sp(hx+5.6,hy-2.2,ramp('#ffd040')[4]);sp(hx+6.4,hy-2.2,ramp('#16101a')[1]);lineP(hx-1,hy-4.6,hx+6,hy-4.8,PT[2]);poly([hx-2,hy-3.4,hx+2,hy-4.6,hx+1,hy-1.4],PT,'g',0);}
+ return{hound,cheetah,elephant,snake};})();
+
+/* ---- Bisu really becomes the animal: cheetah, elephant, massive anaconda ---- */
+(function(){const C=CH.find(c=>c.id==='bisu');if(!C)return;const fx=['#5ad85a','#e8ffd0'],NORM=['jab1','jab2','jab3','jab','ftilt','utilt','dtilt','dash','fsmash','usmash','dsmash','nair','fair','bair','uair','dair'];
+ const ORDER=[null,'cheetah','elephant','snake'],NAME={cheetah:'CHEETAH',elephant:'ELEPHANT',snake:'ANACONDA'};
+ const shift=()=>M('roar',8,4,10,null,{fx,lim:'none',cd:45,onStart(f){const i=(ORDER.indexOf(f.form||null)+1)%ORDER.length,to=ORDER[i];f.form=to;f.formL=to?BEASTLOOK[to]:null;f.S=null;f.buff=null;FXL.push({k:'txt2',s:to?NAME[to]+'!':'HIMSELF',x:f.x,y:f.y-84,t:0,life:44,col:'#5ad85a'});sfx('power');burst(f.x,f.y-26,24,['#5ad85a','#e8ffd0','#2a8a3a'],3.2,24);FXL.push({k:'ring',x:f.x,y:f.y-26,t:0,col:'#5ad85a',r0:10,life:20});}});
+ const form=(reach,dm,ds,yMax,yMul,el)=>{const o={};for(const k of NORM){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)continue;const b0=d.hits[0].b[0],fy=y=>Math.max(y,yMax)*yMul;
+   o[k]=Object.assign({},d,{s:Math.max(2,d.s+ds),r:Math.max(4,d.r+ds),hits:d.hits.map(h=>Object.assign({},h,{dmg:h.dmg*dm,kbg:h.kbg*(dm>1.1?1.12:dm<1?.92:1),b:h.b.map(q=>[q[0]*reach,fy(q[1]),q[2]*(dm>1.1?1.3:1)]),f0:h.f0!==undefined?h.f0+ds:undefined,f1:h.f1!==undefined?h.f1+ds:undefined})),vfx:{k:'H',el:'beast',sub:el,x:b0[0]*reach,y:fy(b0[1]),r:(b0[2]+3)*(dm>1.1?1.3:1)},lim:'none'});}o.dB=shift();return o;};
+ const b0=NEWFX.beast;NEWFX.beast=function(sub,x,y,d,pr,fx2,f,R,T){
+   if(sub==='tusk'){wring(x,y,R*.6+pr*14,'#e8ffd0',3);for(let i=0;i<5;i++){const a=i/5*TAU+pr;wr('#8e8a84',x+Math.cos(a)*(R*.5+pr*16)-2,y+Math.sin(a)*(R*.5+pr*16)-2,4,4);}wl('#f4f0e0',x-d*R*.8,y+4,x+d*R*.4,y-4,4);return;}
+   if(sub==='fang'){const gap=R*(1-Math.min(1,pr*2.4))+1;for(const s of[-1,1])for(let i=0;i<2;i++){const tx=x-4+i*8;wpoly('#f2f2f6',[tx-2,y+s*(gap+7),tx+2,y+s*(gap+7),tx,y+s*gap]);}wring(x,y,R*.5+pr*8,'#a0ff40',1);return;}
+   if(sub==='coil'){for(let k=0;k<3;k++){const rr=R*(.5+k*.25)*(1-pr*.3);for(let i=0;i<10;i++){const a0=i/10*TAU+T*.3+k,a1=a0+TAU/10;wl(i%2?'#4a9a4a':'#1e4a24',f.x+f.face*20+Math.cos(a0)*rr,f.y-22+Math.sin(a0)*rr*.6,f.x+f.face*20+Math.cos(a1)*rr,f.y-22+Math.sin(a1)*rr*.6,3);}}return;}
+   b0(sub,x,y,d,pr,fx2,f,R,T);};
+ C.fmv={};
+ /* cheetah: fast and low */
+ C.fmv.cheetah=Object.assign(form(1.1,.9,-1,-40,.8,undefined),{
+   nB:M('punch',4,22,12,hit([[24,-22,12]],1.6,.8,0,35,{ri:3}),{finisher:hit([[26,-22,14]],4,4.4,.065,40),fx,imp:[[4,2.6,0],[24,0,0]],lim:'none',vfx:{k:'H',el:'beast',x:24,y:-22,r:12}}),
+   sB:M('dive',6,16,14,hit([[22,-20,15]],9,4.5,.06,35),{beh:'dash',bp:{spd:8.6,f0:6,f1:22,air:'float',jumpCancel:1},fx,lim:'none',vfx:{k:'H',el:'beast',x:22,y:-20,r:15}}),
+   uB:M('uppercut',4,10,14,hit([[8,-34,15]],6,4.6,.05,72),{beh:'leapUp',bp:{vy:-12,vx:3.4},fx,lim:'none'})});
+ /* elephant: huge, slow, crushing */
+ C.fmv.elephant=Object.assign(form(1.35,1.32,4,-70,1.05,'tusk'),{
+   nB:M('castDown',18,6,26,[hit([[40,-10,26]],17,5,.095,72),hit([[-30,-10,20]],11,4.5,.07,108)],{bp:{armor:1,f0:8,f1:24},fx,lim:'none',vfx:{k:'H',el:'beast',sub:'tusk',x:40,y:-10,r:26}}),
+   sB:M('shoulder',14,26,22,hit([[30,-34,24]],16,5.4,.085,40),{beh:'dash',bp:{spd:4.6,f0:14,f1:40,air:'grav',armor:1},fx,lim:'none',vfx:{k:'H',el:'beast',sub:'tusk',x:30,y:-34,r:24}}),
+   uB:M('roar',10,8,22,hit([[0,-40,58]],4,7.5,.02,60),{beh:'leapUp',bp:{vy:-8.4,vx:.8},helpless:1,fx,lim:'none'})});
+ /* anaconda: long strikes and a crushing grab */
+ C.fmv.snake=Object.assign(form(1.6,1.04,1,-36,.75,'fang'),{
+   nB:M('lunge',12,8,22,null,{beh:'cgrab',bp:{box:[4,-40,46,40],mode:'constrict',eff:null},imp:[[6,2.6,0],[16,0,0]],fx,lim:'none'}),
+   sB:M('spin',10,20,20,hit([[30,-12,18],[52,-12,16],[-20,-12,16]],2.4,2,.01,60,{ri:5}),{finisher:hit([[40,-12,20]],6,5,.075,50),fx,lim:'none',vfx:{k:'H',el:'beast',sub:'coil',x:20,y:-22,r:26}}),
+   uB:M('uppercut',8,12,18,hit([[8,-50,16],[6,-28,14]],9,5.2,.07,82,{eff:'poison'}),{beh:'leapUp',bp:{vy:-11.2,vx:1.4},helpless:1,fx,lim:'none',vfx:{k:'H',el:'beast',sub:'fang',x:8,y:-50,r:14}})});
+ C.mv.dB=shift();
+ C.sp=['Rooster Peck (cheetah: claw flurry / elephant: stomp quake / anaconda: constrict)','Bull Charge (cheetah: sprint, jump to cancel / elephant: armored stampede / anaconda: coil whip)','Hawk Flight (cheetah: huge leap / elephant: trumpet hop / anaconda: striking uncoil)','Shift (cheetah, then elephant, then anaconda, then himself)'];
+ if(typeof GTXT!=='undefined'&&GTXT.bisu){GTXT.bisu[0]='Himself: a rooster-fast flurry of pecks. Cheetah: an advancing claw flurry. Elephant: rears and stomps, shaking the ground on both sides, and cannot be interrupted. Anaconda: lunges, wraps a rival up and squeezes before throwing them.';GTXT.bisu[1]='Himself: an armored bull charge. Cheetah: a sprint across the stage you can jump out of. Elephant: a slow, unstoppable stampede. Anaconda: whips his coils around himself, hitting many times at long range.';GTXT.bisu[2]='Himself: hawk flight in any direction. Cheetah: the highest leap he has, and he can still act. Elephant: a small hop with a trumpet blast that shoves everyone away. Anaconda: uncoils upward into a poisonous strike.';GTXT.bisu[3]='Changes his whole body: cheetah (fastest, low to the ground, weaker hits, launched more easily), elephant (enormous, slow, 32% more damage, very hard to launch), anaconda (60% more reach, low and long, slow to move), then back to himself.';}
+ C.na='Normals: scrappy claws and kicks as himself. Each animal fights its own way: the cheetah fast and low, the elephant with tusks and weight, the anaconda with long lunging bites.';
+ C.trait='Three full animal forms on Down-B, each with its own size, speed and moves.';C.weak='No projectile in any form, and every form gives something up: the cheetah is fragile, the elephant is a huge slow target, the anaconda barely moves.';C.role='Shape-shifter';C.tip='Cheetah to close the gap, elephant to finish, anaconda to keep them out.';
+ const kb0=kbMod;kbMod=function(a,t,h,o){let m=kb0(a,t,h,o);if(t.form==='elephant')m*=.72;else if(t.form==='cheetah')m*=1.12;return m;};
+ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.C.id!=='bisu'||f.gone)continue;if(f.dead||f.st==='respawn'){f.form=null;f.formL=null;continue;}
+   if(f.ground&&(f.st==='run'||f.st==='walk')){if(f.form==='cheetah')f.x+=f.vx*.42;else if(f.form==='elephant')f.x-=f.vx*.34;else if(f.form==='snake')f.x-=f.vx*.3;}
+   if(f.form==='elephant'&&f.ground&&f.st==='run'&&FR%14===0&&!RM)shakeA=Math.max(shakeA,2);
+   if(f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&(f.st==='idle'||f.st==='walk'||f.st==='run')&&rnd()<.006)startMove(f,'dB');}};
+})();
+
 /* ===================== DAKU: a hell-fire brawler who really turns into a three-headed hound ===================== */
 (function(){const C=CH.find(c=>c.id==='daku');if(!C)return;const fx=['#ff4a1a','#ffb030'],txt=(f,s)=>FXL.push({k:'txt2',s,x:f.x,y:f.y-84,t:0,life:44,col:'#ff4a1a'});
  const NORM=['jab1','jab2','jab3','jab','ftilt','utilt','dtilt','dash','fsmash','usmash','dsmash','nair','fair','bair','uair','dair'];
@@ -5986,10 +6078,10 @@ function skinLabel(n){if((SEL.skin[n]||0)>=skinCount(n))SEL.skin[n]=0;const s=SE
    dogBite[k]=Object.assign({},d,{s:Math.max(2,d.s-1),hits:d.hits.map(h=>Object.assign({},h,{eff:'burn',dmg:h.dmg*1.06,b:h.b.map(q=>[q[0]*1.15,Math.max(q[1],-44)*.8,q[2]])})),vfx:{k:'H',el:'hell',x:b0[0]*1.15,y:Math.max(b0[1],-44)*.8,r:b0[2]+3}});
    d.vfx={k:'H',el:'hfire',x:b0[0],y:b0[1],r:b0[2]+3};d.hits.forEach(h=>{h.eff='burn';});}
  const oldBite=C.mv.nB,oldPillar=C.mv.uB;
- const shift=(to)=>M('roar',10,4,12,null,{fx,lim:'none',cd:70,onStart(f){f.hound=to;f.S=null;txt(f,to?'HELLHOUND!':'HEEL.');sfx('power');burst(f.x,f.y-24,26,['#ff4a1a','#ffb030','#2a1a1a'],3.4,26);FXL.push({k:'ring',x:f.x,y:f.y-24,t:0,col:'#ff4a1a',r0:10,life:22});if(!RM)shakeA=Math.max(shakeA,5);}});
+ const shift=(to)=>M('roar',10,4,12,null,{fx,lim:'none',cd:70,onStart(f){f.hound=to;f.form=to?'hound':null;f.formL=to?BEASTLOOK.hound:null;f.S=null;txt(f,to?'HELLHOUND!':'HEEL.');sfx('power');burst(f.x,f.y-24,26,['#ff4a1a','#ffb030','#2a1a1a'],3.4,26);FXL.push({k:'ring',x:f.x,y:f.y-24,t:0,col:'#ff4a1a',r0:10,life:22});if(!RM)shakeA=Math.max(shakeA,5);}});
  C.mv.nB=M('cast',11,1,18,null,{fx,spawn:[[11,{k:'fireball',vx:5,life:58,r:7,dmg:8,bkb:4,kbg:.055,ang:40,eff:'burn',explode:1}]]});
  C.mv.dB=shift(1);
- C.dmv=Object.assign(dogBite,{nB:oldBite,
+ C.fmv={};C.fmv.hound=Object.assign(dogBite,{nB:oldBite,
    sB:M('roar',12,1,22,null,{fx,cd:60,spawn:[[12,{k:'fireball',n:3,spread:.42,vx:4.6,life:44,r:6,dmg:5,bkb:3,kbg:.04,ang:45,eff:'burn',dy:-22}]],onStart(f){FXL.push({k:'txt',s:'CERBERUS BREATH',x:f.x,y:f.y-60,t:0,life:36,col:'#ffb030'});}}),
    uB:M('spin',5,22,20,hit([[0,-18,24]],2.2,2.6,.01,80,{ri:5,eff:'burn'}),{finisher:hit([[0,-22,26]],6,5.4,.075,80,{eff:'burn'}),beh:'leapUp',bp:{vy:-10.4,vx:2.4,sustain:14},helpless:1,fx,vfx:{k:'H',el:'hell',sub:'wheel',x:0,y:-18,r:24},lim:'none',
      spawn:[[5,{k:'lava',life:150,r:14,dmg:2,bkb:1,kbg:0,ang:80,eff:'burn',dx:0,dy:0}]]}),
@@ -5999,30 +6091,10 @@ function skinLabel(n){if((SEL.skin[n]||0)>=skinCount(n))SEL.skin[n]=0;const s=SE
  if(typeof GTXT!=='undefined'&&GTXT.daku){GTXT.daku[0]='Human: throws a ball of hellfire that bursts and burns. Hound: all three heads bite in turn as he lunges.';GTXT.daku[1]='Human: a burning dash low to the ground. Hound: each head breathes a fireball, three in a spread.';GTXT.daku[2]='Human: rises inside a pillar of fire. Hound: spins upward as a wheel of flame and leaves the ground burning where he took off.';GTXT.daku[3]='Transforms into the three-headed hellhound, and back again. The hound is faster, lower to the ground and bites instead of punching, with every hit burning, but it is a wider target and takes 15% more damage.';}
  C.d='Fights with hellfire in his fists, and can become a three-headed hound wreathed in flame.';C.na='Normals: as a human, burning punches and kicks. As the hound, fast low bites from three sets of jaws. Every hit burns in either form.';
  C.trait='Two forms on Down-B: human (hellfire, a projectile, better reach upward) and hound (faster, lower, stronger bites).';C.weak='The hound is a wide target and takes 15% more damage; the human form is slower.';C.role='Shape-shifting rushdown';C.tip='Zone with Brimstone as a human, then turn hound and run them down.';
- const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.C.id!=='daku'||f.gone)continue;if(f.dead||f.st==='respawn'){f.hound=0;f.hellT=0;continue;}
+ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.C.id!=='daku'||f.gone)continue;if(f.dead||f.st==='respawn'){f.hound=0;f.form=null;f.formL=null;f.hellT=0;continue;}
    if(f.hound){f.hellT=2;if(f.ground&&(f.st==='run'||f.st==='walk'))f.x+=f.vx*.22;if(FR%3===0)part(f.x-f.face*14+rnd()*10-5,f.y-26-rnd()*10,-f.vx*.2,-.9,14,rnd()<.5?'#ff4a1a':'#ffb030',2,0);}
    if(f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&(f.st==='idle'||f.st==='walk'||f.st==='run')){const o=opp(f),far=o?Math.abs(o.x-f.x):0;if((!f.hound&&far<90&&rnd()<.02)||(f.hound&&far>200&&rnd()<.006))startMove(f,'dB');}}};
 })();
-/* the hound itself, drawn at the fighter's feet facing +x */
-function drawHound(f){const t=f.anim||0,m=f.mv,run=f.st==='run'||f.st==='walk'||f.st==='dash',air=!f.ground,atk=m&&m.t>=m.d.s-2&&m.t<=m.d.s+m.d.a+3,hurt=f.st==='hit'||f.st==='held'||f.st==='dizzy';
- const dk='#1c1418',md='#3a2a2a',lt='#5a3a34',fl=['#ff4a1a','#ffb030','#ffe060'],bob=run?Math.sin(t*.6)*1.5:Math.sin(t*.12)*.6,by=-20+bob+(hurt?2:0);
- if(f.flash>3&&((f.flash>>1)&1)){X.globalAlpha*=.6;}
- /* tail of fire */
- for(let i=0;i<5;i++){const u=i/4;wdisc(-17-u*9,by-4-u*8+Math.sin(t*.4+i)*2,3.4-u*2,fl[i%3]);}
- /* legs */
- const lg=(x,ph,back)=>{const s=run?Math.sin(t*.6+ph)*6:(air?(back?-4:5):0),k=run?Math.max(0,Math.cos(t*.6+ph))*4:0;wl(dk,x,by+6,x+s*.5,by+13-k,5);wl(dk,x+s*.5,by+13-k,x+s,-1-k,4);wr(md,x+s-2,-3-k,5,3);};
- lg(-11,0,1);lg(-7,2.2,1);lg(9,1.1,0);lg(13,3.3,0);
- /* body */
- wr(dk,-16,by-7,30,15);wr(md,-15,by-6,28,12);wr(lt,-13,by-6,22,3);for(let i=0;i<4;i++)wr(dk,-10+i*6,by+1,2,4);
- for(let i=0;i<5;i++)wdisc(-12+i*6,by-8-((t+i*4)%7)*.6,2.6-(i%2),fl[(i+(t>>2))%3]);
- /* three heads on three necks */
- const hd=(nx,ny,ang,open,z)=>{const hx=10+nx,hy=by-6+ny;wl(dk,8,by-3,hx,hy,6);wl(md,8,by-3,hx,hy,4);X.save();X.translate(hx,hy);X.rotate(ang);
-   wr(dk,-4,-6,13,11);wr(z?lt:md,-3,-5,11,9);wr(dk,6,-3-open*.5,9,4);wr(md,6,-2-open*.5,8,2);wr(dk,6,2+open,8,3);wr('#7a1820',6,1,7,1+open);
-   for(let i=0;i<3;i++){wr('#ffffff',7+i*2.4,1-open*.2,1,2);wr('#ffffff',8+i*2.4,1+open,1,-2);}
-   wpoly(dk,[-3,-5,-1,-12,2,-5]);wpoly(dk,[2,-5,5,-11,6,-5]);wr(fl[1],3,-3,2,2);wr('#ffffff',4,-3,1,1);
-   if(open>2)for(let i=0;i<3;i++)wdisc(16+i*3,1,2-i*.5,fl[i]);X.restore();};
- const op=atk?4:(hurt?1:(Math.sin(t*.1)>.7?2:0)),sw=Math.sin(t*.15)*1.5;
- hd(2,-12+sw,-.55,atk?((t>>1)%3===0?5:1):op*.5,0);hd(8,2-sw,.35,atk?((t>>1)%3===1?5:1):op*.5,0);hd(10,-5,-.1,atk?((t>>1)%3===2?5:2):op,1);}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
