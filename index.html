@@ -2238,7 +2238,7 @@ function touchDown(f,s,tvy){
   else if(f.st==='airdodge'){f.st='land';f.stT=0;f.landLen=f.adDir?10:4;}
   else if(f.st==='air'||f.st==='dizzy'){if(f.st==='air'){f.st='land';f.stT=0;f.landLen=3;}}}
 function respawn(f){f.kd=false;f.wj=0;f.copyT=0;f.hazeT=0;f.paraT=0;f.x=WW/2+(f.id?24:-24);f.y=40;f.vx=f.vy=f.lx=f.ly=0;f.dmg=0;f.st='respawn';f.stT=0;f.mv=null;f.hitstun=0;f.frozen=0;f.dot=null;f.buff=null;f.stickT=f.rootT=0;f.jumps=f.C.st.aj;f.ground=null;f.inv=0;f.shp=50;f.invis=false;f.cosmo=f.cosmo||0;}
-function ko(f){if(f.dead||f.gone)return;releaseHolds(f);if(f.ledge)leaveLedge(f);
+function ko(f){if(f.dead||f.gone)return;if(typeof koSave==='function'&&koSave(f))return;releaseHolds(f);if(f.ledge)leaveLedge(f);
   const vw=WW/CAM.z,vh=WH/CAM.z,ex=clamp(f.x,CAM.x-vw/2+6,CAM.x+vw/2-6),ey=clamp(f.y-26,CAM.y-vh/2+6,CAM.y+vh/2-6);FXL.push({k:'ko',x:ex,y:ey,t:0,col:f.col,a:Math.atan2(CAM.y-ey,CAM.x-ex)});sfx('ko');if(!RM)shakeA=12;flashA=8;
   f.stocks--;f.falls++;f.fsm=(f.fsm||0)*.6;const o=(f.lastBy&&FR-f.lastHurt<600&&F.includes(f.lastBy))?f.lastBy:opp(f);f.lastBy=null;if(o&&o!==f)o.kos++;f.dead=70;f.x=WW/2;f.y=-400;f.vx=f.vy=f.lx=f.ly=0;f.mv=null;f.st='dead';
   ENT.forEach(e=>{if(e.owner===f&&e.attached)e.alive=false;});
@@ -3470,7 +3470,7 @@ function drawHUD(c){const HF=F.filter(f=>f.team!==1),n=HF.length,sp=n>3?316:n>2?
   if(f.copyT>0&&f.copyCi>=0){c.save();c.beginPath();c.arc(-74,70,17,0,TAU);c.fillStyle='#e8c040';c.fill();c.beginPath();c.arc(-74,70,14.5,0,TAU);c.clip();c.fillStyle='#1c1650';c.fillRect(-90,54,32,32);c.drawImage(HEADS[f.copyCi],-89,55,30,30);c.restore();}
   c.font='14px "Press Start 2P", monospace';c.textAlign='left';c.textBaseline='alphabetic';c.fillStyle=f.col;c.fillText((f.ctrl==='dummy'?'DUMMY ':f.ctrl==='cpu'?'CPU ':'P'+(f.id+1)+' ')+f.C.sn,-56,32,96);
   const d=fl(f.dmg),sh=f.shakeHUD>0?(rnd()*8-4):0;c.font=(d>=100?34:40)+'px "Press Start 2P", monospace';c.textAlign='right';c.lineJoin='round';c.lineWidth=7;c.strokeStyle='#0c0820';
-  const txt=f.gone?'—':d+'%';c.strokeText(txt,150+sh,80+sh*.3);c.fillStyle=dmgCol(d);c.fillText(txt,150+sh,80+sh*.3);
+  const txt=f.gone?'—':(f.noPct>0?'  ?':d+'%');c.strokeText(txt,150+sh,80+sh*.3);c.fillStyle=dmgCol(d);c.fillText(txt,150+sh,80+sh*.3);
   for(let k=0;k<MATCH.stocks;k++){c.globalAlpha=k<f.stocks?1:.22;c.save();c.beginPath();c.arc(-46+k*24,58,10,0,TAU);c.fillStyle=f.col;c.fill();c.beginPath();c.arc(-46+k*24,58,8.5,0,TAU);c.clip();c.drawImage(HEADS[f.ci],-56+k*24,48,20,20);c.restore();c.globalAlpha=1;}
   c.font='11px "Press Start 2P", monospace';c.textAlign='left';
   {const w=150,fx=-56,fy=-18,full=f.fsm>=100;c.fillStyle='rgba(255,255,255,.12)';c.fillRect(fx,fy,w,6);c.fillStyle=full?'hsl('+((FR*6)%360)+',100%,62%)':'#f6c94e';c.fillRect(fx,fy,w*f.fsm/100,6);if(full){c.font='10px "Press Start 2P", monospace';c.textAlign='left';c.fillStyle='#ffffff';c.fillText('FINAL SMASH READY',fx+w+8,fy+7);}}
@@ -5141,7 +5141,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
    if(f.sleepT>0){f.sleepT--;if(f.st!=='dizzy')f.sleepT=0;else if(FR%26===0)FXL.push({k:'txt',s:'z',x:f.x+8,y:f.y-66,t:0,life:30,col:'#ffb8e0'});}
    if(f.drum>0&&FR%12===0)part(f.x+rnd()*20-10,f.y-40-rnd()*20,0,-.4,12,'#6a8aff',2,0);
    if(C.id==='shi'&&f.kos>(f._k||0)){f._k=f.kos;if((f.reap||0)<3){f.reap=(f.reap||0)+1;FXL.push({k:'txt2',s:'QUIRK TAKEN',x:f.x,y:f.y-84,t:0,life:50,col:'#d8d0c0'});sfx('power');}}
-   if(C.id==='hippo'&&GS==='play'&&!f.mv&&f.ground&&rnd()<.0016)FXL.push({k:'txt',s:HIPPO_LINES[fl(rnd()*HIPPO_LINES.length)],x:f.x,y:f.y-80,t:0,life:90,col:'#ffe060'});}};}
+}};}
 
 /* ---- hit effects, one look per quirk ---- */
 (function(){const A=(a,f)=>{X.globalAlpha=a;f();X.globalAlpha=1;};
@@ -5486,6 +5486,68 @@ function rvInfo(){const el=document.getElementById('gmvinfo'),f=RV.f;if(!el||!f)
     box.querySelectorAll('#gmoves button').forEach(b=>b.onclick=()=>{RV.auto=false;document.getElementById('gauto').classList.remove('on');sfx('tick');rvStart(b.dataset.k);});
     document.getElementById('gauto').onclick=e=>{RV.auto=!RV.auto;e.currentTarget.classList.toggle('on',RV.auto);sfx('tick');};
     rvStart(rvKeys(C,RV.key).length?RV.key:'nB');if(!RV.raf)RV.raf=requestAnimationFrame(rvLoop);}catch(e){RV.err=String(e);}};}
+
+/* ===================== CAPTAIN BLUE HIPPO knows he is in a video game ===================== */
+(function(){const st=document.createElement('style');st.textContent=`
+#hfx{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden;font-family:"Press Start 2P",monospace;color:#fff;text-align:center}
+#hfx>div{position:absolute;inset:0;display:none;place-items:center}
+#hfx .hp.on{display:grid;background:rgba(6,5,26,.55);animation:hpz .35s steps(2) both}#hfx .hp b{font-size:clamp(22px,6vw,64px);letter-spacing:.1em;text-shadow:0 4px 0 #0c0820}#hfx .hp i{display:block;font-style:normal;font-size:clamp(8px,1.4vw,14px);margin-top:14px;color:#ffe060}
+#hfx .hc.on{display:grid;background:#000;animation:hcut .16s steps(1) both}#hfx .hc b{font-size:clamp(10px,2vw,20px);color:#fff}
+#hfx .ht.on{display:grid;background:rgba(0,0,0,.82);animation:htk 1.1s both}#hfx .ht b{display:block;font-size:clamp(20px,5vw,56px);color:#ffe060;text-shadow:0 4px 0 #0c0820}#hfx .ht i{display:block;font-style:normal;margin-top:14px;font-size:clamp(8px,1.5vw,15px)}
+#hfx .hs.on{display:block;inset:8% auto auto 50%;transform:translateX(-50%) rotate(-2deg);background:#fdf8e4;color:#1a1420;border:3px solid #0c0820;padding:10px 14px 8px;font-size:clamp(7px,1.15vw,12px);line-height:1.7;text-align:left;box-shadow:6px 6px 0 rgba(0,0,0,.4);animation:hsc 2.5s both;white-space:nowrap}
+#hfx .hs u{text-decoration:none;color:#c82a2a}
+#hfx .hr.on{display:block;background:rgba(0,0,0,.78)}#hfx .hr p{position:absolute;left:0;right:0;top:100%;margin:0;font-size:clamp(9px,1.7vw,18px);line-height:2.3;animation:hroll 2.6s linear both}#hfx .hr p b{color:#ffe060}
+@keyframes hpz{from{opacity:0}to{opacity:1}}@keyframes hcut{0%{opacity:1}100%{opacity:0}}@keyframes htk{0%{opacity:0}8%{opacity:1}85%{opacity:1}100%{opacity:0}}
+@keyframes hsc{0%{opacity:0;margin-top:-20px}8%{opacity:1;margin-top:0}88%{opacity:1}100%{opacity:0}}@keyframes hroll{from{transform:translateY(0)}to{transform:translateY(-190%)}}
+@media (prefers-reduced-motion:reduce){#hfx .hr p{animation:none;top:8%}#hfx>div.on{animation:none}}`;document.head.appendChild(st);})();
+const HFX={el:null,t:{}};
+function hfx(kind,html,ms){try{if(!HFX.el){const gb=document.getElementById('gamebox');if(!gb)return;HFX.el=document.createElement('div');HFX.el.id='hfx';HFX.el.setAttribute('aria-hidden','true');HFX.el.innerHTML='<div class="hp"></div><div class="hc"></div><div class="ht"></div><div class="hs"></div><div class="hr"></div>';gb.appendChild(HFX.el);}
+  const d=HFX.el.querySelector('.'+kind);d.classList.remove('on');d.innerHTML=html;void d.offsetWidth;d.classList.add('on');clearTimeout(HFX.t[kind]);HFX.t[kind]=setTimeout(()=>d.classList.remove('on'),ms);}catch(e){}}
+function hsay(f,s,dur,force){if(!force&&f.sayCD>0)return false;f.sayS=s;f.sayT=dur||150;f.sayCD=(dur||150)+170;return true;}
+const hWho=o=>o.ctrl==='cpu'?'THE CPU':'PLAYER '+(o.id+1),hPick=a=>a[fl(rnd()*a.length)];
+function koSave(f){if(f.C.id!=='hippo'||f.takeTwo||f.stocks<=0)return false;f.takeTwo=1;const d=f.dmg,fs=f.fsm;releaseHolds(f);if(f.ledge)leaveLedge(f);respawn(f);f.dmg=d;f.fsm=fs;f.hitN=0;
+  hfx('ht','<span><b>CUT!</b><i>TAKE TWO. THAT ONE DID NOT COUNT.</i></span>',1100);sfx('counter');flashA=6;hsay(f,'NOBODY SAW THAT. KEEP ROLLING.',170,1);return true;}
+/* speech bubble, drawn in the world above his head */
+function hippoBubble(f){if(!(f.sayT>0)||f.dead||f.gone)return;const words=f.sayS.split(' '),lines=[];let cur='';for(const w of words){if((cur+' '+w).trim().length>20){lines.push(cur);cur=w;}else cur=(cur+' '+w).trim();}if(cur)lines.push(cur);
+  const a=Math.min(1,f.sayT/10,(f.sayT0-f.sayT+4)/6);X.save();X.globalAlpha=Math.max(0,a);X.font='5px "Press Start 2P", monospace';X.textAlign='center';
+  let w=0;for(const l of lines)w=Math.max(w,X.measureText(l).width);w=Math.ceil(w)+10;const h=lines.length*8+7,ip=(typeof interpPos==='function')?interpPos(f):f,bx=Math.round(clamp(ip.x-w/2,CAM.x-WW/CAM.z/2+4,CAM.x+WW/CAM.z/2-w-4)),by=Math.round(ip.y-88*(f.L&&f.L.size||1)-h);
+  X.fillStyle='#0c0820';X.fillRect(bx-1,by,w+2,h);X.fillRect(bx,by-1,w,h+2);X.fillStyle='#ffffff';X.fillRect(bx,by,w,h);
+  const tx=Math.round(clamp(ip.x,bx+6,bx+w-6));X.fillStyle='#0c0820';X.beginPath();X.moveTo(tx-4,by+h);X.lineTo(tx+4,by+h);X.lineTo(tx,by+h+7);X.fill();X.fillStyle='#ffffff';X.beginPath();X.moveTo(tx-2.5,by+h-1);X.lineTo(tx+2.5,by+h-1);X.lineTo(tx,by+h+4.5);X.fill();
+  X.fillStyle='#16101e';lines.forEach((l,i)=>X.fillText(l,bx+w/2,by+10+i*8));X.restore();}
+{const ov0=overlay2D;overlay2D=function(){ov0();try{for(const f of F)if(f.C&&f.C.id==='hippo')hippoBubble(f);}catch(e){}};}
+/* what he notices */
+{const mtH=modeTick;modeTick=function(){mtH();if(typeof GS==='undefined'||GS!=='play')return;for(const f of F){if(!f.C||f.C.id!=='hippo'||f.gone)continue;
+  if(f.sayT>0){if(f.sayT0===undefined||f.sayT>f.sayT0)f.sayT0=f.sayT;f.sayT--;if(f.sayT===0)f.sayT0=undefined;}if(f.sayCD>0)f.sayCD--;if(f.noPct>0)f.noPct--;
+  if(ENT.some(e=>e.k==='pct'&&e.owner===f&&e.alive))f.noPct=3;
+  const H=f.hs||(f.hs={k:f.kos,st:f.stocks,d:f.dmg,idle:0,n:0,cpu:0,fs:{},sh:{}});const rivals=F.filter(o=>o!==f&&!o.gone&&!(f.team!==undefined&&o.team===f.team));
+  if(f.dead)continue;
+  if(!H.hi){H.hi=1;const sn=(typeof STGD!=='undefined'&&STGD&&STGD.name?String(STGD.name).toUpperCase():'THIS STAGE');
+    hsay(f,f.ctrl==='cpu'?'A LEVEL '+(f.lvl||1)+' CPU IS PLAYING ME. WONDERFUL.':hPick(['OH GOOD. '+sn+' AGAIN.','HI '+hWho(f)+'. TRY NOT TO DROP ME.','IS THIS RANKED? IT FEELS RANKED.']),190,1);continue;}
+  if(f.fsNow!==(f.st==='fs')){f.fsNow=f.st==='fs';if(f.fsNow)hfx('hr','<p><b>ROLL CREDITS</b><br>DIRECTED BY<br><b>CAPTAIN BLUE HIPPO</b><br>STARRING<br><b>CAPTAIN BLUE HIPPO</b><br>EVERYONE ELSE<br><b>EXTRAS</b><br>STUNTS<br><b>NOT HIM</b><br>NO HIPPOS WERE HARMED<br><b>THE END?</b></p>',2500);}
+  if(f.kos>H.k){H.k=f.kos;hsay(f,hPick(['THAT IS ONE STOCK. IT IS RIGHT THERE ON THE HUD.','AND THE CROWD (THERE IS NO CROWD) GOES WILD.','KO! I WOULD LIKE TO THANK THE BLAST ZONE.','DID YOU SEE THAT? OF COURSE YOU DID. YOU ARE HOLDING THE CONTROLLER.']),170,1);}
+  if(f.stocks<H.st){H.st=f.stocks;hsay(f,f.stocks===1?'LAST STOCK. THIS IS THE DRAMATIC PART.':hPick(['RESPAWN PLATFORM. BEST PART OF THE GAME.','I MEANT TO DO THAT. CHECK THE SCRIPT.','THAT COST A STOCK. THEY ARE NOT CHEAP.']),170,1);}
+  if(H.d<100&&f.dmg>=100)hsay(f,'ONE HUNDRED PERCENT? WHO IS WRITING THIS?',160);else if(H.d<150&&f.dmg>=150)hsay(f,'I CAN SEE MY OWN DAMAGE COUNTER. IT IS BAD.',160);H.d=f.dmg;
+  if(f.st==='hit'&&f.hitstun>26&&rnd()<.03)hsay(f,hPick(['OW. THAT HITBOX WAS HUGE.','IS THIS GOING IN A COMBO VIDEO?','I FELT THAT IN MY POLYGONS. I AM A SPRITE.']),130);
+  for(const o of rivals){if(o.dead)continue;const near=Math.abs(o.x-f.x)<150;
+    if(o.mv&&o.mv.t===1&&near&&/^[nsud]B$/.test(o.mv.k)&&rnd()<.3)hsay(f,hPick(['THEY PRESSED '+({nB:'B',sB:'SIDE B',uB:'UP B',dB:'DOWN B'})[o.mv.k]+'. I HEARD THE BUTTON.',o.C.sn+' IS DOING THE THING AGAIN.','AH YES. '+String(o.C.sp[['nB','sB','uB','dB'].indexOf(o.mv.k)]).replace(/\s*\(.*\)$/,'').toUpperCase()+'.']),130);
+    if(o.mv&&o.mv.charging&&o.mv.chargeT===12&&near)hsay(f,'THEY ARE CHARGING A SMASH. I CAN SEE THE GLOW.',120);
+    if((o.fsm||0)>=100&&!H.fs[o.id]){H.fs[o.id]=1;hsay(f,hWho(o)+' HAS A FULL METER. I WOULD RUN.',160);}if((o.fsm||0)<50)H.fs[o.id]=0;
+    if(o.st==='shield'){H.sh[o.id]=(H.sh[o.id]||0)+1;if(H.sh[o.id]===90)hsay(f,'STOP HOLDING SHIELD, '+hWho(o)+'.',150);}else H.sh[o.id]=0;
+    if(o.ctrl==='cpu'&&!H.cpu&&FR%600===300&&f.ctrl!=='cpu'){H.cpu=1;hsay(f,'YOU KNOW '+o.C.sn+' IS A LEVEL '+(o.lvl||1)+' CPU, RIGHT?',170);}}
+  if(f.ctrl!=='cpu'){if(f.st==='idle'&&!f.mv)H.idle++;else H.idle=0;if(H.idle===330)hsay(f,'HELLO? '+hWho(f)+'? DID YOU PUT THE CONTROLLER DOWN?',180);if(H.idle===700)hsay(f,'FINE. I WILL JUST STAND HERE. IN MY PAJAMAS.',180);}
+  if(!f.mv&&f.ground&&rnd()<.0011)hsay(f,hPick(['HEY. YOU. WITH THE CONTROLLER.','NICE FRAME RATE.','WHO BALANCED THIS GAME?','I AM NOT EVEN A REAL CAPTAIN.','MY HITBOX IS MORE OF A SUGGESTION.','THERE ARE 58 FIGHTERS AND YOU PICKED THE PAJAMA GUY.','I READ AHEAD. I WIN. PROBABLY.','DOES THIS STAGE HAVE HAZARDS? IT HAS HAZARDS, DOESN\'T IT.','THE MUSIC LOOPS, BY THE WAY. YOU WILL NOTICE NOW.']),160);}};}
+/* his moves lean on the fourth wall too */
+(function(){const C=CH.find(c=>c.id==='hippo');if(!C)return;const wrap=(k,fn)=>{const d=C.mv[k],o=d.onStart;d.onStart=f=>{if(o)o(f);fn(f);};};
+ C.mv.uB.onStart=f=>{for(const o of F)if(o!==f&&!o.dead&&!(f.team!==undefined&&o.team===f.team))o.hl=Math.max(o.hl,20);hfx('hp','<span><b>PAUSED</b><i>(NOT FOR ME)</i></span>',340);sfx('pop');};
+ C.mv.sB.onStart=f=>{hfx('hc','<b>*JUMP CUT*</b>',170);};
+ C.mv.dB.onStart=f=>{f.plotT=150;sfx('power');hfx('hs','SCENE 12. INT. THE STAGE.<br>CAPTAIN BLUE HIPPO IS HIT.<br><u>HE DOES NOT MOVE.</u> (PLOT ARMOR)',2500);};
+ C.mv.nB.onStart=f=>{if(rnd()<.4)hsay(f,hPick(['HOLD THIS.','I WAS NOT USING IT.','CATCH MY PERCENT.']),90);};
+ C.mv.taunt.onStart=f=>{burst(f.x,f.y-34,16,[f.C.col,'#ffe060'],2.4,22);sfx('power');hsay(f,hPick(['LIKE AND SUBSCRIBE.','PRESS HOME. I DARE YOU.','THIS TAUNT HAS NO HITBOX. I CHECKED.','HI MOM. YES, I AM IN A VIDEO GAME.','PLAYER '+(f.id+1)+' MADE ME DO THIS.']),150,1);};
+ C.trait='Plot Armor: every sixth hit against him does not happen, and the first time he is knocked out each match, the scene is cut and reshot (he comes back with his damage, not a lost stock).';
+ C.na='Normals: lazy, confident slaps from a man who has read the script. He talks to the player, heckles the HUD and comments on what his rivals are pressing.';
+ if(typeof GTXT!=='undefined'&&GTXT.hippo){GTXT.hippo[0]='Rips the damage counter off his own HUD and throws it (his HUD shows "?" until it lands). The more damage he has, the bigger it is and the harder it hits.';GTXT.hippo[2]='Pauses the game for everyone but himself for a moment, and jumps. The pause screen is real. It just does not apply to him.';GTXT.hippo[4]='He decides the match has gone on long enough and rolls the credits over everyone. He is credited for everything.';}
+})();
+{const ph0=preHit;preHit=function(t,h,a,o){const r=ph0(t,h,a,o);if(r&&t.C.id==='hippo'&&t.foreT===0&&rnd()<.6)hsay(t,hPick(['THAT DID NOT HAPPEN.','WE CUT THAT IN EDITING.','CHECK THE REPLAY. OH WAIT.']),110);return r;};}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
