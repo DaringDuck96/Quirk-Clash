@@ -5585,8 +5585,9 @@ function rvInfo(){const el=document.getElementById('gmvinfo'),f=RV.f;if(!el||!f)
     box.innerHTML=h+'</div></div>';head.after(box);
     box.querySelectorAll('#gmoves button').forEach(b=>b.onclick=()=>{RV.auto=false;document.getElementById('gauto').classList.remove('on');sfx('tick');rvStart(b.dataset.k);});
     document.getElementById('gauto').onclick=e=>{RV.auto=!RV.auto;e.currentTarget.classList.toggle('on',RV.auto);sfx('tick');};
-    if(C.heroLook){const hb=document.createElement('button');hb.id='ghero';hb.textContent='HERO UNIFORM';hb.className=RV.hero?'on':'';hb.onclick=()=>{RV.hero=!RV.hero;sfx('tick');renderGuide();};box.querySelector('.gmvbar').appendChild(hb);
-      if(RV.hero){RV.f.L=skinLook(C,HERO_I);RV.f.hero=true;RV.f.skin=HERO_I;if(C.heroNote){const p=document.createElement('p');p.className='gheron';p.textContent=C.heroNote;box.querySelector('#gmvinfo').after(p);}}}
+    {const list=[0];for(let k=6;k<(C.looks||[]).length;k++)if(C.looks[k])list.push(k);if(list.length>1){if(RV.cosCi!==ci){RV.cosCi=ci;RV.cos=0;}const cur=list[RV.cos%list.length],nm=cur?(C.looks[cur].cname||'ALT'):'EVERYDAY';
+      const hb=document.createElement('button');hb.id='ghero';hb.textContent='COSTUME: '+nm+' ▸';hb.className=cur?'on':'';hb.onclick=()=>{RV.cos=(RV.cos+1)%list.length;sfx('tick');renderGuide();};box.querySelector('.gmvbar').appendChild(hb);
+      if(cur){RV.f.L=skinLook(C,cur);RV.f.skin=cur;RV.f.hero=cur===HERO_I&&!!C.heroLook;if(RV.f.hero&&C.heroNote){const p=document.createElement('p');p.className='gheron';p.textContent=C.heroNote;box.querySelector('#gmvinfo').after(p);}}}}
     rvStart(rvKeys(C,RV.key).length?RV.key:'nB');if(!RV.raf)RV.raf=requestAnimationFrame(rvLoop);}catch(e){RV.err=String(e);}};}
 
 /* ===================== CAPTAIN BLUE HIPPO knows he is in a video game ===================== */
@@ -5874,6 +5875,104 @@ const ING_MAX=6;
  /* Blue Hippo comments on his uniform */
  {const C=c('hippo');C.heroNote='His hero uniform is the onesie he was already wearing. He has added a bath towel as a cape.';}
 })();
+
+/* ===================== ALTERNATE COSTUMES: one or two extra outfits per fighter, picked to suit them ===================== */
+(function(){
+ const RESET={top2:null,cuff:false,trim:null,stripe:0,pantStripe:0,print:null,armband:0,pauldron:0,emblem:null,chain:0,fur:0,stripes:null,open:0,buckles:0,briefs:null,boots:0,bootTrim:0,kneepad:0,tattoo:undefined,acc2:null,sl:'long'};
+ const J='#34446a',W='#f2f2f4',K='#1c1c22';
+ const T={
+  gym:(a,b)=>({outfit:'trackz',top:a,sleeve:a,acc:b,acc2:b,stripe:1,pantStripe:1,pants:a,shoe:W,sole:b}),
+  casual:(a,b)=>({outfit:'tee',top:a,sleeve:a,sl:'short',print:b,pants:J,shoe:W}),
+  hoodie:(a,b)=>({outfit:'jacketS',top:K,acc:a,sleeve:a,trim:b,pants:'#26262e',shoe:b}),
+  formal:(a,b)=>({outfit:'vest',top:W,sleeve:W,acc:a,pants:a,shoe:K}),
+  festival:(a,b)=>({outfit:'happi',top:a,sleeve:a,sl:'short',pants:b||K,shoe:'#c8a878'}),
+  winter:(a,b)=>({outfit:'sweater',top:a,sleeve:a,acc:b,pants:'#3a3a48',shoe:'#5a4030',boots:1,_scarf:b}),
+  beach:(a,b)=>({outfit:'tee',top:b||W,sleeve:b||W,sl:'none',print:a,pants:a,pantStripe:1,acc:W,_bare:1}),
+  work:(a,b)=>({outfit:'coveralls',top:a,sleeve:a,sl:'short',acc:b||K,pants:a,shoe:K,boots:1}),
+  knight:(a,b)=>({outfit:'plate',top:a,sleeve:a,trim:b,acc:'#3a3a44',pants:'#4a4a56',shoe:a,boots:1,kneepad:1,pauldron:1,pauldC:a,emblem:'rivets'}),
+  shinobi:(a,b)=>({outfit:'ninja',top:a,sleeve:a,acc:b,pants:a,shoe:K}),
+  dojo:(a,b)=>({outfit:'wrap',top:a,sleeve:a,sl:'short',trim:b,acc:b,pants:a,shoe:'#c8a878'}),
+  sailor:(a,b)=>({outfit:'sailor',top:W,sleeve:W,acc:a,cuff:true,trim:a,_skirt:a,pants:a,shoe:'#6a4028'}),
+  gala:(a,b)=>({outfit:'dress',top:a,sleeve:a,sl:'short',acc:b,_skirt:W,pants:a,shoe:a}),
+  pjs:(a,b)=>({outfit:'sweater',top:a,sleeve:a,acc:b,pants:a,pantStripe:1,shoe:b}),
+  punk:(a,b)=>({outfit:'leather',top:K,sleeve:K,pants:'#26262e',shoe:a,boots:1,acc:a}),
+  space:(a,b)=>({outfit:'astro',top:a,sleeve:a,acc:b,pants:a,shoe:a,boots:1,bootTrim:1,trim:b,glove:b}),
+  agent:(a,b)=>({outfit:'coat',top:a,sleeve:a,acc:a,pants:a,shoe:K,glove:K}),
+  stealth:(a,b)=>({outfit:'stealth',top:K,sleeve:K,acc:a,trim:b,pants:K,shoe:K})};
+ const A={
+  kimiko:[['WINTER','winter','#bfe4f4','#ffffff'],['ICE GALA','gala','#8fd0f0','#ffffff']],
+  keanu:[['BEACH','beach','#2a9a9a'],['FESTIVAL','festival','#c8362a','#e8dcc0']],
+  bara:[['FESTIVAL','festival','#7a2a8a'],['DOJO','dojo','#f2ece0','#b8202c']],
+  tori:[['GYM','gym','#8a60d0','#ffffff'],['HOODIE','hoodie','#6a6a7a','#b890ff']],
+  minato:[['GYM','gym','#e8c030','#1c1c22'],['BEACH','beach','#f08a20']],
+  oro:[['STREET','hoodie','#2a2a32','#a0ff40'],['SHINOBI','shinobi','#16161c','#f08a20']],
+  gomi:[['MECHANIC','work','#7a1e1e','#1c1c22'],['BAND TEE','casual','#1c1c22','#ff6a1a']],
+  kouji:[['FORMAL','formal','#16161c'],['WINTER','winter','#4a4a56','#e8c040']],
+  emi:[['OFF DUTY','casual','#1f2e64','#e8b040'],['DOJO','dojo','#f2f2f4','#e8b040']],
+  soran:[['GYM','gym','#f2f2f4','#9a6ae0'],['OFF DUTY','casual','#e8ecf0','#9a6ae0']],
+  hake:[['GYM','gym','#c8282e','#f2f2f4'],['OFF DUTY','casual','#8a2a2a','#f2f2f4']],
+  shiki:[['FESTIVAL','festival','#1e2a5a','#f0f0f0'],['GYM','gym','#3a5ab8','#f0f0f0']],
+  zabu:[['PYJAMAS','pjs','#f0d060','#ffffff'],['SHINOBI','shinobi','#3a3a44','#c8302a']],
+  marina:[['FISHMONGER','work','#2a6a9a','#f4b020'],['FESTIVAL','festival','#f4b020','#1e2a52']],
+  uchuu:[['PYJAMAS','pjs','#7a5ac8','#ececf2'],['MISSION CONTROL','formal','#3a2a6a']],
+  shuko:[['OFF DUTY','casual','#4a4a52','#c8b088'],['WINTER','winter','#6a6a72','#c8c4c8']],
+  torabi:[['FESTIVAL STALL','festival','#2a48b8','#1c1c22'],['DAY OFF','casual','#f4f4f6','#2a48b8']],
+  suze:[['SUNDRESS','gala','#f0c030','#1c1c22'],['GYM','gym','#f0c030','#1c1c22']],
+  tatsuya:[['FORMAL','formal','#24262e'],['GYM','gym','#e8c040','#24262e']],
+  riku:[['GYM','gym','#3a9a4a','#f2f2f4'],['PYJAMAS','pjs','#b8b4d8','#3a9a4a']],
+  sanshou:[['MECHANIC','work','#4a4a40','#e8b830'],['GYM','gym','#1c1c22','#8ad07a']],
+  kairi:[['BEACH','beach','#ff8ac8','#f4f4f8'],['GALA','gala','#e060a0','#ffe0f4']],
+  kichi:[['PUNK','punk','#8a90b8'],['MECHANIC','work','#3a4a6a','#c8c8d0']],
+  tamashi:[['STAGEHAND','hoodie','#16141c','#a8d0f0'],['GALA','gala','#5a2a5e','#d8d0e8']],
+  akemi:[['CROUPIER','formal','#8a1e2a'],['GYM','gym','#f0d890','#e05a5a']],
+  taru:[['GYM','gym','#3a3a44','#ff7a20'],['DOJO','dojo','#e8e0d0','#3a8a3a']],
+  sai:[['OFF DUTY','casual','#2a2030','#4ac88a'],['AGENT','agent','#1c1c22']],
+  tenmetsu:[['OFF DUTY','casual','#3a4a6a','#5ad8ff'],['SHINOBI','shinobi','#1e2230','#5ad8ff']],
+  yado:[['RAINCOAT','agent','#e8c030'],['GYM','gym','#1c1c22','#c8281e']],
+  hari:[['FENCER','dojo','#f2f2f4','#5a8ab8'],['GYM','gym','#5a8ab8','#f2f2f4']],
+  toguchi:[['SAILOR','sailor','#1e2a52'],['OFF DUTY','hoodie','#6a4ab8','#e0d4ff']],
+  pitto:[['GYM','gym','#c83a2a','#f0e8c8'],['BEACH','beach','#3a8ac8']],
+  maho:[['PYJAMAS','pjs','#3a2a6a','#e8c860'],['GAME NIGHT','casual','#1e5a6a','#e8c860']],
+  raion:[['GYM','gym','#8a3a18','#e8c060'],['FORMAL','formal','#3a2616']],
+  tsuki:[['BEACH','beach','#3aa0e8','#f4f4f8'],['FESTIVAL','festival','#1e4a8a','#5aa8e0']],
+  rei:[['OFF DUTY','hoodie','#3a3a48','#c8a0ff'],['GYM','gym','#1c1a1e','#8a1e24']],
+  tai:[['SCRUBS','work','#3aa88a','#f2f2f4'],['OFF DUTY','casual','#f2f2f4','#3ac86a']],
+  hatsuko:[['BAND TEE','casual','#16141a','#b04aff'],['FORMAL','formal','#2a1a3a']],
+  ginko:[['GYM','gym','#f08a20','#ffd040'],['GALA','gala','#ffd040','#f08a20']],
+  makiko:[['PYJAMAS','pjs','#c8b8ff','#ffb8e0'],['SAILOR','sailor','#5a4a8a']],
+  koki:[['HAWAIIAN','casual','#2a9a9a','#f0c030'],['GYM','gym','#2a4a6a','#f2f2f4']],
+  hana:[['PUNK','punk','#f08a20'],['GYM','gym','#5a3a8a','#f08a20']],
+  tomi:[['GYM','gym','#c83a2a','#f2f2f4'],['FORMAL','formal','#2a3a5a']],
+  yoko:[['GALA','gala','#1e1a3a','#6aa8ff'],['OFF DUTY','hoodie','#2a2a3a','#6aa8ff']],
+  chiyoki:[['FORMAL','formal','#5a1a5a'],['PYJAMAS','pjs','#e8a030','#2a5a5a']],
+  yurei:[['WHITE SHEET','agent','#f0f0f4'],['OFF DUTY','casual','#3a3a48','#d8e0ff']],
+  ivan:[['GYM','gym','#c8282e','#f2f2f4'],['WINTER','winter','#4a5a48','#e8e4dc']],
+  bisu:[['BEACH','beach','#e83a8a'],['PYJAMAS','pjs','#8a5ac8','#f0f0f0']],
+  kurai:[['FORMAL','formal','#2e2e36'],['WINTER','winter','#5a524c','#d8d0c8']],
+  homura:[['BAND TEE','casual','#16141a','#ff5a1a'],['GYM','gym','#c83a3a','#1c1c22']],
+  kuragari:[['OFF DUTY','casual','#3a3a44','#e02a2a'],['SHINOBI','shinobi','#16161c','#e8e8f0']],
+  mia:[['GALA','gala','#c8a0ff','#ffffff'],['OFF DUTY','hoodie','#3a3444','#c8a0ff']],
+  shi:[['FORMAL','formal','#16141a'],['OFF DUTY','casual','#3a2a30','#d8d0c0']],
+  takeshi:[['BEACH','beach','#3a3a44'],['FORMAL','formal','#3a3a44']],
+  ali:[['LIBRARIAN','winter','#8a6a4a','#e8dcc0'],['GALA','gala','#4a8aff','#c8e0ff']],
+  daku:[['GYM','gym','#c83a2a','#1c1c22'],['WINTER','winter','#1c1c22','#ff4a1a']],
+  kongu:[['BASEBALL','gym','#f2f2f4','#2a5ac8'],['FORMAL','formal','#2a3a6a']],
+  hippo:[['PINK HIPPO','pjs','#ff8ac8','#ffe0f4'],['BUSINESS HIPPO','formal','#2a3a5a']]};
+ for(const id in A){const C=CH.find(c=>c.id===id);if(!C||!C.looks)continue;const base=C.look,girl=!!base.fem,hadSkirt=!!base.skirt;
+  for(const[name,tp,a,b]of A[id]){const o=T[tp](a,b),L={};for(const k in base){if(k==='_r'||k==='R')continue;L[k]=base[k];}
+   for(const k in RESET){if(RESET[k]===null||RESET[k]===undefined)delete L[k];else L[k]=RESET[k];}
+   L.ex=(base.ex||[]).filter(x=>!['coattails','scarf','cape','katana','pack','quiver','rescue'].includes(x));if(base.elArm){L.elArm=base.elArm;L.elLeg=base.elLeg;L.sl='short';}
+   const sk=o._skirt,sc=o._scarf,bare=o._bare;delete o._skirt;delete o._scarf;delete o._bare;Object.assign(L,o);
+   if(sk&&girl){L.skirt=sk;L.socks=hadSkirt?(base.socks||'#f2f2f4'):'#f2f2f4';}else{delete L.skirt;delete L.socks;}
+   if(sc){L.ex=L.ex.concat(['scarf']);L.scarfC=sc;}
+   if(bare&&!girl){L.outfit='bare';L.top=base.skin||'#e8c8b0';L.sleeve=L.top;L.shoe=base.skin||'#e8c8b0';L.sole=L.shoe;}
+   if(id==='hippo'){L.hair=a;L.top=a;L.sleeve=a;L.pants=tp==='formal'?a:L.pants;}
+   L.cname=name;C.looks.push(L);}}
+ /* Ryuko's dinosaur body takes paint jobs instead of clothes */
+ {const C=CH.find(c=>c.id==='ryuko');if(C&&C.looks){for(const[name,p,m,d]of[['CHROME','#b8bcc8','#5ad8ff','#3a3e4a'],['INFERNO','#c8302a','#ffb030','#3a1210']]){const L={};for(const k in C.look){if(k==='_r'||k==='R')continue;L[k]=C.look[k];}L.dP=p;L.dM=m;L.dD=d;L.cname=name;C.looks.push(L);}}}
+ CH.forEach(C=>{if(C.heroLook&&C.looks&&C.looks[HERO_I])C.looks[HERO_I].cname='HERO';});
+})();
+function skinLabel(n){if((SEL.skin[n]||0)>=skinCount(n))SEL.skin[n]=0;const s=SEL.skin[n]||0,C=CH[SEL.p[n]],L=C&&C.looks&&C.looks[s];return L&&L.cname?L.cname:'COLOR '+(s+1);}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
