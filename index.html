@@ -6595,7 +6595,7 @@ const FSG={
  heart(x,y,s,c,c1){wdisc(x-s*.5,y-s*.3,s*.6,c);wdisc(x+s*.5,y-s*.3,s*.6,c);wtri(c,x-s*1.05,y,x+s*1.05,y,x,y+s*1.3);},
  swirl(x,y,s,c,c1,k){X.strokeStyle=c;X.lineWidth=1.5;X.beginPath();for(let i=0;i<=14;i++){const a=k*3+i*.5,r=s*i/7;X[i?'lineTo':'moveTo'](x+Math.cos(a)*r,y+Math.sin(a)*r);}X.stroke();}};
 /* id: [glyph A, glyph B, motion]   motion: fall | rise | orbit | burst | drift | storm */
-const FSM={riku:['fist','star','burst'],sanshou:['fist','gear','fall'],kairi:['bubble','bolt','rise'],kichi:['chain','chain','orbit'],tamashi:['hand','card','drift'],akemi:['clock','bolt','orbit'],taru:['flame','rock','storm'],sai:['arrow','arrow','storm'],
+const FSM={kimiko:['snow','shard','fall'],keanu:['drop','leaf','rise'],bara:['feather','eye','orbit'],tori:['ghost','hex','drift'],minato:['hand','swirl','burst'],oro:['tooth','drop','storm'],gomi:['flame','skull','rise'],kouji:['sun','moon','orbit'],emi:['feather','swirl','storm'],soran:['bolt','swirl','orbit'],hake:['swirl','bolt','orbit'],ryuko:['gear','tooth','storm'],shiki:['mask','fist','burst'],zabu:['paw','swirl','storm'],marina:['bubble','drop','rise'],uchuu:['star','moon','orbit'],shuko:['cloud','hand','drift'],torabi:['flame','bubble','rise'],suze:['hex','drop','orbit'],tatsuya:['mask','card','drift'],riku:['fist','star','burst'],sanshou:['fist','gear','fall'],kairi:['bubble','bolt','rise'],kichi:['chain','chain','orbit'],tamashi:['hand','card','drift'],akemi:['clock','bolt','orbit'],taru:['flame','rock','storm'],sai:['arrow','arrow','storm'],
  tenmetsu:['star','hex','burst'],yado:['drop','bolt','rise'],hari:['lance','lance','storm'],toguchi:['door','door','orbit'],pitto:['fist','star','burst'],maho:['star','flame','fall'],raion:['claw','paw','burst'],tsuki:['drop','swirl','rise'],
  rei:['eye','hex','orbit'],tai:['cross','leaf','rise'],hatsuko:['skull','tendril','rise'],ginko:['sun','flame','burst'],makiko:['moon','star','drift'],koki:['tooth','drop','burst'],hana:['saw','saw','orbit'],tomi:['fist','rock','fall'],
  yoko:['rock','swirl','orbit'],chiyoki:['eye','skull','drift'],yurei:['ghost','tendril','drift'],ivan:['hand','hand','fall'],bisu:['paw','leaf','burst'],kurai:['feather','moon','fall'],homura:['flame','blob','rise'],kuragari:['web','web','drift'],
@@ -6903,7 +6903,29 @@ animPose=function(A,m,base){const d=m.d,mo=d.mo;if(!mo)return _ap(A,m,base);
 /* ---------- mark playback ---------- */
 function polyO(c,k,R,th,rot){X.strokeStyle=c;X.lineWidth=th;X.beginPath();for(let i=0;i<=k;i++){const a=rot+i/k*TAU;X[i?'lineTo':'moveTo'](Math.cos(a)*R,Math.sin(a)*R);}X.stroke();}
 function arcO(c,R,a0,a1,th){X.strokeStyle=c;X.lineWidth=th;X.lineCap='round';X.beginPath();X.arc(0,0,Math.max(.5,R),a0,a1);X.stroke();}
-function drawMark(u,x,y,dir,pr,fx,t,r){const base=(fx&&fx[0])||'#ffffff',lite=(fx&&fx[1])||'#ffffff',acc=accent(base,u.ak);
+const ARRN=16;
+function glyphMark(u,x,y,dir,pr,fx,t,r,M){const base=(fx&&fx[0])||'#ffffff',lite=(fx&&fx[1])||'#ffffff',gA=FSG[M[u.sh>=ARRN?1:0]]||FSG.star,gB=FSG[M[u.sh>=ARRN?0:1]]||gA,n=Math.min(6,u.n),S=Math.max(3,Math.min(7,r*.34*u.sz)),a=Math.max(0,1-pr),R=Math.max(8,r)*(.7+pr*.9)*u.sz,th=-u.rot*PI/180,k=t*.08+u.rot;
+  const put=(px,py,i,sc)=>{X.globalAlpha=a*.92;try{(i%2?gB:gA)(x+dir*px,y+py,S*(sc||1),i%2?lite:base,i%2?base:lite,k+i*1.3);}catch(e){}};
+  const cs=Math.cos(th),sn=Math.sin(th),rot=(lx,ly)=>[lx*cs-ly*sn,lx*sn+ly*cs];
+  switch(u.sh%ARRN){
+  case 0:put(0,0,0,1.5+pr*.8);break;
+  case 1:for(let i=0;i<n;i++){const p=rot(-R+i*2*R/Math.max(1,n-1),0);put(p[0],p[1],i);}break;
+  case 2:for(let i=0;i<n;i++){const g=th-.7+1.4*i/Math.max(1,n-1);put(Math.cos(g)*R,Math.sin(g)*R,i);}break;
+  case 3:for(let i=0;i<n;i++){const g=i/n*TAU+pr*2.4*(u.sp>0?1:-1);put(Math.cos(g)*R,Math.sin(g)*R*.8,i);}break;
+  case 4:for(let i=0;i<n+2;i++){const g=i*.9+pr*3,rr=R*(i+1)/(n+2);put(Math.cos(g)*rr,Math.sin(g)*rr,i,.6+i*.1);}break;
+  case 5:{const p=rot(0,R*.8);put(p[0],p[1],0,1.2);put(-p[0],-p[1],1,1.2);}break;
+  case 6:for(let i=0;i<n;i++)put((i%2?4:-4),R*.6-i*R*1.4/n-pr*R*.5,i);break;
+  case 7:for(let i=0;i<n;i++)put((i-(n-1)/2)*R*.5,-R+((i*.37+pr)%1)*R*1.8,i,.8);break;
+  case 8:for(let i=0;i<n;i++){const g=i/n*TAU+u.rot,rr=R*(.3+pr);put(Math.cos(g)*rr,Math.sin(g)*rr,i,.9);}break;
+  case 9:for(let i=0;i<n;i++){const p=rot(-i*R*.45,0);put(p[0],p[1],i,1.3-i*.18);}break;
+  case 10:for(let i=0;i<4;i++){const g=th+i*PI/2;put(Math.cos(g)*R*.8,Math.sin(g)*R*.8,i);}break;
+  case 11:{const g0=th-1.1+pr*2.2;for(let i=0;i<3;i++){const g=g0-i*.35;put(Math.cos(g)*R,Math.sin(g)*R,i,1.3-i*.3);}}break;
+  case 12:for(let i=0;i<3;i++)put(0,0,i,1.9-i*.55);break;
+  case 13:for(let i=0;i<n;i++){const p=rot(-R+i*2*R/Math.max(1,n-1),(i%2?1:-1)*R*.35);put(p[0],p[1],i);}break;
+  case 14:{const g=pr*TAU*1.2;put(Math.cos(g)*R,Math.sin(g)*R*.7,0,1.2);put(-Math.cos(g)*R,-Math.sin(g)*R*.7,1,1.2);put(0,0,2,.8);}break;
+  default:for(let i=0;i<n;i++){const g=i/n*TAU,rr=R*(1.5-pr*1.1);put(Math.cos(g)*rr,Math.sin(g)*rr,i,.9);}}
+  X.globalAlpha=1;}
+function drawMark(u,x,y,dir,pr,fx,t,r,f){if(f&&typeof FSM!=='undefined'&&typeof FSG!=='undefined'&&FSM[f.C.id]){glyphMark(u,x,y,dir,pr,fx,t,r,FSM[f.C.id]);return;}const base=(fx&&fx[0])||'#ffffff',lite=(fx&&fx[1])||'#ffffff',acc=accent(base,u.ak);
   const[c0,c1]=[[base,lite],[lite,'#ffffff'],[base,'#ffffff'],[acc,lite]][u.cm],R=Math.max(6,r)*u.sz*(.55+pr*.85),n=u.n,th=u.th,a=1-pr,q=i=>((i*7919+u.rot*13)%97)/97;
   X.save();X.translate(x,y);X.scale(dir,1);X.rotate(-u.rot*PI/180+u.sp*pr);X.globalAlpha=Math.max(0,a)*.9;
   switch(u.sh){
@@ -6941,7 +6963,7 @@ function drawMark(u,x,y,dir,pr,fx,t,r){const base=(fx&&fx[0])||'#ffffff',lite=(f
 const _df=drawFighter;
 drawFighter=function(f){_df(f);const m=f.mv;if(!m||f.dead||f.gone||f.invis)return;const d=m.d,u=d.ux;if(!u)return;const t=m.t;if(t<d.s-1||t>d.s+d.a+5)return;
   try{const b=d.hits&&d.hits[0]&&d.hits[0].b[0],bx=b?b[0]:14,by=b?b[1]:-34,br=b?b[2]:10;
-    drawMark(u,f.x+f.face*bx,f.y+by,f.face,clamp((t-d.s+1)/(d.a+6),0,1),d.fx||(f.C.kit&&f.C.kit.fx)||[f.C.col,'#ffffff'],t,br);}catch(er){}};
+    drawMark(u,f.x+f.face*bx,f.y+by,f.face,clamp((t-d.s+1)/(d.a+6),0,1),d.fx||(f.C.kit&&f.C.kit.fx)||[f.C.col,'#ffffff'],t,br,f);}catch(er){}};
 
 /* ---------- hit feel: every attack lands with its own spray, its own note and its own weight ---------- */
 const _ah=applyHit;
@@ -7052,6 +7074,49 @@ screenFX=function(c,V){_sf(c,V);try{if(!VG){VG=mk(320,180);const g=VG.getContext
   c.save();c.imageSmoothingEnabled=true;c.globalAlpha=.8;c.drawImage(VG,0,0,1280,720);c.restore();c.imageSmoothingEnabled=false;}catch(e){}};
 })();
 try{GFX60=!(('ontouchstart' in window)||(navigator.maxTouchPoints||0)>0);}catch(e){}
+
+/* style.js — how each fighter carries themselves: their own run, their own idle, their own trail; and a personal touch on every school uniform */
+(function(){const c=id=>CH.find(x=>x.id===id);
+/* run: lean ninja heavy float skate hop prowl march flail glide | idle: bounce sway still float twitch slouch proud guard */
+const MV={kimiko:['skate','proud'],keanu:['heavy','sway'],bara:['march','proud'],tori:['ninja','still'],minato:['flail','bounce'],oro:['prowl','sway'],gomi:['lean','twitch'],kouji:['lean','still'],emi:['glide','float'],soran:['ninja','bounce'],hake:['ninja','twitch'],
+ ryuko:['heavy','still'],shiki:['heavy','proud'],zabu:['prowl','twitch'],marina:['hop','sway'],uchuu:['float','float'],shuko:['lean','slouch'],torabi:['march','bounce'],suze:['glide','float'],tatsuya:['lean','slouch'],riku:['hop','twitch'],sanshou:['heavy','still'],
+ kairi:['float','float'],kichi:['march','still'],tamashi:['skate','still'],akemi:['ninja','twitch'],taru:['heavy','guard'],sai:['lean','bounce'],tenmetsu:['ninja','still'],yado:['hop','bounce'],hari:['march','proud'],toguchi:['skate','sway'],pitto:['hop','bounce'],
+ maho:['skate','proud'],raion:['prowl','proud'],tsuki:['skate','sway'],rei:['lean','still'],tai:['march','sway'],hatsuko:['lean','slouch'],ginko:['float','float'],makiko:['float','slouch'],koki:['heavy','sway'],hana:['ninja','twitch'],tomi:['heavy','proud'],
+ yoko:['float','still'],chiyoki:['flail','twitch'],yurei:['float','slouch'],ivan:['heavy','slouch'],bisu:['prowl','bounce'],kurai:['glide','still'],homura:['lean','twitch'],kuragari:['prowl','still'],mia:['skate','still'],shi:['float','slouch'],takeshi:['lean','slouch'],
+ ali:['float','still'],daku:['prowl','twitch'],kongu:['heavy','bounce'],hippo:['flail','slouch'],dawson:['ninja','still'],maya:['skate','sway'],sarah:['float','slouch'],aria:['flail','sway'],bryson:['march','twitch'],conor:['hop','bounce'],ray:['lean','proud'],
+ oliver:['lean','still'],chris:['march','slouch'],evona:['skate','proud'],jack:['lean','guard'],kal:['flail','bounce'],kora:['glide','proud'],ash:['heavy','sway'],moya:['float','sway'],sato:['march','proud'],akio:['ninja','twitch'],sata:['march','still'],
+ kitsu:['skate','proud'],uzi:['hop','sway'],ichigo:['lean','slouch'],bentou:['prowl','slouch'],okane:['march','proud'],goiru:['heavy','still'],aya:['skate','proud'],hikari:['ninja','guard'],ryo:['prowl','still'],suzume:['hop','bounce'],ayame:['skate','still'],sota:['lean','bounce'],tiki:['lean','sway']};
+for(const id in MV){const C=c(id);if(C)C.mvStyle=MV[id];}
+const ex0=exaggerate;exaggerate=function(p,f){const o=ex0(p,f),st=f.st,M=f.C&&f.C.mvStyle;if(!M||o.lie||f.form||(f.L&&f.L.body)||st==='move')return o;const t=f.anim||0;
+  if(st==='run'||st==='walk'){const k=st==='run'?1:.5,s=Math.sin(t*(st==='run'?.3:.2)),ab=Math.abs(s);switch(M[0]){
+    case'ninja':o.tl=(o.tl||0)+.22*k;o.aF=[-10*k+4*(1-k),-36];o.aB=[-14*k,-38];o.hd=(o.hd||0)-.12*k;break;
+    case'heavy':o.tl=(o.tl||0)-.08*k;o.py=(o.py||0)+ab*2.2*k;if(o.aF)o.aF=[o.aF[0]*.7,o.aF[1]+3];if(o.aB)o.aB=[o.aB[0]*.7,o.aB[1]+3];break;
+    case'float':o.py=(o.py||0)-3.5+Math.sin(t*.08)*1.2;if(o.lF)o.lF=[3+s*1.5,-5.5];if(o.lB)o.lB=[-3-s*1.5,-4.5];o.tl=(o.tl||0)+.1*k;break;
+    case'skate':if(o.lF)o.lF=[10*k+s*3,-1.5];if(o.lB)o.lB=[-9*k+s*2,-1.5-Math.max(0,s)*3];o.py=(o.py||0)+1.5;o.aF=[9,-34];o.aB=[-11,-33+s*2];break;
+    case'hop':o.py=(o.py||0)-ab*4.5*k;o.tl=(o.tl||0)-.04;break;
+    case'prowl':o.py=(o.py||0)+5*k;o.tl=(o.tl||0)+.26*k;o.hd=(o.hd||0)-.2*k;o.aF=[12*k+s*5,-22];o.aB=[-2-s*5,-22];break;
+    case'march':o.tl=(o.tl||0)-.1*k;if(o.aF)o.aF=[o.aF[0]*1.2,o.aF[1]-1];o.hd=(o.hd||0)+.04;break;
+    case'flail':o.aF=[8+s*4,-52-ab*6];o.aB=[-8-s*4,-50-(1-ab)*6];o.tl=(o.tl||0)+.06;break;
+    case'glide':o.aF=[14,-40+s*2];o.aB=[-15,-41-s*2];o.tl=(o.tl||0)+.24*k;o.py=(o.py||0)-1.5;break;}}
+  else if(st==='idle'){const b=Math.sin(t*.06);switch(M[1]){
+    case'bounce':o.py=(o.py||0)-Math.abs(Math.sin(t*.13))*2.4;break;
+    case'sway':o.px=(o.px||0)+Math.sin(t*.035)*1.6;o.tl=(o.tl||0)+Math.sin(t*.035)*.05;break;
+    case'still':o.aF=[5,-33];o.aB=[-3,-32];o.tl=(o.tl||0)-.04;break;
+    case'float':o.py=(o.py||0)-3+Math.sin(t*.07)*1.6;if(o.lF)o.lF=[4,-4.5+b*.6];if(o.lB)o.lB=[-4,-5.5-b*.6];break;
+    case'twitch':o.px=(o.px||0)+Math.sin(t*.4)*.5;o.hd=(o.hd||0)+Math.sin(t*.19)*.06;break;
+    case'slouch':o.tl=(o.tl||0)+.14;o.hd=(o.hd||0)+.12;o.aF=[5,-24+b*.5];o.aB=[-4,-24];o.py=(o.py||0)+1.5;break;
+    case'proud':o.tl=(o.tl||0)-.1;o.hd=(o.hd||0)-.08;o.aF=[7,-27];o.aB=[-9,-30];break;}}
+  return o;};
+/* a trail of the quirk when running */
+const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.dead||f.gone||f.invis||!f.ground||f.st!=='run'||(FR+f.id*2)%5)continue;const th=f.C.qth;if(!th)continue;const cs=th[0],cl=cs[fl(rnd()*cs.length)],s=th[1];
+  part(f.x-f.face*(6+rnd()*6),f.y-2-rnd()*(s==='rise'||s==='float'?18:6),-f.face*(.3+rnd()*.5),s==='rise'?-.5:s==='fall'?.1:-.15,12,cl,rnd()<.4?2:1,s==='drip'?.08:0);}};
+/* uniforms: every student wears theirs a little differently */
+const ACC={toguchi:{hairS:'bob'},tai:{hx:['glasses']},rei:{hx:['band'],bandC:'#f2f2f6'},tenmetsu:{hx:['goggles'],gogC:'#7ae0ff'},hatsuko:{hx:['ribbon']},tori:{hx:['band'],bandC:'#b890ff'},kichi:{ex:['scarf'],scarfC:'#8a8e9a'},ali:{hx:['band'],bandC:'#c8a0ff'},sai:{hx:['band'],bandC:'#8affc8'},riku:{hx:['goggles']}};
+for(const C of CH){const Ls=[C.look].concat((C.looks||[]).slice(0,1));for(const L of Ls){if(!L)continue;const a=ACC[C.id];let ch=false;
+    if(L.outfit==='blazer'&&!L.cname){L.trim=C.col;L.tieC=C.col;ch=true;}
+    if(a&&!L.cname){for(const k in a){if(k==='hx'){if(!(L.hx&&L.hx.length)){L.hx=a.hx.slice();ch=true;}}else if(k==='ex'){if(!(L.ex&&L.ex.length)){L.ex=a.ex.slice();ch=true;}}else{L[k]=a[k];ch=true;}}}
+    if(ch){delete L._r;delete L.R;}}}
+})();
 
 /* gimmick.js — ten fighters get a mechanic nobody else has (combo cancels, motion inputs, stances, meters, marks).
    Each one shows a small gauge at the fighter's feet. */
