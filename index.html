@@ -2036,7 +2036,7 @@ const consume=(f,k)=>{f['last'+k]=-99;};
 
 /* ---------- moves ---------- */
 function scaled(d,k){const c='_s'+k;if(d[c])return d[c];const o=Object.assign({},d);if(d.hits)o.hits=d.hits.map(h=>Object.assign({},h,{dmg:h.dmg*k}));return d[c]=o;}
-function resolveDef(f,key){let src=f.C;if(f.copyT>0&&f.copyCi>=0&&key!=='ledgeAtk')src=CH[f.copyCi];let d=(src===f.C&&f.hero&&src.hmv&&src.hmv[key])||src.mv[key];if(!d)return null;let mc=-1;
+function resolveDef(f,key){let src=f.C;if(f.copyT>0&&f.copyCi>=0&&key!=='ledgeAtk')src=CH[f.copyCi];let d=(src===f.C&&f.hound&&src.dmv&&src.dmv[key])||(src===f.C&&f.hero&&src.hmv&&src.hmv[key])||src.mv[key];if(!d)return null;let mc=-1;
   if(src!==f.C)d=scaled(d,.85);
   if(d.cyc)d=d.cyc[(f.cycN||0)%d.cyc.length];
   if(d.airAlt&&!f.ground)d=Object.assign({},d,d.airAlt);
@@ -2892,7 +2892,7 @@ function drawFighter(f){if(f.dead||f.gone)return;const L=lookOf(f);
   if(m&&m.v.board){wr('#2a6aa8',-14,-2,28,4);wr('#bff4ff',-13,-2,26,2);wp('#ffffff',10,-2);}
   if(m&&m.d.koi&&m.t<m.d.s+m.d.a){const d=f.face,wg=Math.sin(f.anim*.5)*2;fishShape(d*4,5+wg*.4,d,64,'#f4b020','#fff4c0','#8a5a08');wpoly('#ffd860',[-d*6,-4,d*2,-13,d*10,-5]);wp('#ffffff',d*22,0);if(f.anim%3===0)part(f.x-d*30,f.y+4,-f.vx*.3,0,16,rnd()<.5?'#ffe890':'#bfe8ff',2,0);}
   if(p.rot){const ry=30*(L.size||1);X.translate(0,-ry);X.rotate(p.rot*f.face);X.translate(0,ry);}
-  X.scale(f.face*sc/RS,sc/RS);X.globalAlpha=alpha;X.drawImage(B.cv,-B.ox,-B.oy);X.restore();
+  if(f.hound&&typeof drawHound==='function'){X.globalAlpha=alpha;X.scale(f.face,1);drawHound(f);X.globalAlpha=1;}else{X.scale(f.face*sc/RS,sc/RS);X.globalAlpha=alpha;X.drawImage(B.cv,-B.ox,-B.oy);}X.restore();
   if(m){const d=m.d,lim=d.lim||(ANIM[d.an]&&ANIM[d.an].lim);if(lim&&lim!=='none'&&m.t>=d.s-1&&m.t<=d.s+d.a+2){const tp=limbTip(f,lim,Sd,L);if(tp){m.trail.push({x:f.x+tp.x*f.face*sc,y:f.y+tp.y*sc});if(m.trail.length>7)m.trail.shift();}}
     if(d.tentacle&&m.t>=d.s&&m.t<d.s+d.a+4){const hx=f.x+f.face*6;for(let i=0;i<10;i++){const yy=f.y-50-i*5,xx=hx+Math.sin(i*.8+f.anim*.3)*4;wdisc(xx,yy,2.4-i*.1,'#e8c458');wdisc(xx+2,yy+2,1.6,'#fff0b0');}}
     if(d.gatling&&m.t>=d.s&&m.t<d.s+d.a){for(let i=0;i<3;i++){const fx2=f.x+f.face*(20+rnd()*28),fy=f.y-44+rnd()*14;wr(L.R.skin[2]?rgbOf(L.R.skin):'#f3d4ba',fx2-3,fy-3,6,6);wl('#ffffff',fx2-f.face*8,fy,fx2-f.face*14,fy);}}
@@ -5473,7 +5473,7 @@ function aiInput(f){const I={x:0,y:0,A:0,B:0,J:0,S:0,G:0};const o=opp(f),L=clamp
   return I;}
 
 /* ---- hurtboxes follow the body: size, crouch, and an outstretched limb can be hit ---- */
-function hurtR(f){const hb=f.C.hurt||[16,HH];let h=hb[1];if(f.st==='crouch')h*=.62;else if(f.st==='climb')h*=.75;if(f.mv&&f.mv.d.beh==='reflect'&&f.mv.d.bp.scale)h*=1.15;if(f.mini>0)return[f.x-4,f.y-h*.3,8,h*.3];if(f.big>0)return[f.x-hb[0]*.7,f.y-h*1.4,hb[0]*1.4,h*1.4];return[f.x-hb[0]/2,f.y-h,hb[0],h];}
+function hurtR(f){const hb=f.C.hurt||[16,HH];let h=hb[1];if(f.st==='crouch')h*=.62;else if(f.st==='climb')h*=.75;if(f.mv&&f.mv.d.beh==='reflect'&&f.mv.d.bp.scale)h*=1.15;if(f.mini>0)return[f.x-4,f.y-h*.3,8,h*.3];if(f.big>0)return[f.x-hb[0]*.7,f.y-h*1.4,hb[0]*1.4,h*1.4];if(f.hound)return[f.x-19,f.y-34,38,34];return[f.x-hb[0]/2,f.y-h,hb[0],h];}
 const LIMBK=/^(jab[123]|ftilt|utilt|dtilt|dash|fsmash|usmash|dsmash|nair|fair|bair|uair|dair)$/;
 function limbR(f){const m=f.mv;if(!m||f.st!=='move'||!LIMBK.test(m.k)||f.mini>0||intangible(f))return null;const d=m.d;if(f.C.disjoint||(f.hero&&f.C.heroDisjoint)||m.t<d.s||m.t>d.s+d.a+2||!d.hits.length)return null;
   let b=null;for(const h of d.hits)for(const q of h.b)if(!b||Math.abs(q[0])+Math.abs(q[1]+30)>Math.abs(b[0])+Math.abs(b[1]+30))b=q;if(!b)return null;
@@ -5973,6 +5973,56 @@ const ING_MAX=6;
  CH.forEach(C=>{if(C.heroLook&&C.looks&&C.looks[HERO_I])C.looks[HERO_I].cname='HERO';});
 })();
 function skinLabel(n){if((SEL.skin[n]||0)>=skinCount(n))SEL.skin[n]=0;const s=SEL.skin[n]||0,C=CH[SEL.p[n]],L=C&&C.looks&&C.looks[s];return L&&L.cname?L.cname:'COLOR '+(s+1);}
+
+/* ===================== DAKU: a hell-fire brawler who really turns into a three-headed hound ===================== */
+(function(){const C=CH.find(c=>c.id==='daku');if(!C)return;const fx=['#ff4a1a','#ffb030'],txt=(f,s)=>FXL.push({k:'txt2',s,x:f.x,y:f.y-84,t:0,life:44,col:'#ff4a1a'});
+ const NORM=['jab1','jab2','jab3','jab','ftilt','utilt','dtilt','dash','fsmash','usmash','dsmash','nair','fair','bair','uair','dair'];
+ /* human: hellfire fists */
+ NEWFX.hfire=function(sub,x,y,d,pr,fx2,f,R,T){const S=Math.max(8,R*.7);for(let i=0;i<6;i++){const a=-d*(.3+i*.25)+(d>0?Math.PI:0)+Math.sin(T*.5+i)*.2,l=S+6+((T+i*3)%6)+pr*8;wl(i%2?'#ffb030':'#ff4a1a',x,y,x+Math.cos(a)*l,y+Math.sin(a)*l-4,3);}
+   wdisc(x,y,S*.7,'#5a1408');wdisc(x,y,S*.7-1.5,'#ff4a1a');wdisc(x+d,y-1,S*.35,'#ffe060');wring(x,y,S+pr*10,'#ffb030',1);if(T%2===0)part(x-d*S,y+rnd()*8-4,-d*.6,-.8,12,rnd()<.5?'#ff4a1a':'#ffb030',2,.04);};
+ const dogBite={};
+ for(const k of NORM){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)continue;const b0=d.hits[0].b[0];
+   /* the hound: lower, longer, a touch faster, everything is teeth */
+   dogBite[k]=Object.assign({},d,{s:Math.max(2,d.s-1),hits:d.hits.map(h=>Object.assign({},h,{eff:'burn',dmg:h.dmg*1.06,b:h.b.map(q=>[q[0]*1.15,Math.max(q[1],-44)*.8,q[2]])})),vfx:{k:'H',el:'hell',x:b0[0]*1.15,y:Math.max(b0[1],-44)*.8,r:b0[2]+3}});
+   d.vfx={k:'H',el:'hfire',x:b0[0],y:b0[1],r:b0[2]+3};d.hits.forEach(h=>{h.eff='burn';});}
+ const oldBite=C.mv.nB,oldPillar=C.mv.uB;
+ const shift=(to)=>M('roar',10,4,12,null,{fx,lim:'none',cd:70,onStart(f){f.hound=to;f.S=null;txt(f,to?'HELLHOUND!':'HEEL.');sfx('power');burst(f.x,f.y-24,26,['#ff4a1a','#ffb030','#2a1a1a'],3.4,26);FXL.push({k:'ring',x:f.x,y:f.y-24,t:0,col:'#ff4a1a',r0:10,life:22});if(!RM)shakeA=Math.max(shakeA,5);}});
+ C.mv.nB=M('cast',11,1,18,null,{fx,spawn:[[11,{k:'fireball',vx:5,life:58,r:7,dmg:8,bkb:4,kbg:.055,ang:40,eff:'burn',explode:1}]]});
+ C.mv.dB=shift(1);
+ C.dmv=Object.assign(dogBite,{nB:oldBite,
+   sB:M('roar',12,1,22,null,{fx,cd:60,spawn:[[12,{k:'fireball',n:3,spread:.42,vx:4.6,life:44,r:6,dmg:5,bkb:3,kbg:.04,ang:45,eff:'burn',dy:-22}]],onStart(f){FXL.push({k:'txt',s:'CERBERUS BREATH',x:f.x,y:f.y-60,t:0,life:36,col:'#ffb030'});}}),
+   uB:M('spin',5,22,20,hit([[0,-18,24]],2.2,2.6,.01,80,{ri:5,eff:'burn'}),{finisher:hit([[0,-22,26]],6,5.4,.075,80,{eff:'burn'}),beh:'leapUp',bp:{vy:-10.4,vx:2.4,sustain:14},helpless:1,fx,vfx:{k:'H',el:'hell',sub:'wheel',x:0,y:-18,r:24},lim:'none',
+     spawn:[[5,{k:'lava',life:150,r:14,dmg:2,bkb:1,kbg:0,ang:80,eff:'burn',dx:0,dy:0}]]}),
+   dB:shift(0)});
+ const hell0=NEWFX.hell;NEWFX.hell=function(sub,x,y,d,pr,fx2,f,R,T){if(sub==='wheel'){for(let i=0;i<10;i++){const a=T*.7+i/10*TAU,rr=R*.9;wdisc(f.x+Math.cos(a)*rr,f.y-18+Math.sin(a)*rr,3.2-(i%3),i%2?'#ff4a1a':'#ffb030');}wring(f.x,f.y-18,R,'#ffe060',1);return;}hell0(sub,x,y,d,pr,fx2,f,R,T);};
+ C.sp=['Brimstone (hellfire ball; as a hound: Triple Bite)','Hell Dash (as a hound: Cerberus Breath, three fireballs at once)','Pillar of Fire (as a hound: Flame Wheel, leaves a burning patch)','Hellhound (turn into the three-headed hound, or back)'];
+ if(typeof GTXT!=='undefined'&&GTXT.daku){GTXT.daku[0]='Human: throws a ball of hellfire that bursts and burns. Hound: all three heads bite in turn as he lunges.';GTXT.daku[1]='Human: a burning dash low to the ground. Hound: each head breathes a fireball, three in a spread.';GTXT.daku[2]='Human: rises inside a pillar of fire. Hound: spins upward as a wheel of flame and leaves the ground burning where he took off.';GTXT.daku[3]='Transforms into the three-headed hellhound, and back again. The hound is faster, lower to the ground and bites instead of punching, with every hit burning, but it is a wider target and takes 15% more damage.';}
+ C.d='Fights with hellfire in his fists, and can become a three-headed hound wreathed in flame.';C.na='Normals: as a human, burning punches and kicks. As the hound, fast low bites from three sets of jaws. Every hit burns in either form.';
+ C.trait='Two forms on Down-B: human (hellfire, a projectile, better reach upward) and hound (faster, lower, stronger bites).';C.weak='The hound is a wide target and takes 15% more damage; the human form is slower.';C.role='Shape-shifting rushdown';C.tip='Zone with Brimstone as a human, then turn hound and run them down.';
+ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.C.id!=='daku'||f.gone)continue;if(f.dead||f.st==='respawn'){f.hound=0;f.hellT=0;continue;}
+   if(f.hound){f.hellT=2;if(f.ground&&(f.st==='run'||f.st==='walk'))f.x+=f.vx*.22;if(FR%3===0)part(f.x-f.face*14+rnd()*10-5,f.y-26-rnd()*10,-f.vx*.2,-.9,14,rnd()<.5?'#ff4a1a':'#ffb030',2,0);}
+   if(f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&(f.st==='idle'||f.st==='walk'||f.st==='run')){const o=opp(f),far=o?Math.abs(o.x-f.x):0;if((!f.hound&&far<90&&rnd()<.02)||(f.hound&&far>200&&rnd()<.006))startMove(f,'dB');}}};
+})();
+/* the hound itself, drawn at the fighter's feet facing +x */
+function drawHound(f){const t=f.anim||0,m=f.mv,run=f.st==='run'||f.st==='walk'||f.st==='dash',air=!f.ground,atk=m&&m.t>=m.d.s-2&&m.t<=m.d.s+m.d.a+3,hurt=f.st==='hit'||f.st==='held'||f.st==='dizzy';
+ const dk='#1c1418',md='#3a2a2a',lt='#5a3a34',fl=['#ff4a1a','#ffb030','#ffe060'],bob=run?Math.sin(t*.6)*1.5:Math.sin(t*.12)*.6,by=-20+bob+(hurt?2:0);
+ if(f.flash>3&&((f.flash>>1)&1)){X.globalAlpha*=.6;}
+ /* tail of fire */
+ for(let i=0;i<5;i++){const u=i/4;wdisc(-17-u*9,by-4-u*8+Math.sin(t*.4+i)*2,3.4-u*2,fl[i%3]);}
+ /* legs */
+ const lg=(x,ph,back)=>{const s=run?Math.sin(t*.6+ph)*6:(air?(back?-4:5):0),k=run?Math.max(0,Math.cos(t*.6+ph))*4:0;wl(dk,x,by+6,x+s*.5,by+13-k,5);wl(dk,x+s*.5,by+13-k,x+s,-1-k,4);wr(md,x+s-2,-3-k,5,3);};
+ lg(-11,0,1);lg(-7,2.2,1);lg(9,1.1,0);lg(13,3.3,0);
+ /* body */
+ wr(dk,-16,by-7,30,15);wr(md,-15,by-6,28,12);wr(lt,-13,by-6,22,3);for(let i=0;i<4;i++)wr(dk,-10+i*6,by+1,2,4);
+ for(let i=0;i<5;i++)wdisc(-12+i*6,by-8-((t+i*4)%7)*.6,2.6-(i%2),fl[(i+(t>>2))%3]);
+ /* three heads on three necks */
+ const hd=(nx,ny,ang,open,z)=>{const hx=10+nx,hy=by-6+ny;wl(dk,8,by-3,hx,hy,6);wl(md,8,by-3,hx,hy,4);X.save();X.translate(hx,hy);X.rotate(ang);
+   wr(dk,-4,-6,13,11);wr(z?lt:md,-3,-5,11,9);wr(dk,6,-3-open*.5,9,4);wr(md,6,-2-open*.5,8,2);wr(dk,6,2+open,8,3);wr('#7a1820',6,1,7,1+open);
+   for(let i=0;i<3;i++){wr('#ffffff',7+i*2.4,1-open*.2,1,2);wr('#ffffff',8+i*2.4,1+open,1,-2);}
+   wpoly(dk,[-3,-5,-1,-12,2,-5]);wpoly(dk,[2,-5,5,-11,6,-5]);wr(fl[1],3,-3,2,2);wr('#ffffff',4,-3,1,1);
+   if(open>2)for(let i=0;i<3;i++)wdisc(16+i*3,1,2-i*.5,fl[i]);X.restore();};
+ const op=atk?4:(hurt?1:(Math.sin(t*.1)>.7?2:0)),sw=Math.sin(t*.15)*1.5;
+ hd(2,-12+sw,-.55,atk?((t>>1)%3===0?5:1):op*.5,0);hd(8,2-sw,.35,atk?((t>>1)%3===1?5:1):op*.5,0);hd(10,-5,-.1,atk?((t>>1)%3===2?5:2):op,1);}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
