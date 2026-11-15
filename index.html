@@ -274,7 +274,7 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
  .tmenu{gap:6px 8px}.tmenu .fight{font-size:28px;padding:8px 36px 3px}.tmenu .btn{font-size:17px;padding:8px 14px 4px}.tline canvas{height:40px}
  #select,#stagesel{gap:5px;padding-block:5px;overflow-y:auto;height:100%;grid-template-rows:auto auto auto}
  .top{flex-wrap:nowrap;gap:6px;overflow:hidden}.logo{font-size:19px}.top .sub{display:none}.top .tbtn,.tbtn{font-size:13px;padding:6px 10px 5px}
- .selmain4{grid-template-rows:auto auto;gap:5px}
+ .selmain4{grid-template-rows:auto auto;gap:5px;min-height:auto}.roster{min-height:124px}#select{align-content:start}
  .roster{grid-template-columns:none!important;grid-auto-flow:column;grid-template-rows:repeat(2,58px);grid-auto-columns:74px;gap:4px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding-bottom:3px}
  .card{scroll-snap-align:start;border-radius:9px}.card span:not(.bd){font-size:11px;padding:6px 2px 2px}.card .cimg{height:calc(100% - 13px);inset:1px 0 12px 0}
  .pprow{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.pprow .pp{border-radius:10px}.pprow .pp canvas{height:50px;min-height:50px}.pp .tag{font-size:15px;padding:5px 8px 2px}
@@ -284,9 +284,9 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
  #stagesel{grid-template-rows:minmax(0,1fr) auto auto}#stagesel .top{display:none}.ssmain{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:6px;min-height:150px}
  .ssgrid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:54px;overflow-y:auto;gap:4px;align-content:start}.scard b{font-size:12px;padding:10px 5px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.scard i{display:none}
  .ssinfo p,.sstags,.ssjp{display:none}.ssinfo h2{font-size:20px}.ssopts{flex-wrap:nowrap;overflow-x:auto;gap:8px}.ssopts .lab{display:none}
- #guide{padding:0}.gbox{height:100%;max-width:none;border-radius:0;padding:5px calc(8px + env(safe-area-inset-right,0px)) 5px calc(8px + env(safe-area-inset-left,0px));gap:5px;grid-template-rows:auto minmax(0,1fr)}
+ #guide{padding:0;place-items:stretch}.gbox{height:100vh;height:100dvh;max-height:100dvh;max-width:none;border-radius:0;padding:5px calc(8px + env(safe-area-inset-right,0px)) 5px calc(8px + env(safe-area-inset-left,0px));gap:5px;grid-template-rows:auto minmax(0,1fr)}
  .gtop h2{font-size:20px}.gtop span{display:none}.gtop{justify-content:space-between}.gtop .btn{font-size:15px;padding:6px 14px 3px}.gfoot{display:none}
- .gmain{grid-template-columns:150px minmax(0,1fr)!important;grid-template-rows:none!important;gap:8px}.gros{grid-template-columns:repeat(2,1fr)!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;overflow-y:auto!important;overflow-x:hidden!important;gap:4px}
+ .gmain{grid-template-columns:150px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;gap:8px;min-height:0;overflow:hidden}.gros,.gdet{min-height:0;max-height:100%;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}.gdet{overflow-y:auto!important}.roster{touch-action:pan-x pan-y;overscroll-behavior-x:contain}.ssgrid{touch-action:pan-y;-webkit-overflow-scrolling:touch}.gros{grid-template-columns:repeat(2,1fr)!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;overflow-y:auto!important;overflow-x:hidden!important;gap:4px}
  .gros button canvas{width:34px;height:34px}.gros button span{font-size:11px}
  .ghead{gap:10px;align-items:flex-start}.gart.live canvas{width:min(250px,34vw)}.gid h3{font-size:22px!important}.gstats{display:none!important}.grole{font-size:11.5px!important}
  #gmvinfo b{font-size:18px}#gmoves button{min-height:34px}
