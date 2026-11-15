@@ -957,6 +957,8 @@ function drawHead(L,J,S){const R=L.R,h=L.h,H=J.Hd,t=S.t;const hs=HAIR[L.hairS];c
   if(ex.includes('fullmask')){const w=ramp(L.maskC||'#16161c'),n=ramp(L.ledC||'#e8283a');polyH(H,h,[-7.6,6,-8.6,-2,-6,-9,0,-11,5,-10,7.6,-6.6,8,-1,7.4,5,4,7.4,-3,7.4],w,{cx:H.x-2,cy:H.y-3,r:9.4*h});[[2.2,-2.6,1.3],[5.2,-2.4,1.3],[1.2,-.4,.8],[3.8,-.2,.8],[6.4,-.2,.8],[2.4,-4.6,.7],[4.8,-4.5,.7],[3.6,1.6,.6]].forEach(([x,y,r])=>ell(H.x+x*h,H.y+y*h,r*h,r*h,0,n,0));}
   if(ex.includes('ninjahood')){const w=ramp(L.hoodC||'#efe6d6');polyH(H,h,[-7.6,6,-8.6,-2,-6,-9,0,-11,5,-10,7.6,-6.6,8,-1,7.4,5,4,7.4,-3,7.4],w,{cx:H.x-2,cy:H.y-3,r:9.4*h});
     polyH(H,h,[.6,-3,7.7,-2.6,7.5,-.2,.8,-.4],R.skin,'g',0);sp(H.x+3*h,H.y-1.6*h,R.eye[1]);sp(H.x+5.8*h,H.y-1.5*h,R.eye[1]);polyH(H,h,[-7.2,-6.2,7.7,-5.8,7.7,-3.8,-7.2,-4.2],R.red,'g');lineH(H,h,.8,1.4,7.4,1.6,w[1]);}
+  if(ex.includes('twigs')){const b=ramp(L.skin||'#7a5230'),lf=ramp(L.hair||'#5aa838');polyH(H,h,[1.2,-7,3.4,-15,5.6,-19,6.4,-18.4,4.6,-14.4,3.2,-6.6],b,'g');polyH(H,h,[3.6,-13,7.8,-14.6,8,-13.6,4.2,-11.8],b,'g');polyH(H,h,[-3.2,-7.4,-6.4,-14,-8.6,-17,-7.6,-17.6,-5,-14,-1.8,-8],b,'g');polyH(H,h,[-5.6,-12.6,-9.6,-12.4,-9.4,-11.4,-5.4,-11.2],b,'g');
+    for(const[x,y]of[[6,-19.4],[8.4,-14.4],[-8.4,-17.8],[-10,-12]])ell(H.x+x*h,H.y+y*h,1.7*h,1.1*h,.5,lf,0);}
   if(ex.includes('beard')){const b=ramp(L.beardC||'#e87a20');polyH(H,h,[-.6,1.4,7.2,1.8,6.6,5,3.2,7.4,-.4,4.8],b,'g');}
   if(ex.includes('band')){const bc=ramp(L.bandC||'#f2f2f6'),bt=ramp(L.bandT||L.bandC||'#f2f2f6'),f=Math.sin(S.t*.13)*1.4-clamp(S.vx*.6,-3,3);polyH(H,h,[-6.9,-5.9,7.3,-5.5,7.3,-3.7,-6.9,-4.1],bc,'g');
     capsule(H.x-6.6*h,H.y-4.8*h,1.5*h,H.x+(-13+f)*h,H.y+0*h,1*h,bt);capsule(H.x-6.6*h,H.y-4.2*h,1.4*h,H.x+(-12+f*1.4)*h,H.y+5*h,.9*h,bc);}
@@ -1852,9 +1854,9 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    uB:M('wingUp',5,30,10,hit([[0,-34,18]],4,3.5,.04,80),{beh:'fly',bp:{dur:38,spd:3.6},fx,helpless:1,lim:'none'}),
    dB:M('castDown',14,5,22,[hit([[24,-10,16]],13,4.5,.085,60,{sd:1.6}),hit([[-24,-10,16]],13,4.5,.085,120,{sd:1.6})],{fx,cd:60})}),
   sp:['Feather Volley','Wing Dash','Ascend (free flight for a moment)','Mace Slam (shockwaves on both sides; cracks shields)']});
- fx=['#8a5a34','#8ae060'];add({id:'ash',n:'ASH ROWAN',sn:'ASH',q:'Mahogany',ty:'Mutant',col:'#8a5a34',d:'His body is living hardwood that he can grow, reshape and snap off at will. The class clown, and built like a tree.',
+ fx=['#8a5a34','#8ae060'];add({id:'ash',n:'ASH ROWAN',sn:'ASH',q:'Mahogany',ty:'Mutant',col:'#8a5a34',d:'A walking tree: bark for skin, branches for arms and a crown of leaves, all of it living hardwood he can grow, reshape and snap off at will.',
   na:'Normals: limbs that grow as they swing, so everything reaches further than it should. Heavy for his size and hard to launch.',
-  look:K({skin:'#9a6a3c',eye:'#a83a2a',hairS:'spiky',hair:'#6ab040',outfit:'jacketS',top:'#3a8a4a',acc:'#a8282e',sleeve:'#a8282e',pants:'#5a3a24',shoe:'#4a2e1c',stance:'cool',smile:1,ex:[]}),st:ST({w:1.14,run:2.9,air:2.5}),kit:{st:'brawler',fx,el:'wood',pow:1.04,reach:1.2},
+  look:K({skin:'#7a5230',eye:'#f0b040',hairS:'spiky',hair:'#5aa838',body:'tree',outfit:'bare',top:'#7a5230',sl:'none',pants:'#6a4628',shoe:'#4a2e1a',stance:'guard',size:1.12,ex:[]}),st:ST({w:1.14,run:2.9,air:2.5}),kit:{st:'brawler',fx,el:'wood',pow:1.04,reach:1.2},
   mv:Object.assign(SM('wood',fx,{f:{far:40}}),{nB:M('throwF',10,1,17,null,{spawn:[[10,GP({sh:'knife',c:'#8a5a34',n:3,spread:.16,vx:6.8,life:44,r:4,dmg:4,bkb:2.4,kbg:.03,ang:30})]],fx}),
    sB:M('punch',12,5,20,hit([[62,-38,12],[40,-38,11],[20,-38,10]],12,4.5,.08,38),{fx,lim:'hF',ph:{sF:2.8,aF:[64,-40]}}),
    uB:M('uppercut',5,10,16,hit([[4,-60,15]],7,4.5,.055,86),{beh:'leapUp',bp:{vy:-10.4,vx:1.5},helpless:1,fx,ph:{sF:2,aF:[8,-88]}}),
@@ -6235,7 +6237,7 @@ const ING_MAX=6;
   jack:{outfit:'tee',top:'#f4f4f8',sl:'short',pants:'#1c2030',shoe:'#1c1c22',glove:'#1c1c22',ex:['wings'],wingC:'#ff7a30',wingT:'#5ab8ff'},
   kal:{outfit:'plate',top:'#8a8e96',acc:'#a0ff40',sleeve:'#5a5e66',pants:'#2a2e34',shoe:'#a0ff40',boots:1,glove:'#5a5e66',hx:['helm','visor'],helmC:'#8a8e96',visorC:'#a0ff40',hair:'#8a8e96',sl:'long'},
   kora:{outfit:'plate',top:'#f4f4f8',acc:'#e84ab0',sleeve:'#f4f4f8',pants:'#8a2a8a',shoe:'#e84ab0',boots:1,glove:'#f4f4f8',pauldron:1,pauldC:'#e84ab0',wpn:'wand',ex:['wings'],wingC:'#f4f4fa',wingT:'#ffd0f0',sl:'long'},
-  ash:{outfit:'coat',top:'#8a2028',acc:'#3a8a4a',sleeve:'#8a2028',pants:'#4a2e1c',shoe:'#3a2414',boots:1},
+  ash:{scarfC:'#a8282e',hair:'#3a8a3a'},
   makiko:{outfit:'pinafore',top:'#5a6a8a',acc:'#e8e4dc',sleeve:'#5a6a8a',sl:'short',skirt:'#5a6a8a',socks:'#d8d8e0',shoe:'#16141a',hx:['glasses','ribbon'],hair:'#e8dcb0'},
   koki:{outfit:'bare',top:'#7a8a9a',sl:'none',pants:'#d8302a',pantStripe:1,acc:'#f4f4f8',shoe:'#7a8a9a',sole:'#7a8a9a',ex:['rescue'],bracelet:1},
   hana:{outfit:'jacketS',top:'#8a8e98',acc:'#3a3c44',trim:'#f08a20',sleeve:'#3a3c44',sl:'none',pants:'#4a4c40',shoe:'#2a2a30',boots:1,kneepad:1,glove:'#8a8e98',bracelet:1,hx:['goggles'],ex:[]},
@@ -6366,7 +6368,7 @@ const ING_MAX=6;
   sarah:[['HOODIE','hoodie','#3a2a5a','#d8c8ff'],['GALA','gala','#1c1a24','#6a50a8']],aria:[['GALA','gala','#c8282e','#ffd84a'],['TRAINING','gym','#f4f4f8','#ffd84a']],bryson:[['CASUAL','casual','#1c1c22','#c8282e'],['HOODIE','hoodie','#5aa03a','#1c1c22']],
   conor:[['FORMAL','formal','#1e4a2a'],['PYJAMAS','pjs','#3aa84a','#ffd84a']],ray:[['HOODIE','hoodie','#6a2a2a','#f0f0f4'],['AGENT','agent','#1c1c22']],oliver:[['CASUAL','casual','#3a8a4a','#2a2a32'],['FORMAL','formal','#1e3a2a']],
   chris:[['BEACH','beach','#4a78c8','#f0a8b8'],['WORK','work','#d8cdb0','#4a78c8']],evona:[['GALA','gala','#bfe8ff','#f4f4fa'],['WINTER','winter','#f4f4fa','#7ab0e8']],jack:[['TRAINING','gym','#1c2030','#ff7a30'],['FORMAL','formal','#1c1c22']],
-  kal:[['TRACK','gym','#c8282e','#2a48c8'],['PUNK','punk','#1c1c22','#a0ff40']],kora:[['TRAINING','gym','#f4f4f8','#2a48c8'],['GALA','gala','#e84ab0','#f4f4f8']],ash:[['WORK','work','#5a3a24','#3a8a4a'],['FESTIVAL','festival','#3a8a4a','#a8282e']],
+  kal:[['TRACK','gym','#c8282e','#2a48c8'],['PUNK','punk','#1c1c22','#a0ff40']],kora:[['TRAINING','gym','#f4f4f8','#2a48c8'],['GALA','gala','#e84ab0','#f4f4f8']],ash:[['AUTUMN','casual','#e8782a','#c8282e'],['BLOSSOM','casual','#ffb0d0','#f4f4f8']],
   moya:[['FORMAL','formal','#1c2440'],['WINTER','winter','#2a4ac8','#d0e4ff']],sato:[['WORK','work','#5a6a80','#e8c860'],['BEACH','beach','#e8c860','#f4f0e8']],akio:[['TRACK','gym','#2a48c8','#f0f0f4'],['PUNK','punk','#1c1c22','#c8282e']],
   sata:[['STEALTH','stealth','#22283e','#5ab8ff'],['TRAINING','gym','#3a6ad8','#f0f2f8']],kitsu:[['FESTIVAL','festival','#ff9ad0','#9affea'],['FORMAL','formal','#3a2a4a']],uzi:[['TRAINING','gym','#1c1c26','#7ae04a'],['WINTER','winter','#2a7a3a','#d8ffc0']],
   ichigo:[['WORK','work','#6a6048','#ff8a30'],['PYJAMAS','pjs','#b8c860','#f0f0f4']],bentou:[['FESTIVAL','festival','#a8283e','#f0e0a0'],['FORMAL','formal','#2a3048']],okane:[['FORMAL','formal','#4a4438'],['FESTIVAL','festival','#e8c040','#f4f0e8']],
@@ -6643,6 +6645,30 @@ if(B){const fx=['#5aa03a','#e8f0c0'];
 {const H=c('hatsuko');if(H){const fx=H.kit.fx||['#b04aff','#ff7ae8'];H.mv.nB=M('cast',10,1,18,null,{fx,chg:1,chgMax:80,spawn:[[10,{k:'gp',sh:'skull',c:'#b04aff',vx:4.6,life:70,r:7,dmg:6,bkb:3.2,kbg:.05,ang:42}]]});
   H.sp[0]='Grudge Skull (hold B to charge: the longer, the bigger and stronger)';if(typeof GTXT!=='undefined'&&GTXT.hatsuko)GTXT.hatsuko[0]='Launches a purple skull. Hold B to charge it for up to a second and a third: it grows to twice the size and more than double the damage.';}
  const g0=EK.gp.draw;EK.gp.draw=function(e){if(e.spec&&e.spec.sh==='spirit'){const r=e.r||8,c0=e.spec.c||'#b04aff',bob=Math.sin(e.t*.25)*2,d=Math.sign(e.vx)||e.face;X.globalAlpha=.3;wdisc(e.x,e.y+bob,r*1.5,c0);X.globalAlpha=.75;FSG.ghost(e.x,e.y+bob+r*.3,r*.9,'#6aff8a','#b04aff',e.t*.06);X.globalAlpha=1;FSG.mask(e.x+d*r*.1,e.y+bob-r*.15,r*.6,c0,'#ffffff');if(e.t%3===0)part(e.x-d*r*.6,e.y+r*.6,-d*.3,.4,12,'#6aff8a',1,0);return;}if(e.spec&&e.spec.sh==='skull'){const r=e.r||7,d=Math.sign(e.vx)||e.face;X.globalAlpha=.35;wdisc(e.x,e.y,r*1.5,'#b04aff');X.globalAlpha=1;FSG.skull(e.x,e.y,r*.85,'#d8a8ff','#b04aff');wdisc(e.x-r*.34,e.y-r*.17,r*.14,'#ff7ae8');wdisc(e.x+r*.34,e.y-r*.17,r*.14,'#ff7ae8');if(e.t%2===0)part(e.x-d*r,e.y+rnd()*r-r/2,-d*.5,-.3,12,'#b04aff',2,0);return;}return g0(e);};}
+/* ---- Ash: a walking tree (his own body painter: trunk, root legs, branch arms, a crown of leaves) ---- */
+BEAST.tree=function(L,S,p){const t=S.t,atk=S.face==='atk',hurt=S.face==='hurt'||S.face==='dizzy',bk=L.skin||'#7a5230',B=ramp(bk),BD=rampB(bk),lc=(L.cname&&L.cname!=='HERO'&&L.top)||L.hair||'#5aa838',LF=ramp(lc),LD=rampB(lc),
+  px=(p.px||0),py=(p.py||0),tl=p.tl||0,bx=px,by=-24+py,tx=px+Math.sin(tl)*30,ty=by-30*Math.cos(tl),sway=Math.sin(t*.07)*1.2;
+  const limb=(x0,y0,x1,y1,r0,r1,P,sg)=>{const[k,e]=ik(x0,y0,x1,y1,15,15,sg);capsule(x0,y0,r0,k.x,k.y,(r0+r1)/2,P);capsule(k.x,k.y,(r0+r1)/2,e.x,e.y,r1,P);return e;};
+  const lB=p.lB||[-5,-1.5],lF=p.lF||[5,-1.5],aB=p.aB||[-5,-29],aF=p.aF||[6,-28];
+  /* back arm and back root */
+  {const e=limb(tx-5,ty+9,aB[0]*1.1,aB[1]-4,3,1.8,BD,-1);for(const a of[-.7,0,.7]){const g=Math.atan2(e.y-(ty+9),e.x-(tx-5))+a;capsule(e.x,e.y,1.2,e.x+Math.cos(g)*4.5,e.y+Math.sin(g)*4.5,.7,BD);}ell(e.x-1,e.y-3,2.4,1.5,.4,LD,0);}
+  {const e=limb(bx-4,by,lB[0]*1.25,Math.min(-1.5,lB[1]),5,3.4,BD,1);for(const d of[-5,-1,4])capsule(e.x,e.y,2.4,e.x+d,-.8,1.1,BD);}
+  /* trunk */
+  capsule(bx,by+3,10.5,(bx+tx)/2,(by+ty)/2,9,B);capsule((bx+tx)/2,(by+ty)/2,9,tx,ty,8.2,B);
+  for(let i=0;i<5;i++){const u=.12+i*.19,x=bx+(tx-bx)*u,y=by+(ty-by)*u;lineP(x-6+(i%2)*3,y,x-4+(i%2)*3,y-5,BD[1]);lineP(x+2-(i%2)*2,y+1,x+3-(i%2)*2,y-4,BD[2]);}
+  capsule(tx-7,ty+2,2.2,tx-13,ty-6+sway*.4,1.2,BD);capsule(tx+6,ty,2.2,tx+13,ty-7-sway*.4,1.2,B);
+  /* front root */
+  {const e=limb(bx+4,by,lF[0]*1.25,Math.min(-1.5,lF[1]),5.2,3.6,B,1);for(const d of[-4,1,6])capsule(e.x,e.y,2.6,e.x+d,-.8,1.2,B);}
+  /* crown */
+  for(const[x,y,rx,ry,P] of[[-12,-9,8,6,LD],[11,-10,8,6,LD],[-6,-15,9,7,LF],[7,-16,9,7,LF],[0,-10,11,7,LF],[1,-21,7,5.5,LF]])ell(tx+x+sway*(1+Math.abs(x)*.05),ty+y,rx,ry,0,P);
+  for(const[x,y]of[[-9,-13],[5,-19],[10,-9],[-2,-22]])sp(tx+x+sway,ty+y,LF[4]);
+  /* face carved into the trunk */
+  {const fx=tx+3.5,fy=ty+8,e=ramp(L.eye||'#f0b040');if(hurt){lineP(fx-2,fy-1,fx+1,fy+1,BD[0]);lineP(fx+3,fy-1,fx+6,fy+1,BD[0]);}else{ell(fx-.5,fy,1.7,atk?1.2:1.9,0,ramp('#1a1008'),0);ell(fx+4.5,fy,1.7,atk?1.2:1.9,0,ramp('#1a1008'),0);sp(fx-.5,fy,e[4]);sp(fx+4.5,fy,e[4]);lineP(fx-3,fy-3.4,fx+1,fy-(atk?2.2:3),BD[0]);lineP(fx+3,fy-(atk?2.2:3),fx+7,fy-3.4,BD[0]);}
+    if(atk||hurt)ell(fx+2,fy+5.5,2.6,2,0,ramp('#1a1008'),0);else lineP(fx-.5,fy+5,fx+5,fy+5,BD[0]);}
+  if(L.scarfC){const sc=ramp(L.scarfC);capsule(tx-8,ty+15,2,tx+8,ty+14,2,sc);capsule(tx-7,ty+15,1.6,tx-13,ty+24+sway,1,sc);}
+  /* front arm */
+  {const e=limb(tx+5,ty+10,aF[0]*1.12,aF[1]-4,3.4,2,B,1);for(const a of[-.7,0,.7]){const g=Math.atan2(e.y-(ty+10),e.x-(tx+5))+a;capsule(e.x,e.y,1.3,e.x+Math.cos(g)*5,e.y+Math.sin(g)*5,.7,B);}ell(e.x+1,e.y-3,2.6,1.6,-.4,LF,0);S.hand={x:e.x,y:e.y};}};
+{const A=c('ash');if(A){A.hurt=[18,62];const fix=L=>{if(L){L.body='tree';delete L._r;delete L.R;}};fix(A.look);}}
 /* ---- Akio: homing attack ---- */
 BEH.homing={tick(f,m,I){const d=m.d,p=d.bp;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.vy,-.6);if(f.ground&&m.t===2){f.vy=-4.5;f.ground=null;}}
   else if(m.t===d.s){const o=F.filter(t=>t!==f&&!t.dead&&!t.gone&&t.st!=='respawn'&&(f.team===undefined||t.team!==f.team)&&Math.hypot(t.x-f.x,t.y-f.y)<p.range).sort((a,b)=>Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y))[0];
@@ -6669,7 +6695,7 @@ const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t.dmg,sh0=t.shp,res=a
   if(t.C.id==='bryson'&&!t.form){const g=t.gm||(t.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.5);}
   if(a&&a!==t&&a.C.id==='hikari'&&!(o&&o.proj)&&t.st==='hit'){const g=a.gm||(a.gm={});g.hk=(g.hk||0)+1;if(g.hk>=4){g.hk=0;t.hitstun+=14;FXL.push({k:'txt',s:'SHOCK!',x:t.x,y:t.y-88,t:0,life:28,col:'#6aff6a'});for(let i=0;i<10;i++)part(t.x,t.y-30,rnd()*4-2,rnd()*4-2,10,i%2?'#6aff6a':'#ffffff',1,0);}}
   if(a&&a!==t&&a.C.id==='bryson'&&!a.form){const g=a.gm||(a.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.2);}}}catch(e){}return res;};
-const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.gone)continue;const id=f.C.id;if(f.jinxT&&(f.dead||f.st==='respawn'))f.jinxT=0;if(f.jinxT>FR&&FR%7===0)part(f.x+rnd()*24-12,f.y-70-rnd()*10,0,.5,14,'#c83a5a',2,0);
+const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.gone)continue;const id=f.C.id;if(f.confT>60)f.confT=60;if(f.jinxT&&(f.dead||f.st==='respawn'))f.jinxT=0;if(f.jinxT>FR&&FR%7===0)part(f.x+rnd()*24-12,f.y-70-rnd()*10,0,.5,14,'#c83a5a',2,0);
   if(id==='bentou'){const m=f.mv;if(m&&m._qf&&!m._jq){m._jq=1;for(const t of F)if(t!==f&&!t.dead&&!t.gone&&(f.team===undefined||t.team!==f.team)&&Math.abs(t.x-f.x)<140&&Math.abs(t.y-f.y)<70)jinx(t,300,f);}}
   if(id==='bryson'){const g=f.gm||(f.gm={});if(f.dead||f.st==='respawn'){if(f.form==='rage'){f.form=null;f.formL=null;}f.rageT=0;g.tan=0;continue;}
     if(f.form==='rage'){if(f.st==='shield'||f.st==='shieldstun')f.st='idle';if(FR%6===0)part(f.x+rnd()*30-15,f.y-rnd()*80,0,-.6,14,'#7ae04a',2,0);
@@ -6681,7 +6707,7 @@ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for
   else if(id==='uzi'){if(f.dmg>0&&FR-(f.lastHurt||0)>120)f.dmg=Math.max(0,f.dmg-.012);}
   else if(id==='ryo'){f.confT=0;f.qslow=Math.min(f.qslow||0,FR);for(const o of F)if(o!==f&&o.qcloak>FR&&Math.abs(o.x-f.x)<200){o.qcloak=0;o.invis=false;}}
   else if(id==='chris'){if(f.dmg>0&&FR-(f.lastHurt||0)>90){f.dmg=Math.max(0,f.dmg-.025);if(FR%20===0)part(f.x+rnd()*16-8,f.y-10-rnd()*40,0,-.5,16,'#7af0a0',1,0);}}
-  else if(id==='dawson'){if(f.ground)f.glF=0;else if(f.pi&&f.pi.J&&f.vy>1.3&&(f.glF||0)<120&&(f.st==='air'||f.st==='helpless')){f.vy=1.3;f.vx=clamp(f.vx+f.face*.14,-3.4,3.4);f.glF=(f.glF||0)+1;if(FR%4===0)part(f.x-f.face*10,f.y-44,-f.face*.6,.2,10,'#3a5a9a',1,0);}}
+  else if(id==='dawson'){if(f.ground)f.glF=0;else if(f.pi&&f.pi.J&&f.vy>1.3&&(f.glF||0)<120&&(f.st==='air'||f.st==='helpless')){f.vy=1.3;f.x+=f.face*1.7;f.glF=(f.glF||0)+1;if(FR%4===0)part(f.x-f.face*10,f.y-44,-f.face*.6,.2,10,'#3a5a9a',1,0);}}
   else if(id==='kora'){if(f.ground)f.hovF=0;else if(f.pi&&f.pi.J&&f.vy>.8&&(f.hovF||0)<80&&f.st!=='hit'){f.vy=.8;f.hovF=(f.hovF||0)+1;if(FR%5===0)part(f.x+rnd()*24-12,f.y-30,0,.6,12,'#ffffff',1,0);}}
   else if(id==='jack'&&f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&rnd()<.003)startMove(f,'dB');}};
 const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.gone||f.invis)continue;const id=f.C.id,x=Math.round(f.x),y=Math.round(f.y)+5;
