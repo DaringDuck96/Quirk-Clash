@@ -1757,13 +1757,16 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('eat',16,6,22,null,{cd:540,fx,onStart(f){for(const t of F){if(t.dead||t.gone)continue;if(t===f||(f.team!==undefined&&t.team===f.team&&Math.abs(t.x-f.x)<120))heal(t,t===f?9:12);}say(f,'GIVEN');}})}),
   sp:['Draw Essence (a touch that heals her)','Spirit Arrow (curves toward a rival)','Spirit Leap','Give Essence (heals her, and teammates beside her even more; long cooldown)']});
  fx=['#6a50a8','#d8c8ff'];add({id:'sarah',n:'SARAH POWERS',sn:'SARAH',q:'Shade',ty:'Mutant',col:'#6a50a8',d:'A girl made of living shadow. She can flatten into the dark, step out of someone else\'s shadow, and throw pieces of her own.',
-  na:'Normals: long shadow limbs that are not really attached to her, so her arms are hard to hit. Light and easy to launch.',
+  na:'Normals: every strike is a shadow construct: blades, spikes, and a hammer for a forward smash. Her own body stays out of it. Hits from behind do 30% more.',
   look:K({skin:'#e8d0c0',eye:'#5a4a8a',hairS:'long',hair:'#1c1a24',hx:['glasses'],outfit:'sweater',top:'#3a3844',acc:'#22202a',sleeve:'#3a3844',skirt:'#1c1a24',socks:'#1c1a24',shoe:'#16141a',stance:'cast',ex:[]},1),st:ST({w:.84,run:3.1,air:2.9,g:.36,fall:5}),kit:{st:'brawler',fx,el:'shade',pow:.95,reach:1.1},
-  mv:Object.assign(SM('shade',fx),{nB:M('cast',10,1,18,null,{spawn:[[10,GP({sh:'orb',c:'#3a2a5a',vx:4.4,life:70,r:7,dmg:7,bkb:3.5,kbg:.05,ang:40})]],fx}),
-   sB:M('kickF',9,5,16,hit([[18,-28,13]],9,4.5,.06,42),{beh:'teleBehind',bp:{range:230},cd:70,fx}),
-   uB:M('float',6,14,12,null,{beh:'teleDir',bp:{dist:120},fx,helpless:1}),
-   dB:M('counter',4,26,16,hit([[20,-34,18]],9,5,.07,40),{beh:'counter',bp:{f0:4,f1:28,mode:'shadow',mult:1.25},fx})}),
-  sp:['Shadow Bolt (weaves as it flies)','Shadow Step (steps out of a rival\'s shadow)','Dark Travel (teleports in any direction)','Flatten (melts into the floor and strikes back if hit)']});
+  mv:Object.assign(SM('shade',fx,{f:{far:44,dmg:16,an:'slashDown'},u:{dmg:14},d:{dmg:13}}),{nB:M('cast',10,1,18,null,{fx,chg:1,chgMax:60,spawn:[[10,GP({sh:'hand',c:'#3a2a5a',vx:5.4,life:46,r:8,dmg:7,bkb:3.5,kbg:.055,ang:40})]]}),
+   sB:M('kickF',9,5,16,hit([[18,-28,13]],9,4.5,.06,42),{beh:'teleBehind',bp:{range:240},cd:70,fx}),
+   uB:M('float',6,14,12,null,{beh:'teleDir',bp:{dist:125},fx,helpless:1}),
+   dB:M('castDown',12,2,20,null,{cd:150,fx,onStart(f){const o=F.filter(t=>t!==f&&!t.dead&&!t.gone&&t.st!=='respawn'&&(f.team===undefined||t.team!==f.team)&&Math.abs(t.x-f.x)<280&&Math.abs(t.y-f.y)<120).sort((a,b)=>Math.abs(a.x-f.x)-Math.abs(b.x-f.x))[0];
+     const dx=o?(o.x-f.x)*f.face:40;for(const off of[-10,0,10]){const e=spawnEnt(f,{k:'gp',sh:'blade',c:'#3a2a5a',vx:.01,vy:-5.5,life:16,r:7,dmg:3,bkb:3,kbg:.03,ang:88,eff:off?null:'root',dist:dx+off,dy:-2});if(e&&o){e.y=o.y-2;}}
+     if(o){FXL.push({k:'ring',x:o.x,y:o.y-4,t:0,col:'#6a50a8',r0:6,life:16});say(f,'YOUR OWN SHADOW');}}})}),
+  sp:['Shadow Hand (a construct fist; hold B to build a bigger one)','Shadow Step (steps out of a rival\'s shadow, behind them)','Dark Travel (moves through shadow in any direction)','Shadow Bind (blades rise out of the nearest rival\'s own shadow and pin them)']});
+
  fx=['#ffd84a','#ffffff'];add({id:'aria',n:'ARIA BLACKTHORN',sn:'ARIA',q:'Fortune',ty:'Emitter',col:'#ffd84a',d:'She is just really lucky. It only works when she is not trying, which is fine, because she is rarely sure what is going on.',
   na:'Normals: stumbles, flails and accidental elbows that somehow connect. One hit in six is a LUCKY hit for half again the damage, and one hit in six aimed at her simply misses.',
   look:K({skin:'#f6dcc8',eye:'#5a8ad0',hairS:'bob',hair:'#f0dc98',outfit:'tee',top:'#2a2a32',sl:'short',pants:'#3a4a6a',shoe:'#f0f0f4',stance:'cool',smile:1,ex:[]},1),st:ST({w:.88,run:3,air:2.8}),kit:{st:'brawler',fx,el:'luck',pow:.94},
@@ -2248,7 +2251,7 @@ Object.assign(TUNE,{
  hatsuko:{role:'Comeback',tip:'Hits harder the more damage she has taken.',sp:.96,pw:.92},
  ginko:{role:'Flying powerhouse',tip:'A heavyweight with three jumps and the longest flight.',sp:1.14,pw:1.06,kb:1.08,def:.92}});
 Object.assign(TUNE,{dawson:{role:'Quirkless technician',tip:'Nothing has a cooldown. Out-fundamentals everyone.',sp:1.12,pw:1,kb:1},
- maya:{role:'Drain support',tip:'Her touch heals her. Give Essence heals teammates more.',sp:.98,pw:1,kb:1},sarah:{role:'Shadow assassin',tip:'Step out of their shadow, strike, and melt away.',sp:1.04,pw:1,kb:1},
+ maya:{role:'Drain support',tip:'Her touch heals her. Give Essence heals teammates more.',sp:.98,pw:1,kb:1},sarah:{role:'Shadow assassin',tip:'Get behind them. Shadow Step and Lights Out both put you there.',sp:1.04,pw:1,kb:1},
  aria:{role:'Lucky wildcard',tip:'One hit in six is LUCKY; one hit in six misses her.',sp:.98,pw:1,kb:1},bryson:{role:'Reluctant berserker',tip:'Weak as himself. Fill the meter and everything changes.',sp:1,pw:1,kb:1},
  conor:{role:'Tiny trickster',tip:'The smallest target. Coins bounce; the pot of gold hurts.',sp:1.1,pw:1,kb:1},ray:{role:'Beam zoner',tip:'Laser for reach, heat for pressure, X-Ray before a smash.',sp:1,pw:1,kb:1},
  oliver:{role:'Homing archer',tip:'Everything he fires steers itself. Stay away and aim.',sp:1,pw:1,kb:1},chris:{role:'Regenerating swordsman',tip:'Back off for a moment and he heals. Outlast them.',sp:1,pw:1,kb:1},
@@ -4940,7 +4943,7 @@ tiki:['Sends a spirit after a rival. Slow, but it follows.','Tears a rift that d
 Object.assign(GTXT,{
 dawson:['Throws two blades, fast and flat. No cooldown.','A grapple line drags him across the stage, hitting on the way.','Fires a grapple hook and rides it up. The highest jump he has.','Drops smoke. If he is hit during it he vanishes and strikes back harder.','Appears beside a rival and takes them apart with every tool on the belt.'],
 maya:['A palm touch that draws essence out of a rival and heals her 4%.','A spirit arrow that curves toward a rival.','A rising leap.','Gives essence back: heals her 9%, and any teammate beside her 12%. Long cooldown.','A circle of life around her: rivals inside are drained, and she is healed.'],
-sarah:['Throws a piece of her own shadow.','Steps out of a nearby rival\'s shadow and kicks.','Teleports a short way in any direction.','Flattens into the floor. If she is hit she slides behind them and strikes back.','Total darkness around her. Everyone inside is torn at by shadows.'],
+sarah:['Builds a fist out of shadow and throws it. Hold B to build a bigger, stronger one.','Steps out of a nearby rival\'s shadow, behind them, and kicks. Hits from behind do 30% more.','Moves through shadow a short way in any direction.','Takes hold of the nearest rival\'s own shadow: blades rise out of it under their feet, and the middle one pins them in place. Works from most of the stage away.','Total darkness around her. Everyone inside is torn at by shadows.'],
 aria:['Flicks a coin. It finds its own way to a rival.','Trips over nothing and falls forward into whoever is there.','A convenient gust carries her up.','Something lucky happens: half the time a snack (heals 8%), sometimes a power-up for her next hit, rarely a chunk of Final Smash meter. Long cooldown.','Everything goes right at once, for her, and wrong for everyone else.'],
 bryson:['Lobs a beaker from the lab.','A short shove forward.','A nervous jump.','Stops fighting it. If his Tantrum meter is at least half full he transforms straight away.','Loses it completely.'],
 conor:['Tosses a gold coin that bounces along the ground.','Rides a rainbow across the stage.','Leaps to the end of the rainbow. Very high.','Lobs his pot of gold. Slow and heavy.','Shows everyone exactly where the rainbow ends.'],
@@ -5686,7 +5689,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   ryo:['No projectile and average speed.','Cannot be confused, and sees cloaked rivals.'],suzume:['Light; her best hits need the web to land first.','Three jumps.'],ayame:['Very low damage: she wins by ring-out.','Her hits push 10% further.'],
   sota:['His dashes commit him; miss and he is wide open.','The fastest dash and the highest jump in the school.'],tiki:['Slow projectiles and no fast escape.','Six spirit masks on one button.'],
   dawson:['No quirk: nothing he has is a trump card, and he is a little light.','No cooldowns on any special.'],
-  maya:['Low damage; she wins slowly.','Her tilts and Draw Essence heal her.'],sarah:['Light, and her best moves leave her exposed if they miss.','Her limbs are shadow: attacks do not expose her arms.'],
+  maya:['Low damage; she wins slowly.','Her tilts and Draw Essence heal her.'],sarah:['Light, and her best moves leave her exposed if they miss.','BACKSTAB: 30% more damage from behind. Her attacks are shadow constructs, so they never expose her arms.'],
   aria:['Nothing about her is reliable, including the luck.','LUCKY: one hit in six does 50% more. One hit in six aimed at her misses.'],bryson:['As himself he is the weakest hitter in the school.','TANTRUM: a full meter turns him into the beast for twelve seconds: huge, armoured against small hits, 35% stronger, and he cannot shield.'],
   conor:['The shortest reach in the school and very light.','The smallest target in the school.'],ray:['His beams leave him standing still; get inside and he struggles.','The longest instant-hit attack in the school.'],
   oliver:['Weak up close and has no kill move without space.','His arrows home.'],chris:['No projectile, average speed.','HEALING FACTOR: after a second and a half without being hit he regenerates about 1.5% per second.'],
@@ -6655,7 +6658,7 @@ const p0=preHit;preHit=function(t,h,a,o){const id=t.C.id;if(a&&a!==t&&!(o&&o.for
     if(id==='kal'&&FR-(t.dsT===undefined?-999:t.dsT)>=480){t.dsT=FR;t.inv=Math.max(t.inv||0,12);FXL.push({k:'txt',s:'DANGER SENSE',x:t.x,y:t.y-78,t:0,life:36,col:'#a0ff40'});FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#a0ff40',r0:10,life:16});sfx('counter');return true;}}
   return p0(t,h,a,o);};
 const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a.C.id==='aria'&&rnd()<1/6){m*=1.5;FXL.push({k:'txt',s:'LUCKY HIT!',x:t.x,y:t.y-88,t:0,life:30,col:'#ffd84a'});}
-  if(t.C.id==='ash'&&h.eff==='burn')m*=1.2;if(a.form==='gold')m*=1.2;return m;};
+  if(a.C.id==='sarah'&&!(o&&o.proj)&&(t.x-a.x)*t.face>0)m*=1.3;if(t.C.id==='ash'&&h.eff==='burn')m*=1.2;if(a.form==='gold')m*=1.2;return m;};
 const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);const id=t.C.id;if(id==='ash'&&h.eff!=='burn')m*=.9;if(t.form==='rage')m*=.7;if(t.form==='gold')m*=.7;if(id==='uzi')m*=.88;const ai=a.C.id;if(ai==='sato'&&a.mv&&/smash/.test(a.mv.k))m*=1.12;else if(ai==='ayame')m*=1.1;return m;};
 const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t.dmg,res=ah(t,h,dirX,a,o);try{const dd=t.dmg-hp;if(dd>0){
   if(t.C.id==='bryson'&&!t.form){const g=t.gm||(t.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.5);}
@@ -7337,7 +7340,7 @@ const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.
 
 /* ================= projectile flight patterns ================= */
 const FP={'kimiko.nB':'charge','gomi.nB':'charge','maho.sB':'charge','tenmetsu.nB':'stall','shuko.nB':'brake','tatsuya.nB':'wave','akemi.nB':'accel','sai.sB':'split','tai.nB':'homing','hatsuko.nB':'charge','chiyoki.sB':'skip','yoko.sB':'grow',
- 'ivan.nB':'brake','takeshi.sB':'bounce','ali.nB':'steer','ginko.nB':'grow','daku.nB':'bounce','taru.nB':'accel','marina.nB':'wave','hippo.nB':'zig','tamashi.sB':'lob','soran.nB':'accel','hake.nB':'zig',
+ 'ivan.nB':'brake','sarah.nB':'charge','takeshi.sB':'bounce','ali.nB':'steer','ginko.nB':'grow','daku.nB':'bounce','taru.nB':'accel','marina.nB':'wave','hippo.nB':'zig','tamashi.sB':'lob','soran.nB':'accel','hake.nB':'zig',
  'maho.ftilt':'zig','mia.ftilt':'grow','uchuu.fair':'curve','tsuki.fsmash':'lob','ali.fsmash':'steer','ginko.fsmash':'grow','gomi.fsmash':'accel','makiko.ftilt':'wave','takeshi.ftilt':'lob','kimiko.fsmash':'brake','tamashi.ftilt':'lob','shi.nB':'wave'};
 const FPN={charge:'Hold B to charge it: bigger, faster and stronger.',stall:'Flies out, hangs in the air for a beat, then carries on.',brake:'Starts fast, then slows and lingers.',wave:'Weaves up and down as it flies.',accel:'Starts slow and keeps speeding up.',split:'Splits into copies in flight.',
  homing:'Curves toward the nearest rival.',curve:'Flies in a rising arc and dips back down.',grow:'Grows as it travels.',lob:'Lobbed in an arc.',bounce:'Bounces along the ground.',steer:'Steer it up and down with the stick while it flies.',zig:'Zigzags.',skip:'Bounces along the platform several times before it rolls off the edge.'};
