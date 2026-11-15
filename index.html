@@ -582,6 +582,10 @@ function joints(p,L){const h=L.h,bw=L.bw;
 /* ---- look prep: build ramps ---- */
 function prepLook(L){if(L._r)return L;if(!L.skin)L.skin={mask:'#16161c',skull:'#e6dcc4',hood:'#d8dce4'}[L.head]||'#e8c8b0';const R={},add=(k,c,md)=>{if(c){R[k]=ramp(c,md);R[k+'B']=rampB(c,md);}};
   L.h=L.h||1;L.bw=L.bw||1;L.ww=L.ww||1;L.lw=L.lw||1;L.pw=L.pw||1;
+  if(!L._b){L._b=1;const big=L.bw>=1.12&&!L.fem;
+    if(L.fem){L.bw*=.84;L.ww*=.74;L.lw*=.78;L.pw=Math.min(L.pw,1)*.86;L.hw=.96;L.nk=.8;L.hs=.86;L.lg=.88;}
+    else if(big){L.ww*=1;L.lw*=1.14;L.pw*=1.1;L.hw=L.bw*.9;L.nk=1.2;L.hs=1.12;L.lg=1.08;}
+    else{L.bw*=1.05;L.ww*=.86;L.lw*=.94;L.pw*=.95;L.hw=.88;L.nk=1;L.hs=1;L.lg=1;}}
   add('skin',L.skin,(!L.head||L.head==='lemur')?'skin':undefined);add('top',L.top);add('top2',L.top2||L.top);add('sleeve',L.sleeve||L.top);add('pants',L.pants);add('shoe',L.shoe);add('hair',L.hair);add('hair2',L.hair2||L.hair);
   add('glove',L.glove);add('socks',L.socks);add('skirt',L.skirt);add('trim',L.trim);add('acc',L.acc);add('acc2',L.acc2);add('eye',L.eye||'#3a2a1a');
   R.white=ramp('#f2f2f6');R.red=ramp('#c42a32');R.dark=ramp('#1c1a24');R.gold=ramp('#e8b848');R.silver=ramp('#c8ccd8');R.ink=ramp('#16101e');
@@ -598,7 +602,7 @@ function dotH(H,h,x,y,c){sp(H.x+x*h,H.y+y*h,c);}
 
 /* ---- limbs ---- */
 function drawArm(L,J,front,S){const R=L.R,h=L.h,k=front?'':'B',S0=front?J.SF:J.SB,E=front?J.EF:J.EB,W=front?J.WF:J.WB;
-  const r1=3.3*L.lw*h,r2=2.85*L.lw*h,r3=2.5*L.lw*h,sk=R['skin'+k],sl=R['sleeve'+k];
+  const r1=3.3*L.lw*h,r2=2.7*L.lw*h,r3=2.15*L.lw*h,sk=R['skin'+k],sl=R['sleeve'+k];
   if(L.sl==='short'){capsule(S0.x,S0.y,r1-.3,E.x,E.y,r2-.2,sk);capsule(E.x,E.y,r2-.2,W.x,W.y,r3-.2,sk);capsule(S0.x,S0.y,r1+.5,lerp(S0.x,E.x,.62),lerp(S0.y,E.y,.62),r2+.6,sl);}
   else if(L.sl==='none'){capsule(S0.x,S0.y,r1,E.x,E.y,r2,sk);capsule(E.x,E.y,r2,W.x,W.y,r3,sk);}
   else{capsule(S0.x,S0.y,r1,E.x,E.y,r2,sl);capsule(E.x,E.y,r2,W.x,W.y,r3,sl);
@@ -609,7 +613,7 @@ function drawArm(L,J,front,S){const R=L.R,h=L.h,k=front?'':'B',S0=front?J.SF:J.S
   const dx=W.x-E.x,dy=W.y-E.y,l=Math.hypot(dx,dy)||1,hx=W.x+dx/l*1.3,hy=W.y+dy/l*1.3;
   if(L.sl!=='none'&&L.sl!=='short'){const ux=dx/l,uy=dy/l,qx=-uy,qy=ux;lineP(E.x-qx*r2*.75-ux*.4,E.y-qy*r2*.75-uy*.4,E.x+qx*.3+ux*1.6,E.y+qy*.3+uy*1.6,sl[1]);
     const ux2=E.x-S0.x,uy2=E.y-S0.y,l2=Math.hypot(ux2,uy2)||1,mx=lerp(S0.x,E.x,.62),my=lerp(S0.y,E.y,.62);lineP(mx+uy2/l2*r1*.6,my-ux2/l2*r1*.6,mx+ux2/l2*1.4,my+uy2/l2*1.4,sl[1]);lineP(lerp(S0.x,E.x,.2)+uy2/l2*r1*.45,lerp(S0.y,E.y,.2)-ux2/l2*r1*.45,lerp(S0.x,E.x,.5)+uy2/l2*r1*.45,lerp(S0.y,E.y,.5)-ux2/l2*r1*.45,sl[3]);}
-  const hp=L.glove?R['glove'+k]:sk;ell(hx,hy,3.1*h,2.9*h,Math.atan2(dy,dx),hp);
+  const hp=L.glove?R['glove'+k]:sk;ell(hx,hy,3.1*h*(L.hs||1),2.9*h*(L.hs||1),Math.atan2(dy,dx),hp);
   {const a=Math.atan2(dy,dx),c=Math.cos(a),s2=Math.sin(a),kx=hx+c*1.1*h,ky=hy+s2*1.1*h;lineP(kx-s2*-2.2*h,ky+c*-2.2*h,kx-s2*1.4*h,ky+c*1.4*h,hp[1]);
     spF1(kx+c*1.2-s2*-1.2,ky+s2*1.2+c*-1.2,hp[4]);spF1(kx+c*1.2,ky+s2*1.2,hp[3]);spF1(hx-c*.4-s2*2*h,hy-s2*.4+c*2*h,hp[1]);}
   if(L.bracelet&&front)capsule(lerp(E.x,W.x,.82),lerp(E.y,W.y,.82),r3+.4,lerp(E.x,W.x,.92),lerp(E.y,W.y,.92),r3+.4,R.silver);
@@ -620,27 +624,31 @@ function drawLeg(L,J,front,S){const R=L.R,h=L.h,k=front?'':'B',Hp=front?J.HF:J.H
     for(let i=1;i<5;i++){const tx=lerp(K.x,A.x,i/5),ty=lerp(K.y,A.y,i/5);sp(tx,ty,sc[3]);}
     const cl=ramp('#e8e0d0');lineP(A.x,A.y,To.x+1,To.y,cl[2]);lineP(A.x,A.y,To.x-1,To.y+1,cl[2]);lineP(A.x,A.y,A.x-4,A.y+1,cl[1]);sp(To.x+2,To.y,cl[4]);capsule(A.x,A.y,1.8,To.x,To.y,1,sc);return;}
   const legsSkin=L.skirt?R['skin'+k]:null;
-  if(L.skirt){capsule(Hp.x,Hp.y,3.8*h,K.x,K.y,3.2*h,legsSkin);capsule(K.x,K.y,3.3*h,A.x,A.y,2.7*h,R['socks'+k]);capsule(lerp(Hp.x,K.x,.7),lerp(Hp.y,K.y,.7),3.4*h,K.x,K.y,3.35*h,R['socks'+k]);}
-  else{capsule(Hp.x,Hp.y,4.3*h*pw,K.x,K.y,3.7*h*pw,R['pants'+k]);capsule(K.x,K.y,3.6*h*pw,A.x,A.y,(L.boots?3.4:2.9)*h*pw,R['pants'+k]);
+  if(L.skirt){const g=L.lg||1;capsule(Hp.x,Hp.y,3.9*h*g,K.x,K.y,3*h*g,legsSkin);capsule(K.x,K.y,3*h*g,A.x,A.y,2.3*h*g,R['socks'+k]);capsule(lerp(Hp.x,K.x,.7),lerp(Hp.y,K.y,.7),3.15*h*g,K.x,K.y,3.05*h*g,R['socks'+k]);}
+  else{capsule(Hp.x,Hp.y,4.3*h*pw,K.x,K.y,3.45*h*pw,R['pants'+k]);capsule(K.x,K.y,3.4*h*pw,A.x,A.y,(L.boots?3.3:2.65)*h*pw,R['pants'+k]);
     if(L.kneepad)ell(K.x+.5,K.y,2.6*h,2.4*h,0,R.dark);
     if(L.boots){capsule(lerp(K.x,A.x,.45),lerp(K.y,A.y,.45),3.3*h,A.x,A.y,3.2*h,R['shoe'+k]);if(L.bootTrim)capsule(lerp(K.x,A.x,.45),lerp(K.y,A.y,.45),3.4*h,lerp(K.x,A.x,.52),lerp(K.y,A.y,.52),3.4*h,R['trim'+k]);}
     {const P1=R['pants'+k][1],ux=A.x-K.x,uy=A.y-K.y,ll=Math.hypot(ux,uy)||1,qx=-uy/ll,qy=ux/ll;lineP(K.x-qx*2.6,K.y-qy*2.6,K.x+qx*.6+ux/ll*1.6,K.y+qy*.6+uy/ll*1.6,P1);
       const hx2=lerp(Hp.x,K.x,.55),hy2=lerp(Hp.y,K.y,.55);lineP(hx2-qx*1.6,hy2-qy*1.6,hx2+qx*1.4+ux/ll*1.2,hy2+qy*1.4+uy/ll*1.2,P1);
       if(!L.boots){const ax=lerp(K.x,A.x,.8),ay=lerp(K.y,A.y,.8);lineP(ax-qx*2.6,ay-qy*2.6,ax+qx*1.8,ay+qy*1.8+.6,P1);lineP(ax-qx*2.2+ux/ll*1.4,ay-qy*2.2+uy/ll*1.4,ax+qx*1.2+ux/ll*1.8,ay+qy*1.2+uy/ll*1.8,P1);}}
     if(L.pantStripe){const c=(front?R.acc:R.accB)[3];lineP(lerp(Hp.x,K.x,.1)+1,lerp(Hp.y,K.y,.1),lerp(K.x,A.x,.8)+1,lerp(K.y,A.y,.8),c);}}
-  const sh=R['shoe'+k];capsule(A.x,A.y,3.2*h,To.x,To.y,2.6*h,sh);
+  const sh=R['shoe'+k];capsule(A.x,A.y,3.2*h*(L.lg||1),To.x,To.y,2.6*h*(L.lg||1),sh);
   const dx=To.x-A.x,dy=To.y-A.y,l=Math.hypot(dx,dy)||1,nx=-dy/l,ny=dx/l;
   lineP(A.x-nx*2.4,A.y+ny*2.6,To.x-nx*2,To.y+ny*2.2,(L.sole?ramp(L.sole):R.white)[front?2:1]);
   if(front){spF1(lerp(A.x,To.x,.3)+nx*2.2,lerp(A.y,To.y,.3)-ny*2.2,R.white[3]);spF1(lerp(A.x,To.x,.5)+nx*2,lerp(A.y,To.y,.5)-ny*2,R.white[3]);spF1(lerp(A.x,To.x,.4)+nx*2.6,lerp(A.y,To.y,.4)-ny*2.6,R.white[2]);}
   spF1(To.x+nx*1.2+dx/l*.6,To.y-ny*1.2+dy/l*.6,sh[4]);spF1(To.x+nx*1.2+dx/l*.1,To.y-ny*1.2+dy/l*.1,sh[3]);}
 
 /* ---- torso & outfits ---- */
-function drawTorso(L,J,S){const R=L.R,h=L.h,tl=J.tl,P=J.P,tf=TF_(J);
-  ell(P.x,P.y-.5*h,6.5*L.bw*h,4.7*h,tl*.5,L.skirt?R.skirt:R.pants);
-  ell(J.Ab.x,J.Ab.y,5.9*L.ww*h,6.6*h,tl,R.top2);
-  ell(J.Ch.x,J.Ch.y,7.4*L.bw*h,7.8*h,tl,R.top);
+function drawTorso(L,J,S){const R=L.R,h=L.h,tl=J.tl,P=J.P,tf0=TF_(J),cf=L.bw,wf=L.ww,hf=L.hw||L.bw;
+  /* width profile down the body: shoulders, waist, hips */
+  const prof=y=>y<=-2?cf:y<5?lerp(cf,wf,(y+2)/7):lerp(wf,hf,Math.min(1,(y-5)/6)),tf=(x,y)=>tf0(x*prof(y),y);
+  ell(P.x,P.y-.5*h,6.5*hf*h,4.7*h,tl*.5,L.skirt?R.skirt:R.pants);
+  polyL(tf,[-3.4,-8.2,3.8,-8.2,6.9,-6.4,7.2,-2,6.9,5,6.7,11,5.6,13.2,-5.8,13.2,-6.9,11,-7,5,-7.1,-2,-6.6,-6.6],R.top,{cx:J.Ch.x+2*h,cy:J.Ch.y-3*h,r:13*h});
+  if(L.top2&&L.top2!==L.top)polyL(tf,[7,3,6.9,5,6.7,11,5.6,13.2,-5.8,13.2,-6.9,11,-7,5,-7,3],R.top2,'g');
+  if(L.fem){const q=tf(2.5,-2.2);ell(q[0],q[1],3.1*h,2.5*h,tl,R.top,0);lineL(tf,-.4,.4,5.4,.2,R.top[1]);}
+  else if(!L.outfit||L.outfit==='tee'){lineL(tf,.6,-1.2,5.6,-1.6,R.top[1]);}
   const o=OUTFIT[L.outfit];if(o)o(L,J,S,tf);
-  if(L.skirt){const f=clamp(-S.vx*.6,-3,3);poly([P.x-6.6*h,P.y-3*h,P.x+6.6*h,P.y-3*h,P.x+(8.8+f*.3)*h,P.y+8*h,P.x+(-9.4+f)*h,P.y+8.4*h],R.skirt,'g');
+  if(L.skirt){const f=clamp(-S.vx*.6,-3,3),sw=5.6*wf/.74*.9;poly([P.x-sw*h,P.y-3.4*h,P.x+sw*h,P.y-3.4*h,P.x+(8.6+f*.3)*h,P.y+8*h,P.x+(-9.2+f)*h,P.y+8.4*h],R.skirt,'g');
     for(let i=-2;i<=2;i++)lineP(P.x+i*3*h,P.y-1,P.x+i*3.8*h+f*.4,P.y+7.6*h,R.skirt[1]);}}
 const OUTFIT={
   blazer(L,J,S,tf){const R=L.R;polyL(tf,[-6.8,3,6.8,3,7.2,12.6,2,13.4,-7,12.8],R.top,'g');
@@ -878,7 +886,7 @@ function drawHumanBody(L,J,S,p){const R=L.R,h=L.h;
   drawLeg(L,J,false,S);drawLeg(L,J,true,S);
   drawTorso(L,J,S);
   if(L.headphones){const C=J.C;capsule(C.x-3,C.y+1,1.6,C.x+4,C.y+.5,1.6,R.silver);ell(C.x+4.6,C.y+.6,2,2.4,0,R.dark);}
-  capsule(J.C.x,J.C.y+1,2.6*h,J.Hd.x-.6*h,J.Hd.y+4*h,2.4*h,R.skin);
+  capsule(J.C.x,J.C.y+1,2.6*h*(L.nk||1),J.Hd.x-.6*h,J.Hd.y+4*h,2.4*h*(L.nk||1),R.skin);
   drawHead(L,J,S);
   const behind=L.wpn&&(J.wa<-1.9||J.wa>2.2)&&L.wpn!=='banjo'&&L.wpn!=='guitar';
   let hand;
@@ -1556,7 +1564,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
  CH[CH.length-1].grabR=36;
  fx=['#4a9aff','#ffe060'];add({id:'hippo',n:'CAPTAIN BLUE HIPPO',sn:'BLUE HIPPO',q:'Plot Armor',ty:'???',col:'#4a9aff',d:'Just a guy in blue hippo pajamas. He knows he is in a video game, and the story needs him alive.',
   na:'Normals: lazy, confident slaps from a man who has read the script. Every sixth hit against him simply does not happen.',
-  look:K({skin:'#f0d0b8',eye:'#3a3a44',hairS:'short',hair:'#4a9aff',hx:['hippo'],smile:1,outfit:'tee',top:'#4a9aff',print:'#e8f4ff',sleeve:'#4a9aff',pants:'#4a9aff',shoe:'#e8f4ff',stance:'cool',bw:1.1,ex:[]}),st:ST({w:1.05,run:3.1,air:2.6}),kit:{st:'brawler',fx,el:'hippo'},
+  look:K({skin:'#f0d0b8',eye:'#3a3a44',hairS:'short',hair:'#4a9aff',hx:['hippo'],smile:1,outfit:'tee',top:'#4a9aff',print:'#e8f4ff',sleeve:'#4a9aff',pants:'#4a9aff',shoe:'#e8f4ff',stance:'cool',bw:1.04,ww:1.22,pw:1.12,ex:[]}),st:ST({w:1.05,run:3.1,air:2.6}),kit:{st:'brawler',fx,el:'hippo'},
   mv:Object.assign(SM('hippo',fx),{nB:M('throwF',12,1,20,null,{spawn:[[12,{k:'pct',vx:5,life:60,r:9,dmg:4,bkb:3.5,kbg:.05,ang:40}]],fx}),
    sB:M('kickF',10,5,18,hit([[18,-28,13]],8,4.5,.06,42),{beh:'teleBehind',bp:{range:999},cd:150,fx,onStart(f){say(f,'*jump cut*');}}),
    uB:M('uppercut',5,10,16,hit([[4,-56,14]],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-11,vx:1.6},helpless:1,fx,onStart(f){say(f,'PAUSE!');for(const o of F)if(o!==f&&!o.dead&&!(f.team!==undefined&&o.team===f.team))o.hl=Math.max(o.hl,20);}}),
