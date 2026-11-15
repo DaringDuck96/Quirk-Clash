@@ -640,7 +640,16 @@ function lineH(H,h,x0,y0,x1,y1,c){lineP(H.x+x0*h,H.y+y0*h,H.x+x1*h,H.y+y1*h,c);}
 function dotH(H,h,x,y,c){sp(H.x+x*h,H.y+y*h,c);}
 
 /* ---- limbs ---- */
+const ELC={fire:['#ff6a1a','#ffd040'],water:['#3aa0e8','#d8f4ff'],rock:['#8a7862','#c8b8a0'],vine:['#3a8a3a','#a8e870']};
+function elLimb(el,pts,rad,S,front){const c=ELC[el],P=front?ramp(c[0]):rampB(c[0]),t=S.t;
+  for(let i=0;i<pts.length-1;i++)capsule(pts[i].x,pts[i].y,rad[i],pts[i+1].x,pts[i+1].y,rad[i+1],P);
+  for(let i=0;i<pts.length-1;i++)for(let j=0;j<4;j++){const u=(j+.5)/4,x=lerp(pts[i].x,pts[i+1].x,u),y=lerp(pts[i].y,pts[i+1].y,u),rr=lerp(rad[i],rad[i+1],u),q=(i*4+j);
+    if(el==='fire'){const f=((t>>1)+q*3)%5;capsule(x,y,rr*.5,x-1.5+((q*7)%3),y-rr-1-f,.6,ramp(q%2?'#ffd040':'#ff8a2a'),0);sp(x,y,ramp('#ffe890')[4]);}
+    else if(el==='water'){sp(x-rr*.4,y-rr*.4,ramp('#ffffff')[4]);if(q%2)sp(x+rr*.3,y+((t>>2)+q)%3-1,ramp(c[1])[3]);if(q%3===0&&((t>>2)+q)%6<3)sp(x,y+rr+1+((t>>2)+q)%3,ramp(c[0])[3]);}
+    else if(el==='rock'){lineP(x-rr*.8,y-rr*.3,x+rr*.5,y+rr*.4,P[0]);if(q%2)sp(x-rr*.3,y-rr*.6,ramp(c[1])[4]);sp(x+rr*.6,y-rr*.2,P[1]);}
+    else{lineP(x-rr,y-rr*.6,x+rr,y+rr*.6,ramp(c[1])[2]);if(q%2){sp(x+(q%4<2?rr:-rr),y,ramp(c[1])[4]);sp(x+(q%4<2?rr+1:-rr-1),y-1,ramp(c[1])[3]);}if(q===2)sp(x,y-rr,ramp('#ff8ac8')[4]);}}}
 function drawArm(L,J,front,S){const R=L.R,h=L.h,k=front?'':'B',S0=front?J.SF:J.SB,E=front?J.EF:J.EB,W=front?J.WF:J.WB;
+  if(L.elArm&&L.elArm[front?0:1]){const el=L.elArm[front?0:1],dx=W.x-E.x,dy=W.y-E.y,l=Math.hypot(dx,dy)||1,hd={x:W.x+dx/l*1.6,y:W.y+dy/l*1.6},lw=L.lw*h;elLimb(el,[S0,E,W,hd],[3.5*lw,3*lw,2.6*lw,3.2*h*(L.hs||1)],S,front);return hd;}
   const r1=3.3*L.lw*h,r2=2.7*L.lw*h,r3=2.15*L.lw*h,sk=R['skin'+k],sl=R['sleeve'+k];
   if(L.sl==='short'){capsule(S0.x,S0.y,r1-.3,E.x,E.y,r2-.2,sk);capsule(E.x,E.y,r2-.2,W.x,W.y,r3-.2,sk);capsule(S0.x,S0.y,r1+.5,lerp(S0.x,E.x,.62),lerp(S0.y,E.y,.62),r2+.6,sl);}
   else if(L.sl==='none'){capsule(S0.x,S0.y,r1,E.x,E.y,r2,sk);capsule(E.x,E.y,r2,W.x,W.y,r3,sk);}
@@ -659,6 +668,7 @@ function drawArm(L,J,front,S){const R=L.R,h=L.h,k=front?'':'B',S0=front?J.SF:J.S
   if(L.handfx==='fire'&&S.t%3!==1){const fr=ramp('#ff7a1a');for(let i=0;i<4;i++){const a=-PI/2+(i-1.5)*.5;capsule(hx,hy,1.6,hx+Math.cos(a)*(3+((S.t+i*3)%4)),hy+Math.sin(a)*(4+((S.t*2+i)%4)),.6,fr,0);}}
   return{x:hx,y:hy};}
 function drawLeg(L,J,front,S){const R=L.R,h=L.h,k=front?'':'B',Hp=front?J.HF:J.HB,K=front?J.KF:J.KB,A=front?J.AF:J.AB,To=front?J.TF:J.TB,pw=L.pw;
+  if(L.elLeg&&L.elLeg[front?0:1]){const HK={x:lerp(Hp.x,K.x,.42),y:lerp(Hp.y,K.y,.42)};capsule(Hp.x,Hp.y,4.4*h*pw,HK.x,HK.y,4.1*h*pw,R['pants'+k]);elLimb(L.elLeg[front?0:1],[HK,K,A,To],[3.9*h*pw,3.5*h*pw,3*h*pw,2.8*h],S,front);return;}
   if(L.legs==='talon'){capsule(Hp.x,Hp.y,4*h*pw,K.x,K.y,3.3*h*pw,R['pants'+k]);const sc=ramp(front?'#c8323c':'#9a2430');capsule(K.x,K.y,2.4*h,A.x,A.y,1.8*h,sc);
     for(let i=1;i<5;i++){const tx=lerp(K.x,A.x,i/5),ty=lerp(K.y,A.y,i/5);sp(tx,ty,sc[3]);}
     const cl=ramp('#e8e0d0');lineP(A.x,A.y,To.x+1,To.y,cl[2]);lineP(A.x,A.y,To.x-1,To.y+1,cl[2]);lineP(A.x,A.y,A.x-4,A.y+1,cl[1]);sp(To.x+2,To.y,cl[4]);capsule(A.x,A.y,1.8,To.x,To.y,1,sc);return;}
@@ -734,12 +744,34 @@ const OUTFIT={
     [[.6,-3],[4.6,-3],[.6,1],[4.6,1],[.6,5],[4.6,5]].forEach(([x,y])=>{dotL(tf,x,y,cu[4]);dotL(tf,x+.8,y,cu[2]);});polyL(tf,[-.4,-9.6,5.6,-9.4,5.4,-7,-.4,-7.2],bk,'g');lineL(tf,-.4,-7.2,5.4,-7,cu[3]);
     lineL(tf,-6,-6.4,6.4,7,R.dark[1]);lineL(tf,6.4,-6.4,-6,7,R.dark[1]);polyL(tf,[-7,7.4,7,7.4,7,9.4,-7,9.4],R.dark,'g');polyL(tf,[-5.4,9,-1.8,9,-1.8,12.6,-5.4,12.6],R.dark,'g');dotL(tf,2.8,8.4,R.silver[4]);},
   suit(L,J,S,tf){const t=L.R.top;lineL(tf,.4,-3.6,5.8,-4,t[1]);lineL(tf,2.8,-3.6,3,7,t[1]);lineL(tf,.8,.8,5,.6,t[1]);lineL(tf,1,3.8,4.8,3.6,t[1]);lineL(tf,1.2,6.6,4.6,6.4,t[1]);
-    [[1.4,-5.8],[4.8,-6],[-4,-5],[1.6,-1.2],[4.2,-1.4],[-5,2]].forEach(([x,y])=>{dotL(tf,x,y,t[4]);dotL(tf,x+.8,y,t[4]);});},
+    [[1.4,-5.8],[4.8,-6],[-4,-5],[1.6,-1.2],[4.2,-1.4],[-5,2]].forEach(([x,y])=>{dotL(tf,x,y,t[4]);dotL(tf,x+.8,y,t[4]);});
+    if(L.emblem==='sun'){const g=ramp('#ffd040'),q=tf(2.6,-3.4);for(let i=0;i<8;i++){const a2=i/8*TAU;lineP(q[0]+Math.cos(a2)*2.4*J.h,q[1]+Math.sin(a2)*2.4*J.h,q[0]+Math.cos(a2)*4*J.h,q[1]+Math.sin(a2)*4*J.h,g[3]);}ell(q[0],q[1],2.3*J.h,2.3*J.h,0,g);polyL(tf,[-7.2,-2,-5.6,-2,-5.6,13,-7.2,12.8],g,'g');polyL(tf,[1,-10,5,-9.8,4.8,-7.6,1.2,-7.8],t,'g');}},
   yy(L,J,S,tf){const R=L.R,g=ramp(L.trim||'#d8b040');polyL(tf,[-7.2,-7.2,.4,-7.8,.8,13,-7.2,12.6],R.white,'g');lineL(tf,.4,-7.6,.8,13,g[3]);lineL(tf,-7,12.4,.8,12.8,g[2]);lineL(tf,7,-6,7,12.4,g[2]);
     polyL(tf,[-2.4,-10,4.8,-10,5,-6.8,-2.6,-6.8],R.top,'g');polyL(tf,[-2.4,-10,1,-10,1,-6.8,-2.6,-6.8],R.white,'g');lineL(tf,-2.4,-6.8,5,-6.8,g[3]);
     ell(...tf(4.4,-3.6),2.1*J.h,2.1*J.h,0,R.white);dotL(tf,4.4,-2.8,R.dark[1]);dotL(tf,3.8,-4,R.dark[1]);dotL(tf,5,-4.2,R.dark[1]);polyL(tf,[-7,7.6,7,7.6,7,9.2,-7,9.2],R.dark,'g');dotL(tf,2.6,8.4,g[4]);dotL(tf,5.4,10.6,g[4]);dotL(tf,5.6,12,g[3]);},
   trackz(L,J,S,tf){const R=L.R,k=ramp(L.acc);polyL(tf,[-3,-9.8,4.8,-9.6,4.6,-6.8,-3.2,-6.8],R.top,'g');lineL(tf,3.2,-9.4,3.2,12.8,R.silver[4]);lineL(tf,3.8,-9.4,3.8,12.8,R.silver[2]);
     polyL(tf,[-7.2,-6,-5.4,-6.6,-5.4,12.8,-7.2,12.4],k,'g');lineL(tf,-7,9.4,7,9.4,R.top[1]);},
+  plate(L,J,S,tf){const R=L.R,t=R.top,tr=ramp(L.trim||'#c8ccd8'),dk=ramp(L.acc||'#2a2a32');polyL(tf,[-6.2,-7.2,6.6,-7,7,.6,2.4,4.6,-6.4,2],t,'g');lineL(tf,-6.2,-7.2,6.6,-7,tr[3]);lineL(tf,7,.6,2.4,4.6,tr[2]);lineL(tf,2.4,4.6,-6.4,2,tr[2]);
+    lineL(tf,2.6,-6.8,2.6,4.2,t[1]);[[5,6],[7,6.2],[9,6.6]].forEach(([y,w])=>{polyL(tf,[-w,y,w,y,w-.4,y+1.6,-w+.4,y+1.6],dk,'g');lineL(tf,-w,y,w,y,t[3]);});polyL(tf,[-7,10.6,7,10.6,7,12.4,-7,12.4],t,'g');lineL(tf,-7,10.6,7,10.6,tr[3]);
+    polyL(tf,[-1.6,-9.8,5.2,-9.6,5,-7,-1.8,-7],dk,'g');
+    if(L.emblem==='cross'){const g=ramp(L.embC||'#3ac86a');polyL(tf,[3.6,-4.6,5,-4.6,5,-.6,3.6,-.6],g,'g',0);polyL(tf,[2.3,-3.3,6.3,-3.3,6.3,-1.9,2.3,-1.9],g,'g',0);}
+    if(L.emblem==='rivets')[[-4.6,-5.4],[5.6,-5.2],[-4.6,.4],[5.8,-.6],[0,-5.6]].forEach(([x,y])=>dotL(tf,x,y,tr[4]));
+    if(L.emblem==='tabard'){const g=ramp(L.embC||'#c8282e');polyL(tf,[1,-7,4.4,-7,4.6,12.6,.8,12.6],g,'g');}},
+  wrap(L,J,S,tf){const R=L.R,tr=ramp(L.trim||'#f2f2f6'),sa=ramp(L.acc||'#2a2a32');
+    if(L.open){polyL(tf,[1.2,-8,5.4,-7.8,4.2,5.6,2,5.6],R.skin,'g',0);lineL(tf,3.2,-4,3.2,4.6,R.skin[1]);lineL(tf,1.8,-1.4,4.8,-1.6,R.skin[1]);lineL(tf,2,1.6,4.6,1.4,R.skin[1]);lineL(tf,1.2,-8,2,5.6,tr[3]);lineL(tf,5.4,-7.8,4.2,5.6,tr[3]);}
+    else{polyL(tf,[1,-8,5.8,-7.8,3.2,-1.4],R.white,3);lineL(tf,-.6,-8,5.6,3.4,tr[3]);lineL(tf,-.2,-8.2,6,3.2,tr[2]);lineL(tf,6,-7.6,3.2,-1.6,tr[3]);}
+    polyL(tf,[-7,6,7,6,7,9,-7,9],sa,'g');lineL(tf,-7,6,7,6,sa[4]);polyL(tf,[3,8.4,5.2,8.4,6,13.6,3.6,13.2],sa,'g');
+    if(L.fur){const fu=ramp('#f4f4f8');for(let x=-2;x<6;x+=1.4)dotL(tf,x,-8.6+Math.abs(x-2)*.2,fu[4]);for(let x=-6.6;x<7;x+=1.6)dotL(tf,x,12.4,fu[4]);}
+    if(L.stripes){const g=ramp(L.stripes);lineL(tf,2.2,-6,2.2,12,g[3]);lineL(tf,3.2,-6,3.2,12,g[4]);lineL(tf,4.2,-6,4.2,12,g[3]);}
+    if(L.chain){const c=R.silver;for(let i=0;i<10;i++){dotL(tf,-6+i*1.3,-6.4+i*1.25,i%2?c[4]:c[2]);dotL(tf,-5.4+i*1.3,-6.2+i*1.25,c[1]);}}},
+  dress(L,J,S,tf){const R=L.R,y=ramp(L.acc||'#f0c030'),w=R.white;polyL(tf,[-6.6,-7.6,6.8,-7.4,6.6,-5.4,-6.6,-5.6],w,'g');polyL(tf,[1.4,-5.2,3,-4,1.4,-2.8,-.2,-4],y,'g',0);polyL(tf,[3,-4,4.6,-5.2,6.2,-4,4.6,-2.8],y,'g',0);dotL(tf,3,-4,y[1]);
+    lineL(tf,-6.4,3,6.6,3,y[3]);for(let x=-6.6;x<7;x+=2.2){polyL(tf,[x,9,x+2.2,9,x+1.1,11.4],w,3,0);polyL(tf,[x,11.2,x+2.2,11.2,x+1.1,13.4],y,3,0);}lineL(tf,-7,8.8,7,8.8,w[4]);},
+  jacketS(L,J,S,tf){const R=L.R,j=ramp(L.acc),ln=ramp(L.trim||'#5ad8ff');polyL(tf,[-7.2,-7.4,.6,-8,1,6.4,-7.2,6],j,'g');polyL(tf,[5,-7.6,7.2,-6.8,7.2,6,5.4,6.2],j,'g');lineL(tf,.6,-7.8,1,6.4,ln[3]);lineL(tf,5,-7.4,5.4,6.2,ln[3]);lineL(tf,-7,6,1,6.4,ln[2]);
+    polyL(tf,[-2.6,-10.2,5,-10,4.8,-7,-2.8,-7.2],j,'g');lineL(tf,-2.8,-7.2,4.8,-7,ln[3]);lineL(tf,-5.6,-5,-5.2,5,ln[2]);if(L.buckles)[-3,0,3].forEach(yy=>{dotL(tf,2.8,yy,R.silver[4]);dotL(tf,3.6,yy,R.silver[2]);});lineL(tf,-6.6,11.6,6.6,11.6,R.top[1]);},
+  harness(L,J,S,tf){const k=L.R.skin,br=ramp('#6a4428');lineL(tf,.4,-3.6,5.8,-4,k[1]);lineL(tf,2.8,-3.6,3,6.4,k[1]);lineL(tf,1,1,5,.8,k[1]);polyL(tf,[-6,-7.6,-4.2,-7.8,5.6,5.4,3.8,5.8],br,'g');polyL(tf,[4.4,-7.8,6.2,-7.4,-3.6,5.8,-5.4,5.4],br,'g');
+    ell(...tf(2.2,-1.4),2.8*J.h,2.6*J.h,0,br);lineL(tf,.6,-1.4,3.8,-1.4,br[4]);lineL(tf,2.2,-3,2.2,.2,br[4]);polyL(tf,[-7,8.6,7,8.6,7,10.2,-7,10.2],ramp('#f0e8c8'),'g');polyL(tf,[1.2,-9.6,4.6,-9.6,4.6,-8.4,1.2,-8.4],br,'g');dotL(tf,3,-8.2,L.R.gold[4]);},
+  stealth(L,J,S,tf){const R=L.R,rd=ramp(L.acc||'#8a2420'),bl=ramp(L.trim||'#2a48c8');for(let y=-1;y<10;y+=2.2)polyL(tf,[-6.6,y,6.6,y,6.6,y+1.1,-6.6,y+1.1],rd,'g',0);ell(...tf(-4.6,-5),2.4*J.h,2.2*J.h,0,bl);ell(...tf(4.8,-5.2),2.2*J.h,2*J.h,0,bl);dotL(tf,4.4,-5.8,R.white[4]);
+    polyL(tf,[-1.6,-9.8,5.2,-9.6,5,-7,-1.8,-7],R.top,'g');lineL(tf,-6.6,11.6,6.6,11.6,R.top[1]);},
   ninja(L,J,S,tf){const R=L.R;polyL(tf,[-.4,-7.6,2,-7.6,5.2,4,3,4.2],R.top,1);polyL(tf,[-7.2,5.4,7.2,5.4,7.2,9.4,-7.2,9.4],ramp(L.acc),'g');lineL(tf,-7,2,7,-6,ramp(L.acc)[1]);
     dotL(tf,4,7,ramp(L.acc)[4]);polyL(tf,[4,8,7,7.6,8,14,5.6,13.4],ramp(L.acc),'g');}};
 
@@ -878,6 +910,11 @@ function drawHead(L,J,S){const R=L.R,h=L.h,H=J.Hd,t=S.t;const hs=HAIR[L.hairS];c
     polyH(H,h,[-7.8,7,-9,-2,-6.4,-9.4,-1,-11.4,4.6,-10.6,7.6,-7.4,3,-6.2,-2,-4.8,-4.6,0,-4.4,7.6],b,{cx:H.x-3,cy:H.y-4,r:10*h});
     polyH(H,h,[3,-10.4,10,-9.6,11,-7,9.6,-5.2,3.6,-5.8],lt,'g');sp(H.x+8.4*h,H.y-8.6*h,k[1]);sp(H.x+9.8*h,H.y-8.2*h,k[1]);sp(H.x+2*h,H.y-9*h,k[1]);sp(H.x+2.6*h,H.y-9.4*h,R.white[4]);
     sp(H.x+5*h,H.y-5.4*h,R.white[4]);sp(H.x+7.6*h,H.y-5*h,R.white[4]);}
+  if(ex.includes('helm')){const m=ramp(L.helmC||'#c8ccd8'),vz=ramp(L.visorC||'#16161c');polyH(H,h,[-7.4,6,-8.4,-2,-6,-9,-.6,-11,4.6,-10,7.4,-6.6,8,-1,7.6,5,5,7.6,-3,7.6],m,{cx:H.x-2,cy:H.y-3,r:9.4*h});
+    polyH(H,h,[.4,-3.4,7.8,-3,7.6,.2,.6,-.2],vz,'g',0);lineH(H,h,1.2,-2.6,6.8,-2.3,vz[4]);lineH(H,h,-6.6,-4.6,.4,-3.6,m[1]);lineH(H,h,3.6,1.2,3.6,6.4,m[1]);lineH(H,h,5.6,1.4,5.6,6,m[1]);lineH(H,h,-1,-10.6,-1.4,-4,m[4]);
+    if(L.plumeC){const p=ramp(L.plumeC),f=Math.sin(S.t*.12)*1.2-clamp(S.vx*.5,-2.5,2.5);capsule(H.x-.6*h,H.y-10.6*h,2*h,H.x+(-5+f)*h,H.y-15.6*h,2.6*h,p);capsule(H.x+(-5+f)*h,H.y-15.6*h,2.6*h,H.x+(-11+f*1.6)*h,H.y-11*h,1.4*h,p);}
+    if(L.helmCross){const g=ramp(L.helmCross);polyH(H,h,[2.8,-9,4.2,-9,4.2,-5.4,2.8,-5.4],g,'g',0);polyH(H,h,[1.6,-7.9,5.4,-7.9,5.4,-6.5,1.6,-6.5],g,'g',0);}}
+  if(ex.includes('tophat')){const b=ramp(L.hatC||'#2a48c8'),y=ramp('#f0c030');polyH(H,h,[-5.6,-9,2.4,-10.2,2.6,-8.6,-5.4,-7.4],b,'g');polyH(H,h,[-4,-15.6,1,-16.4,1.6,-9.8,-4.2,-8.8],b,'g');lineH(H,h,-4.1,-10.2,1.5,-11.2,y[3]);ell(H.x+1.6*h,H.y-10.6*h,1.5*h,1.5*h,0,ramp('#6a9aff'),0);sp(H.x-5*h,H.y-10*h,R.white[4]);sp(H.x-6*h,H.y-9*h,R.white[4]);}
   if(ex.includes('ninjahood')){const w=ramp(L.hoodC||'#efe6d6');polyH(H,h,[-7.6,6,-8.6,-2,-6,-9,0,-11,5,-10,7.6,-6.6,8,-1,7.4,5,4,7.4,-3,7.4],w,{cx:H.x-2,cy:H.y-3,r:9.4*h});
     polyH(H,h,[.6,-3,7.7,-2.6,7.5,-.2,.8,-.4],R.skin,'g',0);sp(H.x+3*h,H.y-1.6*h,R.eye[1]);sp(H.x+5.8*h,H.y-1.5*h,R.eye[1]);polyH(H,h,[-7.2,-6.2,7.7,-5.8,7.7,-3.8,-7.2,-4.2],R.red,'g');lineH(H,h,.8,1.4,7.4,1.6,w[1]);}
   if(ex.includes('band')){const bc=ramp(L.bandC||'#f2f2f6'),bt=ramp(L.bandT||L.bandC||'#f2f2f6'),f=Math.sin(S.t*.13)*1.4-clamp(S.vx*.6,-3,3);polyH(H,h,[-6.9,-5.9,7.3,-5.5,7.3,-3.7,-6.9,-4.1],bc,'g');
@@ -919,6 +956,12 @@ function drawBack(L,J,S,p){const R=L.R,h=L.h,t=S.t,ex=L.ex||[];
     const hx=pts[16][0],hy=pts[16][1];poly([hx-4,hy-3,hx+5,hy-4,hx+10,hy-1,hx+9,hy+2,hx+2,hy+4,hx-4,hy+3],blk,{cx:hx,cy:hy-2,r:7});sp(hx+4,hy-2,ramp('#ffd040')[4]);sp(hx+5,hy-2,ramp('#ffd040')[2]);
     lineP(hx+3,hy+2,hx+9,hy+1,ramp('#c82020')[2]);sp(hx+8,hy+3,R.white[4]);}
   if(ex.includes('katana')&&!S.wpnOut){capsule(J.SB.x-7*h,J.P.y+2*h,1.6,J.SB.x+5*h,J.SB.y-12*h,1.6,R.dark);capsule(J.SB.x+4*h,J.SB.y-10*h,1.8,J.SB.x+7*h,J.SB.y-15*h,1.6,ramp('#f07a20'));}
+  if(ex.includes('puff')){const hc=L.R.hairB||L.R.hair;ell(J.Hd.x-8*h,J.Hd.y-3*h,8.5*h,9*h,0,hc);ell(J.Hd.x-12*h,J.Hd.y+3*h,6*h,6.4*h,0,hc);ell(J.Hd.x-5*h,J.Hd.y-9*h,5.4*h,5*h,0,hc);}
+  if(ex.includes('mantle')){const fu=ramp(L.furC||'#b08a58');for(let i=0;i<6;i++){const a2=-2.6+i*.5;ell(J.C.x+Math.cos(a2)*6*h-1*h,J.C.y+2*h+Math.sin(a2)*3*h,3.4*h,3*h,0,i%2?fu:rampB(L.furC||'#b08a58'));}}
+  if(ex.includes('quiver')){const q=ramp('#3a2a2a'),c=Math.cos(J.tl),s=Math.sin(J.tl),bx=J.Ch.x-6*h*c,by=J.Ch.y-2*h;capsule(bx+3*h,by+7*h,2.2*h,bx-3*h,by-8*h,2.2*h,q);for(let i=0;i<3;i++){lineP(bx-3*h+i*1.4,by-8*h,bx-5*h+i*1.6,by-13*h,R.silver[3]);sp(bx-5*h+i*1.6,by-14*h,ramp('#e83a3a')[4]);}}
+  if(ex.includes('scorptail')){const g=ramp(L.tailC||'#2a8a3a'),gb=rampB(L.tailC||'#2a8a3a'),am=ramp('#ffb020'),atk=S.face==='atk'?1:0,w=Math.sin(t*.1)*1.5,B={x:J.P.x-4*h,y:J.P.y-2*h};let px=B.x,py=B.y;
+    for(let i=1;i<=7;i++){const u=i/7,ang=-2.5+u*(3.4+atk*.9),rr=(7+u*3)*h,x=B.x-10*h+Math.cos(ang)*rr*1.6+u*(8+atk*16)*h+w*u,y=B.y-12*h+Math.sin(ang)*rr*1.8-u*(14-atk*8)*h;capsule(px,py,(3.2-u*1.2)*h,x,y,(3-u*1.2)*h,i%2?g:gb);px=x;py=y;}
+    poly([px-2*h,py-2.4*h,px+(7+atk*4)*h,py+(3+atk*2)*h,px+1*h,py+3*h],am,'g');sp(px+(6+atk*4)*h,py+(3+atk*2)*h,R.white[4]);}
   if(ex.includes('stingers')){const B={x:J.Ch.x-5*h,y:J.Ch.y-3*h},dk=ramp('#2a2024'),am=ramp('#ffb020'),atk=S.face==='atk'?1:0,w=Math.sin(t*.09);
     [[-7,-17,7+atk*10,-29+atk*8],[-15,-9,-23,-25],[-13,7,-5+atk*8,23-atk*6],[-18,2,-23,19]].forEach((a,i)=>{const ex2=B.x+(a[0]+w*(i%2?1:-1))*h,ey=B.y+a[1]*h,tx=B.x+(a[2]+w*1.6*(i%2?-1:1))*h,ty=B.y+a[3]*h;
       capsule(B.x,B.y,1.9*h,ex2,ey,1.6*h,dk);capsule(ex2,ey,1.6*h,lerp(ex2,tx,.72),lerp(ey,ty,.72),1.3*h,dk);ell(ex2,ey,2*h,2*h,0,am);
@@ -932,10 +975,14 @@ function drawBack(L,J,S,p){const R=L.R,h=L.h,t=S.t,ex=L.ex||[];
 
 /* ---- weapons ---- */
 function weaponTip(L,J,hand){const len=L.wlen||22,a=J.wa;return{x:hand.x+Math.cos(a)*len*L.h,y:hand.y+Math.sin(a)*len*L.h};}
+const c0x=a=>Math.cos(a),c0y=a=>Math.sin(a);
 function drawWeapon(L,J,hand,S){const a=J.wa,c=Math.cos(a),s=Math.sin(a),h=L.h,R=L.R,hx=hand.x,hy=hand.y,px=-s,py=c;const at=(d,o)=>[hx+c*d*h+px*(o||0)*h,hy+s*d*h+py*(o||0)*h];
   switch(L.wpn){
   case 'katana':{const b=ramp('#d8dcea');capsule(...at(-5),1.5,...at(1),1.5,ramp('#1a1a1e'));for(let i=-4;i<1;i+=2){const q=at(i);sp(q[0],q[1],ramp('#f08a20')[3]);}
     ell(...at(1.6),1.4*h,2.6*h,a,R.gold);capsule(...at(2.6),1.4,...at(26),.5,b);lineP(...at(3,-.8),...at(25,-.6),b[4]);break;}
+  case 'bow':{const c=ramp(L.bowC||'#8a1a1e'),st=ramp('#e8e8f0');const A=at(0,-13),B=at(0,13),M2=at(5,0);capsule(A[0],A[1],1,lerp(A[0],M2[0],.5)+c0x(a)*2,lerp(A[1],M2[1],.5)+c0y(a)*2,1.3,c);capsule(lerp(A[0],M2[0],.5)+c0x(a)*2,lerp(A[1],M2[1],.5)+c0y(a)*2,1.3,M2[0],M2[1],1.5,c);
+    capsule(B[0],B[1],1,lerp(B[0],M2[0],.5)+c0x(a)*2,lerp(B[1],M2[1],.5)+c0y(a)*2,1.3,c);capsule(lerp(B[0],M2[0],.5)+c0x(a)*2,lerp(B[1],M2[1],.5)+c0y(a)*2,1.3,M2[0],M2[1],1.5,c);lineP(A[0],A[1],B[0],B[1],st[3]);sp(A[0],A[1],st[4]);sp(B[0],B[1],st[4]);break;}
+  case 'wand':{const wd=ramp('#7a2a2e');capsule(...at(-6),1.1,...at(13),1.5,wd);const q=at(15);ell(q[0],q[1],2.6*h,2.2*h,a,wd);ell(q[0],q[1],1.3*h,1.1*h,a,ramp('#c83a5a'),0);sp(q[0],q[1]-1,ramp('#ffd0e0')[4]);for(let i=-3;i<12;i+=4){const z=at(i);sp(z[0],z[1],wd[4]);}break;}
   case 'hook':{const sh=ramp('#e8dcc0');capsule(...at(-9),1.8,...at(16),1.8,sh);for(let i=-6;i<15;i+=4){const q=at(i);sp(q[0],q[1],ramp('#3a7a8a')[2]);sp(q[0]+1,q[1],ramp('#3a7a8a')[3]);}
     let prev=at(16);for(let k=1;k<=7;k++){const ang=k*.45,q=[hx+c*(16+Math.sin(ang)*7)*h-px*(1-Math.cos(ang))*7*h,hy+s*(16+Math.sin(ang)*7)*h-py*(1-Math.cos(ang))*7*h];capsule(prev[0],prev[1],2.2-k*.15,q[0],q[1],2.1-k*.15,sh);prev=q;}
     const bb=at(10,-9);capsule(prev[0],prev[1],1.2,bb[0],bb[1],.6,sh);break;}
@@ -4891,6 +4938,7 @@ setInterval(()=>{try{if(!$('#select').hidden)teamDecor();}catch(e){}},120);
 
 /* ===================== SMASH-STYLE EXTRAS: costumes, rules, intros, announcer, podium ===================== */
 /* ---- alternate costumes: palette swaps of each student's outfit ---- */
+const CHB0={};CH.forEach(C=>{const L=C.look,o={};for(const k of['bw','ww','lw','pw'])if(L[k]!==undefined&&!L._b)o[k]=L[k];if(!L._b)CHB0[C.id]=o;});
 SEL.skin=[0,0,0,0];
 function hslOf(h){const c=hex2(h).map(v=>v/255),mx=Math.max(...c),mn=Math.min(...c),l=(mx+mn)/2;let hh=0,s=0;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);hh=mx===c[0]?(c[1]-c[2])/d+(c[1]<c[2]?6:0):mx===c[1]?(c[2]-c[0])/d+2:(c[0]-c[1])/d+4;hh/=6;}return[hh,s,l];}
 function hexOf(h,s,l){const f=(p,q,t)=>{t=(t%1+1)%1;return t<1/6?p+(q-p)*6*t:t<.5?q:t<2/3?p+(q-p)*(2/3-t)*6:p;},q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;return'#'+[f(p,q,h+1/3),f(p,q,h),f(p,q,h-1/3)].map(v=>Math.round(clamp(v,0,1)*255).toString(16).padStart(2,'0')).join('');}
@@ -5006,6 +5054,7 @@ EK.gp={init(e,f,s){if(s.hm)e.target=opp(f);if(s.ex)e.explode=1;if(s.multi)e.mult
     case 'web':{for(let i=0;i<6;i++){const a=i/6*TAU+t*.1;wl(c,x,y,x+Math.cos(a)*e.r,y+Math.sin(a)*e.r,1);}wring(x,y,e.r*.6,c,1);wring(x,y,e.r,c,1);wl(c,x-d*e.r,y,x-d*(e.r+12),y,1);break;}
     case 'ink':wl('#e8e8f0',x-d*7,y,x+d*4,y,3);wl('#16161c',x-d*6,y,x+d*4,y,2);wdisc(x+d*4,y,2,'#16161c');break;
     case 'wolf':{const b=Math.sin(t*.6)*2;wpoly('#e8e8f0',[x-d*13,y-3+b,x-d*4,y-9,x+d*8,y-8,x+d*14,y-3,x+d*9,y+1,x-d*8,y+1].map((v,i)=>v+(i%2?-1:0)));wpoly('#16161c',[x-d*12,y-2+b,x-d*4,y-8,x+d*8,y-7,x+d*13,y-3,x+d*9,y,x-d*8,y]);wpoly('#16161c',[x+d*6,y-7,x+d*8,y-12,x+d*10,y-7]);wr('#16161c',x-d*7,y,2,5+b);wr('#16161c',x+d*6,y,2,5-b);wr('#e8e8f0',x+d*10,y-5,1.5,1.5);break;}
+    case 'arrow':{const an=Math.atan2(e.vy,e.vx),cx=Math.cos(an),sy=Math.sin(an),hc=['#e8ecf4','#ff7a20','#6adf6a'][e.spec.head||0];wl('#0c0820',x-cx*11,y-sy*11,x+cx*8,y+sy*8,3);wl('#c8a878',x-cx*10,y-sy*10,x+cx*7,y+sy*7,1);wpoly(hc,[x+cx*12,y+sy*12,x+cx*6-sy*3,y+sy*6+cx*3,x+cx*6+sy*3,y+sy*6-cx*3]);wl('#e83a3a',x-cx*10-sy*2,y-sy*10+cx*2,x-cx*7,y-sy*7,1);wl('#e83a3a',x-cx*10+sy*2,y-sy*10-cx*2,x-cx*7,y-sy*7,1);if(e.spec.head===1&&t%2===0)part(x-cx*8,y-sy*8,0,0,10,'#ff7a20',2,0);break;}
     default:wdisc(x,y,e.r+1,'#0c0820');wdisc(x,y,e.r,c);wdisc(x-1,y-1,Math.max(1,e.r-3),'#ffffff');if(t%2===0)part(x-d*e.r,y,0,0,12,c,2,0);}}};
 EK.kchain=Object.assign({},EK.chain,{draw(e){const o=e.owner,sx=o.x+o.face*10;for(let i=0;i<=e.cur;i+=4){const x=sx+o.face*i;wdisc(x,e.y+((i>>2)%2?1:-1),2.4,'#3a3a44');wdisc(x,e.y+((i>>2)%2?1:-1),1.4,(i>>2)%2?'#e8e8f0':'#9a9aa8');}wpoly('#e8e8f0',[e.x-o.face*2,e.y-5,e.x+o.face*7,e.y,e.x-o.face*2,e.y+5]);}});
 /* ---- quirk-themed hit effects ---- */
@@ -5610,7 +5659,7 @@ const HEROLOOK={
  torabi:{outfit:'vest',top:'#f4f4f6',acc:'#1e2448',sleeve:'#f4f4f6',sl:'short',pants:'#1e2448',shoe:'#1e2448',boots:1,kneepad:1,glove:'#1e2448',hair:'#2a48d8',streak:'#f0c030',headband:0,hx:['eyemask','band'],maskC:'#c8282e',bandC:'#f4f4f6',bandT:'#2a48d8',pauldron:1,pauldC:'#c8ccd8',ex:['coattails'],ctA:'#f4f4f6',ctB:'#dfe6f6'},
  suze:{outfit:'bee',top:'#2a2024',top2:null,sleeve:'#2a2024',sl:'short',skirt:null,socks:null,pants:'#2a2024',pantStripe:1,acc:'#f0b020',boots:1,bootTrim:1,trim:'#f0b020',shoe:'#2a2024',kneepad:1,glove:'#2a2024',hx:['goggles'],cuff:false,ex:['beewings','stingers'],hair:'#f0c860'},
  tatsuya:{outfit:'suit',top:'#c8ccd6',top2:null,sleeve:'#c8ccd6',pants:'#c8ccd6',shoe:'#c8ccd6',glove:'#c8ccd6',briefs:'#6a4ac8',cuff:false,trim:null,skin:'#e8b860'}};
-CH.forEach(C=>{const h=HEROLOOK[C.id];if(!h||!C.looks)return;const L={};for(const k in C.look){if(k==='_r'||k==='R')continue;L[k]=C.look[k];}for(const k in h){if(h[k]===null)delete L[k];else L[k]=h[k];}C.looks[HERO_I]=L;C.heroLook=1;});
+CH.forEach(C=>{const h=HEROLOOK[C.id];if(!h||!C.looks)return;const L={};for(const k in C.look){if(k==='_r'||k==='R')continue;L[k]=C.look[k];}{const b0=CHB0[C.id];if(b0){for(const k of['bw','ww','lw','pw','hw','nk','hs','lg'])delete L[k];Object.assign(L,b0);}}for(const k in h){if(h[k]===null)delete L[k];else L[k]=h[k];}C.looks[HERO_I]=L;C.heroLook=1;});
 function skinCount(n){const C=CH[SEL.p[n]];return(C&&C.looks?C.looks.length:SKINS.length);}
 function skinLabel(n){if((SEL.skin[n]||0)>=skinCount(n))SEL.skin[n]=0;const s=SEL.skin[n]||0;return s===HERO_I?'HERO':'COLOR '+(s+1);}
 function applySkins(){const used={};for(const f of F){if(f.team===1&&MODE==='survival')continue;const n=(f.C.looks||SKINS).length;let s=(SEL.skin[f.id]||0)%n,g=0;while(used[f.ci+':'+s]&&g++<n)s=(s+1)%n;used[f.ci+':'+s]=1;f.skin=s;f.L=skinLook(f.C,s);f.hero=s===HERO_I&&!!f.C.heroLook;}}
@@ -5657,6 +5706,94 @@ const ING_MAX=6;
  C.heroNote='In his hero uniform the robot duck Chaud follows him. Wasabi Breath costs 1 ingredient and Dumpling Bombs cost 2 (he holds 6); with none left they come out weak. Hold Down-B next to Chaud to cook: restock, then season the next special, then plate the Signature Dish. Away from Chaud, Down-B calls the duck over.';
 })();
 (function(){const C=CH.find(c=>c.id==='suze');if(C)C.heroNote='In her hero uniform her four mechanical stingers throw every normal attack: about a third more reach and nothing of hers to hit back, but each one starts 2 frames slower. Honey moves are unchanged.';})();
+
+/* ===================== HERO UNIFORMS, class 1-B: looks, plus the moves that change with them ===================== */
+(function(){const c=id=>CH.find(x=>x.id===id);
+ /* Taru is always made of his elements, in every costume */
+ {const C=c('taru');for(const L of new Set([C.look,...(C.looks||[])])){if(!L)continue;L.elArm=['fire','water'];L.elLeg=['rock','vine'];L.sl='short';L.cuff=false;delete L._r;delete L.R;}}
+ const H2={
+  riku:{outfit:'plate',top:'#2a8a3a',trim:'#7ae07a',acc:'#1c2a22',sleeve:'#2a8a3a',pants:'#1c2a22',shoe:'#2a8a3a',boots:1,kneepad:1,glove:'#1c2a22',cuff:false,emblem:'rivets',hx:['helm'],helmC:'#2a8a3a',visorC:'#ffb020',hairS:null,ex:['scorptail'],tailC:'#2a8a3a',pauldron:1,pauldC:'#3aa84a',top2:null},
+  sanshou:{outfit:'plate',top:'#3e7a3a',top2:null,trim:'#8ad07a',acc:'#22422a',sleeve:'#3e7a3a',pants:'#356a34',shoe:'#2e5a2c',boots:1,kneepad:1,glove:'#2e5a2c',cuff:false,emblem:'rivets',pauldron:1,pauldC:'#4a9a44'},
+  kairi:{outfit:'plate',top:'#8a86a0',top2:null,trim:'#e8e4f4',acc:'#5a5670',sleeve:'#b8a8d0',glove:'#4a4658',cuff:true,skirt:'#f4f0f0',socks:'#4a4658',shoe:'#4a4658',pauldron:1,pauldC:'#a8a4c0',ex:['coattails'],ctA:'#f09a8a',ctB:'#f8c0a8'},
+  kichi:{outfit:'wrap',top:'#2a2c5a',top2:null,trim:'#8a90b8',acc:'#7a8090',sl:'none',chain:1,pants:'#20223a',shoe:'#16161c',boots:1,bracelet:1,cuff:false,armband:1},
+  tamashi:{outfit:'jacketS',top:'#3a2a44',top2:null,acc:'#5a2a5e',trim:'#d8d0e8',sleeve:'#5a2a5e',skirt:null,socks:null,pants:'#1e1a26',shoe:'#16141c',boots:1,glove:'#d8d0e8',cuff:false,ex:['coattails','katana'],ctA:'#5a2a5e',ctB:'#4a2250',wpn:'katana',wlen:24,stance:'weapon'},
+  akemi:{outfit:'dress',top:'#2a48c8',top2:null,acc:'#f0c030',sleeve:'#2a48c8',sl:'short',skirt:'#f4f4f8',socks:'#f4f4f8',shoe:'#2a48c8',glove:'#f4f4f8',cuff:false,hairS:'long',hx:['tophat'],hatC:'#2a48c8',ex:['coattails'],ctA:'#2a48c8',ctB:'#f0c030'},
+  taru:{outfit:'bare',top:'#e0b088',top2:null,sl:'none',cuff:false},
+  sai:{outfit:'plate',top:'#c8282e',top2:null,trim:'#ff8a7a',acc:'#2a2a32',sleeve:'#2a2a32',pants:'#2a2a32',pantStripe:1,shoe:'#c8282e',boots:1,kneepad:1,glove:'#2a2a32',cuff:false,hx:['visor'],capBand:'#c8282e',ex:['quiver'],wpn:'bow',wlen:10,stance:'weapon'},
+  tenmetsu:{outfit:'jacketS',top:'#1e2230',top2:null,acc:'#3a4a6a',trim:'#5ad8ff',sleeve:'#3a4a6a',stripe:1,acc2:'#5ad8ff',pants:'#1e2230',shoe:'#d8dce8',boots:1,glove:'#1e2230',cuff:false,ex:['cape'],capeC:'#2a3650',capeT:'#5ad8ff'},
+  yado:{outfit:'stealth',top:'#16161c',top2:null,acc:'#8a2420',trim:'#2a48c8',sleeve:'#16161c',pants:'#16161c',shoe:'#16161c',sole:'#d8d8e0',kneepad:1,cuff:false,pauldron:1,pauldC:'#2a48c8'},
+  hari:{outfit:'plate',top:'#b8bcc8',top2:null,trim:'#f0f0f6',acc:'#5a5e6a',sleeve:'#b8bcc8',pants:'#8a8e9a',shoe:'#b8bcc8',boots:1,kneepad:1,glove:'#b8bcc8',cuff:false,emblem:'tabard',embC:'#c8282e',hx:['helm'],helmC:'#b8bcc8',visorC:'#1c1c22',plumeC:'#c8282e',hairS:null,pauldron:1,pauldC:'#d0d4de',ex:['cape'],capeC:'#a8202a',capeT:'#e8c060'},
+  toguchi:{outfit:'wrap',top:'#f2f0ea',top2:null,trim:'#d8d4cc',acc:'#16161c',sleeve:'#f2f0ea',sl:'short',skirt:null,socks:null,pants:'#2a2c34',pw:1.25,shoe:'#16161c',cuff:false,hx:['band'],bandC:'#f4f4f6',wpn:'katana',wlen:25,stance:'weapon',ex:['katana']},
+  pitto:{outfit:'harness',top:'#d8a860',top2:null,sl:'none',cuff:false,glove:'#c83a2a',bracelet:1,pants:'#b8281e',shoe:'#b89868',sole:'#b89868'},
+  maho:{outfit:'wrap',top:'#1e5a6a',top2:null,trim:'#e8c860',acc:'#5a3a24',stripes:'#e8c860',sleeve:'#1e5a6a',glove:'#16161c',pants:'#1c2236',shoe:'#3a2a20',boots:1,cuff:false,ex:['cape'],capeC:'#5a4a52',capeT:'#8a7a80',wpn:'wand',wlen:14,hairS:'messy'},
+  raion:{outfit:'plate',top:'#5a3c24',top2:null,trim:'#8a6238',acc:'#3a2616',sl:'none',glove:'#8a7048',bracelet:1,cuff:false,skirt:'#b89858',socks:'#e0a050',shoe:'#e0a050',pauldron:1,pauldC:'#6a4628',ex:['tail','mantle'],furC:'#a88858'},
+  tsuki:{outfit:'wrap',top:'#1e4a8a',top2:null,trim:'#f4f4f8',acc:'#5aa8e0',fur:1,sleeve:'#1e4a8a',cuff:true,skirt:null,socks:null,pants:'#18305a',shoe:'#3a2a20',boots:1,bootTrim:1,glove:'#5aa8e0'},
+  rei:{outfit:'wrap',open:1,top:'#1c1a1e',top2:null,trim:'#8a1e24',acc:'#16141a',sleeve:'#1c1a1e',sl:'short',pants:'#1c1a1e',shoe:'#c89a78',sole:'#c89a78',glove:'#16141a',cuff:false,bracelet:1,ex:['coattails'],ctA:'#1c1a1e',ctB:'#8a1e24'},
+  tai:{outfit:'plate',top:'#e4e8ee',top2:null,trim:'#ffffff',acc:'#3a3e48',sleeve:'#3a3e48',pants:'#3a3e48',shoe:'#2a2c34',boots:1,kneepad:1,glove:'#1c1e24',cuff:true,emblem:'cross',embC:'#3ac86a',hx:['helm'],helmC:'#e4e8ee',visorC:'#e8a030',helmCross:'#3ac86a',hairS:null,pauldron:1,pauldC:'#e4e8ee'},
+  hatsuko:{outfit:'jacketS',buckles:1,top:'#4a2a6a',top2:null,acc:'#16141a',trim:'#b04aff',sleeve:'#16141a',skirt:'#16141a',socks:'#6a3a9a',shoe:'#16141a',glove:'#16141a',cuff:false,streak:'#b04aff',ex:['coattails'],ctA:'#16141a',ctB:'#6a3a9a'},
+  ginko:{outfit:'suit',emblem:'sun',top:'#f08a20',top2:null,sl:'none',cuff:false,glove:'#ffd040',skirt:null,socks:null,pants:'#f08a20',pantStripe:1,acc:'#ffd040',shoe:'#ffd040',boots:1,hairS:'short',ex:['puff']}};
+ for(const id in H2){const C=c(id);if(!C||!C.looks)continue;const L={};for(const k in C.look){if(k==='_r'||k==='R')continue;L[k]=C.look[k];}
+   /* the stored look already has build factors applied: reset them so the rig derives them once for the new copy */
+   const b0=CHB0[id];if(b0){for(const k of['bw','ww','lw','pw','hw','nk','hs','lg'])delete L[k];Object.assign(L,b0);}
+   for(const k in H2[id]){if(H2[id][k]===null)delete L[k];else L[k]=H2[id][k];}C.looks[HERO_I]=L;C.heroLook=1;}
+
+ /* ---- generic steel cut effect for sword normals ---- */
+ NEWFX.cut=function(sub,x,y,d,pr,fx,f,R,T){const a0=-1.25+pr*.5,n=9,RR=Math.max(12,R);for(let i=0;i<n;i++){const a=a0+i/n*2.3,b=a+2.3/n,rr=RR*(1+.25*pr);wl(i<n-3?'#8a90a8':'#ffffff',x-d*RR*.4+Math.cos(a)*rr*d,y+Math.sin(a)*rr,x-d*RR*.4+Math.cos(b)*rr*d,y+Math.sin(b)*rr,3);}
+   for(let i=0;i<n;i++){const a=a0+i/n*2.3,b=a+2.3/n,rr=RR*(.86+.25*pr);wl('#e8ecf4',x-d*RR*.4+Math.cos(a)*rr*d,y+Math.sin(a)*rr,x-d*RR*.4+Math.cos(b)*rr*d,y+Math.sin(b)*rr,1);}};
+ const NORM=['jab1','jab2','jab3','jab','ftilt','utilt','dtilt','dash','fsmash','usmash','dsmash','nair','fair','bair','uair','dair'];
+ const sword=(C,keys,reach,dm,slow,el)=>{C.hmv=C.hmv||{};for(const k of keys){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)continue;const b0=d.hits[0].b[0];
+   C.hmv[k]=Object.assign({},d,{s:d.s+slow,hits:d.hits.map(h=>Object.assign({},h,{dmg:h.dmg*dm,b:h.b.map(q=>[q[0]*reach,q[1],q[2]+1]),f0:h.f0!==undefined?h.f0+slow:undefined,f1:h.f1!==undefined?h.f1+slow:undefined})),vfx:{k:'H',el,x:b0[0]*reach,y:b0[1],r:b0[2]+5}});}};
+ /* Tamashi: katana normals */
+ {const C=c('tamashi');sword(C,NORM,1.2,1.08,1,'cut');C.heroDisjoint=1;C.heroNote='In her hero uniform she carries a katana: every normal attack is a sword cut with about 20% more reach and a little more damage, one frame slower. Her puppet specials are unchanged.';}
+ /* Riku: scorpion tail strikes */
+ {const C=c('riku');C.hmv={};C.heroDisjoint=1;for(const k of['fsmash','bair','utilt']){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)continue;const b0=d.hits[0].b[0],up=k==='utilt';
+    C.hmv[k]=Object.assign({},d,{s:d.s+2,hits:d.hits.map(h=>Object.assign({},h,{eff:'poison',dmg:h.dmg*1.06,b:h.b.map(q=>up?[q[0],q[1]*1.3,q[2]+1]:[q[0]*1.5,q[1],q[2]+1])})),vfx:{k:'H',el:'stail',x:up?b0[0]:b0[0]*1.5,y:up?b0[1]*1.3:b0[1],r:b0[2]+4},lim:'none'});}
+  NEWFX.stail=function(sub,x,y,d,pr,fx,f,R,T){const bx=f.x-d*8,by=f.y-34,g=Math.min(1,pr*3);let px=bx,py=by;for(let i=1;i<=6;i++){const u=i/6,qx=lerp(bx,x,u*g)-d*Math.sin(u*Math.PI)*10*(1-g*.5),qy=lerp(by,y,u*g)-Math.sin(u*Math.PI)*16;wl('#0c0820',px,py,qx,qy,5);wl(i%2?'#2a8a3a':'#3aa84a',px,py,qx,qy,3);px=qx;py=qy;}
+    wpoly('#ffb020',[px-d*3,py-3,px+d*8,py,px-d*3,py+3]);wring(x,y,R*.5+pr*10,'#a0ff40',2);};
+  C.heroNote='In his hero uniform he gains a mechanical scorpion tail. Forward smash, back air and up tilt become tail stabs: about 50% more reach, they poison, and there is nothing of his to hit back, but they start 2 frames slower. Shrinking is unchanged.';}
+ /* Sai: bow with three arrowheads */
+ {const C=c('sai'),GPx=o=>Object.assign({k:'gp',sh:'arrow'},o),say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-78,t:0,life:40,col});
+  const HEADS=[{n:'BROADHEAD',c:'#e8ecf4',p:{head:0,vx:8.2,life:48,r:5,dmg:8,bkb:3.5,kbg:.055,ang:35}},{n:'EXPLOSIVE',c:'#ff7a20',p:{head:1,vx:5.4,life:60,r:6,dmg:11,bkb:4.5,kbg:.07,ang:50,ex:1,eff:'burn'}},{n:'SNARE',c:'#6adf6a',p:{head:2,vx:6.6,life:50,r:6,dmg:3,bkb:1,kbg:0,ang:80,eff:'root'}}];
+  const fx=['#c8282e','#ffffff'];
+  C.hmv={nB:M('throwF',11,1,17,null,{fx,cyc:HEADS.map(h=>M('throwF',11,1,17,null,{fx,spawn:[[11,GPx(h.p)]]}))}),
+   sB:M('throwF',15,1,22,null,{fx,cd:70,cyc:HEADS.map(h=>M('throwF',15,1,22,null,{fx,cd:70,spawn:[[15,GPx(Object.assign({},h.p,{n:3,spread:.32,dmg:h.p.dmg*.6}))]]}))}),
+   dB:M('roar',5,2,9,null,{fx,lim:'none',onStart(f){f.cycN=((f.cycN||0)+1)%3;const h=HEADS[f.cycN];say(f,h.n,h.c);sfx('pop');}})};
+  const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(!f.hero||f.C.id!=='sai'||f.dead||f.gone||f.invis)continue;const h=HEADS[(f.cycN||0)%3],ip=(typeof interpPos==='function')?interpPos(f):f,x=Math.round(ip.x),y=Math.round(ip.y)-84;wr('#0c0820',x-6,y-2,13,5);wr('#c8a878',x-5,y,7,1);wpoly(h.c,[x+6,y,x+2,y-2,x+2,y+3]);}}catch(e){}};
+  const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F)if(f.hero&&f.C.id==='sai'&&f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&rnd()<.004)startMove(f,'dB');};
+  C.heroNote='In his hero uniform he is an archer. B fires an arrow; Down-B swaps the arrowhead (Broadhead: fast and solid / Explosive: slower, bursts and burns / Snare: weak, but roots). Side-B duplicates one arrow into a spread of three at 60% power. The loaded head shows above him.';}
+})();
+
+/* ---- Toguchi, reworked in every costume: she fights with a pair of connected portals ---- */
+(function(){const C=CH.find(x=>x.id==='toguchi');if(!C)return;const fx=['#9a70ff','#ffffff'];
+ const portal=(x,y,r,t,col)=>{X.globalAlpha=.85;wdisc(x,y,r,'#1a0e3a');X.globalAlpha=1;wring(x,y,r,col||'#9a70ff',2);wring(x,y,r*.6+Math.sin(t*.5)*1.5,'#e0d4ff',1);for(let i=0;i<4;i++){const a=t*.3+i*1.57;wp('#ffffff',x+Math.cos(a)*r,y+Math.sin(a)*r);}};
+ const foe=(f,o)=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team)&&!(MODE==='survival'&&o.team===f.team);
+ BEH.pstrike={start(f,m){let best=null,bd=200;for(const o of F){if(!foe(f,o))continue;const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<bd&&d>26){bd=d;best=o;}}m.v.tg=best;},
+  tick(f,m){const d=m.d,o=m.v.tg;if(m.t===d.s&&o&&!o.dead&&!intangible(o)){const sw=f.hero?1:0,dir=Math.sign(f.x-o.x)||-f.face;m.v.hx=o.x-dir*14;m.v.hy=o.y-34;
+     const r=applyHit(o,hit([[0,0,10]],(sw?11.5:9)*(f.C.atkS||1),4,.06,40),dir,f,{});if(r!=='miss'){sfx('warp');burst(m.v.hx,m.v.hy,10,fx,2,14);}}}};
+ BEH.trapdoor={tick(f,m){const d=m.d;if(m.t!==d.s)return;let best=null,bd=175;for(const o of F){if(!foe(f,o)||!o.ground||intangible(o))continue;const dx=(o.x-f.x)*f.face;if(dx>24&&dx<bd&&Math.abs(o.y-f.y)<34){bd=dx;best=o;}}
+   m.v.px=f.x+f.face*Math.min(bd,90);m.v.py=f.y;if(!best){m.v.miss=1;return;}m.v.px=best.x;m.v.py=best.y;if(best.st==='shield'){best.shp=Math.max(0,best.shp-14);}
+   burst(best.x,best.y-6,14,fx,2.2,16);const r=applyHit(best,hit([[0,0,10]],6,1,0,90),f.face,f,{});if(r==='miss')return;
+   best.x=f.x+f.face*30;best.y=f.y-78;best.vx=best.vy=best.lx=best.ly=0;best.ground=null;if(best.ledge)leaveLedge(best);
+   if(!(best.ccT&&FR-best.ccT<240)){best.st='dizzy';best.dz=40;best.hitstun=0;best.ccT=FR;}m.v.ox=best.x;m.v.oy=best.y-10;sfx('warp');burst(best.x,best.y-30,14,fx,2.2,16);}};
+ C.mv.nB=M('palm',10,6,20,hit([[20,-36,12]],4,2.5,.03,40),{beh:'pstrike',fx,lim:'hF'});
+ C.mv.sB=M('castDown',14,6,24,null,{beh:'trapdoor',fx,cd:170});
+ {const d=C.mv.uB;d.hits=[hit([[0,-30,26]],6,4.4,.05,74)];}
+ C.sp=['Portal Strike (hits a rival from behind, at range)','Trapdoor (drops a grounded rival out of the air in front of her)','Step Through (short; the exit bursts; can act after)','Doorway (set a door, press again to return; the door eats projectiles)'];
+ if(typeof GTXT!=='undefined')GTXT.toguchi=['Strikes into a portal. Its twin opens behind the nearest rival within range, so the blow lands on their back and knocks them toward her. With nobody in range it is a short jab.','Opens a portal under a grounded rival ahead of her. They fall through and drop out of a second portal above and in front of her, dazed for a moment. Misses anyone in the air. Cooldown.','Steps through a doorway a short distance away. The exit bursts and hits anyone beside it, and she can still act.','First press leaves a doorway where she stands; it swallows enemy projectiles and spits them back. Press again anywhere to step home: both doors burst as she does.',(GTXT.toguchi||[])[4]||''];
+ C.na='Normals: punches and kicks that pass through small portals. Light, but nobody controls space like she does.';C.trait='Her standing Doorway returns enemy projectiles to sender.';C.weak='Light, and her portal punches miss rivals who are right next to her.';
+ if(typeof TUNE!=='undefined'&&TUNE.toguchi){C.role='Portal trickster';C.tip='Hit them in the back from across the stage and drop them through the floor.';}
+ /* doorway: eats projectiles, bursts on return */
+ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.C.id!=='toguchi'||f.gone)continue;const mk=f.marker;
+   if(mk&&mk.alive){f._mk={x:mk.x,y:mk.y};for(const e of ENT){if(!e.alive||!e.proj||e.owner===f||(e.owner&&f.team!==undefined&&e.owner.team===f.team))continue;if(Math.abs(e.x-mk.x)<16&&Math.abs(e.y-(mk.y-20))<30){e.owner=f;e.vx=-e.vx;e.face=-e.face;e.hits={};e.t=Math.min(e.t,4);burst(mk.x,mk.y-20,10,fx,2,14);sfx('warp');}}}
+   else if(f._mk){const p=f._mk;f._mk=null;if(f.mv&&f.mv.k==='dB'){for(const q of[p,{x:f.x,y:f.y}]){FXL.push({k:'ring',x:q.x,y:q.y-28,t:0,col:'#9a70ff',r0:8,life:18});for(const o of F){if(!foe(f,o)||intangible(o))continue;if(Math.hypot(o.x-q.x,o.y-q.y)<38)applyHit(o,hit([[0,0,10]],6,4.5,.05,70),Math.sign(o.x-q.x)||1,f,{});}}}}}};
+ const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.C.id!=='toguchi'||f.dead||f.gone)continue;const m=f.mv;if(!m)continue;const d=m.d,t=m.t;
+   if(m.k==='nB'&&t>=d.s-4&&t<=d.s+d.a+6){portal(f.x+f.face*20,f.y-36,9,t);if(m.v.hx!==undefined){portal(m.v.hx,m.v.hy,9,t+3);const dd=Math.sign(f.x-m.v.hx)||1;if(f.hero){wl('#0c0820',m.v.hx,m.v.hy,m.v.hx-dd*20,m.v.hy-3,4);wl('#e8ecf4',m.v.hx,m.v.hy,m.v.hx-dd*20,m.v.hy-3,2);}else{wr('#0c0820',m.v.hx-dd*14-4,m.v.hy-4,8,8);wr('#f8e0d0',m.v.hx-dd*14-3,m.v.hy-3,6,6);}}}
+   if(m.k==='sB'&&t>=d.s-8&&t<=d.s+d.a+14&&m.v.px!==undefined){const g=Math.min(1,(t-d.s+8)/8);X.save();X.translate(m.v.px,m.v.py);X.scale(1,.3);X.translate(-m.v.px,-m.v.py);portal(m.v.px,m.v.py,16*g,t,m.v.miss?'#6a6a8a':'#9a70ff');X.restore();if(m.v.ox!==undefined){X.save();X.translate(m.v.ox,m.v.oy-64);X.scale(1,.3);X.translate(-m.v.ox,-(m.v.oy-64));portal(m.v.ox,m.v.oy-64,16,t+5);X.restore();}}}}catch(e){}};
+ /* hero: the katana goes through the portals */
+ {const NORM=['jab1','jab2','jab3','jab','ftilt','utilt','dtilt','dash','fsmash','usmash','dsmash','nair','fair','bair','uair','dair'];C.hmv={};for(const k of NORM){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)continue;const b0=d.hits[0].b[0];
+   C.hmv[k]=Object.assign({},d,{s:d.s+1,hits:d.hits.map(h=>Object.assign({},h,{dmg:h.dmg*1.1,b:h.b.map(q=>[q[0]*1.12,q[1],q[2]+1]),f0:h.f0!==undefined?h.f0+1:undefined,f1:h.f1!==undefined?h.f1+1:undefined})),vfx:{k:'H',el:'cut',x:b0[0]*1.12,y:b0[1],r:b0[2]+5}});}
+  C.heroNote='In her hero uniform she cuts through her portals with a katana: normals reach about 12% further and hit 10% harder, one frame slower, and Portal Strike does more damage.';}
+})();
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
