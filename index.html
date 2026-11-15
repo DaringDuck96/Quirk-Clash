@@ -1923,13 +1923,13 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('castDown',12,1,16,null,{spawn:[[12,GP({sh:'orb',c:'#ff5030',vx:.01,life:420,r:8,dmg:12,bkb:5,kbg:.08,ang:70,ex:1,max:1,dy:-6})]],cd:120,fx})}),
   sp:['Grenade (lobbed; explodes)','Drone (flies out and comes back)','Jetpack (free flight for a moment)','Proximity Mine (one at a time)']});
  fx=['#c83a5a','#8a9ab8'];add({id:'bentou',n:'BENTOU BAKEMONO',sn:'BENTOU',q:'Portent',ty:'Emitter',col:'#c83a5a',d:'Fills people with good luck or bad, and sees things coming. Convinced he is Karma\'s chosen.',
-  na:'Normals: lanky, unhurried swipes. His parry window is half again as long as normal, because he saw it coming.',
+  na:'Normals: lanky, unhurried swipes. A JINXED rival is a bigger target, has a weaker shield and hits a little softer; Bentou wins by keeping someone jinxed. His parry window is half again as long as normal.',
   look:K({skin:'#8a9ab8',eye:'#f0e0a0',hairS:'messy',hair:'#2a3048',hx:['horns','halfmask'],maskC:'#a8283e',outfit:'wrap',top:'#5a4a3a',acc:'#a8283e',sleeve:'#5a4a3a',pants:'#3a3a44',shoe:'#5a4030',stance:'cool',ex:[]}),st:ST({w:.94,run:2.9,air:2.7}),kit:{st:'brawler',fx,el:'omen',pow:.96,reach:1.1},
-  mv:Object.assign(SM('omen',fx),{nB:M('cast',12,1,18,null,{spawn:[[12,GP({sh:'dream',c:'#c83a5a',vx:3.4,life:90,r:9,dmg:4,bkb:2,kbg:.02,ang:50,eff:'conf',hm:1})]],cd:150,fx}),
+  mv:Object.assign(SM('omen',fx),{nB:M('cast',12,1,18,null,{spawn:[[12,GP({sh:'dream',c:'#c83a5a',vx:3.8,life:100,r:9,dmg:4,bkb:2,kbg:.02,ang:50,jinx:420,hm:1})]],cd:110,fx}),
    sB:M('roar',10,3,12,null,{cd:480,fx,onStart(f){f.qhype=FR+420;f.qhaste=FR+240;say(f,'GOOD FORTUNE','#ffe060');sfx('power');}}),
    uB:LEAP(fx,-10.4),
-   dB:M('counter',3,28,16,hit([[20,-34,18]],10,5,.07,40),{beh:'counter',bp:{f0:3,f1:30,mode:'dodge',mult:1.3},fx})}),
-  sp:['Ill Omen (a drifting curse that swaps a rival\'s left and right; cooldown)','Good Fortune (blesses himself: faster, and his next hit lands 30% harder)','Rise','Foreseen (the longest counter window in the school)']});
+   dB:M('counter',3,28,16,hit([[20,-34,18]],10,5,.07,40,{jinx:300}),{beh:'counter',bp:{f0:3,f1:30,mode:'dodge',mult:1.3},fx})}),
+  sp:['Ill Omen (a drifting curse that JINXES a rival for seven seconds)','Good Fortune (blesses himself: faster, and his next hit lands 30% harder)','Rise','Foreseen (the longest counter window in the school)']});
  fx=['#e8c040','#fff4c0'];add({id:'okane',n:'OKANE MOCHI',sn:'OKANE',q:'Gilded',ty:'Transformation',col:'#e8c040',d:'Shifts his body into solid gold, which improves everything about him. He would like you to know this school is beneath him.',
   na:'Normals: poised, contemptuous strikes. GILDED (Down-B) turns him to gold for eight seconds: 20% more damage and much harder to launch, but slower.',
   look:K({skin:'#f6e0cc',eye:'#7aa0c8',hairS:'messy',hair:'#f0dca0',outfit:'vest',top:'#b8a878',acc:'#f4f0e8',sleeve:'#f4f0e8',pants:'#4a4438',shoe:'#3a3028',stance:'cool',ex:[]}),st:ST({w:.98,run:3,air:2.7}),kit:{st:'brawler',fx,el:'gold',pow:1},
@@ -2258,7 +2258,7 @@ Object.assign(TUNE,{dawson:{role:'Quirkless technician',tip:'Nothing has a coold
 Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be hit at all. Slip through, whip them back.',sp:1,pw:1,kb:1},sato:{role:'Knockback specialist',tip:'Low damage, huge shove. Win at the edge.',sp:1,pw:1,kb:1},
  akio:{role:'Speedster',tip:'Homing Attack to start, Spin Dash to chase, Spring Jump to get home.',sp:1.2,pw:1,kb:1},sata:{role:'All-rounder',tip:'A tool for every range and a self-repair.',sp:1,pw:1,kb:1},kitsu:{role:'Hard-light bruiser',tip:'Constructs do the hitting. The hammer breaks shields.',sp:1,pw:1,kb:1},
  uzi:{role:'Resilient grappler',tip:'Melt under their attacks, Engulf them when they shield.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest.',sp:.96,pw:1,kb:1},
- bentou:{role:'Fortune teller',tip:'Curse them, bless yourself, counter what is left.',sp:.98,pw:1,kb:1},okane:{role:'Gilded duelist',tip:'Save Gilded for when it matters; it has a long cooldown.',sp:1,pw:1,kb:1},
+ bentou:{role:'Jinx specialist',tip:'Keep them JINXED: bigger target, weaker shield, softer hits.',sp:.98,pw:1,kb:1},okane:{role:'Gilded duelist',tip:'Save Gilded for when it matters; it has a long cooldown.',sp:1,pw:1,kb:1},
  goiru:{role:'Flying heavyweight',tip:'Four jumps and armour. Drop the hammer from above.',sp:.9,pw:1,kb:1,armor:1},aya:{role:'Crystal caster',tip:'A different crystal on every button.',sp:1,pw:1,kb:1},
  hikari:{role:'Twin-blade rushdown',tip:'Count your hits: every fourth one shocks.',sp:1.1,pw:1,kb:1},ryo:{role:'Burrowing brawler',tip:'Tunnel under projectiles and come up swinging.',sp:1,pw:1,kb:1},
  suzume:{role:'Web rocker',tip:'Yank them in, then Encore.',sp:1.06,pw:1,kb:1},ayame:{role:'Defensive air master',tip:'Blast them away and reflect what they throw.',sp:1.02,pw:1,kb:1},
@@ -4928,7 +4928,7 @@ sata:['An arm-cannon shot. Hold B to charge it.','Fires her forearm. It flies ou
 kitsu:['Throws a spinning blade of solid light.','Builds a giant hammer and brings it down. Slow, strong, and it cracks shields.','Runs up a stair of light.','A wall of hard light that reflects projectiles and shoves rivals.','A parade of constructs sweeps the stage. He takes a bow.'],
 uzi:['Lobs a glob of slime that sticks to whoever it hits.','Lunges and swallows a rival whole: squeezes them inside her, then spits them out. Shields do not stop it.','A geyser of slime erupts under her and throws her upward.','Melts into a puddle and pours across the floor. She cannot be hit, slows anyone she passes under, and leaves a sticky pool that roots.','Becomes a wave of slime taller than the stage.'],
 ichigo:['Lobs a grenade. It explodes.','Launches a drone that flies out and comes back.','A jetpack carries her in any direction; the exhaust burns anyone below.','Plants a proximity mine. One at a time.','Unfolds the prototype mech she has been working on and fires its main gun.'],
-bentou:['A drifting curse that hunts a rival and swaps their left and right. Cooldown.','Blesses himself: faster for four seconds, and his next hit lands 30% harder. Long cooldown.','A rising leap.','He saw it coming: the longest counter window in the school.','Everyone on screen gets what is coming to them.'],
+bentou:['A drifting curse that hunts a rival and JINXES them for seven seconds: they become a quarter bigger to hit, their shield takes half again as much damage, and their attacks do 12% less.','Blesses himself: faster for four seconds, and his next hit lands 30% harder. Long cooldown.','A rising leap.','He saw it coming: the longest counter window in the school. The counter-hit jinxes for five seconds.','Everyone on screen gets what is coming to them.'],
 okane:['Flicks a coin, fast and flat.','A contemptuous shoulder charge.','A rising leap.','Turns to solid gold for eight seconds: 20% more damage and much harder to launch, but slower. Long cooldown.','Demonstrates, at length, why he is better than this.'],
 goiru:['Brings his hammer down. Slow, heavy and it cracks shields.','An armoured swoop on his wings.','Free flight for a moment.','Turns to stone: for two and a half seconds nothing makes him flinch, and he heals 3%.','Drops out of the sky onto a rival.'],
 aya:['Quartz: a fast, sharp shard.','Amethyst: a beam that swaps a rival\'s left and right. Cooldown.','Rides a crystal spire upward.','Rose quartz: heals 5% and a crystal shell eats the next hit. Long cooldown.','Turns the stage into her stage. Everything on it glitters and cuts.'],
@@ -5680,7 +5680,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
 (function(){const c=id=>CH.find(x=>x.id===id);
  const W2={moya:['Light, and his damage is low.','Two of his specials cannot be hit at all.'],sato:['The lowest damage of any brawler.','AIRBAGS: his smash attacks send rivals 12% further.'],akio:['Small, light, and he overshoots: a missed roll leaves him wide open.','The fastest runner in the school, and Spring Jump does not leave him helpless.'],
   sata:['Excellent at nothing.','No real weakness.'],kitsu:['His constructs are slow to build.','Constructs keep his body out of his attacks.'],uzi:['Slow, and a big soft target.','SLIME: launched 12% less, and regenerates slowly when left alone.'],
-  ichigo:['Weak up close and easy to launch.','Mines, drones and grenades all at once.'],bentou:['Without his blessings he hits softly.','A parry window half again as long as normal.'],okane:['Gilded has a sixteen-second cooldown, and he is ordinary without it.','GILDED: 20% more damage and 30% less knockback taken for eight seconds.'],
+  ichigo:['Weak up close and easy to launch.','Mines, drones and grenades all at once.'],bentou:['He hits softly; against a rival who is not jinxed he has very little.','JINX: his curses make a rival a bigger target with a weaker shield and softer hits. A parry window half again as long as normal.'],okane:['Gilded has a sixteen-second cooldown, and he is ordinary without it.','GILDED: 20% more damage and 30% less knockback taken for eight seconds.'],
   goiru:['A huge target with a slow start to everything.','Four jumps. Hits under 5% do not make him flinch.'],aya:['Light, with little knockout power.','A different crystal on every special.'],hikari:['Short reach for a blade fighter and light.','SHOCK: every fourth hit she lands holds the rival a moment longer.'],
   ryo:['No projectile and average speed.','Cannot be confused, and sees cloaked rivals.'],suzume:['Light; her best hits need the web to land first.','Three jumps.'],ayame:['Very low damage: she wins by ring-out.','Her hits push 10% further.'],
   sota:['His dashes commit him; miss and he is wide open.','The fastest dash and the highest jump in the school.'],tiki:['Slow projectiles and no fast escape.','His spirits do the fighting: his attacks never expose his arms, and three of his specials keep working after he has moved on.'],
@@ -6648,19 +6648,23 @@ BEH.homing={tick(f,m,I){const d=m.d,p=d.bp;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.
   if(m.t>=d.s&&m.t<d.s+d.a){if(m.hit&&Object.keys(m.hit).length){f.vx=-f.face*1.5;f.vy=-5;m.t=d.s+d.a;}else{f.vx=m.v.hx;f.vy=m.v.hy;if(m.t%2===0)part(f.x,f.y-20,0,0,10,'#4a8aff',2,0);}}
   if(m.t===d.s+d.a){f.vx*=.25;if(f.vy>0)f.vy*=.3;}}};
 {const A=c('akio');if(A)A.hurt=[13,46];}
+/* ---- Bentou: the jinx ---- */
+function jinx(t,n,by){if(!t||t.dead)return;if(!(t.jinxT>FR))FXL.push({k:'txt',s:'JINXED',x:t.x,y:t.y-92,t:0,life:40,col:'#c83a5a'});t.jinxT=Math.max(t.jinxT||0,FR+n);FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#c83a5a',r0:8,life:16});}
+{const h0=hurtR;hurtR=function(f){const r=h0(f);if(f.jinxT>FR){const w=r[2]*.26,h=r[3]*.18;return[r[0]-w/2,r[1]-h,r[2]+w,r[3]+h];}return r;};}
 /* ---- hooks ---- */
 const p0=preHit;preHit=function(t,h,a,o){const id=t.C.id;if(a&&a!==t&&!(o&&o.force)){
     if(id==='aria'&&rnd()<1/6){t.inv=Math.max(t.inv||0,10);FXL.push({k:'txt',s:'LUCKY!',x:t.x,y:t.y-78,t:0,life:34,col:'#ffd84a'});sfx('counter');return true;}
     if(id==='kal'&&FR-(t.dsT===undefined?-999:t.dsT)>=480){t.dsT=FR;t.inv=Math.max(t.inv||0,12);FXL.push({k:'txt',s:'DANGER SENSE',x:t.x,y:t.y-78,t:0,life:36,col:'#a0ff40'});FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#a0ff40',r0:10,life:16});sfx('counter');return true;}}
   return p0(t,h,a,o);};
 const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a.C.id==='aria'&&rnd()<1/6){m*=1.5;FXL.push({k:'txt',s:'LUCKY HIT!',x:t.x,y:t.y-88,t:0,life:30,col:'#ffd84a'});}
-  if(a.C.id==='sarah'&&!(o&&o.proj)&&(t.x-a.x)*t.face>0)m*=1.3;if(t.C.id==='ash'&&h.eff==='burn')m*=1.2;if(a.form==='gold')m*=1.2;return m;};
+  if(a.jinxT>FR)m*=.88;if(a.C.id==='sarah'&&!(o&&o.proj)&&(t.x-a.x)*t.face>0)m*=1.3;if(t.C.id==='ash'&&h.eff==='burn')m*=1.2;if(a.form==='gold')m*=1.2;return m;};
 const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);const id=t.C.id;if(id==='ash'&&h.eff!=='burn')m*=.9;if(t.form==='rage')m*=.7;if(t.form==='gold')m*=.7;if(id==='uzi')m*=.88;const ai=a.C.id;if(ai==='sato'&&a.mv&&/smash/.test(a.mv.k))m*=1.12;else if(ai==='ayame')m*=1.1;return m;};
-const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t.dmg,res=ah(t,h,dirX,a,o);try{const dd=t.dmg-hp;if(dd>0){
+const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t.dmg,sh0=t.shp,res=ah(t,h,dirX,a,o);try{if(t.jinxT>FR&&t.shp<sh0&&t.shp>0)t.shp=Math.max(0,t.shp-(sh0-t.shp)*.5);const jx=h&&(h.jinx||(h.spec&&h.spec.jinx));if(jx&&a&&a!==t&&(t.dmg>hp||t.shp<sh0))jinx(t,jx,a);const dd=t.dmg-hp;if(dd>0){
   if(t.C.id==='bryson'&&!t.form){const g=t.gm||(t.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.5);}
   if(a&&a!==t&&a.C.id==='hikari'&&!(o&&o.proj)&&t.st==='hit'){const g=a.gm||(a.gm={});g.hk=(g.hk||0)+1;if(g.hk>=4){g.hk=0;t.hitstun+=14;FXL.push({k:'txt',s:'SHOCK!',x:t.x,y:t.y-88,t:0,life:28,col:'#6aff6a'});for(let i=0;i<10;i++)part(t.x,t.y-30,rnd()*4-2,rnd()*4-2,10,i%2?'#6aff6a':'#ffffff',1,0);}}
   if(a&&a!==t&&a.C.id==='bryson'&&!a.form){const g=a.gm||(a.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.2);}}}catch(e){}return res;};
-const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.gone)continue;const id=f.C.id;
+const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.gone)continue;const id=f.C.id;if(f.jinxT&&(f.dead||f.st==='respawn'))f.jinxT=0;if(f.jinxT>FR&&FR%7===0)part(f.x+rnd()*24-12,f.y-70-rnd()*10,0,.5,14,'#c83a5a',2,0);
+  if(id==='bentou'){const m=f.mv;if(m&&m._qf&&!m._jq){m._jq=1;for(const t of F)if(t!==f&&!t.dead&&!t.gone&&(f.team===undefined||t.team!==f.team)&&Math.abs(t.x-f.x)<140&&Math.abs(t.y-f.y)<70)jinx(t,300,f);}}
   if(id==='bryson'){const g=f.gm||(f.gm={});if(f.dead||f.st==='respawn'){if(f.form==='rage'){f.form=null;f.formL=null;}f.rageT=0;g.tan=0;continue;}
     if(f.form==='rage'){if(f.st==='shield'||f.st==='shieldstun')f.st='idle';if(FR%6===0)part(f.x+rnd()*30-15,f.y-rnd()*80,0,-.6,14,'#7ae04a',2,0);
       if(FR>=f.rageT&&!f.mv&&f.st!=='hit'){f.form=null;f.formL=null;f.S=null;g.tan=0;say(f,'...sorry.','#c8d0e0');burst(f.x,f.y-30,14,['#5aa03a','#ffffff'],2,18);}}
@@ -6674,6 +6678,7 @@ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for
   else if(id==='kora'){if(f.ground)f.hovF=0;else if(f.pi&&f.pi.J&&f.vy>.8&&(f.hovF||0)<80&&f.st!=='hit'){f.vy=.8;f.hovF=(f.hovF||0)+1;if(FR%5===0)part(f.x+rnd()*24-12,f.y-30,0,.6,12,'#ffffff',1,0);}}
   else if(id==='jack'&&f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&rnd()<.003)startMove(f,'dB');}};
 const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.gone||f.invis)continue;const id=f.C.id,x=Math.round(f.x),y=Math.round(f.y)+5;
+  if(f.jinxT>FR){const R=hurtR(f);X.globalAlpha=.5+.2*Math.sin(FR*.3);X.strokeStyle='#c83a5a';X.lineWidth=1;X.setLineDash([3,3]);X.strokeRect(R[0],R[1],R[2],R[3]);X.setLineDash([]);X.globalAlpha=1;wtri('#c83a5a',x-4,Math.round(f.y)-96,x+4,Math.round(f.y)-96,x,Math.round(f.y)-90);}
   const bar=(v,col,full)=>{wr('#0c0820',x-13,y-1,26,5);wr('#3a3660',x-12,y,24,3);wr(v>=1&&full?(FR%10<5?'#ffffff':full):col,x-12,y,Math.round(24*clamp(v,0,1)),3);};
   if(id==='bryson'){if(f.form==='rage')bar((f.rageT-FR)/720,'#7ae04a');else bar(((f.gm&&f.gm.tan)||0)/100,'#5aa03a','#7ae04a');}
   else if(id==='hikari'){const n=(f.gm&&f.gm.hk)||0;wr('#0c0820',x-9,y-1,17,5);for(let i=0;i<3;i++)wr(i<n?'#6aff6a':'#3a3660',x-8+i*5,y,4,3);}
@@ -7120,7 +7125,7 @@ const Q={
  bryson:['dust',null,shove(.6),null],conor:['gold',haste(50),null,null],ray:['spark',burn(.4),daze(5),null],oliver:['leaf',shove(.6),null,null],chris:['blood',bleed(.4),bleed(.6),null],
  evona:['snow',slow(50),slow(90),null],jack:['ember',burn(.4),burn(.6),null],kal:['aqua',daze(3),shove(.8),null],kora:['feather',lift(.7),shove(.9),lift(.5)],ash:['leaf',pull(.7),sd(1.5),null],
  moya:['bubble',pull(.6),null,daze(3)],sato:['white',shove(.9),shove(1.2),shove(.6)],akio:['spark',haste(50),daze(4),null],sata:['aqua',daze(3),sd(1.4),null],kitsu:['star',daze(3),sd(1.5),null],
- uzi:['venom',slow(50),pull(1),null],ichigo:['spark',burn(.4),burn(.6),null],bentou:['dark',daze(4),slow(70),null],okane:['gold',shove(.6),sd(1.5),null],goiru:['dust',shove(.7),sd(1.7),lift(.5)],
+ uzi:['venom',slow(50),pull(1),null],ichigo:['spark',burn(.4),burn(.6),null],bentou:['dark',daze(3),null,null],okane:['gold',shove(.6),sd(1.5),null],goiru:['dust',shove(.7),sd(1.7),lift(.5)],
  aya:['star',bleed(.4),daze(5),null],hikari:['spark',bleed(.4),daze(5),null],ryo:['dust',bleed(.5),lift(.8),null],suzume:['web',pull(.7),daze(5),slow(40)],ayame:['gale',shove(.9),shove(1.3),lift(.7)],
  sota:['ember',burn(.4),shove(1),null],tiki:['star',drain(.5),daze(5),null],
  daku:['ember',null,sd(1.4),null],kongu:['dust',shove(.6),sd(1.6),null],hippo:['blue',daze(3),daze(5),null]};
@@ -7284,7 +7289,7 @@ const A={
  moya:['VAPOR','blink',{d:100},5,'Turns to vapor and re-forms a few steps away in the held direction.'],sato:['DEPLOY','roar',{r:110,f:6.5,sd:6},8,'Every airbag at once: everyone close is thrown back. No damage.'],
  akio:['REV UP','haste',{dur:170},8,'Spins his legs on the spot, then runs 20% faster for a few seconds.'],sata:['SCAN','fear',{r:170,front:1,slow:80},9,'Locks on: rivals in front of her are slowed by targeting interference.'],
  kitsu:['SPOTLIGHT','fear',{r:130,conf:50},10,'A blinding stage light: nearby rivals have left and right swapped.'],uzi:['RE-FORM','heal',{amt:4},9,'Pulls herself back together: heals 4%.'],
- ichigo:['EMP','fear',{r:130,slow:120},9,'A pocket EMP slows everyone nearby.'],bentou:['BAD LUCK','fear',{r:130,turn:1,slow:90},9,'A flick of ill fortune: rivals nearby stumble, turn around and slow down.'],
+ ichigo:['EMP','fear',{r:130,slow:120},9,'A pocket EMP slows everyone nearby.'],bentou:['BAD LUCK','fear',{r:140,turn:1},9,'A flick of ill fortune: rivals nearby stumble, turn around and are JINXED for five seconds.'],
  okane:['DISDAIN','push',{r:110,f:1.3},7,'Waves rivals away from him.'],goiru:['WING BUFFET','push',{r:150,f:1.6,lift:1},7,'Stone wings blow everyone in front of him backward.'],
  aya:['DAZZLE','fear',{r:125,turn:1,slow:70},9,'A flash of prismatic light turns nearby rivals around.'],hikari:['OVERCHARGE','hype',{},10,'Runs current through her blades: her next hit lands 30% harder.'],
  ryo:['TREMOR','roar',{r:140,f:3.5,lift:1,sd:8},9,'Strikes the ground: everyone standing nearby is bounced into the air.'],suzume:['WEB LINE','pull',{r:200,f:1.2,front:1},8,'Reels in everyone in front of her. No damage.'],
