@@ -1901,13 +1901,14 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('palm',6,14,16,hit([[26,-36,22]],4,6,.02,30),{beh:'reflect',bp:{f0:6,f1:20},fx,cd:60})}),
   sp:['Light Blade (a spinning hard-light blade)','Giant Hammer (a slow hard-light hammer; cracks shields)','Light Stair','Prism Wall (reflects projectiles)']});
  fx=['#7ae04a','#d8ffc0'];add({id:'uzi',n:'UZI UEHARA',sn:'UZI',q:'Slime',ty:'Mutant',col:'#7ae04a',d:'Her whole body is tough green slime that she shapes however she wants. Sweet about it.',
-  na:'Normals: slime limbs that stretch and slap. Hits sink into her: she is launched 12% less than her weight suggests and slowly pulls herself back together.',
+  na:'Normals: her arms and legs stretch into whips and hammers of slime, and her forward smash is a fist bigger than she is. Hits sink into her: she is launched 12% less than her weight suggests and slowly pulls herself back together.',
   look:K({skin:'#8ae05a',eye:'#f0f060',hairS:'long',hair:'#2a7a3a',outfit:'coat',top:'#1c1c26',acc:'#7ae04a',sleeve:'#1c1c26',pants:'#2a3a4a',shoe:'#1c1c26',stance:'cool',smile:1,ex:[]},1),st:ST({w:1.06,run:2.9,air:2.6}),kit:{st:'brawler',fx,el:'slime',pow:1,reach:1.12},
-  mv:Object.assign(SM('slime',fx),{nB:M('throwF',11,1,18,null,{spawn:[[11,GP({sh:'jelly',c:'#7ae04a',vx:3.6,vy:-4.2,g:.26,life:80,r:8,dmg:7,bkb:3,kbg:.045,ang:55,slow:1})]],fx}),
-   sB:M('punch',14,5,22,hit([[50,-40,20],[26,-40,14]],14,5,.09,40),{fx,lim:'hF',ph:{sF:3.2,aF:[54,-42]}}),
-   uB:M('uppercut',5,12,16,hit([[4,-64,15]],7,4.5,.055,86),{beh:'leapUp',bp:{vy:-10.2,vx:1.5},helpless:1,fx,ph:{sF:2.2,aF:[8,-92]}}),
-   dB:M('castDown',12,1,18,null,{spawn:[[12,{k:'puddle',life:360,r:16,dmg:2,bkb:1,kbg:0,ang:90,eff:'root',max:1}]],cd:140,fx})}),
-  sp:['Slime Glob (lobbed; slows)','Giant Fist (a huge fist of slime)','Stretch','Slime Pool (a sticky patch that roots; one at a time)']});
+  mv:Object.assign(SM('slime',fx,{f:{far:44,dmg:16,ph:{sF:3.2,aF:[54,-42]}},d:{dmg:14}}),{nB:M('throwF',11,1,18,null,{spawn:[[11,GP({sh:'jelly',c:'#7ae04a',vx:3.6,vy:-4.2,g:.26,life:80,r:9,dmg:6,bkb:2.5,kbg:.04,ang:55,eff:'stick'})]],fx}),
+   sB:M('lunge',9,7,22,null,{beh:'cgrab',bp:{box:[4,-48,40,44],mode:'constrict',eff:null},fx}),
+   uB:M('uppercut',5,12,16,hit([[4,-64,15]],7,4.5,.055,86),{beh:'leapUp',bp:{vy:-10.6,vx:1.5},helpless:1,fx,ph:{sF:2.2,aF:[8,-92]},spawn:[[4,{k:'geyser',life:22,delay:0,dmg:5,bkb:4,kbg:.03,ang:86}]]}),
+   dB:M('sink',6,20,12,hit([[0,-6,18]],2.4,2,.02,70,{ri:6,qk:{k:'slow',t:90}}),{beh:'dash',bp:{spd:5.6,f0:6,f1:26,air:'grav',intang:1},fx,lim:'none',cd:70,spawn:[[6,{k:'puddle',life:300,r:16,dmg:2,bkb:1,kbg:0,ang:90,eff:'root',max:1}]]})}),
+  sp:['Slime Glob (lobbed; sticks to whoever it hits)','Engulf (swallows a rival in slime, squeezes, and spits them out; beats shields)','Geyser (a column of slime throws her upward)','Melt (pours herself across the floor as a puddle: cannot be hit, slows whoever she passes under, and leaves a sticky pool behind)']});
+
  fx=['#b8c860','#ff8a30'];add({id:'ichigo',n:'ICHIGO TANAKA',sn:'ICHIGO',q:'Big Brain',ty:'Mutant',col:'#b8c860',d:'A genius who builds things that should not fit in a backpack. Independent, always tinkering, and very fond of explosions.',
   na:'Normals: wrenches, spare parts and a mechanical third arm. Mediocre up close; everything she has built is what you should worry about.',
   look:K({skin:'#f0d8c0',eye:'#6a8a3a',hairS:'bun',hair:'#b8c860',hx:['goggles'],outfit:'jacketS',top:'#5a6a3a',acc:'#3a3a30',sleeve:'#5a6a3a',pants:'#6a6048',shoe:'#3a3028',glove:'#2a2a24',stance:'cool',ex:['pack']},1),st:ST({w:.9,run:2.9,air:2.6}),kit:{st:'brawler',fx,el:'tech',pow:.92},
@@ -1918,7 +1919,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   sp:['Grenade (lobbed; explodes)','Drone (flies out and comes back)','Jetpack (free flight for a moment)','Proximity Mine (one at a time)']});
  fx=['#c83a5a','#8a9ab8'];add({id:'bentou',n:'BENTOU BAKEMONO',sn:'BENTOU',q:'Portent',ty:'Emitter',col:'#c83a5a',d:'Fills people with good luck or bad, and sees things coming. Convinced he is Karma\'s chosen.',
   na:'Normals: lanky, unhurried swipes. His parry window is half again as long as normal, because he saw it coming.',
-  look:K({skin:'#8a9ab8',eye:'#f0e0a0',hairS:'long',hair:'#2a3048',hx:['horns','halfmask'],maskC:'#a8283e',outfit:'wrap',top:'#5a4a3a',acc:'#a8283e',sleeve:'#5a4a3a',pants:'#3a3a44',shoe:'#5a4030',stance:'cool',ex:[]}),st:ST({w:.94,run:2.9,air:2.7}),kit:{st:'brawler',fx,el:'omen',pow:.96,reach:1.1},
+  look:K({skin:'#8a9ab8',eye:'#f0e0a0',hairS:'messy',hair:'#2a3048',hx:['horns','halfmask'],maskC:'#a8283e',outfit:'wrap',top:'#5a4a3a',acc:'#a8283e',sleeve:'#5a4a3a',pants:'#3a3a44',shoe:'#5a4030',stance:'cool',ex:[]}),st:ST({w:.94,run:2.9,air:2.7}),kit:{st:'brawler',fx,el:'omen',pow:.96,reach:1.1},
   mv:Object.assign(SM('omen',fx),{nB:M('cast',12,1,18,null,{spawn:[[12,GP({sh:'dream',c:'#c83a5a',vx:3.4,life:90,r:9,dmg:4,bkb:2,kbg:.02,ang:50,eff:'conf',hm:1})]],cd:150,fx}),
    sB:M('roar',10,3,12,null,{cd:480,fx,onStart(f){f.qhype=FR+420;f.qhaste=FR+240;say(f,'GOOD FORTUNE','#ffe060');sfx('power');}}),
    uB:LEAP(fx,-10.4),
@@ -2253,7 +2254,7 @@ Object.assign(TUNE,{dawson:{role:'Quirkless technician',tip:'Nothing has a coold
  kal:{role:'Precognitive brawler',tip:'Every eight seconds one hit misses him. Swing first.',sp:1.04,pw:1,kb:1},kora:{role:'Winged skirmisher',tip:'Four jumps and a hover. Fight from above.',sp:1,pw:1,kb:1},ash:{role:'Long-limbed heavy',tip:'His arm reaches half the stage. Keep them at the end of it.',sp:.96,pw:1,kb:1}});
 Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be hit at all. Slip through, whip them back.',sp:1,pw:1,kb:1},sato:{role:'Knockback specialist',tip:'Low damage, huge shove. Win at the edge.',sp:1,pw:1,kb:1},
  akio:{role:'Speedster',tip:'Run, spin through them, run again.',sp:1.2,pw:1,kb:1},sata:{role:'All-rounder',tip:'A tool for every range and a self-repair.',sp:1,pw:1,kb:1},kitsu:{role:'Hard-light bruiser',tip:'Constructs do the hitting. The hammer breaks shields.',sp:1,pw:1,kb:1},
- uzi:{role:'Resilient grappler',tip:'Hard to launch and heals slowly. Giant Fist ends stocks.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest.',sp:.96,pw:1,kb:1},
+ uzi:{role:'Resilient grappler',tip:'Melt under their attacks, Engulf them when they shield.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest.',sp:.96,pw:1,kb:1},
  bentou:{role:'Fortune teller',tip:'Curse them, bless yourself, counter what is left.',sp:.98,pw:1,kb:1},okane:{role:'Gilded duelist',tip:'Save Gilded for when it matters; it has a long cooldown.',sp:1,pw:1,kb:1},
  goiru:{role:'Flying heavyweight',tip:'Four jumps and armour. Drop the hammer from above.',sp:.9,pw:1,kb:1,armor:1},aya:{role:'Crystal caster',tip:'A different crystal on every button.',sp:1,pw:1,kb:1},
  hikari:{role:'Twin-blade rushdown',tip:'Count your hits: every fourth one shocks.',sp:1.1,pw:1,kb:1},ryo:{role:'Burrowing brawler',tip:'Tunnel under projectiles and come up swinging.',sp:1,pw:1,kb:1},
@@ -4922,7 +4923,7 @@ sato:['A quick pistol shot.','An airbag bursts off his fist: little damage, a ve
 akio:['A spark of stored static. Stuns. Cooldown.','Curls up and rolls across the stage, hitting again and again.','Springs upward as a ball.','Stores up static: his next hit within seven seconds lands 30% harder.','Runs through everyone faster than they can see.'],
 sata:['An arm-cannon shot. Hold B to charge it.','Fires her forearm. It flies out fast, then slows and lingers.','Thrusters carry her in any direction for a moment.','Her nanites repair her: heals 7%. Long cooldown.','Opens every weapon port and fires down the lane.'],
 kitsu:['Throws a spinning blade of solid light.','Builds a giant hammer and brings it down. Slow, strong, and it cracks shields.','Runs up a stair of light.','A wall of hard light that reflects projectiles and shoves rivals.','A parade of constructs sweeps the stage. He takes a bow.'],
-uzi:['Lobs a glob of slime. Slows whoever it hits.','Grows a huge fist of slime and swings it.','Stretches upward.','Leaves a sticky pool that roots whoever steps in it. One at a time.','Becomes a wave of slime taller than the stage.'],
+uzi:['Lobs a glob of slime that sticks to whoever it hits.','Lunges and swallows a rival whole: squeezes them inside her, then spits them out. Shields do not stop it.','A geyser of slime erupts under her and throws her upward.','Melts into a puddle and pours across the floor. She cannot be hit, slows anyone she passes under, and leaves a sticky pool that roots.','Becomes a wave of slime taller than the stage.'],
 ichigo:['Lobs a grenade. It explodes.','Launches a drone that flies out and comes back.','A jetpack carries her in any direction; the exhaust burns anyone below.','Plants a proximity mine. One at a time.','Unfolds the prototype mech she has been working on and fires its main gun.'],
 bentou:['A drifting curse that hunts a rival and swaps their left and right. Cooldown.','Blesses himself: faster for four seconds, and his next hit lands 30% harder. Long cooldown.','A rising leap.','He saw it coming: the longest counter window in the school.','Everyone on screen gets what is coming to them.'],
 okane:['Flicks a coin, fast and flat.','A contemptuous shoulder charge.','A rising leap.','Turns to solid gold for eight seconds: 20% more damage and much harder to launch, but slower. Long cooldown.','Demonstrates, at length, why he is better than this.'],
@@ -6212,7 +6213,7 @@ const ING_MAX=6;
  const H3={
   sato:{outfit:'jacketS',top:'#f4f0e8',acc:'#1c1c22',sleeve:'#8a8078',pants:'#5a6a80',shoe:'#2a2a30'},
   akio:{outfit:'stealth',top:'#1c1c22',acc:'#c8282e',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#c8282e',boots:1,glove:'#1c1c22',hair:'#c8282e'},
-  uzi:{outfit:'stealth',top:'#1c1c26',acc:'#7ae04a',sleeve:'#f0f0f4',pants:'#5a6a8a',shoe:'#1c1c26',boots:1,glove:'#1c1c26',hx:['helm'],helmC:'#f0f0f4',ex:['cape'],capeC:'#1c1c26',capeT:'#7ae04a'},
+  uzi:{outfit:'stealth',top:'#1c1c26',acc:'#7ae04a',sleeve:'#f0f0f4',pants:'#5a6a8a',shoe:'#1c1c26',boots:1,glove:'#1c1c26',hx:[],ex:['cape'],capeC:'#1c1c26',capeT:'#7ae04a'},
   ichigo:{outfit:'coat',top:'#f0f0f4',acc:'#5ab8ff',sleeve:'#f0f0f4',pants:'#3a3a48',shoe:'#c8282e',boots:1,glove:'#5a6a8a',hx:['hoodup','goggles'],hoodC:'#f0f0f4',ex:['pack']},
   aya:{outfit:'dress',top:'#6a3ac8',acc:'#9affea',sleeve:'#5ab8e8',sl:'long',skirt:'#6a3ac8',socks:'#f0f0f8',shoe:'#c8a0ff'},
   suzume:{outfit:'hoodsuit',top:'#f4f4f8',acc:'#ff6ad0',sleeve:'#f4f4f8',pants:'#1c1c26',shoe:'#6ae8ff',boots:1,glove:'#1c1c26',hx:['hoodup'],hoodC:'#f4f4f8'},
