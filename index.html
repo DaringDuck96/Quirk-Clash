@@ -2156,7 +2156,7 @@ function applyHit(t,h,dirX,a,o){o=o||{};
   let sw=1;if(a&&a!==t&&a.mv&&a.mv.d.sweet&&!o.proj&&!o.force){const hb=a.mv.d.hits[0].b[0],reach=Math.abs(hb[0])+hb[2],far=Math.abs(t.x-a.x)>reach*.6,good=a.mv.d.sweet==='tip'?far:!far;sw=good?1.15:.88;if(good&&a.mv.swT!==FR){a.mv.swT=FR;FXL.push({k:'txt',s:'SWEET SPOT!',x:t.x,y:t.y-78,t:0,life:34,col:'#ffe060'});sfx('hitH');}}
   let stale=1;if(a&&a!==t&&a.mv&&!o.proj&&!o.force){const q=a.stq||(a.stq=[]),k=a.mv.k,n=q.filter(x=>x===k).length;stale=n?Math.max(.7,1-n*.07):1.05;if(a.mv.stm!==1){a.mv.stm=1;q.push(k);if(q.length>8)q.shift();}}
   const dmg=(a&&a!==t&&a.C.necro?1+Math.min(a.dmg,150)/300:1)*sw*stale*h.dmg*(o.cm||1)*(rage?1.25:1)*(spice?1.2:1)*(a&&a!==t&&a.C.atkM||1)*(t.C.defM||1)*(typeof dmgMod==='function'&&a&&a!==t?dmgMod(a,t,h,o):1);
-  t.dmg=Math.min(999,t.dmg+dmg);t.lastHurt=FR;if(a&&a!==t)t.lastBy=a;t.kd=false;if(a&&a!==t&&a.st!=='fs')a.fsm=Math.min(100,(a.fsm||0)+dmg*.195);if(t.st!=='fs')t.fsm=Math.min(100,(t.fsm||0)+dmg*.1125);if(a){if(a.C.lifesteal&&a!==t&&!o.proj&&a.dmg>0)a.dmg=Math.max(0,a.dmg-dmg*a.C.lifesteal);a.dealt+=dmg;a.hitsN=(a.hitsN||0)+1;a.best=Math.max(a.best||0,dmg);if(a.C.id==='tatsuya'&&a!==t&&t.C.id!=='tatsuya'&&(a.copyT<=0||h.eff==='copy'))mimicCopy(a,t,h.eff==='copy'?600:420);
+  t.dmg=Math.min(999,t.dmg+dmg);t.lastHurt=FR;if(a&&a!==t)t.lastBy=a;t.kd=false;if(a&&a!==t&&a.st!=='fs')a.fsm=Math.min(100,(a.fsm||0)+dmg*.39);if(t.st!=='fs')t.fsm=Math.min(100,(t.fsm||0)+dmg*.225);if(a){if(a.C.lifesteal&&a!==t&&!o.proj&&a.dmg>0)a.dmg=Math.max(0,a.dmg-dmg*a.C.lifesteal);a.dealt+=dmg;a.hitsN=(a.hitsN||0)+1;a.best=Math.max(a.best||0,dmg);if(a.C.id==='tatsuya'&&a!==t&&t.C.id!=='tatsuya'&&(a.copyT<=0||h.eff==='copy'))mimicCopy(a,t,h.eff==='copy'?600:420);
     if((a.C.id==='keanu'||a.C.id==='marina')&&t.stickT>0){t.stickT=0;burst(t.x,t.y-30,8,['#9fe8ff','#ffe890'],1.6,14);}}
   t.flash=8;t.shakeHUD=10;
   const col=(h.fx&&h.fx[0])||(a&&a.mv&&a.mv.d.fx&&a.mv.d.fx[0])||'#ffffff';
@@ -6109,6 +6109,18 @@ const BEAST=(function(){
    /* the hound: lower, longer, a touch faster, everything is teeth */
    dogBite[k]=Object.assign({},d,{s:Math.max(2,d.s-1),hits:d.hits.map(h=>Object.assign({},h,{eff:'burn',dmg:h.dmg*1.06,b:h.b.map(q=>[q[0]*1.15,Math.max(q[1],-44)*.8,q[2]])})),vfx:{k:'H',el:'hell',x:b0[0]*1.15,y:Math.max(b0[1],-44)*.8,r:b0[2]+3}});
    d.vfx={k:'H',el:'hfire',x:b0[0],y:b0[1],r:b0[2]+3};d.hits.forEach(h=>{h.eff='burn';});}
+ /* human down smash: pillars of hellfire burst out of the ground on both sides of him, the inner pair first */
+ {const col=(x,dm,ang,f0,f1)=>hit([[x,-10,11],[x,-32,11],[x,-54,10]],dm,3.6,.082,ang,{eff:'burn',f0,f1,sd:1.4});
+  C.mv.dsmash=M('castDown',10,9,20,[col(24,13,82,10,14),col(-24,13,98,10,14),col(47,10.5,68,13,19),col(-47,10.5,112,13,19)],{charge:1,lim:'none',fx,face:'atk',vfx:{k:'H',el:'hfpillar',x:0,y:0,r:12}});
+  C.mv.dsmash.qn='Pillars of hellfire burst from the ground on both sides of him. Burns, and chews through shields.';
+  NEWFX.hfpillar=function(sub,x,y,d,pr,fx2,f,R,T){const gy=f.y;for(const[ox,dl]of[[-47,.2],[-24,0],[24,0],[47,.2]]){const q=clamp((pr-dl)/(1-dl),0,1);if(q<=0)continue;const up=Math.sin(Math.min(1,q*1.6)*Math.PI*.5),fade=q>.6?1-(q-.6)/.4:1,h=74*up*(.55+.45*fade),px=f.x+ox,w=9*(.6+.4*fade);if(h<2)continue;
+     X.globalAlpha=.9*Math.max(.15,fade);const fl2=Math.sin(T*.9+ox)*2;
+     wpoly('#8a1408',[px-w-2,gy,px-w*.8+fl2,gy-h*.6,px-2+fl2,gy-h-6,px+2-fl2,gy-h-2,px+w*.8+fl2,gy-h*.55,px+w+2,gy]);
+     wpoly('#ff4a1a',[px-w,gy,px-w*.6+fl2,gy-h*.6,px+fl2,gy-h,px+w*.6+fl2,gy-h*.55,px+w,gy]);
+     wpoly('#ffb030',[px-w*.6,gy,px-w*.3-fl2,gy-h*.5,px,gy-h*.8,px+w*.3-fl2,gy-h*.45,px+w*.6,gy]);
+     wpoly('#ffe060',[px-w*.25,gy,px,gy-h*.5,px+w*.25,gy]);X.globalAlpha=1;
+     X.save();X.translate(px,gy);X.scale(1,.3);wring(0,0,w+4+q*8,'#ffb030',2);X.restore();
+     if(T%2===0)part(px+rnd()*10-5,gy-h*rnd(),(rnd()-.5)*.8,-1.2-rnd(),14,rnd()<.5?'#ff4a1a':'#ffe060',2,0);}};}
  const oldBite=C.mv.nB,oldPillar=C.mv.uB;
  const shift=(to)=>M('roar',10,4,12,null,{fx,lim:'none',cd:70,onStart(f){f.hound=to;f.form=to?'hound':null;f.formL=to?BEASTLOOK.hound:null;f.S=null;txt(f,to?'HELLHOUND!':'HEEL.');sfx('power');burst(f.x,f.y-24,26,['#ff4a1a','#ffb030','#2a1a1a'],3.4,26);FXL.push({k:'ring',x:f.x,y:f.y-24,t:0,col:'#ff4a1a',r0:10,life:22});if(!RM)shakeA=Math.max(shakeA,5);}});
  C.mv.nB=M('cast',11,1,18,null,{fx,spawn:[[11,{k:'fireball',vx:5,life:58,r:7,dmg:8,bkb:4,kbg:.055,ang:40,eff:'burn',explode:1}]]});
