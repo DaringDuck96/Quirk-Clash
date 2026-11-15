@@ -5715,13 +5715,13 @@ function applySkins(){const used={};for(const f of F){if(f.team===1&&MODE==='sur
    wl('#2a2024',bx,by,mx,my,3);wl('#2a2024',mx,my,tx,ty,3);wdisc(mx,my,2.4,'#ffb020');wpoly('#ffd060',[tx-d*7,ty-3,tx+d*7,ty,tx-d*7,ty+3]);wpoly('#ffffff',[tx-d*2,ty-1,tx+d*7,ty,tx-d*2,ty+1]);}
    wring(x,y,R*.5+pr*10,'#ffd060',2);};})();
 
-/* ---- Torabi: in uniform, his robot duck Chaud carries the ingredients and is where he cooks ---- */
+/* ---- Torabi: in uniform, his robot duck Quackpot carries the ingredients and is where he cooks ---- */
 const ING_MAX=6;
 (function(){const C=CH.find(c=>c.id==='torabi');if(!C)return;const txt=(f,s,c)=>FXL.push({k:'txt',s,x:f.x,y:f.y-78,t:0,life:46,col:c||'#ffd060'});
  const weak=d=>{if(d._weak)return d._weak;const o=Object.assign({},d);if(d.hits)o.hits=d.hits.map(h=>Object.assign({},h,{dmg:h.dmg*.45,kbg:h.kbg*.6}));if(d.finisher)o.finisher=Object.assign({},d.finisher,{dmg:d.finisher.dmg*.45,kbg:d.finisher.kbg*.6});if(d.spawn)o.spawn=d.spawn.map(q=>[q[0],Object.assign({},q[1],{dmg:(q[1].dmg||0)*.45,kbg:(q[1].kbg||.03)*.6})]);return d._weak=o;};
  const spend=(k,n)=>{const d=C.mv[k],o=d.onStart;return Object.assign({},d,{onStart(f){if(o)o(f);if(f.ing===undefined)f.ing=ING_MAX;if(f.ing>=n){f.ing-=n;if(f.spiced){f.spiced=0;f.buff={k:'spice',until:FR+110};}}else{f.mv.d=weak(f.mv.d);txt(f,'EMPTY PLATE','#c8c8d8');}}});};
  C.hmv={nB:spend('nB',1),sB:spend('sB',2),dB:M('eat',8,96,10,null,{beh:'cook',fx:['#ffd060','#ffffff'],lim:'none'})};
- BEH.cook={start(f,m){const dk=f.duck;m.v.near=!!dk&&Math.abs(dk.x-f.x)<48&&Math.abs(dk.y-f.y)<44;if(!m.v.near){if(dk)dk.call=140;txt(f,'CHAUD! HERE!','#9ad8ff');sfx('pop');m.t=m.d.s+m.d.a-8;}},
+ BEH.cook={start(f,m){const dk=f.duck;m.v.near=!!dk&&Math.abs(dk.x-f.x)<48&&Math.abs(dk.y-f.y)<44;if(!m.v.near){if(dk)dk.call=140;txt(f,'QUACKPOT! HERE!','#9ad8ff');sfx('pop');m.t=m.d.s+m.d.a-8;}},
   tick(f,m){if(!m.v.near)return;const t=m.t-m.d.s,hold=f.ctrl==='cpu'?t<60:!!(f.I&&f.I.B);if(t<0)return;if(f.duck)f.duck.cook=3;
    if(t%5===0)part(f.x+f.face*10+(rnd()*10-5),f.y-40-rnd()*8,0,-.7,22,rnd()<.5?'#fff4d0':'#ffd060',2,0);
    if(t===24){f.ing=ING_MAX;txt(f,'RESTOCKED');sfx('pop');}
@@ -5746,7 +5746,7 @@ const ING_MAX=6;
      if(dk.cook){wring(x,y-10,10+Math.sin(dk.t*.6)*1.5,'#ffd060',1);wp('#ffffff',x-d*4,y-22-(dk.t%8));}}
    if(f.st!=='dead'&&!f.invis){const n=f.ing===undefined?ING_MAX:f.ing,ip=(typeof interpPos==='function')?interpPos(f):f,px=Math.round(ip.x)-ING_MAX*2.5,py=Math.round(ip.y)-84;
      for(let i=0;i<ING_MAX;i++){wr('#0c0820',px+i*5-1,py-1,5,5);wr(i<n?(f.spiced?'#ff8a3a':'#ffd060'):'#3a3650',px+i*5,py,3,3);}}}}catch(e){}};
- C.heroNote='In his hero uniform the robot duck Chaud follows him. Wasabi Breath costs 1 ingredient and Dumpling Bombs cost 2 (he holds 6); with none left they come out weak. Hold Down-B next to Chaud to cook: restock, then season the next special, then plate the Signature Dish. Away from Chaud, Down-B calls the duck over.';
+ C.heroNote='In his hero uniform the robot duck Quackpot follows him. Wasabi Breath costs 1 ingredient and Dumpling Bombs cost 2 (he holds 6); with none left they come out weak. Hold Down-B next to Quackpot to cook: restock, then season the next special, then plate the Signature Dish. Away from Quackpot, Down-B calls the duck over.';
 })();
 (function(){const C=CH.find(c=>c.id==='suze');if(C)C.heroNote='In her hero uniform her four mechanical stingers throw every normal attack: about a third more reach and nothing of hers to hit back, but each one starts 2 frames slower. Honey moves are unchanged.';})();
 
