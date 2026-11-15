@@ -251,6 +251,15 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
 @media (prefers-reduced-motion:reduce){.podcol.clap canvas,.podcol i{animation:none}}
 .roster{grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}.card span:not(.bd){font-size:clamp(10px,1.05vw,17px);padding:8px 2px 2px}.card .bd{font-size:9px!important;padding:2px 4px!important}
 @media (max-width:900px){.roster{grid-template-columns:repeat(8,minmax(0,1fr))}}
+/* roster cards: face on the left, name on the right */
+.roster{grid-template-columns:repeat(10,minmax(0,1fr))}
+.card{display:flex;align-items:center;gap:0}
+.card .cimg{position:static!important;inset:auto!important;flex:0 0 auto;height:100%!important;width:auto!important;aspect-ratio:1/1;max-width:52%;object-fit:contain;object-position:50% 100%}
+.card span:not(.bd){position:static!important;flex:1 1 0;min-width:0;padding:0 5px 0 3px!important;background:none!important;text-align:left;font-size:clamp(10px,1.02vw,17px)!important;line-height:1.02;overflow-wrap:break-word}
+.card .bd.b3,.card .bd.b4{bottom:3px!important}
+.card.nm7 span:not(.bd){font-size:clamp(9px,.88vw,15px)!important}.card.nm8 span:not(.bd){font-size:clamp(8px,.76vw,13px)!important;letter-spacing:0}
+@media (max-width:900px){.roster{grid-template-columns:repeat(7,minmax(0,1fr))}}
+
 .tline canvas{height:clamp(40px,11vh,110px);margin:0 -2.35vw}
 .grole i{font-style:normal;color:var(--p1);font-family:var(--display);font-size:15px;letter-spacing:.5px;text-transform:uppercase;margin-right:5px}.grole{max-width:70ch}
 .rcard{display:grid;place-items:center;background:repeating-linear-gradient(135deg,#2a2468 0 10px,#1c174e 10px 20px)!important}.rcard em{font-style:normal;font-family:var(--display);font-weight:700;font-size:clamp(26px,3.2vw,48px);color:var(--gold);line-height:1;margin-bottom:12px}
@@ -275,7 +284,7 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
  #select,#stagesel{gap:5px;padding-block:5px;overflow-y:auto;height:100%;grid-template-rows:auto auto auto}
  .top{flex-wrap:nowrap;gap:6px;overflow:hidden}.logo{font-size:19px}.top .sub{display:none}.top .tbtn,.tbtn{font-size:13px;padding:6px 10px 5px}
  .selmain4{grid-template-rows:auto auto;gap:5px;min-height:auto}.roster{min-height:124px}#select{align-content:start}
- .roster{grid-template-columns:none!important;grid-auto-flow:column;grid-template-rows:repeat(2,58px);grid-auto-columns:74px;gap:4px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding-bottom:3px}
+ .roster{grid-template-columns:none!important;grid-auto-flow:column;grid-template-rows:repeat(2,58px);grid-auto-columns:128px;gap:4px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding-bottom:3px}
  .card{scroll-snap-align:start;border-radius:9px}.card span:not(.bd){font-size:11px;padding:6px 2px 2px}.card .cimg{height:calc(100% - 13px);inset:1px 0 12px 0}
  .pprow{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.pprow .pp{border-radius:10px}.pprow .pp canvas{height:50px;min-height:50px}.pp .tag{font-size:15px;padding:5px 8px 2px}
  .pprow .info{padding:2px 8px 4px}.pprow .info h2{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pprow .info .q,.pprow .info p{display:none}
@@ -510,6 +519,10 @@ function wdisc(cx,cy,r,c){if(r<=0)return;X.fillStyle=c;X.beginPath();X.arc(cx,cy
 function wring(cx,cy,r,c,th){if(r<=0)return;X.strokeStyle=c;X.lineWidth=th||1;X.beginPath();X.arc(cx,cy,r,0,TAU);X.stroke();}
 function wtri(c,x0,y0,x1,y1,x2,y2){X.fillStyle=c;X.beginPath();X.moveTo(x0,y0);X.lineTo(x1,y1);X.lineTo(x2,y2);X.closePath();X.fill();}
 function wpoly(c,pts){X.fillStyle=c;X.beginPath();X.moveTo(pts[0],pts[1]);for(let i=2;i<pts.length;i+=2)X.lineTo(pts[i],pts[i+1]);X.closePath();X.fill();}
+
+/* roster order: alphabetical by the name on the card; default costume: the hero uniform when the fighter has one */
+function rosterOrder(){const nm=i=>(CH[i].card||CH[i].sn||CH[i].n||'').toUpperCase();return CH.map((c,i)=>i).filter(i=>!CH[i].hidden).sort((a,b)=>nm(a)<nm(b)?-1:nm(a)>nm(b)?1:a-b);}
+function defSkin(ci){const C=CH[ci];return C&&C.heroLook&&C.looks&&C.looks[6]?6:0;}
 
 /* ===================== RIG: poses, IK, character painters ===================== */
 const BASEP={px:0,py:0,tl:.06,hd:0,aF:[6,-28],aB:[-5,-29],lF:[5,-1.5],lB:[-5,-1.5],wa:-1,sF:1,sL:1,tail:0,wing:0,fan:0,jaw:0,sq:1};
@@ -4430,8 +4443,8 @@ function showResults(){if(MODE==='survival'){showSurvResults();return;}if(TEAMS_
   mkb('REMATCH','pri',startMatch);mkb('STAGES','',toStageSel);mkb('FIGHTERS','',toSelect);box.appendChild(row);ov.appendChild(box);}
 /* ---------- select screen: roster on top, four player panels below ---------- */
 function buildSelect(){const ro=$('#roster');
-  CH.forEach((C,i)=>{if(C.hidden)return;const b=document.createElement('button');b.className='card';b.dataset.ci=i;b.style.setProperty('--cc',C.col);const cv=CARDS[i];cv.className='cimg';b.appendChild(cv);
-    const s=document.createElement('span');s.textContent=C.card||C.sn;b.appendChild(s);b.setAttribute('aria-label',C.n);
+  rosterOrder().forEach(i=>{const C=CH[i];const b=document.createElement('button');b.className='card';b.dataset.ci=i;b.style.setProperty('--cc',C.col);const cv=CARDS[i];cv.className='cimg';b.appendChild(cv);
+    const s=document.createElement('span');s.textContent=C.card||C.sn;b.appendChild(s);b.setAttribute('aria-label',C.n);{const wl=Math.max(...(C.card||C.sn).split(' ').map(w=>w.length));if(wl>=8)b.classList.add('nm8');else if(wl>=7)b.classList.add('nm7');}
     b.onclick=()=>{audioInit();const n=SEL.active;if(SEL.mode[n]==='off')SEL.mode[n]='3';SEL.p[n]=i;PREV4[n]=null;sfx('pop');refreshSel();};
     b.onmouseenter=()=>{renderInfo(SEL.active,i);};b.onmouseleave=()=>{renderInfo(SEL.active,SEL.p[SEL.active]);};ro.appendChild(b);});
   const row=$('#pprow');for(let n=0;n<4;n++){const p=document.createElement('div');p.className='pp p'+(n+1);p.id='pp'+n;
@@ -4517,7 +4530,7 @@ torabi:['Swallows a lump of wasabi and breathes a long cone of green fire. Hits 
 suze:['Spits a honey glob. Stuck rivals move slowly and jump lower.','Releases a bee swarm (one at a time) that chases rivals and stings repeatedly.','Buzzes through the air in any direction.','Lays a honey puddle (one at a time) that roots whoever steps in it. It gets stickier the longer it sits.','The Queen calls her whole hive: a swarm engulfs everyone nearby and leaves them coated in honey.'],
 tatsuya:['A golden orb. While he is copying a rival, this becomes their neutral special.','A quick lunge. While copying, their side special.','A rising leap. While copying, their up special.','A palm touch that copies the rival for 10 seconds instead of 7.','Copies the Final Smash of the nearest rival.']};
 const GD={ci:0,tw:0,on:false};
-function gList(){return CH.map((c,i)=>i).filter(i=>!CH[i].hidden);}
+function gList(){return rosterOrder();}
 function gEsc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 function gDmg(C,k){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)return null;return Math.round(d.hits[0].dmg*(C.atkM||1)*10)/10;}
 function gPips(v,lo,hi){const n=clamp(Math.round(1+4*(v-lo)/(hi-lo)),1,5);let s='';for(let i=0;i<5;i++)s+='<i class="'+(i<n?'on':'')+'"></i>';return s;}
@@ -4547,7 +4560,7 @@ function renderGuide(){const list=gList(),ci=list[GD.ci],C0=CH[ci],twin=C0.twin?
   det.querySelectorAll('.gtabs button').forEach(b=>b.onclick=()=>{GD.tw=+b.dataset.t;sfx('tick');renderGuide();});
   $('#gdesc').textContent=C0.d;}
 function openGuide(ci){const list=gList();if(ci!==undefined){let k=list.indexOf(ci);if(k<0&&CH[ci]&&CH[ci].twin)k=list.indexOf(CH.findIndex(c=>c.id===CH[ci].twin));if(k>=0)GD.ci=k;}
-  const gr=$('#gros');if(!gr.childElementCount){list.forEach((i,k)=>{const b=document.createElement('button');b.title=CH[i].card||CH[i].sn;const c=document.createElement('canvas');c.width=c.height=64;c.getContext('2d').drawImage(HEADS[i],0,0);b.appendChild(c);const s=document.createElement('span');s.textContent=CH[i].card||CH[i].sn;b.appendChild(s);b.onclick=()=>{GD.ci=k;GD.tw=0;sfx('tick');renderGuide();};gr.appendChild(b);});}
+  const gr=$('#gros');if(!gr.childElementCount){list.forEach((i,k)=>{const b=document.createElement('button');b.title=CH[i].card||CH[i].sn;const c=document.createElement('canvas');c.width=c.height=64;c.getContext('2d').drawImage(headFor(i,defSkin(i)),0,0);b.appendChild(c);const s=document.createElement('span');s.textContent=CH[i].card||CH[i].sn;b.appendChild(s);b.onclick=()=>{GD.ci=k;GD.tw=0;sfx('tick');renderGuide();};gr.appendChild(b);});}
   GD.on=true;GD.tw=0;$('#guide').hidden=false;renderGuide();}
 function closeGuide(){GD.on=false;$('#guide').hidden=true;}
 function guideStep(d){const n=gList().length;GD.ci=(GD.ci+d+n)%n;GD.tw=0;sfx('tick');renderGuide();}
@@ -5589,7 +5602,7 @@ function rvInfo(){const el=document.getElementById('gmvinfo'),f=RV.f;if(!el||!f)
     box.innerHTML=h+'</div></div>';head.after(box);
     box.querySelectorAll('#gmoves button').forEach(b=>b.onclick=()=>{RV.auto=false;document.getElementById('gauto').classList.remove('on');sfx('tick');rvStart(b.dataset.k);});
     document.getElementById('gauto').onclick=e=>{RV.auto=!RV.auto;e.currentTarget.classList.toggle('on',RV.auto);sfx('tick');};
-    {const list=[0];for(let k=6;k<(C.looks||[]).length;k++)if(C.looks[k])list.push(k);if(list.length>1){if(RV.cosCi!==ci){RV.cosCi=ci;RV.cos=0;}const cur=list[RV.cos%list.length],nm=cur?(C.looks[cur].cname||'ALT'):'EVERYDAY';
+    {const list=[0];for(let k=6;k<(C.looks||[]).length;k++)if(C.looks[k])list.push(k);if(list.length>1){if(RV.cosCi!==ci){RV.cosCi=ci;RV.cos=Math.max(0,list.indexOf(defSkin(ci)));}const cur=list[RV.cos%list.length],nm=cur?(C.looks[cur].cname||'ALT'):'EVERYDAY';
       const hb=document.createElement('button');hb.id='ghero';hb.textContent='COSTUME: '+nm+' ▸';hb.className=cur?'on':'';hb.onclick=()=>{RV.cos=(RV.cos+1)%list.length;sfx('tick');renderGuide();};box.querySelector('.gmvbar').appendChild(hb);
       if(cur){RV.f.L=skinLook(C,cur);RV.f.skin=cur;RV.f.hero=cur===HERO_I&&!!C.heroLook;if(RV.f.hero&&C.heroNote){const p=document.createElement('p');p.className='gheron';p.textContent=C.heroNote;box.querySelector('#gmvinfo').after(p);}}}}
     rvStart(rvKeys(C,RV.key).length?RV.key:'nB');if(!RV.raf)RV.raf=requestAnimationFrame(rvLoop);}catch(e){RV.err=String(e);}};}
@@ -6345,8 +6358,12 @@ try{GFX60=!(('ontouchstart' in window)||(navigator.maxTouchPoints||0)>0);}catch(
 
 /* fixes.js — what you pick is what you get: two players on the same fighter are moved to different costumes on the select screen itself, never silently at match start */
 function fixSkinClash(){try{const used={};for(let n=0;n<4;n++){if(SEL.mode&&SEL.mode[n]==='off')continue;const ci=SEL.p[n],cnt=Math.max(1,skinCount(n));let s=(SEL.skin[n]||0)%cnt,g=0;while(used[ci+':'+s]&&g++<cnt)s=(s+1)%cnt;used[ci+':'+s]=1;SEL.skin[n]=s;}}catch(e){}}
-{const r0=refreshSel;refreshSel=function(){fixSkinClash();return r0.apply(this,arguments);};
- const a0=applySkins;applySkins=function(){if(!(MODE==='survival'))fixSkinClash();return a0.apply(this,arguments);};}
+const LASTP=[-1,-1,-1,-1];function heroDefault(){try{for(let n=0;n<4;n++){if(SEL.p[n]!==LASTP[n]){LASTP[n]=SEL.p[n];SEL.skin[n]=defSkin(SEL.p[n]);}}}catch(e){}}
+{const r0=refreshSel;refreshSel=function(){heroDefault();fixSkinClash();return r0.apply(this,arguments);};
+ const a0=applySkins;applySkins=function(){heroDefault();if(!(MODE==='survival'))fixSkinClash();return a0.apply(this,arguments);};}
+
+/* roster cards and the guide list show the default (hero) costume */
+{const m0=makeHeads;makeHeads=function(){m0();try{CH.forEach((C,i)=>{const s=defSkin(i);if(!s)return;const c=CARDS[i];portrait(i,c,'head','idle',s);});}catch(e){}};}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
