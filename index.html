@@ -5764,7 +5764,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
  d=m('kichi','uB');d.hits[0].b=[[0,-62,12],[0,-86,10]];d.bp.vy=-9.4;T('kichi',2,'Anchor Chain (very long reach, grabs ledges)','Hurls his chain straight up: lower jump than most, but the chain reaches far and grabs ledges.');
  d=m('ginko','dB');d.hits.forEach(h=>h.eff='burn');
  /* balance table from CPU-vs-CPU sampling: [power dealt, knockback taken] */
- const BALT={goiru:[0.84,1.18],uzi:[0.84,1.18],kal:[0.9,1.1],ash:[0.9,1.1],jack:[0.94,1.06],tiki:[0.94,1.06],aria:[0.95,1.05],aya:[0.95,1.05],ayame:[0.95,1.05],chris:[0.95,1.05],bryson:[1.12,0.9],conor:[1.14,0.9],oliver:[1.14,0.9],kimiko:[1.16,0.87],gomi:[0.91,1.10],uchuu:[1.20,0.85],akemi:[1.04,0.96],tai:[0.95,1.05],shiki:[0.80,1.22],tenmetsu:[0.92,1.07],sai:[1.04,0.96],soran:[1.14,0.87],raion:[0.84,1.16],sanshou:[0.80,1.22],keanu:[0.96,1.04],maho:[1.19,0.86],kouji:[1.02,0.98],shuko:[0.99,1.01],taru:[0.92,1.08],hatsuko:[0.97,1.03],zabu:[1.08,0.92],yado:[1.0,1.0],homura:[0.86,1.14],ryuko:[0.81,1.22],tsuki:[1.2,0.84],kairi:[1.20,0.85],bara:[1.03,0.97],emi:[1.13,0.88],torabi:[0.87,1.14],ginko:[0.84,1.18],marina:[1.06,0.95],hari:[1.10,0.91],rei:[0.95,1.05],kichi:[1.08,0.94],tori:[1.14,0.9],suze:[1.28,0.82],toguchi:[1.16,0.87],daku:[0.94,1.06],tamashi:[1.20,0.86],minato:[1.20,0.86],tatsuya:[1.02,0.98],pitto:[0.92,1.08],oro:[0.92,1.06],riku:[1.06,0.94],kuragari:[1.03,0.97],ivan:[1.03,0.97],bisu:[1.08,0.94],shi:[0.95,1.04],kurai:[1.1,0.92],makiko:[1.11,0.90],koki:[0.90,1.12],ali:[1.12,0.9],hana:[1.04,0.96],tomi:[1.05,0.96],kongu:[0.93,1.08],yoko:[1.10,0.91],hippo:[0.89,1.12],yurei:[1.0,1.0]};
+ const BALT={okane:[1.1,0.92],bentou:[0.94,1.06],sato:[0.94,1.06],suzume:[0.94,1.06],goiru:[0.84,1.18],uzi:[0.98,1.02],kal:[0.9,1.1],ash:[0.9,1.1],jack:[0.94,1.06],tiki:[0.94,1.06],aria:[0.95,1.05],aya:[0.95,1.05],ayame:[0.95,1.05],chris:[0.95,1.05],bryson:[1.12,0.9],conor:[1.04,0.97],oliver:[1.04,0.97],kimiko:[1.16,0.87],gomi:[0.91,1.10],uchuu:[1.20,0.85],akemi:[1.04,0.96],tai:[0.95,1.05],shiki:[0.80,1.22],tenmetsu:[0.92,1.07],sai:[1.04,0.96],soran:[1.06,0.93],raion:[0.84,1.16],sanshou:[0.80,1.22],keanu:[0.96,1.04],maho:[1.19,0.86],kouji:[1.02,0.98],shuko:[0.99,1.01],taru:[0.92,1.08],hatsuko:[0.97,1.03],zabu:[1.08,0.92],yado:[1.0,1.0],homura:[0.86,1.14],ryuko:[0.81,1.22],tsuki:[1.1,0.9],kairi:[1.20,0.85],bara:[1.03,0.97],emi:[1.13,0.88],torabi:[0.87,1.14],ginko:[0.84,1.18],marina:[1.06,0.95],hari:[1.10,0.91],rei:[0.95,1.05],kichi:[1.08,0.94],tori:[1.14,0.9],suze:[1.28,0.82],toguchi:[1.16,0.87],daku:[0.94,1.06],tamashi:[1.26,0.83],minato:[1.20,0.86],tatsuya:[1.02,0.98],pitto:[0.86,1.12],oro:[0.92,1.06],riku:[1.16,0.88],kuragari:[1.03,0.97],ivan:[1.03,0.97],bisu:[1.08,0.94],shi:[0.95,1.04],kurai:[1.1,0.92],makiko:[1.11,0.90],koki:[0.90,1.12],ali:[1.12,0.9],hana:[1.04,0.96],tomi:[1.05,0.96],kongu:[0.88,1.12],yoko:[1.18,0.87],hippo:[0.89,1.12],yurei:[1.0,1.0]};
  for(const id in BALT){const C=c(id),t=BALT[id];if(!C)continue;C.atkM=(C.atkM||1)*t[0];C.kbM=(C.kbM||1)*Math.sqrt(t[0]);C.defKb=(C.defKb||1)*t[1];}
  {const S=c('sanshou');S.st.w=1.44;S.defM=(S.defM||1)*1.12;S.iron=5;}
 })();
@@ -6685,6 +6685,68 @@ const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.
   else if(id==='ray'&&f.xrayT>FR){const yy=Math.round(f.y)-88;wring(x,yy,4,'#ff4a4a',1);wl('#ff4a4a',x-6,yy,x+6,yy);wl('#ff4a4a',x,yy-6,x,yy+6);}}}catch(e){}};
 })();
 
+/* flavor.js — no two recoveries and no two rushes alike: every plain up-special and side-dash gets a twist from its owner's quirk,
+   and every fighter is given a fighting style (combo, poke, bruiser, finisher) that changes how their basic attacks link and launch */
+(function(){const c=id=>CH.find(x=>x.id===id);const note=(id,k,t)=>{try{const si=['nB','sB','uB','dB'].indexOf(k);if(typeof GTXT!=='undefined'&&GTXT[id]&&GTXT[id][si]!==undefined)GTXT[id][si]+=' '+t;}catch(e){}};
+const GPs=o=>Object.assign({k:'gp'},o);
+/* ---- up-special twists ---- */
+const U={
+ tether:(d,o)=>{d.bp=Object.assign({},d.bp,{tether:1,vy:(d.bp.vy||-10)*(o.h||1.06),vx:o.vx||d.bp.vx});return'It snags the ledge from a distance.';},
+ armor:(d,o)=>{d.bp=Object.assign({},d.bp,{armor:1,f0:1,f1:d.s+6});d.s+=2;d.hits.forEach(h=>{h.dmg=Math.round(h.dmg*1.4*10)/10;h.bkb*=1.15;});return'Slow to leave the ground, but nothing stops it and it hits hard.';},
+ act:(d,o)=>{delete d.helpless;d.bp=Object.assign({},d.bp,{vy:(d.bp.vy||-10)*(o.h||.86)});return'Lower than most, but he or she can still act afterwards.';},
+ drop:(d,o)=>{d.spawn=(d.spawn||[]).concat([[d.s+1,o.spec]]);return o.t;},
+ multi:(d,o)=>{d.a=Math.max(d.a,12);d.hits.forEach(h=>{h.ri=4;h.dmg=Math.round(h.dmg*.42*10)/10;h.bkb*=.7;h.b.forEach(q=>{q[2]+=3;});});if(o.eff)d.hits.forEach(h=>h.eff=o.eff);return'Hits several times on the way up.';},
+ angled:(d,o)=>{d.bp=Object.assign({},d.bp,{vx:o.vx||3.6,vy:(d.bp.vy||-10)*(o.h||.9)});return'Travels as far sideways as it does up.';},
+ ko:(d,o)=>{d.bp=Object.assign({},d.bp,{vy:(d.bp.vy||-10)*.9});d.hits.forEach(h=>{h.dmg=13;h.bkb=5.5;h.kbg=.1;h.f0=d.s;h.f1=d.s+3;});return'The first frames are a real knockout blow; after that it is only a jump.';},
+ inv:(d,o)=>{const p=d.onStart;d.onStart=f=>{if(p)p(f);f.inv=Math.max(f.inv||0,o.n||12);};return'Cannot be hit as it starts.';},
+ glide:(d,o)=>{d.bp=Object.assign({},d.bp,{glide:1});return'Hold Jump afterwards to glide down.';},
+ spike:(d,o)=>{d.hits=[hit([[0,-4,18]],o.dmg||8,5,.06,-78)].concat(d.hits);return'Whatever is under the takeoff gets spiked.';},
+ eff:(d,o)=>{d.hits.forEach(h=>{if(o.eff)h.eff=o.eff;if(o.qk)h.qk=o.qk;});return o.t;},
+ wide:(d,o)=>{d.hits.forEach(h=>h.b.forEach(q=>{q[2]+=6;q[1]-=8;}));d.bp=Object.assign({},d.bp,{tether:1});return'Reaches high above him and catches the ledge from a distance.';}};
+const UT={minato:['tether',{h:1.1}],shiki:['armor',{}],torabi:['drop',{spec:GPs({sh:'sun',c:'#ff8a30',vx:.01,vy:6,life:40,r:7,dmg:6,bkb:3.5,kbg:.04,ang:75,ex:1,eff:'burn'}),t:'Drops a flaming pan straight down as he leaves.'}],
+ tatsuya:['act',{}],kichi:['tether',{vx:3,h:1}],taru:['drop',{spec:{k:'geyser',life:22,delay:0,dmg:6,bkb:4,kbg:.03,ang:86},t:'A burst of stone at his feet throws him up and hits anyone beside him.'}],
+ yado:['eff',{eff:'para',t:'The kick at the start of it stuns.'}],hari:['angled',{vx:3.8,h:.92}],pitto:['ko',{}],raion:['multi',{}],rei:['inv',{n:12}],hatsuko:['glide',{}],koki:['multi',{}],tomi:['spike',{dmg:10}],
+ dawson:['tether',{h:1}],maya:['eff',{qk:{k:'drain',v:2},t:'The strike heals her a little.'}],aria:['act',{h:.9}],bryson:['inv',{n:8}],
+ conor:['drop',{spec:GPs({sh:'star',c:'#ffd84a',n:3,spread:.5,vx:.01,vy:5,life:44,r:5,dmg:3,bkb:2,kbg:.02,ang:80}),t:'Coins shower down behind him.'}],
+ ray:['drop',{spec:GPs({sh:'star',c:'#ff4a4a',vx:.01,vy:9,life:30,r:5,dmg:6,bkb:3,kbg:.04,ang:-70}),t:'He looks down as he rises and fires a beam at the floor.'}],
+ chris:['multi',{}],jack:['glide',{}],kal:['angled',{vx:3.2,h:.95}],ash:['wide',{}],kitsu:['act',{h:.9}],bentou:['inv',{n:14}],okane:['armor',{}],hikari:['multi',{eff:null}],sato:['angled',{vx:2.6,h:1}],sota:['eff',{t:'',eff:'burn'}]};
+for(const id in UT){const C=c(id);if(!C||!C.mv.uB||!C.mv.uB.bp)continue;const[k,o]=UT[id];try{const d=C.mv.uB;if(!d.hits||!d.hits.length)continue;const t=U[k](d,o);if(t)note(id,'uB',t);}catch(e){}}
+/* ---- side-dash twists ---- */
+const S={
+ fast:(d,o)=>{d.bp=Object.assign({},d.bp,{spd:(d.bp.spd||6)*1.25,f1:d.bp.f0+Math.round((d.bp.f1-d.bp.f0)*.7)});d.a=Math.max(4,Math.round(d.a*.7));return'Shorter than most rushes, and much faster.';},
+ long:(d,o)=>{d.bp=Object.assign({},d.bp,{f1:d.bp.f1+8});d.a+=8;d.r+=3;return'Keeps going further than you expect.';},
+ armor:(d,o)=>{d.bp=Object.assign({},d.bp,{armor:1});d.s+=2;d.bp.f0+=2;d.bp.f1+=2;return'Does not flinch on the way through.';},
+ intang:(d,o)=>{d.bp=Object.assign({},d.bp,{intang:1,f1:d.bp.f0+Math.round((d.bp.f1-d.bp.f0)*.75)});return'Passes straight through attacks and rivals.';},
+ multi:(d,o)=>{d.hits.forEach(h=>{h.ri=5;h.dmg=Math.round(h.dmg*.36*10)/10;h.bkb*=.6;});if(o.eff)d.hits.forEach(h=>h.eff=o.eff);return'Hits again and again as it passes.';},
+ fin:(d,o)=>{const h=d.hits[0];d.finisher=hit([[14,-30,14]],o.dmg||7,5.5,.09,o.ang||42);h.dmg=Math.round(h.dmg*.6*10)/10;h.bkb*=.6;return o.t||'Ends in a second, harder blow.';},
+ eff:(d,o)=>{d.hits.forEach(h=>{if(o.eff)h.eff=o.eff;if(o.qk)h.qk=o.qk;if(o.ang)h.ang=o.ang;if(o.bkb)h.bkb=o.bkb;});return o.t;},
+ jc:(d,o)=>{d.bp=Object.assign({},d.bp,{jumpCancel:1});return'Press Jump to cancel out of it.';},
+ trail:(d,o)=>{d.spawn=(d.spawn||[]).concat([[d.bp.f0+4,o.spec],[d.bp.f0+10,o.spec]]);return o.t;}};
+const SD={tori:['intang',{}],oro:['fast',{}],emi:['jc',{}],tatsuya:['eff',{eff:'copy',t:'Whoever it touches, he copies.'}],kichi:['eff',{qk:{k:'pull',v:2},t:'Drags whoever it hits along with him.'}],hari:['long',{}],
+ pitto:['fin',{dmg:9,t:'Ends in a straight right that launches.'}],hatsuko:['eff',{qk:{k:'drain',v:2.5},t:'Drains a little health from whoever it hits.'}],ginko:['fin',{dmg:8,ang:60,t:'Ends in a burst of sunlight.'}],bisu:['multi',{}],
+ dawson:['fin',{dmg:8,ang:70,t:'Ends in a rising kick that sets up a combo.'}],aria:['eff',{eff:'conf',t:'Whoever she lands on is left dizzy: left and right swapped.'}],bryson:['eff',{bkb:7.5,t:'Barely hurts, but shoves hard.'}],
+ conor:['trail',{spec:GPs({sh:'star',c:'#ffd84a',vx:.01,life:70,r:5,dmg:3,bkb:2,kbg:.02,ang:80,dy:-12}),t:'Leaves coins hanging in the air behind him.'}],evona:['long',{}],kal:['fin',{dmg:7,ang:82,t:'Ends in an uppercut that pops the rival straight up.'}],
+ kora:['eff',{ang:75,t:'Carries the rival upward.'}],okane:['armor',{}],hikari:['fast',{}],ayame:['multi',{}],kuragari:['jc',{}],daku:['eff',{eff:'burn',t:''}],jack:['trail',{spec:{k:'lava',life:90,r:12,dmg:1.5,bkb:1,kbg:0,ang:80,eff:'burn',dy:0,dist:-10},t:'Leaves fire burning on the floor behind him.'}]};
+for(const id in SD){const C=c(id);if(!C||!C.mv.sB||!C.mv.sB.bp||C.mv.sB.beh!=='dash')continue;const[k,o]=SD[id];try{const d=C.mv.sB;if(!d.hits||!d.hits.length)continue;const t=S[k](d,o);if(t)note(id,'sB',t);}catch(e){}}
+
+/* ---- fighting styles ---- */
+const TK=['ftilt','utilt','dtilt','jab1','jab2','jab3','jab','dash'],AK=['nair','fair','bair','uair','dair'],SK=['fsmash','usmash','dsmash'];
+const each=(C,keys,fn)=>{for(const k of keys){const d=C.mv[k];if(d&&d.hits&&d.hits.length&&!d.beh)fn(d);}};
+const STY={combo:['COMBO FIGHTER','Light launches and short recovery on tilts and aerials: hits link into each other, but single hits are weak.'],poke:['POKER','Basic attacks reach a little further and are safer, with less damage.'],
+ bruiser:['BRUISER','Tilts hit harder and launch further, a frame slower.'],finisher:['FINISHER','Smash attacks hit harder and launch further, with more recovery.'],juggler:['JUGGLER','Up attacks send rivals straight up and recover quickly, for follow-ups from below.'],edge:['EDGEGUARD','Back and down aerials are stronger; he or she is most dangerous off the stage.']};
+const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;};
+for(const C of CH){if(C.hidden&&C.id!=='hake')continue;const w=C.st.w,run=C.st.run,rg=(typeof RANGE!=='undefined'&&RANGE[C.id]&&RANGE[C.id][0])||3,hv=hsh(C.id+'sty')%100;let s;
+  if(w>=1.18)s=hv<60?'bruiser':'finisher';else if(rg>=4)s=hv<70?'poke':'edge';else if(w<=.9&&run>=3.1)s=hv<60?'combo':'juggler';else s=['combo','poke','finisher','juggler','edge','bruiser'][hv%6];
+  C.style=s;
+  if(s==='combo'){each(C,TK.concat(AK),d=>{d.r=Math.max(4,d.r-2);d.hits.forEach(h=>{h.kbg*=.78;h.dmg=Math.round(h.dmg*.92*10)/10;});});}
+  else if(s==='poke'){each(C,TK.concat(AK),d=>{d.r=Math.max(4,d.r-1);d.hits.forEach(h=>{h.dmg=Math.round(h.dmg*.94*10)/10;h.b.forEach(q=>{q[0]*=1.07;});});if(d.vfx&&d.vfx.x)d.vfx.x*=1.07;});}
+  else if(s==='bruiser'){each(C,TK,d=>{d.s+=1;d.hits.forEach(h=>{h.dmg=Math.round(h.dmg*1.1*10)/10;h.kbg*=1.1;});});}
+  else if(s==='finisher'){each(C,SK,d=>{d.r+=2;d.hits.forEach(h=>{h.dmg=Math.round(h.dmg*1.06*10)/10;h.kbg*=1.08;});});}
+  else if(s==='juggler'){each(C,['utilt','uair','usmash'],d=>{d.r=Math.max(4,d.r-2);d.hits.forEach(h=>{if(typeof h.ang==='number'&&h.ang>40&&h.ang<140)h.ang=Math.round(h.ang*.4+88*.6);h.kbg*=.9;});});}
+  else{each(C,['bair','dair'],d=>{d.hits.forEach(h=>{h.dmg=Math.round(h.dmg*1.12*10)/10;h.kbg*=1.1;});});}
+  C.styleT=STY[s];}
+})();
+
 /* unique.js — every attack of every fighter gets its own motion, its own mark, its own hit feel and its own numbers.
    Each of the three is registered in a table, so no two attacks in the game can share one. */
 const UNIQ={list:[],anim:new Map(),mark:new Map(),stat:new Map()};
@@ -7313,6 +7375,7 @@ for(const C of CH){const S=C.st,id=C.id,w=S.w,hv=w>1.15?-1:w<.9?1:0;if(KEEP.has(
   S.run*=run;S.walk*=.9+u(id,'walk')*.25;S.air*=air;S.jump*=jmp;S.sj*=jmp;S.dj*=.92+u(id,'dj')*.2;S.g*=gr;S.fall*=fl;S.ff*=fl;}
 {const mx=Math.max(...CH.filter(C=>!KEEP.has(C.id)).map(C=>C.st.run)),mj=Math.min(...CH.filter(C=>!KEEP.has(C.id)).map(C=>C.st.jump));const A=c('akio'),Z=c('zabu'),Y=c('yado'),So=c('sota');
   if(A)A.st.run=Math.max(A.st.run,mx+.6);if(Z)Z.st.run=Math.max(Z.st.run,mx+.15);if(Y)Y.st.jump=Math.min(Y.st.jump,mj-.6);if(So)So.st.jump=Math.min(So.st.jump,mj-.2);}
+for(const C of CH)if(C.styleT)C.trait=(C.trait?C.trait+' ':'')+'STYLE: '+C.styleT[0]+' — '+C.styleT[1];
 /* grab reach */
 const GR={minato:64,kichi:62,ivan:56,suzume:54,kuragari:52,ash:50,moya:48,uzi:46,dawson:44,oliver:44,zabu:44,tamashi:42,keanu:40,hari:36,kongu:33,goiru:32,sanshou:30,ryuko:30,tomi:31,koki:30,shiki:30,bryson:24,
   conor:17,riku:19,akio:22,hana:22,maho:22,aya:22,makiko:21,kairi:23,emi:23,tori:22};
