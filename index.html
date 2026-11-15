@@ -537,7 +537,7 @@ function defSkin(ci){const C=CH[ci];return C&&C.heroLook&&C.looks&&C.looks[6]?6:
 
 function ptag(f){return f.ctrl==='cpu'?'CPU':'P'+(f.id+1);}
 
-function hudName(f){const id=f.C.id,k=f.cycN||0;let x='';if(id==='sai'&&f.hero)x=['BROADHEAD','EXPLOSIVE','SNARE'][k%3];else if(id==='jack')x=['RED','BLUE','GREEN','VIOLET'][k%4];else if(id==='tiki')x='NEXT: '+['TANTOU','KOFUN','BARI','JONETSU','OSHISAGE','OSORE'][k%6];return f.C.sn+(x?' ['+x+']':'');}
+function hudName(f){const id=f.C.id,k=f.cycN||0;let x='';if(id==='sai'&&f.hero)x=['BROADHEAD','EXPLOSIVE','SNARE'][k%3];else if(id==='jack')x=['RED','BLUE','GREEN','VIOLET'][k%4];return f.C.sn+(x?' ['+x+']':'');}
 
 /* ===================== RIG: poses, IK, character painters ===================== */
 const BASEP={px:0,py:0,tl:.06,hd:0,aF:[6,-28],aB:[-5,-29],lF:[5,-1.5],lB:[-5,-1.5],wa:-1,sF:1,sL:1,tail:0,wing:0,fan:0,jaw:0,sq:1};
@@ -1995,16 +1995,14 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('castDown',9,6,18,[hit([[26,-8,16]],11,4.5,.08,55,{eff:'burn'}),hit([[-26,-8,16]],11,4.5,.08,125,{eff:'burn'})],{fx,imp:[[9,0,-5]]})}),
   sp:['Afterburner (a jet of exhaust that hits many times)','Rocket Punch (the fastest dash in the school)','Blast Off (the highest jump in the school; the exhaust spikes anyone below)','Ground Burn (fires both legs into the floor: flames on both sides, and he hops)']});
  fx=['#b04aff','#6aff8a'];add({id:'tiki',n:'TIKI SEKAI',sn:'TIKI',q:'Shaman',ty:'Emitter',col:'#b04aff',d:'The bridge between this world and the Chaos Realm of the spirits that runs alongside it. Loves his quirk.',
-  na:'Normals: strikes with a spirit a half-step behind each one. Down-B puts on the next spirit mask, and each mask grants a different boon.',
-  look:K({skin:'#f2d8c0',eye:'#5a7a9a',hairS:'spiky',hair:'#6a2ab0',outfit:'jacketS',top:'#1c3a2a',acc:'#b04aff',sleeve:'#2a8a4a',pants:'#2a2a34',shoe:'#3a3a44',stance:'cool',ex:[]}),st:ST({w:.96,run:3.1,air:2.8}),kit:{st:'brawler',fx,el:'spirit',pow:1.02},
-  mv:Object.assign(SM('spirit',fx),{nB:M('cast',11,1,18,null,{spawn:[[11,GP({sh:'dream',c:'#6aff8a',vx:4,life:90,r:8,dmg:7,bkb:3.5,kbg:.05,ang:45,hm:1})]],cd:40,fx}),
-   sB:M('cast',14,1,22,null,{spawn:[[14,GP({sh:'orb',c:'#b04aff',vx:1.6,life:120,r:14,dmg:2,bkb:2,kbg:.01,ang:80,ri:8,multi:1,max:1})]],cd:200,fx}),
-   uB:M('float',6,14,12,null,{beh:'teleDir',bp:{dist:120},fx,helpless:1}),
-   dB:M('roar',10,3,12,null,{cd:420,fx,lim:'none',onStart(f){const k=(f.cycN||0)%6;f.cycN=(k+1)%6;const near=F.filter(t=>t!==f&&!t.dead&&!t.gone&&(f.team===undefined||t.team!==f.team)&&Math.abs(t.x-f.x)<140&&Math.abs(t.y-f.y)<70);
-     if(k===0){f.qhype=FR+420;say(f,'MASK OF TANTOU: POWER','#ff5a8a');}else if(k===1){f.qguard=FR+240;say(f,'MASK OF KOFUN: WARD','#9fe8ff');}else if(k===2){f.qhaste=FR+360;say(f,'MASK OF BARI: SPEED','#ffe060');}
-     else if(k===3){heal(f,5);say(f,'MASK OF JONETSU: PASSION','#ff8a30');}else if(k===4){near.forEach(t=>{t.qslow=FR+150;});say(f,'MASK OF OSHISAGE: WEIGHT','#8a8ad8');}else{near.forEach(t=>{t.face=-t.face;t.confT=Math.max(t.confT||0,50);});say(f,'MASK OF OSORE: DREAD','#b04aff');}
-     FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:'#b04aff',r0:10,life:20});sfx('power');}})}),
-  sp:['Spirit (a slow spirit that hunts a rival)','Chaos Rift (a tear that drifts forward and keeps hitting; one at a time)','Realm Step (teleports in any direction)','Spirit Mask (six masks in turn: power, ward, speed, healing, weight, dread)']});
+  na:'Normals: he points, and a spirit does the hitting, so his attacks reach further than his arms and never expose them. Every special calls a different spirit to fight for him.',
+  look:K({skin:'#f2d8c0',eye:'#5a7a9a',hairS:'spiky',hair:'#6a2ab0',outfit:'jacketS',top:'#1c3a2a',acc:'#b04aff',sleeve:'#2a8a4a',pants:'#2a2a34',shoe:'#3a3a44',stance:'cast',ex:[]}),st:ST({w:.96,run:3.1,air:2.8}),kit:{st:'brawler',fx,el:'spirit',pow:1,reach:1.14},
+  mv:Object.assign(SM('spirit',fx,{f:{far:40}}),{nB:M('cast',10,1,17,null,{spawn:[[10,GP({sh:'spirit',mk:0,c:'#ff5a8a',vx:4.4,life:100,r:8,dmg:7,bkb:3.5,kbg:.05,ang:45,hm:1})]],cd:45,fx}),
+   sB:M('cast',14,1,22,null,{spawn:[[14,GP({sh:'spirit',mk:1,c:'#9fe8ff',vx:3.4,life:80,r:15,dmg:3,bkb:3,kbg:.03,ang:40,ri:7,multi:1,dy:-24})]],cd:150,fx}),
+   uB:M('float',5,30,10,hit([[0,-6,14]],3,3,.03,80),{beh:'fly',bp:{dur:38,spd:3.5},fx,helpless:1,spirit:2}),
+   dB:M('castDown',14,1,20,null,{spawn:[[14,GP({sh:'spirit',mk:5,c:'#b04aff',vx:.01,life:330,r:22,dmg:2.5,bkb:3.5,kbg:.02,ang:75,ri:12,multi:1,dx:30,dy:-40})]],cd:330,fx})}),
+  sp:['Tantou (a small fierce spirit that hunts a rival down)','Kofun (a big guardian spirit that marches forward hitting everything it passes)','Bari (a spirit carries him through the air)','Osore (a watching spirit that stays where he leaves it and bites anyone who comes close)']});
+
  }
 }
 const NX={
@@ -2264,7 +2262,7 @@ Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be
  goiru:{role:'Flying heavyweight',tip:'Four jumps and armour. Drop the hammer from above.',sp:.9,pw:1,kb:1,armor:1},aya:{role:'Crystal caster',tip:'A different crystal on every button.',sp:1,pw:1,kb:1},
  hikari:{role:'Twin-blade rushdown',tip:'Count your hits: every fourth one shocks.',sp:1.1,pw:1,kb:1},ryo:{role:'Burrowing brawler',tip:'Tunnel under projectiles and come up swinging.',sp:1,pw:1,kb:1},
  suzume:{role:'Web rocker',tip:'Yank them in, then Encore.',sp:1.06,pw:1,kb:1},ayame:{role:'Defensive air master',tip:'Blast them away and reflect what they throw.',sp:1.02,pw:1,kb:1},
- sota:{role:'Burst mover',tip:'Nobody covers ground or height faster.',sp:1.1,pw:1,kb:1},tiki:{role:'Spirit caller',tip:'Six masks in a fixed order. The HUD shows which is next.',sp:1,pw:1,kb:1}});
+ sota:{role:'Burst mover',tip:'Nobody covers ground or height faster.',sp:1.1,pw:1,kb:1},tiki:{role:'Spirit summoner',tip:'Leave Osore on guard, send Tantou hunting, and march Kofun through whatever is left.',sp:1,pw:1,kb:1}});
 Object.assign(TUNE,{makiko:{role:'Sleep trickster',tip:'Put them to sleep, then hit the sleeper with Nightmare.',sp:.92,pw:1.02,kb:1},
  koki:{role:'Biting heavyweight',tip:'Hits harder the more hurt the rival is. Swims through the floor.',sp:1.24,pw:1.02,kb:1.04,def:.98,armor:1},
  hana:{role:'Multi-hit rushdown',tip:'Saws hit many times and shred shields.',sp:.9,pw:.92,kb:.94},
@@ -2285,7 +2283,7 @@ Object.assign(TUNE,{makiko:{role:'Sleep trickster',tip:'Put them to sleep, then 
  kongu:{role:'Super-heavy grappler',tip:'The heaviest fighter. Drum his chest, then grab.',sp:1.3,pw:1.04,kb:1.06,def:.98,armor:1},
  hippo:{role:'Fourth-wall breaker',tip:'Every sixth hit against him does not count. He knows.',sp:1,pw:.98,kb:1}});
 Object.assign(RANGE,{dawson:[2,1],maya:[3,1],sarah:[3,1],aria:[3,1],bryson:[2,1],conor:[3,1],ray:[5,1],oliver:[5,1],chris:[2,1],evona:[3,1],jack:[4,1],kal:[1,1],kora:[3,1],ash:[4,1]});
-Object.assign(RANGE,{moya:[3,1],sato:[2,1],akio:[2,1],sata:[4,1],kitsu:[3,1],uzi:[3,1],ichigo:[5,1],bentou:[3,1],okane:[2,1],goiru:[2,1],aya:[4,1],hikari:[2,1],ryo:[1,1],suzume:[4,1],ayame:[3,1],sota:[2,1],tiki:[4,1]});
+Object.assign(RANGE,{moya:[3,1],sato:[2,1],akio:[2,1],sata:[4,1],kitsu:[3,1],uzi:[3,1],ichigo:[5,1],bentou:[3,1],okane:[2,1],goiru:[2,1],aya:[4,1],hikari:[2,1],ryo:[1,1],suzume:[4,1],ayame:[3,1],sota:[2,1],tiki:[5,1]});
 Object.assign(RANGE,{makiko:[2,1],koki:[1,1],hana:[2,1],tomi:[2,1],yoko:[2,1],chiyoki:[3,1],yurei:[3,1],ivan:[4,1],bisu:[1,1],kurai:[2,1],homura:[4,1],kuragari:[3,1],mia:[3,1],shi:[4,1],takeshi:[5,1],ali:[4,1],daku:[1,1],kongu:[1,1],hippo:[3,1]});
 Object.assign(RANGE,{riku:[1,1],sanshou:[1,1],kairi:[3,1],kichi:[3,1],tamashi:[5,1.2],akemi:[4,1.1],taru:[3,1],sai:[5,1.15],tenmetsu:[2,.8],yado:[2,.8],hari:[3,1],toguchi:[4,1],pitto:[2,.9],maho:[5,1.2],raion:[1,1],tsuki:[4,1],rei:[1,1],tai:[3,.9],hatsuko:[2,.8],ginko:[3,1]});
 {const NK=['jab','jab1','jab2','jab3','ftilt','utilt','dtilt','dash','fsmash','usmash','dsmash','nair','fair','bair','uair','dair','fthrow','bthrow','uthrow','dthrow'];
@@ -4939,9 +4937,7 @@ ryo:['A rapid flurry of claws.','Burrows across the stage. He cannot be hit whil
 suzume:['A power chord: a sound wave that grows as it travels.','Fires a long web line and drags whoever it touches to her.','Swings on a web. She can still act afterwards.','A blast of feedback all around her that shreds shields. Cooldown.','Plays the loudest show of her life.'],
 ayame:['A ball of compressed air: almost no damage, a very large shove.','Rides a ball of air across the stage.','An updraft carries her upward.','A spinning wall of wind that reflects projectiles and shoves rivals away.','Stands in the eye of a storm and throws everyone else out of it.'],
 sota:['A jet of exhaust from his palm that hits many times and burns.','A rocket-driven punch: the fastest dash in the school.','Blasts off: the highest jump in the school. The exhaust spikes anyone below.','Fires both legs into the floor: flames on both sides, and he hops.','Reaches escape velocity with a rival attached.'],
-tiki:['Sends a spirit after a rival. Slow, but it follows.','Tears a rift that drifts forward and keeps hitting whoever stands in it. One at a time.','Steps through the Chaos Realm and comes out somewhere else.','Puts on the next of six spirit masks: Tantou (next hit 30% harder), Kofun (a ward that eats one hit), Bari (speed), Jonetsu (heals 5%), Oshisage (slows rivals nearby), Osore (turns rivals nearby around and muddles their controls).','Opens the door all the way.']});
-Object.assign(GTXT,{
-dawson:['Throws two blades, fast and flat. No cooldown.','A grapple line drags him across the stage, hitting on the way.','Fires a grapple hook and rides it up. The highest jump he has.','Drops smoke. If he is hit during it he vanishes and strikes back harder.','Appears beside a rival and takes them apart with every tool on the belt.'],
+tiki:['Calls Tantou, a small fierce spirit that chases a rival down.','Calls Kofun, a big guardian spirit that marches forward and keeps hitting everything it passes through.','Bari lifts him and carries him through the air in any direction.','Posts Osore on guard: the spirit stays where he leaves it for five seconds and bites anyone who comes close. One at a time.','Opens the door all the way, and everything on the other side comes through.'],
 maya:['A palm touch that draws essence out of a rival and heals her 4%.','A spirit arrow that curves toward a rival.','A rising leap.','Gives essence back: heals her 9%, and any teammate beside her 12%. Long cooldown.','A circle of life around her: rivals inside are drained, and she is healed.'],
 sarah:['Builds a fist out of shadow and throws it. Hold B to build a bigger, stronger one.','Steps out of a nearby rival\'s shadow, behind them, and kicks. Hits from behind do 30% more.','Moves through shadow a short way in any direction.','Takes hold of the nearest rival\'s own shadow: blades rise out of it under their feet, and the middle one pins them in place. Works from most of the stage away.','Total darkness around her. Everyone inside is torn at by shadows.'],
 aria:['Flicks a coin. It finds its own way to a rival.','Trips over nothing and falls forward into whoever is there.','A convenient gust carries her up.','Something lucky happens: half the time a snack (heals 8%), sometimes a power-up for her next hit, rarely a chunk of Final Smash meter. Long cooldown.','Everything goes right at once, for her, and wrong for everyone else.'],
@@ -5687,7 +5683,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   ichigo:['Weak up close and easy to launch.','Mines, drones and grenades all at once.'],bentou:['Without his blessings he hits softly.','A parry window half again as long as normal.'],okane:['Gilded has a sixteen-second cooldown, and he is ordinary without it.','GILDED: 20% more damage and 30% less knockback taken for eight seconds.'],
   goiru:['A huge target with a slow start to everything.','Four jumps. Hits under 5% do not make him flinch.'],aya:['Light, with little knockout power.','A different crystal on every special.'],hikari:['Short reach for a blade fighter and light.','SHOCK: every fourth hit she lands holds the rival a moment longer.'],
   ryo:['No projectile and average speed.','Cannot be confused, and sees cloaked rivals.'],suzume:['Light; her best hits need the web to land first.','Three jumps.'],ayame:['Very low damage: she wins by ring-out.','Her hits push 10% further.'],
-  sota:['His dashes commit him; miss and he is wide open.','The fastest dash and the highest jump in the school.'],tiki:['Slow projectiles and no fast escape.','Six spirit masks on one button.'],
+  sota:['His dashes commit him; miss and he is wide open.','The fastest dash and the highest jump in the school.'],tiki:['Slow projectiles and no fast escape.','His spirits do the fighting: his attacks never expose his arms, and three of his specials keep working after he has moved on.'],
   dawson:['No quirk: nothing he has is a trump card, and he is a little light.','No cooldowns on any special.'],
   maya:['Low damage; she wins slowly.','Her tilts and Draw Essence heal her.'],sarah:['Light, and her best moves leave her exposed if they miss.','BACKSTAB: 30% more damage from behind. Her attacks are shadow constructs, so they never expose her arms.'],
   aria:['Nothing about her is reliable, including the luck.','LUCKY: one hit in six does 50% more. One hit in six aimed at her misses.'],bryson:['As himself he is the weakest hitter in the school.','TANTRUM: a full meter turns him into the beast for twelve seconds: huge, armoured against small hits, 35% stronger, and he cannot shield.'],
@@ -6623,7 +6619,7 @@ function genFS(e,f,d,t,a){const c0=d.col[0],c1=d.col[1],F2=e.face,cx=e.x,cy=e.y,
 /* class3.js — the NHA transfer class: effects, traits and Bryson's Tantrum form */
 (function(){const c=id=>CH.find(x=>x.id===id),say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-84,t:0,life:42,col:col||'#ffffff'});
 for(const[a,b]of[['night','blink'],['gum','jelly'],['essence','heal'],['shade','ghost'],['luck','magic'],['rage','kong'],['clover','magic'],['eye','mind'],['aim','cut'],['regen','cut'],['sense','speed'],['angel','sun'],['wood','vine'],['mist','ghost'],['airbag','force'],['spine','speed'],['slime','jelly'],['tech','magic'],['omen','fear'],['gold','sun'],['stone','kong'],['crystal','lance'],['volt','cut'],['mole','claw'],['rocket','hfire'],['spirit','ghost']])if(NEWFX[b]&&!NEWFX[a])NEWFX[a]=NEWFX[b];
-{const O=c('okane');if(O)O.goldL=prepLook(Object.assign({},O.look,{skin:'#e8c040',hair:'#f0d860',eye:'#fff4c0',top:'#d8b030',acc:'#f0d860',sleeve:'#d8b030',pants:'#c8a028',shoe:'#b08a20',_r:undefined,R:undefined}));const Bt=c('bentou');if(Bt)Bt.parryW=8;const Go=c('goiru');if(Go)Go.iron=5;const Ki=c('kitsu');if(Ki)Ki.disjoint=1;const S=c('sarah');if(S)S.disjoint=1;const Co=c('conor');if(Co)Co.hurt=[11,38];}
+{const Tk=c('tiki');if(Tk)Tk.disjoint=1;const O=c('okane');if(O)O.goldL=prepLook(Object.assign({},O.look,{skin:'#e8c040',hair:'#f0d860',eye:'#fff4c0',top:'#d8b030',acc:'#f0d860',sleeve:'#d8b030',pants:'#c8a028',shoe:'#b08a20',_r:undefined,R:undefined}));const Bt=c('bentou');if(Bt)Bt.parryW=8;const Go=c('goiru');if(Go)Go.iron=5;const Ki=c('kitsu');if(Ki)Ki.disjoint=1;const S=c('sarah');if(S)S.disjoint=1;const Co=c('conor');if(Co)Co.hurt=[11,38];}
 
 /* ---- Bryson: the beast ---- */
 const B=c('bryson');
@@ -6644,7 +6640,7 @@ if(B){const fx=['#5aa03a','#e8f0c0'];
 /* ---- Hatsuko: a chargeable purple skull ---- */
 {const H=c('hatsuko');if(H){const fx=H.kit.fx||['#b04aff','#ff7ae8'];H.mv.nB=M('cast',10,1,18,null,{fx,chg:1,chgMax:80,spawn:[[10,{k:'gp',sh:'skull',c:'#b04aff',vx:4.6,life:70,r:7,dmg:6,bkb:3.2,kbg:.05,ang:42}]]});
   H.sp[0]='Grudge Skull (hold B to charge: the longer, the bigger and stronger)';if(typeof GTXT!=='undefined'&&GTXT.hatsuko)GTXT.hatsuko[0]='Launches a purple skull. Hold B to charge it for up to a second and a third: it grows to twice the size and more than double the damage.';}
- const g0=EK.gp.draw;EK.gp.draw=function(e){if(e.spec&&e.spec.sh==='skull'){const r=e.r||7,d=Math.sign(e.vx)||e.face;X.globalAlpha=.35;wdisc(e.x,e.y,r*1.5,'#b04aff');X.globalAlpha=1;FSG.skull(e.x,e.y,r*.85,'#d8a8ff','#b04aff');wdisc(e.x-r*.34,e.y-r*.17,r*.14,'#ff7ae8');wdisc(e.x+r*.34,e.y-r*.17,r*.14,'#ff7ae8');if(e.t%2===0)part(e.x-d*r,e.y+rnd()*r-r/2,-d*.5,-.3,12,'#b04aff',2,0);return;}return g0(e);};}
+ const g0=EK.gp.draw;EK.gp.draw=function(e){if(e.spec&&e.spec.sh==='spirit'){const r=e.r||8,c0=e.spec.c||'#b04aff',bob=Math.sin(e.t*.25)*2,d=Math.sign(e.vx)||e.face;X.globalAlpha=.3;wdisc(e.x,e.y+bob,r*1.5,c0);X.globalAlpha=.75;FSG.ghost(e.x,e.y+bob+r*.3,r*.9,'#6aff8a','#b04aff',e.t*.06);X.globalAlpha=1;FSG.mask(e.x+d*r*.1,e.y+bob-r*.15,r*.6,c0,'#ffffff');if(e.t%3===0)part(e.x-d*r*.6,e.y+r*.6,-d*.3,.4,12,'#6aff8a',1,0);return;}if(e.spec&&e.spec.sh==='skull'){const r=e.r||7,d=Math.sign(e.vx)||e.face;X.globalAlpha=.35;wdisc(e.x,e.y,r*1.5,'#b04aff');X.globalAlpha=1;FSG.skull(e.x,e.y,r*.85,'#d8a8ff','#b04aff');wdisc(e.x-r*.34,e.y-r*.17,r*.14,'#ff7ae8');wdisc(e.x+r*.34,e.y-r*.17,r*.14,'#ff7ae8');if(e.t%2===0)part(e.x-d*r,e.y+rnd()*r-r/2,-d*.5,-.3,12,'#b04aff',2,0);return;}return g0(e);};}
 /* ---- Akio: homing attack ---- */
 BEH.homing={tick(f,m,I){const d=m.d,p=d.bp;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.vy,-.6);if(f.ground&&m.t===2){f.vy=-4.5;f.ground=null;}}
   else if(m.t===d.s){const o=F.filter(t=>t!==f&&!t.dead&&!t.gone&&t.st!=='respawn'&&(f.team===undefined||t.team!==f.team)&&Math.hypot(t.x-f.x,t.y-f.y)<p.range).sort((a,b)=>Math.hypot(a.x-f.x,a.y-f.y)-Math.hypot(b.x-f.x,b.y-f.y))[0];
@@ -6682,7 +6678,7 @@ const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.
   if(id==='bryson'){if(f.form==='rage')bar((f.rageT-FR)/720,'#7ae04a');else bar(((f.gm&&f.gm.tan)||0)/100,'#5aa03a','#7ae04a');}
   else if(id==='hikari'){const n=(f.gm&&f.gm.hk)||0;wr('#0c0820',x-9,y-1,17,5);for(let i=0;i<3;i++)wr(i<n?'#6aff6a':'#3a3660',x-8+i*5,y,4,3);}
   else if(id==='okane'&&f.form==='gold')bar((f.goldT-FR)/480,'#e8c040');
-  else if(id==='tiki'){const cl=['#ff5a8a','#9fe8ff','#ffe060','#ff8a30','#8a8ad8','#b04aff'][(f.cycN||0)%6],yy=Math.round(f.y)-88;wr('#0c0820',x-4,yy-5,8,10);wr(cl,x-3,yy-4,6,8);wr('#0c0820',x-2,yy-2,1,2);wr('#0c0820',x+1,yy-2,1,2);}
+  else if(id==='tiki'){const m=f.mv;if(m&&m.d.spirit&&m.t>=m.d.s&&m.t<m.d.s+m.d.a){X.globalAlpha=.8;FSG.ghost(x,Math.round(f.y)+6,10,'#ffe060','#b04aff',FR*.06);FSG.mask(x,Math.round(f.y)+2,6,'#ffe060','#ffffff');X.globalAlpha=1;}}
   else if(id==='kal')bar((FR-(f.dsT===undefined?-999:f.dsT))/480,'#5a8a2a','#a0ff40');
   else if(id==='jack'){const cl=['#ff5a30','#5ab8ff','#6adf6a','#b070ff'][(f.cycN||0)%4],yy=Math.round(f.y)-88;wdisc(x,yy,4,'#0c0820');wpoly(cl,[x-3,yy+2,x,yy-5,x+3,yy+2]);wdisc(x,yy+1,2,'#ffffff');}
   else if(id==='ray'&&f.xrayT>FR){const yy=Math.round(f.y)-88;wring(x,yy,4,'#ff4a4a',1);wl('#ff4a4a',x-6,yy,x+6,yy);wl('#ff4a4a',x,yy-6,x,yy+6);}}}catch(e){}};
@@ -7293,7 +7289,7 @@ const A={
  aya:['DAZZLE','fear',{r:125,turn:1,slow:70},9,'A flash of prismatic light turns nearby rivals around.'],hikari:['OVERCHARGE','hype',{},10,'Runs current through her blades: her next hit lands 30% harder.'],
  ryo:['TREMOR','roar',{r:140,f:3.5,lift:1,sd:8},9,'Strikes the ground: everyone standing nearby is bounced into the air.'],suzume:['WEB LINE','pull',{r:200,f:1.2,front:1},8,'Reels in everyone in front of her. No damage.'],
  ayame:['GALE','push',{r:170,f:1.8},6,'A wall of wind. The strongest push in the school, and no damage at all.'],sota:['HOVER','updraft',{v:9.5},5,'A burst from his legs sends him straight up, even in mid-air.'],
- tiki:['SPIRIT WALK','cloak',{dur:120},10,'Steps halfway into the Chaos Realm: unseen for two seconds.'],
+ tiki:['JONETSU','heal',{amt:4,team:1},10,'Calls Jonetsu, the spirit of passion: heals him and teammates beside him for 4%.'],
  kongu:['CHEST BEAT','hype',{},10,'Beats his chest: his next hit lands 30% harder.'],
  hippo:['SPOILERS','fear',{r:140,conf:55},11,'Tells everyone nearby how the fight ends. They get left and right mixed up.']};
 const FORMA={elephant:['TRUNK SPRAY','push',{r:160,f:1.7,water:1},6,'Sprays water from his trunk, pushing rivals away. No damage.'],cheetah:['SPRINT','haste',{dur:170},8,'Runs even faster for a few seconds.'],snake:['HYPNOSIS','fear',{r:150,front:1,slow:130},9,'Rivals in front of him are slowed to a crawl.'],hound:['TRIPLE HOWL','roar',{r:130,f:5,sd:16},9,'Three heads howl: rivals are shoved back and shields crack.']};
