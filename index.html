@@ -433,7 +433,7 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
 const fl=Math.floor,rnd=Math.random,PI=Math.PI,TAU=PI*2;
 const clamp=(v,a,b)=>v<a?a:v>b?b:v,lerp=(a,b,t)=>a+(b-a)*t;
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const RS=2;let GFX60=false; /* sprite fine pixels per world unit */
+const BIGK=1.95;const RS=2;let GFX60=false; /* sprite fine pixels per world unit */
 function mk(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
 function hex2(h){const n=parseInt(h.slice(1),16);return[(n>>16)&255,(n>>8)&255,n&255];}
 function rgbHex(c){return'#'+((1<<24)|(c[0]<<16)|(c[1]<<8)|c[2]).toString(16).slice(1);}
@@ -2914,7 +2914,7 @@ function drawFighter(f){if(f.dead||f.gone)return;const L=lookOf(f);
   if(m&&m.d.bp&&m.d.bp.intang&&m.t>=m.d.s&&m.t<=m.d.s+m.d.a)alpha=.45;
   if(f.st==='spot'||f.st==='airdodge'||f.st==='roll'||f.st==='tech')alpha=.55;
   if(f.inv>0&&(f.inv>>2)%2)alpha*=.6;
-  const sc=(p.sq||1)*(L.size||1)*(f.mini>0?.34:1)*(f.big>0?1.42:1),ox=f.hl>0&&f.flash>0?(f.hl%2?1:-1):0;
+  const sc=(p.sq||1)*(L.size||1)*(f.mini>0?.34:1)*(f.big>0?BIGK:1),ox=f.hl>0&&f.flash>0?(f.hl%2?1:-1):0;
   X.save();X.translate(Math.round((f.x+ox)*RS)/RS,Math.round(f.y*RS)/RS);
   if(f.st==='respawn'){for(let i=-12;i<=12;i++)wp((i+FR)%4?f.col:'#ffffff',i,2+fl(Math.abs(i)/5));}
   if(m&&m.v.board){wr('#2a6aa8',-14,-2,28,4);wr('#bff4ff',-13,-2,26,2);wp('#ffffff',10,-2);}
@@ -4217,7 +4217,7 @@ function overlay2D(){const back=new Set(['geyser','vines','storm','smokeplat','h
   X.globalAlpha=1;X.globalCompositeOperation='source-over';
   for(const e of FXL)drawFX(e);
   X.font='8px "Press Start 2P", monospace';X.textAlign='center';X.textBaseline='alphabetic';
-  for(const f of F){if(f.dead||f.gone||f.invis||f.team===1)continue;const ip=interpPos(f),ty=Math.round(ip.y-(lookOf(f).body==='dino'?84:76));const lab=f.ctrl==='dummy'?'DUMMY':ptag(f);
+  for(const f of F){if(f.dead||f.gone||f.invis||f.team===1)continue;const ip=interpPos(f),ty=Math.round(ip.y-(lookOf(f).body==='dino'?84:76)*(f.big>0?BIGK:1));const lab=f.ctrl==='dummy'?'DUMMY':ptag(f);
     X.fillStyle='#0c0820';X.fillText(lab,Math.round(ip.x)+1,ty+1);X.fillStyle=f.col;X.fillText(lab,Math.round(ip.x),ty);X.fillRect(Math.round(ip.x)-2,ty+2,4,1);X.fillRect(Math.round(ip.x)-1,ty+3,2,1);}}
 /* the parts of the old 3D fighter effects that the 2D sprite drawer does not already cover */
 function extrasFX(f){const m=f.mv,Sd=f.S||{};
@@ -4625,7 +4625,7 @@ Object.assign(GTXT,{
 makiko:['A touch at close range that puts a rival to sleep. Sleep lasts longer the more damage they have.','A slow, drifting dream bubble (one at a time). Whoever it touches falls asleep.','A gentle float in any direction.','A burst of nightmare around her. Weak on its own, but it does over three times the damage and launches hard if the rival is asleep or dizzy.','Everyone near her is dragged into one dream and hit again and again before waking with a jolt.'],
 koki:['Bites rapidly in front of him, then a final snap that launches.','Dives into the floor as a fin. Steer left and right, then press B (or wait) to burst out biting.','Launches himself very high, jaws first. Almost no sideways travel.','Belly-flops, hitting rivals on both sides.','Charges in; if he connects, he tears into his rival in a frenzy.'],
 hana:['Holds a spinning saw out in front: many small hits that grind shields down fast.','Dashes with both saws out, dragging a rival along, then cuts them loose.','A rising spin with both saws.','Sends a saw disc rolling along the ground, hitting repeatedly as it passes.','A blur of cuts through her rival, ending in one clean launching slice.'],
-tomi:['Grows one fist to giant size for a slow punch with enormous reach.','Grows one foot and stomps the ground well ahead of him.','A rising uppercut with a giant fist.','Grows to full giant size for 8 seconds: 25% more damage, bigger hitboxes, harder to launch, but a far bigger target. Long cooldown.','Grows to full height and strides across the stage, flattening everyone in the way.'],
+tomi:['Grows one fist to giant size for a slow punch with enormous reach.','Grows one foot and stomps the ground well ahead of him.','A rising uppercut with a giant fist.','Grows to nearly twice his size for 8 seconds: 25% more damage, bigger hitboxes, harder to launch, but a far bigger target. Long cooldown.','Grows to full height and strides across the stage, flattening everyone in the way.'],
 yoko:['Multiplies gravity around her: everyone close is slammed down and pinned for a moment, and airborne rivals are spiked.','Fires an orb of gravity. Whoever it hits is knocked back toward her.','Floats upward weightlessly, lifting nearby rivals with her.','Reverses gravity around her, popping everyone close straight up for a follow-up.','Everything near her collapses inward, is crushed, and is then flung straight up.'],
 chiyoki:['The laugh. Rivals in front of him are gripped by dread: blinded and slowed. Cooldown.','Lobs a bowling pin in an arc.','An adrenaline-fuelled leap, followed by a few seconds of extra speed.','Winds up a shovel swing. Very slow, but nothing stops it and it launches enormously.','His laugh fills the whole screen. Nobody is out of earshot.'],
 yurei:['Throws a spirit dagger that curves back to her hand, hitting on the way out and back.','Vanishes and reappears behind a nearby rival with a cut. Combine it with her backstab bonus.','Drifts upward. She cannot be hit as she takes off.','Fades from sight for 3 seconds. Attacking brings her back. Cooldown.','Passes through her rival again and again from every side.'],
@@ -5247,7 +5247,7 @@ function preHit(t,h,a,o){if(t.foreT>0){t.foreT=0;t.inv=Math.max(t.inv,24);FXL.pu
 function dmgMod(a,t,h,o){let m=1;if(h.vsDz&&t.st==='dizzy')m*=h.vsDz;const C=a.C;
   if(C.bloodlust)m*=1+Math.min(.2,t.dmg/500);if(C.fearB&&t.hazeT>0)m*=1.3;if(C.backstab&&!o.proj&&a.face===t.face&&(t.x-a.x)*a.face>0)m*=1.3;
   if(a.big>0)m*=1.25;if(a.hellT>0)m*=1.12;if(t.hellT>0)m*=1.15;if(a.drum&&a.mv&&a.mv.k!=='nB'&&!o.proj)m*=1+.12*a.drum;if(a.reap)m*=1+.08*a.reap;return m;}
-function kbMod(a,t,h,o){let m=1;if(h.vsDz&&t.st==='dizzy')m*=1.7;if(h.exec)m*=t.dmg>=100?1.9:.8;if(t.big>0)m*=.8;if(a.big>0)m*=1.1;if(t.plotT>0)m=0;return m;}
+function kbMod(a,t,h,o){let m=1;if(h.vsDz&&t.st==='dizzy')m*=1.7;if(h.exec)m*=t.dmg>=100?1.9:.8;if(t.big>0)m*=.68;if(a.big>0)m*=1.12;if(t.plotT>0)m=0;return m;}
 function effX(t,h,a,o,eff,dmg){
   if(eff==='sleep'){t.st='dizzy';t.dz=70+Math.min(70,t.dmg*.5);t.sleepT=t.dz;t.hitstun=0;FXL.push({k:'txt',s:'Zzz',x:t.x,y:t.y-74,t:0,life:40,col:'#ffb8e0'});}
   if(eff==='conf'){t.confT=180;FXL.push({k:'txt',s:'CONFUSED',x:t.x,y:t.y-78,t:0,life:44,col:'#4a8aff'});}
@@ -5256,7 +5256,7 @@ function effX(t,h,a,o,eff,dmg){
   if(a&&a!==t){if(t.moltenT>0&&!o.proj){a.dmg=Math.min(999,a.dmg+4);a.flash=6;a.dot={n:4,t:0,c:'#ff8020'};burst(a.x,a.y-30,8,['#ff5a1a','#ffd040'],2,14);}
     if(a.drum&&a.mv&&a.mv.k!=='nB'&&!o.proj){a.drum=0;}
     if(a.fadeT>0&&a.C.id==='yurei')a.fadeT=0;}}
-{const hb0=hitboxes;hitboxes=function(f){const r=hb0(f);if(f.big>0&&r.length)return r.map(([h,i])=>[Object.assign({},h,{b:h.b.map(q=>[q[0]*1.4,q[1]*1.4,q[2]*1.4])}),i]);return r;};}
+{const hb0=hitboxes;hitboxes=function(f){const r=hb0(f);if(f.big>0&&r.length)return r.map(([h,i])=>[Object.assign({},h,{b:h.b.map(q=>[q[0]*1.85,q[1]*1.85,q[2]*1.85])}),i]);return r;};}
 const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE SCRIPT. I WIN','NICE FRAME RATE','WHO BALANCED THIS?','PRESS B. NO, THE OTHER B','ROLL CREDITS ALREADY','I AM NOT EVEN A CAPTAIN','MY HITBOX IS A SUGGESTION'];
 {const mtV=modeTick;modeTick=function(){mtV();if(typeof GS==='undefined')return;for(const f of F){if(f.gone)continue;
    if(f.dead||f.st==='respawn'){f.big=f.fadeT=f.confT=f.moltenT=f.foreT=f.hellT=f.plotT=f.sleepT=0;f.drum=0;if(f.form){f.form=0;}if(f.C.fades)f.invis=false;continue;}
@@ -5329,7 +5329,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
  const W2={makiko:['Very light, and almost harmless against a rival who is awake.','Sleep lasts longer the more damage the sleeper has.'],
   koki:['A huge slow target with no ranged attack at all.','Blood in the water: up to 20% more damage against badly hurt rivals.'],
   hana:['Short reach and weak single hits; she has to stay on top of you.','Her saws do more than double damage to shields.'],
-  tomi:['As a giant he is an enormous target, and it has a long cooldown.','While giant: 25% more damage, bigger hitboxes, harder to launch.'],
+  tomi:['As a giant he is an enormous target, and it has a long cooldown.','While giant he is nearly twice his size: 25% more damage, far bigger hitboxes, much harder to launch.'],
   yoko:['Nothing she does reaches far, and she is light.','Hold Jump in the air to hover.'],
   chiyoki:['The laugh has a cooldown, and without it he is ordinary.','Feels no pain: hits under 4% do not make him flinch. 30% more damage to frightened rivals.'],
   yurei:['Among the lightest fighters; one clean smash ends her stock.','Backstab: 30% more damage from behind. Fade is broken by attacking.'],
@@ -5503,7 +5503,7 @@ function aiInput(f){const I={x:0,y:0,A:0,B:0,J:0,S:0,G:0};const o=opp(f),L=clamp
   return I;}
 
 /* ---- hurtboxes follow the body: size, crouch, and an outstretched limb can be hit ---- */
-function hurtR(f){const hb=f.C.hurt||[16,HH];let h=hb[1];if(f.st==='crouch')h*=.62;else if(f.st==='climb')h*=.75;if(f.mv&&f.mv.d.beh==='reflect'&&f.mv.d.bp.scale)h*=1.15;if(f.mini>0)return[f.x-4,f.y-h*.3,8,h*.3];if(f.big>0)return[f.x-hb[0]*.7,f.y-h*1.4,hb[0]*1.4,h*1.4];if(f.form&&typeof FORMBOX!=='undefined'&&FORMBOX[f.form]){const b=FORMBOX[f.form];return[f.x-b[0]/2,f.y-b[1],b[0],b[1]];}return[f.x-hb[0]/2,f.y-h,hb[0],h];}
+function hurtR(f){const hb=f.C.hurt||[16,HH];let h=hb[1];if(f.st==='crouch')h*=.62;else if(f.st==='climb')h*=.75;if(f.mv&&f.mv.d.beh==='reflect'&&f.mv.d.bp.scale)h*=1.15;if(f.mini>0)return[f.x-4,f.y-h*.3,8,h*.3];if(f.big>0)return[f.x-hb[0]*.92,f.y-h*1.85,hb[0]*1.84,h*1.85];if(f.form&&typeof FORMBOX!=='undefined'&&FORMBOX[f.form]){const b=FORMBOX[f.form];return[f.x-b[0]/2,f.y-b[1],b[0],b[1]];}return[f.x-hb[0]/2,f.y-h,hb[0],h];}
 const LIMBK=/^(jab[123]|ftilt|utilt|dtilt|dash|fsmash|usmash|dsmash|nair|fair|bair|uair|dair)$/;
 function limbR(f){const m=f.mv;if(!m||f.st!=='move'||!LIMBK.test(m.k)||f.mini>0||intangible(f))return null;const d=m.d;if(f.C.disjoint||(f.hero&&f.C.heroDisjoint)||m.t<d.s||m.t>d.s+d.a+2||!d.hits.length)return null;
   let b=null;for(const h of d.hits)for(const q of h.b)if(!b||Math.abs(q[0])+Math.abs(q[1]+30)>Math.abs(b[0])+Math.abs(b[1]+30))b=q;if(!b)return null;
@@ -6331,7 +6331,7 @@ const _df=drawFighter;
 drawFighter=function(f){
   try{if(f.buf&&!f.invis&&!f.dead&&!f.gone&&F.indexOf(f)>=0){const vx=(f.vx||0)+(f.lx||0),vy=(f.vy||0)+(f.ly||0),sp=Math.hypot(vx,vy),L=lookOf(f);
     const fast=sp>7||f.st==='airdodge'||(f.mv&&f.mv.d.beh==='dash'&&f.mv.t>=f.mv.d.s);
-    if(fast&&!f.tumble&&f.st!=='roll'){const sc=(L.size||1)*(f.mini>0?.34:1)*(f.big>0?1.42:1),B=f.buf;for(let i=2;i>=1;i--){X.save();X.globalAlpha=.1+.07*(3-i);X.translate(Math.round(f.x-vx*i*1.6),Math.round(f.y-vy*i*1.6));X.scale(f.face*sc/RS,sc/RS);X.drawImage(B.cv,-B.ox,-B.oy);X.restore();}X.globalAlpha=1;}
+    if(fast&&!f.tumble&&f.st!=='roll'){const sc=(L.size||1)*(f.mini>0?.34:1)*(f.big>0?BIGK:1),B=f.buf;for(let i=2;i>=1;i--){X.save();X.globalAlpha=.1+.07*(3-i);X.translate(Math.round(f.x-vx*i*1.6),Math.round(f.y-vy*i*1.6));X.scale(f.face*sc/RS,sc/RS);X.drawImage(B.cv,-B.ox,-B.oy);X.restore();}X.globalAlpha=1;}
     /* dust */
     const t=f.anim||0,g=!!f.ground;if(f._dG===undefined)f._dG=g;
     if(f._dG!==g){if(g&&f.st!=='hit'){for(const s of[-1,1])GX.push({k:'puff',x:f.x+s*6,y:f.y-1,vx:s*(.9+Math.abs(vx)*.1),vy:-.15,t:0,life:16,r:3.5});}else if(!g&&vy<-2){for(const s of[-1,1])GX.push({k:'puff',x:f.x+s*4,y:f.y-1,vx:s*.5,vy:-.05,t:0,life:13,r:2.6});}f._dG=g;}
