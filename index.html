@@ -5976,7 +5976,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   mia:['Low damage and a very long cooldown on her bubble.','Barrier and Force Push both stop projectiles.'],
   shi:['Last Rites is weak and slow below 100%.','Each knockout makes him 8% stronger, up to three times.'],
   takeshi:['His summons are weak one at a time, and he is average up close.','Three pistol shots per press.'],
-  ali:['Fragile, with almost no knockout power of her own.','Foresight only stops one hit.'],
+  ali:['Fragile, with almost no knockout power of her own.','Each rock only stops one projectile.'],
   daku:['In hellhound form he takes 15% more damage and burns himself.','Hellhound: faster on the ground, 12% more damage, every hit burns.'],
   kongu:['The biggest target in the game, with a slow, low recovery.','His grab cannot be shielded.'],
   hippo:['Entirely average. He is a man in pajamas.','Plot Armor: every sixth hit against him does not happen.']};
@@ -8118,6 +8118,31 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
    return df.apply(this,arguments);};
 }}
 
+/* ---------- Ali Kazama: Psychokinesis. She lifts chunks of the floor, holds them as shields, and hurls them where she aims. Mind Control is now a held B. ---------- */
+{const C=CH.find(q=>q.id==='ali');if(C){const fx=C.kit.fx,BL='#4a8aff',ST1='#8a8478',ST2='#b8b0a0',DKc='#0c0820',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-84,t:0,life:40,col:col||BL});
+ const orb=C.mv.nB;
+ const wind=M('cast',9,1,2,null,{fx,lim:'none'}),hurl=M('throwF',2,2,15,null,{fx,lim:'none'}),push=M('palm',2,4,15,hit([[30,-34,15],[14,-34,11]],3,5.5,.012,32),{fx,lim:'hF'}),lift=M('castUp',10,4,12,null,{fx,lim:'none',cd:40});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;T.nB=wind;T.nBm=orb;T.nBh=hurl;T.nBp=push;T.dB=lift;}
+ C._aik={nB:'far',dB:'self',nBm:null,nBh:null,nBp:null};
+ C.sp=['Hurl (tap B then hold a direction to throw a held rock that way; with none held it is a weak mind push; hold B for Mind Control, which swaps a rival\'s left and right for 3 seconds)','Telekinetic Throw (lifts a rival at range and throws them behind her)','Levitate (slow, precise; she can still act)','Lift (pulls a chunk out of the floor and holds it floating beside her, up to two; each one blocks a projectile)'];
+ C.d='Moves things with her mind: rocks, rivals, and now and then somebody else\'s thoughts.';
+ C.na='Normals: precise telekinetic jabs with little force behind them. Her power comes from the rocks she lifts out of the floor: they guard her from projectiles until she throws them.';
+ try{if(typeof GTXT!=='undefined'&&GTXT.ali){GTXT.ali[0]='Tap B, then hold a direction: she throws a held rock that way (straight ahead if you hold nothing), hard enough to knock out at high damage. With no rock it is a weak push. Hold B instead to send out the Mind Control orb: a rival it hits has left and right swapped for 3 seconds.';GTXT.ali[3]='On the ground, pulls a chunk out of the floor and holds it floating beside her. She can hold two. Each rock destroys one projectile that would have hit her.';}}catch(e){}
+ const sm0=startMove;startMove=function(f,key){if(f&&f.C===C&&!f.form&&!(f.copyT>0)&&key==='dB'){if(!f.ground||(f.rocks||0)>=2){if(FR-(f._nlT||-99)>30&&(f.rocks||0)>=2){f._nlT=FR;say(f,'FULL','#b0a8a0');}return false;}}
+   const r=sm0(f,key);if(r&&f&&f.C===C&&key==='dB'&&f.mv)f.mv._lift=1;return r;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){try{if(t&&t.C===C&&!t.form&&t.rocks>0&&o&&o.proj&&!o.force&&h&&h.alive!==undefined&&h.owner!==t&&!(t.inv>0)){t.rocks--;t._rkT=FR;h.alive=false;burst(h.x,h.y,14,[ST1,ST2,'#ffffff'],2.4,18);FXL.push({k:'ring',x:h.x,y:h.y,t:0,col:BL,r0:8,life:14});sfx('clank');say(t,'BLOCKED',ST2);return 'miss';}}catch(e){}return ah(t,h,dirX,a,o);};
+ const st0=step;step=function(){st0();try{for(const f of F){if(f.C!==C||f.gone)continue;if(f.rocks===undefined)f.rocks=0;if(f.dead||f.st==='respawn'){f.rocks=0;continue;}if(f.form||f.copyT>0)continue;const m=f.mv;if(!m||f.hl>0)continue;const d=m.d,I=f.pi||{};
+   if(m._lift&&m.t===d.s&&!m._done){m._done=1;f.rocks=Math.min(2,f.rocks+1);f._rkUp=FR;burst(f.x+f.face*14,f.y-2,12,[ST1,ST2,'#5a544a'],2.2,18);FXL.push({k:'ring',x:f.x+f.face*14,y:f.y-4,t:0,col:BL,r0:6,life:16});sfx('thud');}
+   if(m.k==='nB'&&m.t>=d.s&&!m._br){m._br=1;const held=!!I.B,can=!(f.cds&&f.cds.nBm>FR);f.mv=null;f.st=f.ground?'idle':'air';
+     if(held&&can)sm0(f,'nBm');else if(f.rocks>0){if(sm0(f,'nBh')){f.rocks--;let ax=I.x||0,ay=I.y||0;if(Math.hypot(ax,ay)<.3){ax=f.face;ay=0;}const n=Math.hypot(ax,ay);ax/=n;ay/=n;if(Math.abs(ax)>.2)f.face=Math.sign(ax);
+       const e=spawnEnt(f,{k:'gp',sh:'rubble',c:ST1,vx:9,life:58,r:9,dmg:11,bkb:5,kbg:.078,ang:42,dy:-40,dx:10});if(e){e.vx=ax*9;e.vy=ay*9;e.face=Math.sign(ax)||f.face;}sfx('swing');FXL.push({k:'ring',x:f.x+f.face*12,y:f.y-40,t:0,col:BL,r0:6,life:12});}}
+     else sm0(f,'nBp');}
+  }}catch(e){}};
+ const rock=(x,y,r,rot)=>{const p=[],q=[];for(let i=0;i<7;i++){const a=rot+i*.8976,rr=r*(i%2?1:.78);p.push(x+Math.cos(a)*rr,y+Math.sin(a)*rr*.85);q.push(x+Math.cos(a)*(rr+1.8),y+Math.sin(a)*(rr+1.8)*.85);}wpoly(DKc,q);wpoly(ST1,p);wtri(ST2,p[0],p[1],p[12],p[13],x-r*.2,y-r*.1);wtri('#5a544a',p[4],p[5],p[6],p[7],x,y+r*.2);};
+ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);if(f&&f.C===C&&!f.form&&!f.dead&&f.rocks>0&&typeof X!=='undefined'&&X){try{const ip=(typeof interpPos==='function')?interpPos(f):f,up=Math.min(1,(FR-(f._rkUp||-99))/14);
+    for(let i=0;i<f.rocks;i++){const rise=(i===f.rocks-1)?up:1,bx=ip.x-f.face*(18+i*4)+(i?f.face*40:0),ty=ip.y-54-i*6+Math.sin(FR*.07+i*2)*3,y=ip.y-4+(ty-(ip.y-4))*rise;X.save();X.globalAlpha=.35;wdisc(bx,y,13,BL);X.restore();rock(bx,y,9,FR*.02+i*1.3);wring(bx,y,12+Math.sin(FR*.1+i)*1.2,BL,1);}}catch(e){try{X.restore();}catch(e2){}}}return r;};
+}}
+
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
    One row per fighter: [rise kind, dash kind]. Colours come from the fighter unless a row gives its own. */
 (function(){
@@ -8734,6 +8759,7 @@ const OK={
  sota:(f)=>f.fuel===undefined||f.fuel>=38,
  ryo:(f,k,o,adx)=>k!=='dB'||adx>60,
  akemi:(f,k)=>k!=='dB'||!!(f.akH&&f.akH[0]&&f.dmg-f.akH[0].dmg>=14),
+ ali:(f,k,o,adx)=>k==='dB'?(f.rocks||0)<2:k==='nB'?((f.rocks||0)>0||adx<70):true,
  kouji:()=>true};
 const ai0=aiInput;aiInput=function(f){const I=ai0(f);try{
   const ai=f.ai2||(f.ai2={cd:60,kc:{},hold:0,tk:0}),P=f.pi||{},lv=Math.min(9,Math.max(1,f.lvl||1)),R=.25+.75*(lv-1)/8;
