@@ -10160,8 +10160,13 @@ function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{c
       const L=mkLink(hid);me.on('open',()=>{const c=me.connect(hid,{serialization:'json',reliable:false});c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};res({role:'guest',link:L,close:()=>{try{me.destroy();}catch(e){}}});});c.on('data',d=>L._data(d));c.on('close',()=>L._close('The host left.'));c.on('error',()=>L._close('Connection lost.'));});
       me.on('call',call=>{L._mc=call;call.answer();call.on('stream',st=>L._stream(st));});
       setTimeout(()=>{if(!L._send)rej(new Error('Found a host but could not connect to them. One of the two networks may be blocking direct connections.'));},15000);}
-    else{done=true;rej(new Error(err&&err.type==='network'||err&&err.type==='server-error'?'Could not reach the connection service. Try again in a moment.':String(err&&err.message||err)));}});
+    else{done=true;rej(new Error(err&&err.type==='browser-incompatible'?noRTC():err&&err.type==='network'||err&&err.type==='server-error'?'Could not reach the connection service. Try again in a moment.':String(err&&err.message||err)));}});
   setTimeout(()=>{if(!done){done=true;rej(new Error('The connection service did not answer.'));}},15000);}));}
+/* why this browser cannot do it, in words someone can act on */
+function noRTC(){let framed=false;try{framed=window.self!==window.top;}catch(e){framed=true;}const has=!!window.RTCPeerConnection,ua=navigator.userAgent||'',inapp=/FBAN|FBAV|Instagram|Line\/|Discord|Snapchat|Twitter|TikTok|; wv\)|Claude/i.test(ua);
+ if(framed)return'Online play cannot run inside this embedded page. Open the game at its own address in Chrome, Edge, Safari or Firefox: '+(/github\.io/.test(location.host)?location.origin+location.pathname:'https://daringduck96.github.io/Quirk-Clash/');
+ if(!has||inapp)return'This looks like an app\'s built-in browser, which cannot make the direct connection online play needs. Open the link in your real browser instead (Chrome, Edge, Safari or Firefox): use "Open in browser" from the menu, or copy the address into it.';
+ return'This browser reports that it cannot make the direct connection online play needs. Try Chrome, Edge, Safari or Firefox, fully up to date, and not in a private window. (Details: '+ua.slice(0,90)+')';}
 function mkLink(id){const L={id,_d:[],_s:[],_c:[],closed:false,send:o=>{if(L._send)L._send(o);},onData:f=>L._d.push(f),onStream:f=>L._s.push(f),onClose:f=>L._c.push(f),sendStream:st=>{if(L._call)L._call(st);},
   _data:d=>L._d.forEach(f=>{try{f(d);}catch(e){}}),_stream:s=>L._s.forEach(f=>f(s)),_close:why=>{if(L.closed)return;L.closed=true;L._c.forEach(f=>f(why));}};return L;}
 function tuneSender(call){setTimeout(()=>{try{const pc=call.peerConnection;if(!pc)return;for(const s of pc.getSenders()){if(!s.track||s.track.kind!=='video')continue;try{s.track.contentHint='motion';}catch(e){}const p=s.getParameters();if(!p.encodings||!p.encodings.length)p.encodings=[{}];p.encodings[0].maxBitrate=3500000;p.encodings[0].maxFramerate=60;p.degradationPreference='maintain-framerate';s.setParameters(p).catch(()=>{});}}catch(e){}},800);}
@@ -10178,7 +10183,7 @@ function mockTransport(room){return new Promise(res=>{const ch=new BroadcastChan
    if(m.q==='join'&&m.to===me&&role==='host'){const L=links[m.from]=mkLink(m.from);pcFor(m.from,L,true);return;}
    if(m.to===me&&links[m.from]&&(m.sdp||m.ice))links[m.from]._sig(m);};
   ch.postMessage({q:'who',from:me});setTimeout(()=>{if(!role){role='host';res({role:'host',onGuest:f=>cbs.push(f),close:()=>ch.close()});}},500);});}
-const transport=room=>TEST?mockTransport(room):peerTransport(room);
+const transport=room=>{if(TEST)return mockTransport(room);let framed=false;try{framed=window.self!==window.top;}catch(e){framed=true;}if(!window.RTCPeerConnection)return Promise.reject(new Error(noRTC()));return peerTransport(room);};
 /* =============================================================== host =============================================================== */
 const VP=[null,null,null];           /* virtual controllers, one per guest */
 function vpad(k){return{index:100+k,id:'Online friend '+(k+1)+' (standard)',connected:true,mapping:'standard',timestamp:0,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false,touched:false,value:0}))};}
