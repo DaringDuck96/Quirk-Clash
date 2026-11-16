@@ -8178,6 +8178,51 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
       if(done){X.fillStyle='#0c0820';X.font='7px "Press Start 2P", monospace';X.textAlign='center';X.textBaseline='middle';X.fillText(m._heads?'H':'T',0.5,0.5);}X.restore();}}catch(e){try{X.restore();}catch(e2){}}}return r;};
 }}
 
+/* ---------- Ash Rowan: Mahogany. He plants trees that become platforms and walls, swings home on them, and punches through them ---------- */
+{const C=CH.find(q=>q.id==='ash');if(C){const fx=C.kit.fx,BR='#8a5a34',GR='#5aa838',GR2='#8ae060',DKc='#0c0820',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-86,t:0,life:40,col:col||GR2});
+ const TREES=[],GROW=240,HT=56,PW=46;window.ASHTREES=TREES;
+ const hOf=t=>14+(HT-14)*Math.min(1,(FR-t.born)/GROW),grown=t=>FR-t.born>=GROW;
+ const fell=(t,quiet)=>{const i=TREES.indexOf(t);if(i>=0)TREES.splice(i,1);if(t.plat){const j=STAGE.temp.indexOf(t.plat);if(j>=0)STAGE.temp.splice(j,1);}if(!quiet){burst(t.x,t.y-hOf(t)*.6,18,[BR,GR,GR2],2.6,22);sfx('thud');}};
+ const plant=M('castDown',12,1,18,null,{fx,lim:'none',cd:90}),reach=M('castUp',6,26,10,null,{fx,lim:'none'});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;T.dB=plant;T.uB=reach;}
+ C.sp=['Branch (his arm grows forward half the stage; if it reaches one of his trees it comes out the far side and keeps going)','Splinters (three thrown shards of himself)','Canopy Reach (a branch grabs the nearest ledge, platform or tree of his and pulls him to it; with nothing in reach it is a short hop)','Plant (plants a sapling that grows in four seconds into a tree: a platform anyone can stand on, and a wall that stops rivals\' projectiles; two at a time)'];
+ C.d='A man made of bark and twigs. He plants trees wherever he fights, then stands on them, hides behind them, swings home on them and punches straight through them.';
+ C.na='Normals: limbs that grow as they swing, so everything reaches further than it should. Heavy for his size and hard to launch. Standing beside one of his grown trees slowly heals him.';
+ if(C.qa){C.qa=['GROW','grow',{},10,'His legs lengthen and he stands almost twice as tall for seven seconds: attacks come from higher and reach further, and he is a bigger target.'];}
+ try{if(typeof GTXT!=='undefined'&&GTXT.ash){GTXT.ash[0]='His arm grows into a branch that reaches half the stage in a straight line. If one of his trees is in the way, the branch grows out of its far side and reaches further still.';
+   GTXT.ash[2]='Shoots a branch at the nearest ledge, platform or tree of his within reach and pulls him to it. Usable once per trip into the air. With nothing in reach it is only a short hop, so plant before you need it.';
+   GTXT.ash[3]='On the ground, plants a sapling just ahead of him. Over four seconds it grows into a tree with a platform on top that anyone can stand on. The trunk stops rivals\' projectiles. Rivals can chop it down by attacking it. He can have two; a third replaces the oldest.';}}catch(e){}
+ const sm0=startMove;startMove=function(f,key){if(f&&f.C===C&&!f.form&&!(f.copyT>0)){if(key==='dB'&&!f.ground)return false;if(key==='uB'&&f._crU)return false;}
+   const r=sm0(f,key);if(r&&f&&f.C===C&&f.mv&&!f.form){if(key==='qa'){f.tallT=FR+420;say(f,'GROW');sfx('power');for(let i=0;i<12;i++)part(f.x+rnd()*16-8,f.y-rnd()*20,rnd()-.5,-1,18,i%2?BR:GR2,2,0);}
+     if(key==='uB'){f._crU=!f.ground;const m=f.mv;let best=null,bd=1e9;const tryP=(x,y,kind,ref)=>{const dx=x-f.x,dy=y-(f.y-30),d=Math.hypot(dx,dy);if(d<210&&d>24&&dy<50&&d<bd){bd=d;best={x,y,kind,ref};}};
+       for(const L of LEDGES)if(!L.occ)tryP(L.x,L.y,'ledge',L);for(const p of STAGE.plats.concat(STAGE.temp)){if(f.ground===p)continue;tryP(clamp(f.x,p.x+8,p.x+p.w-8),p.y,'plat',p);}for(const t of TREES)if(t.owner===f&&!t.plat)tryP(t.x,t.y-hOf(t),'tree',t);
+       m._tg=best;if(!best){f.vy=Math.min(f.vy,-7.2);f.ground=null;f.st==='move';say(f,'NOTHING TO GRAB','#b0a8a0');}else sfx('swing');}}
+   return r;};
+ const st0=step;step=function(){st0();try{if(typeof GS!=='undefined'&&GS==='count'&&gsT<2&&TREES.length){for(const t of TREES.slice())fell(t,1);}
+  for(const t of TREES.slice()){const h=hOf(t);if(STAGE.main!==t.g&&STAGE.plats.indexOf(t.g)<0){fell(t,1);continue;}
+    if(grown(t)&&!t.plat){t.plat={x:t.x-PW/2,y:t.y-HT,w:PW,tree:1,until:1e12,born:FR};STAGE.temp.push(t.plat);burst(t.x,t.y-HT,14,[GR,GR2],2,18);sfx('power');}
+    for(const e of ENT){if(!e.alive||!e.proj||e.owner===t.owner||(typeof sameTeam==='function'&&e.owner&&sameTeam(e.owner,t.owner)))continue;if(Math.abs(e.x-t.x)<8+(e.r||5)&&e.y>t.y-h-4&&e.y<t.y+2){e.alive=false;t.hp-=((e.spec&&e.spec.dmg)||e.dmg||5);t.shk=FR;burst(e.x,e.y,8,[BR,'#ffffff'],1.8,14);sfx('clank');}}
+    for(const a of F){if(a===t.owner||a.dead||a.gone||!a.mv||(typeof sameTeam==='function'&&sameTeam(a,t.owner))||t.hitBy===a.mv)continue;for(const[hb]of hitboxes(a)){let hit=false;for(const q of hb.b){const x=a.x+a.face*q[0],y=a.y+q[1];if(Math.abs(x-t.x)<6+q[2]&&y>t.y-h-q[2]&&y<t.y+q[2]){hit=true;break;}}if(hit){t.hitBy=a.mv;t.hp-=hb.dmg;t.shk=FR;burst(t.x,t.y-h*.5,6,[BR,'#d8b890'],1.6,12);sfx('hit');break;}}}
+    if(t.hp<=0){fell(t);continue;}}
+  for(const f of F){if(f.C!==C||f.gone)continue;if(f.dead||f.st==='respawn'){f._crU=false;continue;}if(f.ground||f.st==='ledge')f._crU=false;if(f.form||f.copyT>0)continue;
+    if(f.ground&&f.dmg>0&&FR%3===0){for(const t of TREES)if(t.owner===f&&t.plat&&Math.abs(t.x-f.x)<44&&Math.abs(t.y-f.y)<70){f.dmg=Math.max(0,f.dmg-.06);if(FR%30===0)part(f.x+rnd()*14-7,f.y-20-rnd()*20,0,-.5,16,GR2,2,0);break;}}
+    const m=f.mv;if(!m||f.hl>0)continue;const d=m.d;
+    if(m.k==='dB'&&m.t===d.s&&!m._pl&&f.ground){m._pl=1;const g=f.ground,x=clamp(f.x+f.face*20,g.x+10,g.x+g.w-10);const mine=TREES.filter(t=>t.owner===f);if(mine.length>=2)fell(mine[0],1);TREES.push({x,y:g.y,g,owner:f,born:FR,hp:28,plat:null});burst(x,g.y-2,10,[BR,GR2,'#5a3a20'],2,16);sfx('thud');say(f,'PLANTED');}
+    if(m.k==='uB'&&m._tg){const T=m._tg,t=m.t-d.s;if(T.kind==='tree'&&TREES.indexOf(T.ref)<0){m._tg=null;continue;}if(T.kind==='plat'&&STAGE.temp.indexOf(T.ref)<0&&STAGE.plats.indexOf(T.ref)<0){m._tg=null;continue;}
+      if(t>=4){const tx=T.x-(T.kind==='ledge'?T.ref.side*-6:0),ty=T.y+(T.kind==='ledge'?26:-2),dx=tx-f.x,dy=ty-f.y,dd=Math.hypot(dx,dy)||1,sp=9.5;f.ground=null;f.lx=f.ly=0;
+        if(dd<14||t>30){if(T.kind==='ledge'&&!T.ref.occ){try{grabLedge(f,T.ref);}catch(e){}}else{f.x=T.x;f.y=T.y-3;f.vx=0;f.vy=0;}f.mv=null;if(f.st==='move')f.st='air';f._crU=false;continue;}
+        f.vx=dx/dd*sp;f.vy=dy/dd*sp;f.inv=Math.max(f.inv||0,2);}else{f.vx*=.6;f.vy=Math.min(f.vy,0)*.6;}}
+    if(m.k==='nB'&&m.t>=d.s&&m.t<=d.s+d.a&&!m._thr){for(const t of TREES){if(t.owner!==f)continue;const dx=(t.x-f.x)*f.face;if(dx>14&&dx<84&&Math.abs(t.y-f.y)<34){m._thr=t;m._thT=FR;for(const o of F){if(o===f||o.dead||o.gone||(typeof sameTeam==='function'&&sameTeam(f,o))||o.inv>0)continue;const ox=(o.x-t.x)*f.face;if(ox>-6&&ox<70&&Math.abs((o.y-30)-(f.y-38))<30){try{applyHit(o,d.hits[0],f.face,f,{});}catch(e){}}}burst(t.x+f.face*8,f.y-38,8,[BR,GR2],2,14);break;}}}
+  }}catch(e){}};
+ const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const t of TREES){const h=hOf(t),k=Math.min(1,(FR-t.born)/GROW),sx=(FR-(t.shk||-99)<8)?Math.sin(FR*2.2)*1.6:0,x=t.x+sx,w=3+4*k;
+    wr(DKc,x-w-1.2,t.y-h-1,w*2+2.4,h+1);wr(BR,x-w,t.y-h,w*2,h);wr('#a87448',x-w,t.y-h,2,h);for(let i=1;i<h/12;i++)wr('#5a3a20',x-w+2,t.y-i*12,w*1.2,1.2);
+    wtri(DKc,x-w-5,t.y,x-w,t.y-7,x-w,t.y);wtri(DKc,x+w+5,t.y,x+w,t.y-7,x+w,t.y);
+    if(t.plat){wr(DKc,t.plat.x-2,t.plat.y-9,PW+4,13);wr(GR,t.plat.x,t.plat.y-7,PW,9);wr(GR2,t.plat.x,t.plat.y-7,PW,3);for(let i=0;i<5;i++){wdisc(t.plat.x+5+i*9,t.plat.y-9+Math.sin(FR*.05+i)*1,5.5,i%2?GR:GR2);}wr('#3a7a2a',t.plat.x,t.plat.y,PW,2);}
+    else{const r=4+7*k;wdisc(x,t.y-h-r*.5,r+1.4,DKc);wdisc(x,t.y-h-r*.5,r,GR);wdisc(x-r*.3,t.y-h-r*.7,r*.5,GR2);}}
+   for(const f of F){if(f.C!==C||!f.mv)continue;const m=f.mv;if(m.k==='uB'&&m._tg){const T=m._tg,k=Math.min(1,(m.t-m.d.s+4)/6);if(k>0){const x0=f.x+f.face*4,y0=f.y-44,x1=x0+(T.x-x0)*k,y1=y0+(T.y-y0)*k;wl(DKc,x0,y0,x1,y1,6);wl(BR,x0,y0,x1,y1,3.6);for(let i=1;i<4;i++){const px=x0+(x1-x0)*i/4,py=y0+(y1-y0)*i/4;wdisc(px,py-3,2.4,i%2?GR:GR2);}}}
+     if(m.k==='nB'&&m._thr&&FR-m._thT<10){const t=m._thr,y=f.y-38,x1=t.x+f.face*68;wl(DKc,t.x,y,x1,y,8);wl(BR,t.x,y,x1,y,5);wdisc(x1,y,5,BR);wdisc(x1+f.face*3,y-4,3,GR2);}}}catch(e){}};
+}}
+
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
    One row per fighter: [rise kind, dash kind]. Colours come from the fighter unless a row gives its own. */
 (function(){
@@ -8796,6 +8841,7 @@ const OK={
  akemi:(f,k)=>k!=='dB'||!!(f.akH&&f.akH[0]&&f.dmg-f.akH[0].dmg>=14),
  ali:(f,k,o,adx)=>k==='dB'?(f.rocks||0)<2:k==='nB'?((f.rocks||0)>0||adx<70):true,
  aria:(f,k)=>k!=='dB'||(f.lkB||1)<2.5,
+ ash:(f,k)=>k!=='dB'||(typeof ASHTREES!=='undefined'&&ASHTREES.filter(t=>t.owner===f).length<2),
  kouji:()=>true};
 const ai0=aiInput;aiInput=function(f){const I=ai0(f);try{
   const ai=f.ai2||(f.ai2={cd:60,kc:{},hold:0,tk:0}),P=f.pi||{},lv=Math.min(9,Math.max(1,f.lvl||1)),R=.25+.75*(lv-1)/8;
