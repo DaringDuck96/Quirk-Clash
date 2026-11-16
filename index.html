@@ -1023,7 +1023,7 @@ function weaponTip(L,J,hand){const len=L.wlen||22,a=J.wa;return{x:hand.x+Math.co
 const c0x=a=>Math.cos(a),c0y=a=>Math.sin(a);
 function drawWeapon(L,J,hand,S){const a=J.wa,c=Math.cos(a),s=Math.sin(a),h=L.h,R=L.R,hx=hand.x,hy=hand.y,px=-s,py=c;const at=(d,o)=>[hx+c*d*h+px*(o||0)*h,hy+s*d*h+py*(o||0)*h];
   switch(L.wpn){
-  case 'katana':{const b=ramp('#d8dcea');capsule(...at(-5),1.5,...at(1),1.5,ramp('#1a1a1e'));for(let i=-4;i<1;i+=2){const q=at(i);sp(q[0],q[1],ramp('#f08a20')[3]);}
+  case 'katana':{const b=ramp(L.bladeC||'#d8dcea');capsule(...at(-5),1.5,...at(1),1.5,ramp('#1a1a1e'));for(let i=-4;i<1;i+=2){const q=at(i);sp(q[0],q[1],ramp('#f08a20')[3]);}
     ell(...at(1.6),1.4*h,2.6*h,a,R.gold);capsule(...at(2.6),1.4,...at(26),.5,b);lineP(...at(3,-.8),...at(25,-.6),b[4]);break;}
   case 'bow':{const c=ramp(L.bowC||'#8a1a1e'),st=ramp('#e8e8f0');const A=at(0,-13),B=at(0,13),M2=at(5,0);capsule(A[0],A[1],1,lerp(A[0],M2[0],.5)+c0x(a)*2,lerp(A[1],M2[1],.5)+c0y(a)*2,1.3,c);capsule(lerp(A[0],M2[0],.5)+c0x(a)*2,lerp(A[1],M2[1],.5)+c0y(a)*2,1.3,M2[0],M2[1],1.5,c);
     capsule(B[0],B[1],1,lerp(B[0],M2[0],.5)+c0x(a)*2,lerp(B[1],M2[1],.5)+c0y(a)*2,1.3,c);capsule(lerp(B[0],M2[0],.5)+c0x(a)*2,lerp(B[1],M2[1],.5)+c0y(a)*2,1.3,M2[0],M2[1],1.5,c);lineP(A[0],A[1],B[0],B[1],st[3]);sp(A[0],A[1],st[4]);sp(B[0],B[1],st[4]);break;}
@@ -1840,14 +1840,14 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    uB:M('uppercut',5,10,15,hit([[4,-56,15]],7,4.5,.055,85,{eff:'burn'}),{beh:'leapUp',bp:{vy:-10.6,vx:1.6},helpless:1,fx}),
    dB:M('roar',5,2,9,null,{fx,lim:'none',onStart(f){f.cycN=((f.cycN||0)+1)%4;const N=[['RED FLAME','#ff5a30'],['BLUE FLAME','#5ab8ff'],['GREEN FLAME','#6adf6a'],['VIOLET FLAME','#b070ff']][f.cycN];say(f,N[0],N[1]);sfx('pop');}})}),
   sp:['Sacred Flame (red bursts and burns / blue is fast and far / green heals him / violet slows)','Flame Dash','Phoenix Rise','Change Flame (red, blue, green, violet)']});
- fx=['#a0ff40','#ffffff'];add({id:'kal',n:'KAL WILSON',sn:'KAL',q:'Danger Sense',ty:'Emitter',col:'#a0ff40',d:'A precognitive gut feeling that warns him just before something bad happens. Loud about it.',
-  na:'Normals: loud, committed haymakers. Every eight seconds his DANGER SENSE makes the next hit aimed at him miss completely.',
-  look:K({skin:'#f2d6bc',eye:'#c83a3a',hairS:'spiky',hair:'#f0f0f4',outfit:'jacketS',top:'#f0f0f4',acc:'#c8282e',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#c8282e',stance:'guard',smile:1,ex:[]}),st:ST({w:1,run:3.3,air:2.8}),kit:{st:'brawler',fx,el:'sense',pow:1.02},
-  mv:Object.assign(SM('sense',fx),{nB:M('counter',3,26,16,hit([[20,-34,18]],11,5,.075,40),{beh:'counter',bp:{f0:3,f1:27,mode:'dodge',mult:1.3},fx}),
-   sB:M('dashF',7,13,14,hit([[0,-30,15]],9,4.5,.065,40),{beh:'dash',bp:{spd:6.6,f0:7,f1:20,air:'float'},fx}),
-   uB:M('uppercut',5,10,15,hit([[4,-56,14]],7,4.5,.055,85),{beh:'leapUp',bp:{vy:-10.6,vx:1.6},helpless:1,fx}),
+ fx=['#a0ff40','#ffffff'];add({id:'kal',n:'KAL WILSON',sn:'KAL',q:'Danger Sense',ty:'Emitter',col:'#a0ff40',d:'A precognitive gut feeling that warns him just before something bad happens. Loud about it, and carries a glowing katana.',
+  na:'Normals: loud, committed cuts with a glowing katana. His quirk is purely defensive: every eight seconds his DANGER SENSE makes the next hit aimed at him miss completely.',
+  look:K({skin:'#f2d6bc',eye:'#c83a3a',hairS:'spiky',hair:'#f0f0f4',outfit:'jacketS',top:'#f0f0f4',acc:'#c8282e',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#c8282e',wpn:'katana',wlen:26,bladeC:'#a0ff40',stance:'weapon',smile:1,ex:[]}),st:ST({w:1,run:3.3,air:2.8}),kit:{st:'blade',fx,el:'sense',pow:1.02},
+  mv:Object.assign(SM('sense',fx,{f:{an:'slashF'},u:{an:'slashUp'},d:{an:'slashLow'}}),{nB:M('counter',3,26,16,hit([[24,-34,19]],11,5,.075,40),{beh:'counter',bp:{f0:3,f1:27,mode:'dodge',mult:1.3},fx,lim:'w'}),
+   sB:M('slashF',7,13,14,hit([[0,-30,17]],9,4.5,.065,40),{beh:'dash',bp:{spd:6.6,f0:7,f1:20,air:'float'},fx,lim:'w'}),
+   uB:M('slashUp',5,10,15,hit([[6,-58,15]],7,4.5,.055,85),{beh:'leapUp',bp:{vy:-10.6,vx:1.6},helpless:1,fx,lim:'w'}),
    dB:M('roar',26,4,14,null,{fx,cd:120,onStart(f){f.dsT=(f.dsT||-999)-200;say(f,'FOCUS');}})}),
-  sp:['Saw It Coming (a counter with a long window)','Overwatch Rush','Rising Strike','Focus (meditates: Danger Sense comes back sooner)']});
+  sp:['Saw It Coming (a counter with a long window: he steps aside and cuts)','Overwatch Rush (a dashing cut that ends in a rising slash)','Rising Cut','Focus (meditates: Danger Sense comes back sooner)']});
  fx=['#ff7ad0','#ffffff'];add({id:'kora',n:'KORA WHITE',sn:'KORA',q:'Angel',ty:'Mutant',col:'#ff7ad0',d:'Angelic wings that generate enormous lift and thrust. She hits with them as often as she flies with them.',
   na:'Normals: wing buffets with wide arcs. Four jumps, and holding Jump in the air lets her hover for a moment.',
   look:K({skin:'#f0cca8',eye:'#6a4a30',hairS:'long',hair:'#5a3420',outfit:'tee',top:'#f4f4f8',sl:'none',pants:'#f0f0f4',shoe:'#f4f4f8',stance:'guard',earring:1,ex:['wings'],wingC:'#f4f4fa',wingT:'#ffd0f0'},1),st:ST({w:.92,run:3,air:3.1,g:.34,fall:4.8,aj:3}),kit:{st:'brawler',fx,el:'angel',pow:.98},
@@ -2260,7 +2260,7 @@ Object.assign(TUNE,{dawson:{role:'Quirkless tactician',tip:'Trap the floor, shur
  conor:{role:'Tiny trickster',tip:'The smallest target. Coins bounce; the pot of gold hurts.',sp:1.1,pw:1,kb:1},ray:{role:'Beam zoner',tip:'Stare to freeze them, X-Ray (Shield + B), then laser or smash.',sp:1,pw:1,kb:1},
  oliver:{role:'Homing archer',tip:'Everything he fires steers itself. Stay away and aim.',sp:1,pw:1,kb:1},chris:{role:'Regenerating brawler',tip:'Trade hits on purpose. He heals; they do not.',sp:1,pw:1,kb:1},
  evona:{role:'Ice architect',tip:'Wall them off, slide in, pillar out.',sp:1.02,pw:1,kb:1},jack:{role:'Four-flame all-rounder',tip:'Down-B changes the flame: burn, speed, heal or slow.',sp:1,pw:1,kb:1},
- kal:{role:'Precognitive brawler',tip:'Every eight seconds one hit misses him. Swing first.',sp:1.04,pw:1,kb:1},kora:{role:'Winged skirmisher',tip:'Four jumps and a hover. Fight from above.',sp:1,pw:1,kb:1},ash:{role:'Long-limbed heavy',tip:'Grow to hit from above and reach the ledge; Branch keeps them at arm\'s length.',sp:.96,pw:1,kb:1}});
+ kal:{role:'Precognitive swordsman',tip:'Every eight seconds one hit misses him. Swing first.',sp:1.04,pw:1,kb:1},kora:{role:'Winged skirmisher',tip:'Four jumps and a hover. Fight from above.',sp:1,pw:1,kb:1},ash:{role:'Long-limbed heavy',tip:'Grow to hit from above and reach the ledge; Branch keeps them at arm\'s length.',sp:.96,pw:1,kb:1}});
 Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be hit at all. Slip through, whip them back.',sp:1,pw:1,kb:1},sato:{role:'Knockback specialist',tip:'Low damage, huge shove. Win at the edge.',sp:1,pw:1,kb:1},
  akio:{role:'Speedster',tip:'Homing Attack to start, Spin Dash to chase, Spring Jump to get home.',sp:1.2,pw:1,kb:1},sata:{role:'All-rounder',tip:'A tool for every range and a self-repair.',sp:1,pw:1,kb:1},kitsu:{role:'Hard-light bruiser',tip:'Constructs do the hitting. The hammer breaks shields.',sp:1,pw:1,kb:1},
  uzi:{role:'Resilient grappler',tip:'Melt under their attacks, Engulf them when they shield.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest.',sp:.96,pw:1,kb:1},
@@ -4955,7 +4955,7 @@ oliver:['A homing arrow. Hold B to charge it bigger and faster.','Three arrows a
 chris:['A big slow haymaker. He does not flinch while winding it up, so he can take a hit to land it.','An armoured rush straight through whatever is in the way. It costs him 3%.','A rising uppercut that hits several times.','Shrugs it off: heals 10%. Nine-second cooldown.','Refuses to go down, and takes it out on whoever is closest. He heals while he does it.'],
 evona:['Raises a wall of ice ahead of her. It blocks shots, shoves and chills rivals. One at a time.','Skates across the stage on her own ice.','Rides a pillar of ice upward.','A freezing flurry all around her. Cooldown.','Raises an ice palace around herself and freezes everyone inside.'],
 jack:['Fires the flame that is lit. Red bursts and burns; blue is fast and long; green heals him a little; violet is slow and slows whoever it touches.','A burning dash.','Rises on wings of flame.','Changes the lit flame: red, blue, green, violet.','A phoenix of every colour sweeps the stage.'],
-kal:['Braces. If he is hit he dodges and counters for 30% more than he took.','A loud rush forward.','A rising strike.','Meditates for a moment. Danger Sense comes back about three seconds sooner.','He already saw how this ends.'],
+kal:['Braces. If he is hit he steps aside and cuts back for 30% more than he took.','A loud dashing cut that ends in a rising slash, popping the rival straight up.','A rising cut.','Meditates for a moment. Danger Sense comes back about three seconds sooner.','He already saw how this ends.'],
 kora:['Throws three feathers.','A wing-powered dash.','Free flight in any direction for a moment.','Slams her mace down: shockwaves on both sides that crack shields.','Dives across the stage on full wings.'],
 ash:['His arm grows into a branch that reaches half the stage in a straight line.','Snaps off three splinters and throws them.','Grows: his legs lengthen until he stands almost twice as tall, for seven seconds. His attacks come from higher up and reach further, and he is a bigger target. In the air it is only a small hop, so do not count on it to get home. Long cooldown.','Roots burst from the floor ahead of him.','A forest erupts around him and roots everyone inside.']});
 Object.assign(GTXT,{
@@ -5697,7 +5697,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   conor:['The shortest reach in the school and very light.','The smallest target in the school.'],ray:['His beams leave him standing still; get inside and he struggles.','Every eye at once: laser, thermal, paralysing stare, flash, X-ray and Future Sight are all available at any time.'],
   oliver:['Weak up close and has no kill move without space.','His arrows home.'],chris:['No projectile, average speed, and his best moves are slow.','HEALING FACTOR: after a second and a half without being hit he regenerates about 1.5% per second. Two of his specials do not flinch.'],
   evona:['Low knockout power; she controls rather than finishes.','Her wall blocks projectiles.'],jack:['Master of none: each flame is weaker than a specialist\'s.','Four flames, one at a time: the lit colour changes every attack he has, not just his fireball.'],
-  kal:['When Danger Sense is on cooldown he is an ordinary brawler.','DANGER SENSE: every eight seconds the next hit aimed at him misses.'],kora:['Floaty and a big target with her wings out.','Four jumps, and holding Jump in the air hovers.'],
+  kal:['When Danger Sense is on cooldown he is an ordinary swordsman.','DANGER SENSE: every eight seconds the next hit aimed at him misses.'],kora:['Floaty and a big target with her wings out.','Four jumps, and holding Jump in the air hovers.'],
   ash:['Slow, his long limbs are slow to pull back, and his up-special barely lifts him.','Wood: burning attacks do 20% more to him, but everything else launches him 10% less.'],
   makiko:['Very light, and almost harmless against a rival who is awake.','Sleep lasts longer the more damage the sleeper has.'],
   koki:['A huge slow target with no ranged attack at all.','Blood in the water: up to 20% more damage against badly hurt rivals.'],
@@ -6238,7 +6238,7 @@ const ING_MAX=6;
   chris:{outfit:'stealth',top:'#1c1c22',acc:'#e8b040',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#e8b040',boots:1,glove:'#e8b040',hx:['cap','halfmask'],capC:'#1c1c22',maskC:'#1c1c22',ex:['pack'],sl:'long'},
   evona:{outfit:'coat',top:'#f4f4fa',acc:'#3a6ac8',sleeve:'#f4f4fa',pants:'#f4f4fa',skirt:'#3a6ac8',socks:'#f4f4fa',shoe:'#f4f4fa',boots:1,furC:'#7ab0e8'},
   jack:{outfit:'tee',top:'#f4f4f8',sl:'short',pants:'#1c2030',shoe:'#1c1c22',glove:'#1c1c22',ex:['wings'],wingC:'#ff7a30',wingT:'#5ab8ff'},
-  kal:{outfit:'plate',top:'#8a8e96',acc:'#a0ff40',sleeve:'#5a5e66',pants:'#2a2e34',shoe:'#a0ff40',boots:1,glove:'#5a5e66',hx:['helm','visor'],helmC:'#8a8e96',visorC:'#a0ff40',hair:'#8a8e96',sl:'long'},
+  kal:{outfit:'plate',top:'#8a8e96',acc:'#a0ff40',sleeve:'#5a5e66',pants:'#2a2e34',shoe:'#a0ff40',boots:1,glove:'#5a5e66',hx:['helm','visor'],helmC:'#8a8e96',visorC:'#a0ff40',hair:'#8a8e96',sl:'long',wpn:'katana',wlen:26,bladeC:'#a0ff40',stance:'weapon'},
   kora:{outfit:'plate',top:'#f4f4f8',acc:'#e84ab0',sleeve:'#f4f4f8',pants:'#8a2a8a',shoe:'#e84ab0',boots:1,glove:'#f4f4f8',pauldron:1,pauldC:'#e84ab0',wpn:'wand',ex:['wings'],wingC:'#f4f4fa',wingT:'#ffd0f0',sl:'long'},
   ash:{ex:['scarf'],scarfC:'#a8282e',leafC:'#8ae060'},
   makiko:{outfit:'pinafore',top:'#5a6a8a',acc:'#e8e4dc',sleeve:'#5a6a8a',sl:'short',skirt:'#5a6a8a',socks:'#d8d8e0',shoe:'#16141a',hx:['glasses','ribbon'],hair:'#e8dcb0'},
@@ -6602,7 +6602,7 @@ const FSM={kimiko:['snow','shard','fall'],keanu:['drop','leaf','rise'],bara:['fe
  yoko:['rock','swirl','orbit'],chiyoki:['eye','skull','drift'],yurei:['ghost','tendril','drift'],ivan:['hand','hand','fall'],bisu:['paw','leaf','burst'],kurai:['feather','moon','fall'],homura:['flame','blob','rise'],kuragari:['web','web','drift'],
  mia:['hex','hex','orbit'],shi:['skull','slash','orbit'],takeshi:['ink','ink','burst'],ali:['eye','swirl','orbit'],daku:['flame','skull','rise'],kongu:['fist','rock','burst'],hippo:['qmark','qmark','drift'],
  dawson:['slash','arrow','storm'],maya:['leaf','cross','rise'],sarah:['tendril','eye','rise'],aria:['coin','heart','fall'],bryson:['fist','bang','burst'],conor:['coin','arc','fall'],ray:['eye','bolt','storm'],oliver:['arrow','arrow','fall'],
- chris:['fist','cross','burst'],evona:['snow','shard','fall'],jack:['flame','wing','rise'],kal:['bang','eye','orbit'],kora:['feather','wing','fall'],ash:['leaf','tendril','rise'],moya:['cloud','cloud','drift'],sato:['bubble','bang','burst'],
+ chris:['fist','cross','burst'],evona:['snow','shard','fall'],jack:['flame','wing','rise'],kal:['slash','bang','orbit'],kora:['feather','wing','fall'],ash:['leaf','tendril','rise'],moya:['cloud','cloud','drift'],sato:['bubble','bang','burst'],
  akio:['bolt','swirl','storm'],sata:['gear','hex','storm'],kitsu:['tri','arc','orbit'],uzi:['blob','drop','rise'],ichigo:['rocket','gear','storm'],bentou:['mask','card','orbit'],okane:['coin','sun','burst'],goiru:['rock','wing','fall'],
  aya:['shard','tri','orbit'],hikari:['bolt','slash','storm'],ryo:['rock','claw','rise'],suzume:['note','web','burst'],ayame:['swirl','cloud','orbit'],sota:['rocket','flame','storm'],tiki:['mask','ghost','orbit']};
 function genFS(e,f,d,t,a){const c0=d.col[0],c1=d.col[1],F2=e.face,cx=e.x,cy=e.y,M=FSM[f.C.id]||['star','star','burst'],gA=FSG[M[0]]||FSG.star,gB=FSG[M[1]]||FSG.star,mo=M[2];
