@@ -10149,7 +10149,8 @@ const linkFor=r=>location.origin+location.pathname+'#room='+r;
 const hashRoom=()=>{const m=/room=([A-Za-z0-9]+)/.exec(location.hash||'');return m?roomSlug(m[1]):'';};
 /* =============================================================== transport =============================================================== */
 function loadLib(){return new Promise((res,rej)=>{if(window.Peer)return res();const s=document.createElement('script');s.src=LIB;s.onload=()=>window.Peer?res():rej(new Error('PeerJS did not load'));s.onerror=()=>rej(new Error('Could not reach the connection service (are you offline, or is this page sandboxed?)'));document.head.appendChild(s);});}
-const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'}]};
+/* STUN finds a direct route; the TURN relays (PeerJS's own free ones) carry the connection when a home router or phone network will not allow a direct one */
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}],sdpSemantics:'unified-plan'};
 /* PeerJS: returns {role:'host', onGuest(cb), close()} or {role:'guest', link, close()} where link = {send, onData, onStream, onClose, sendStream, id} */
 function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{const hid=PREFIX+room;let done=false;
   const host=new Peer(hid,{config:ICE,debug:1});
@@ -10159,7 +10160,7 @@ function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{c
       const me=new Peer(undefined,{config:ICE,debug:1});me.on('error',e2=>{if(e2&&e2.type==='peer-unavailable')L._close('The host is not there any more.');});
       const L=mkLink(hid);me.on('open',()=>{const c=me.connect(hid,{serialization:'json',reliable:false});c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};res({role:'guest',link:L,close:()=>{try{me.destroy();}catch(e){}}});});c.on('data',d=>L._data(d));c.on('close',()=>L._close('The host left.'));c.on('error',()=>L._close('Connection lost.'));});
       me.on('call',call=>{L._mc=call;call.answer();call.on('stream',st=>L._stream(st));});
-      setTimeout(()=>{if(!L._send)rej(new Error('Found a host but could not connect to them. One of the two networks may be blocking direct connections.'));},15000);}
+      setTimeout(()=>{if(!L._send)rej(new Error('Found the host but could not get a connection through to them, even by relay. Both of you: reload the page and try once more. If it keeps failing, one of you is likely on a network that blocks this (work, school, some mobile data): try home wifi or a phone hotspot.'));},25000);}
     else{done=true;rej(new Error(err&&err.type==='browser-incompatible'?noRTC():err&&err.type==='network'||err&&err.type==='server-error'?'Could not reach the connection service. Try again in a moment.':String(err&&err.message||err)));}});
   setTimeout(()=>{if(!done){done=true;rej(new Error('The connection service did not answer.'));}},15000);}));}
 /* why this browser cannot do it, in words someone can act on */
