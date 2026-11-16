@@ -3336,7 +3336,7 @@ function drawFighter(f){if(f.dead||f.gone)return;const L=lookOf(f);
   if(m&&m.v.board){wr('#2a6aa8',-14,-2,28,4);wr('#bff4ff',-13,-2,26,2);wp('#ffffff',10,-2);}
   if(m&&m.d.koi&&m.t<m.d.s+m.d.a){const d=f.face,wg=Math.sin(f.anim*.5)*2;fishShape(d*4,5+wg*.4,d,64,'#f4b020','#fff4c0','#8a5a08');wpoly('#ffd860',[-d*6,-4,d*2,-13,d*10,-5]);wp('#ffffff',d*22,0);if(f.anim%3===0)part(f.x-d*30,f.y+4,-f.vx*.3,0,16,rnd()<.5?'#ffe890':'#bfe8ff',2,0);}
   if(p.rot){const ry=30*(L.size||1);X.translate(0,-ry);X.rotate(p.rot*f.face);X.translate(0,ry);}
-  X.scale(f.face*sc/RS*(p.kx||1),sc/RS*(p.ky||1));X.globalAlpha=alpha;X.drawImage(B.cv,-B.ox,-B.oy);X.restore();
+  X.scale(f.face*sc/RS*(p.kx||1),sc/RS*(p.ky||1));X.globalAlpha=alpha;X.drawImage(B.cv,-B.ox,-B.oy);if(typeof stageLit==='function')stageLit(f,B,alpha);X.restore();
   if(m){const d=m.d,lim=d.lim||(ANIM[d.an]&&ANIM[d.an].lim);if(lim&&lim!=='none'&&m.t>=d.s-1&&m.t<=d.s+d.a+2){const tp=limbTip(f,lim,Sd,L);if(tp){m.trail.push({x:f.x+tp.x*f.face*sc,y:f.y+tp.y*sc});if(m.trail.length>7)m.trail.shift();}}
     if(d.tentacle&&m.t>=d.s&&m.t<d.s+d.a+4){const hx=f.x+f.face*6;for(let i=0;i<10;i++){const yy=f.y-50-i*5,xx=hx+Math.sin(i*.8+f.anim*.3)*4;wdisc(xx,yy,2.4-i*.1,'#e8c458');wdisc(xx+2,yy+2,1.6,'#fff0b0');}}
     if(d.gatling&&m.t>=d.s&&m.t<d.s+d.a){for(let i=0;i<3;i++){const fx2=f.x+f.face*(20+rnd()*28),fy=f.y-44+rnd()*14;wr(L.R.skin[2]?rgbOf(L.R.skin):'#f3d4ba',fx2-3,fy-3,6,6);wl('#ffffff',fx2-f.face*8,fy,fx2-f.face*14,fy);}}
@@ -9619,6 +9619,22 @@ function colours(){const S=(typeof STGD!=='undefined'&&STGD)||null;if(S===palFor
    for(const p of STAGE.plats){X.save();X.globalAlpha=.9;wr('#ffffff',p.x,p.y-.5,p.w,1);X.globalAlpha=.6;wr(DKc,p.x,p.y+.5,p.w,1.5);wr(DKc,p.x-1,p.y-.5,1,3.5);wr(DKc,p.x+p.w,p.y-.5,1,3.5);X.restore();}});
 if(typeof drawTrails==='function'){const dt=drawTrails;drawTrails=function(f){if(typeof F!=='undefined'&&f===F[0]&&typeof X!=='undefined'&&X){for(const fn of window.UNDER){try{fn();}catch(e){try{X.restore();}catch(e2){}}}}return dt.apply(this,arguments);};}
 })();
+
+/* stagelight.js — every stage lights its fighters: a colour wash, a rim of light on the side facing the stage's main light, and a brief glow in the colour of any hit they
+   land or take. Drawn over the sprite only, so nothing else changes. Set STAGELIT=false to switch it off. */
+var STAGELIT=true;
+const LITS={fuji:['#ffb0c8',.07,'#fff2d8',-1],shibuya:['#6a48d0',.13,'#3af0ff',1],inari:['#ff9050',.11,'#ffd8a0',-1],miyajima:['#ff8060',.12,'#ffe0a0',1],tower:['#3858b0',.14,'#ff7a6a',-1],osaka:['#a8c8ff',.06,'#ffffff',-1],
+ orbit:['#5a38b0',.16,'#c8a8ff',1],mockcity:['#ffffff',0,'#ffffff',-1],arena:['#fff0c0',.05,'#ffffff',1],dome:['#80c0ff',.08,'#e0f4ff',-1],gym:['#ffe0a0',.06,'#fff4d8',1],sewers:['#3aa060',.16,'#a8ffb8',-1],
+ train:['#ff9a60',.1,'#ffe4b8',1],prom:['#8a48c8',.15,'#ff7ad0',1],ramen:['#ffb060',.12,'#ffe4a8',-1]};
+let _litT=null;
+function stageLit(f,B,alpha){if(!STAGELIT||!B||!B.cv||typeof STGD==='undefined'||!STGD)return;const P=LITS[STGD.id],L=f._lit&&FR-f._lit.t<12?f._lit:null;if(!P&&!L)return;if(f.invis||alpha<.3)return;
+  const w=B.cv.width,h=B.cv.height;if(!_litT||_litT.width!==w||_litT.height!==h){_litT=document.createElement('canvas');_litT.width=w;_litT.height=h;}const g=_litT.getContext('2d'),rs=(typeof RS!=='undefined'?RS:2);
+  const wash=(col,a)=>{g.globalCompositeOperation='copy';g.drawImage(B.cv,0,0);g.globalCompositeOperation='source-in';g.fillStyle=col;g.fillRect(0,0,w,h);X.globalAlpha=alpha*a;X.drawImage(_litT,-B.ox,-B.oy);};
+  if(P&&P[1]>0)wash(P[0],P[1]);
+  if(P){const sx=-P[3]*f.face*rs,sy=rs;g.globalCompositeOperation='copy';g.drawImage(B.cv,0,0);g.globalCompositeOperation='destination-out';g.drawImage(B.cv,sx,sy);g.globalCompositeOperation='source-in';g.fillStyle=P[2];g.fillRect(0,0,w,h);X.globalAlpha=alpha*.62;X.drawImage(_litT,-B.ox,-B.oy);}
+  if(L)wash(L.c,.34*(1-(FR-L.t)/12));
+  g.globalCompositeOperation='source-over';X.globalAlpha=alpha;}
+(function(){const ah=applyHit;applyHit=function(t,h,d,a,o){const r=ah(t,h,d,a,o);try{if(r==='hit'){const c=(h&&h.fx&&h.fx[0])||(a&&a.mv&&a.mv.d.fx&&a.mv.d.fx[0])||(a&&a.C&&a.C.col)||'#ffffff';if(/^#[0-9a-f]{6}$/i.test(c)){t._lit={c,t:FR};if(a&&a!==t&&!(o&&o.proj))a._lit={c,t:FR};}}}catch(e){}return r;};})();
 
 /* pace.js — Smash-like pacing. Weak hits leave a grounded fighter standing (SLIDEKB, used by the engine), and smash attacks, tilts and dash attacks take a little longer,
    so fewer hits land per minute. Extra frames are added by holding the move's clock, which leaves every hitbox, projectile and armour window where it was authored.
