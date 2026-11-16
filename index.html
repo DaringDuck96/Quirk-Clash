@@ -5435,20 +5435,20 @@ function musStep(T,i,t,sd){const bar=fl(i/16)%T.prog.length,st=i%16,root=T.root+
   const b=T.bass[st];if(b!==null)musNote(T.bw,root-24+b,t,sd*1.6,T.bw==='triangle'?.24:.07);
   if(T.arp&&st%2===0){const ch=[0,T.min[bar]?3:4,7,12],a=ch[(st/2)%4];musNote('square',root+a,t,sd*.9,.022*T.arp);}
   if(T.k[st]==='x')musDrum('k',t);if(T.s[st]==='x')musDrum('s',t);if(T.h[st]==='x')musDrum('h',t);}
-function musWant(){if(typeof curScreen!=='function')return'menu';const s=curScreen();if(s==='play'||s==='pause'){const m=(typeof SEL!=='undefined'&&SEL.music)||'auto';if(m==='shuffle')return MUS.sh||(MUS.sh=['japan','hero','clash'][Math.floor(Math.random()*3)]);if(m!=='auto'&&TRK[m])return m;return STAGE_TRK[STAGES[STI].id]||'clash';}MUS.sh=null;if(s==='results')return'win';if(running&&GS==='over')return'';return'menu';}
-/* the theme song ("PU NeXT Class") plays on every menu; the synth menu loop is only the fallback if it cannot be decoded */
+function musWant(){if(typeof curScreen!=='function')return'menu';const s=curScreen();if(s==='play'||s==='pause'){const m=(typeof SEL!=='undefined'&&SEL.music)||'auto';if(m==='shuffle')return MUS.sh||(MUS.sh=['japan','hero','clash'][Math.floor(Math.random()*3)]);if(m!=='auto'&&TRK[m])return m;return STAGE_TRK[STAGES[STI].id]||'clash';}MUS.sh=null;if(s==='results')return'win';if(s==='title')return'theme';if(running&&GS==='over')return'';return'menu';}
+/* the theme song ("PU NeXT Class") plays on the title screen only; other menus keep the synth loop until they get songs of their own */
 const THEME={el:null,ok:false,tried:false,vol:.55};
 function themeLoad(){if(THEME.tried)return;THEME.tried=true;try{const s=document.getElementById('themeb64');if(!s||!s.textContent||s.textContent.length<1000)return;const bin=atob(s.textContent.trim()),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
   const a=new Audio(URL.createObjectURL(new Blob([u],{type:'audio/mpeg'})));a.loop=true;a.preload='auto';a.volume=0;a.addEventListener('error',()=>{THEME.ok=false;});THEME.el=a;THEME.ok=true;s.textContent='';}catch(e){THEME.ok=false;}}
-function themeTick(want,tv){if(!THEME.tried)themeLoad();const a=THEME.el;if(!a||!THEME.ok)return;const on=want==='menu'&&tv>0,target=on?Math.min(1,THEME.vol*tv/(MUS.vol||1)):0;
+function themeTick(want,tv){if(!THEME.tried)themeLoad();const a=THEME.el;if(!a||!THEME.ok)return;const on=want==='theme'&&tv>0,target=on?Math.min(1,THEME.vol*tv/(MUS.vol||1)):0;
   if(on&&a.paused){const p=a.play();if(p&&p.catch)p.catch(()=>{});}
   const v=a.volume+(target-a.volume)*.18;a.volume=Math.max(0,Math.min(1,Math.abs(v-target)<.01?target:v));if(!on&&!a.paused&&a.volume<=.012)a.pause();}
 window.THEME=THEME;
 function musTick(){if(!AC)return;if(!MUS.g){MUS.g=AC.createGain();MUS.g.connect(AC.destination);const len=AC.sampleRate,b=AC.createBuffer(1,len,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;MUS.nb=b;}
   const want=(MUS.on&&!muted&&!document.hidden)?musWant():'';const tv=want?(typeof paused!=='undefined'&&paused?.35:1)*MUS.vol:0;MUS.g.gain.setTargetAtTime(tv,AC.currentTime,.08);
   if(want!==MUS.cur){MUS.cur=want;MUS.step=0;MUS.next=AC.currentTime+.08;}themeTick(want,tv);if(!want)return;if(AC.state==='suspended'){try{AC.resume();}catch(e){}return;}
-  if(want==='menu'&&THEME.ok)return;
-  const T=TRK[want],sd=60/T.bpm/4;if(MUS.next<AC.currentTime-.3)MUS.next=AC.currentTime+.05;let n=0;while(MUS.next<AC.currentTime+.16&&n++<16){try{musStep(T,MUS.step,MUS.next,sd);}catch(e){}MUS.step++;MUS.next+=sd;}}
+  if(want==='theme'&&THEME.ok)return;
+  const T=TRK[want==='theme'?'menu':want],sd=60/T.bpm/4;if(MUS.next<AC.currentTime-.3)MUS.next=AC.currentTime+.05;let n=0;while(MUS.next<AC.currentTime+.16&&n++<16){try{musStep(T,MUS.step,MUS.next,sd);}catch(e){}MUS.step++;MUS.next+=sd;}}
 setInterval(musTick,40);
 function musToggle(){MUS.on=!MUS.on;document.querySelectorAll('.musbtn').forEach(b=>b.textContent=MUS.on?'MUSIC ON':'MUSIC OFF');}
 (function wait(){const gb=document.querySelector('#game .gbar'),tm=document.querySelector('.tmenu');if(!gb||!tm){setTimeout(wait,60);return;}
