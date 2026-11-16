@@ -6987,10 +6987,10 @@ function jinx(t,n,by){if(!t||t.dead)return;if(!(t.jinxT>FR))FXL.push({k:'txt',s:
 const JK=[{n:'RED',fx:['#ff5a30','#ffe060'],el:'fire'},{n:'BLUE',fx:['#5ab8ff','#ffffff'],el:'ice'},{n:'GREEN',fx:['#6adf6a','#e0ffe0'],el:'heal'},{n:'VIOLET',fx:['#b070ff','#f0e0ff'],el:'magic'}];
 /* ---- hooks ---- */
 const p0=preHit;preHit=function(t,h,a,o){const id=t.C.id;if(a&&a!==t&&!(o&&o.force)){
-    if(id==='aria'&&rnd()<1/6){t.inv=Math.max(t.inv||0,10);FXL.push({k:'txt',s:'LUCKY!',x:t.x,y:t.y-78,t:0,life:34,col:'#ffd84a'});sfx('counter');return true;}
+    if(id==='aria'&&rnd()<(t.lkD===undefined?1/6:t.lkD)){t._lkDg=FR;t.inv=Math.max(t.inv||0,10);FXL.push({k:'txt',s:'LUCKY!',x:t.x,y:t.y-78,t:0,life:34,col:'#ffd84a'});sfx('counter');return true;}
     if(id==='kal'&&FR-(t.dsT===undefined?-999:t.dsT)>=480){t.dsT=FR;t.inv=Math.max(t.inv||0,12);FXL.push({k:'txt',s:'DANGER SENSE',x:t.x,y:t.y-78,t:0,life:36,col:'#a0ff40'});FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#a0ff40',r0:10,life:16});sfx('counter');return true;}}
   return p0(t,h,a,o);};
-const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a.C.id==='aria'&&rnd()<1/6){m*=1.5;FXL.push({k:'txt',s:'LUCKY HIT!',x:t.x,y:t.y-88,t:0,life:30,col:'#ffd84a'});}
+const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a.C.id==='aria'&&rnd()<(a.lkC===undefined?1/6:a.lkC)){a._lkCr=FR;m*=1.5;FXL.push({k:'txt',s:'LUCKY HIT!',x:t.x,y:t.y-88,t:0,life:30,col:'#ffd84a'});}
   if(a.jinxT>FR)m*=.88;if(a.C.id==='jack'&&!(o&&o.proj)){const k=(a.cycN||0)%4;m*=k===0?1.08:k===1?.92:1;}if(a.C.id==='sarah'&&!(o&&o.proj)&&(t.x-a.x)*t.face>0)m*=1.3;if(t.C.id==='ash'&&h.eff==='burn')m*=1.2;if(a.form==='gold')m*=1.2;return m;};
 const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);const id=t.C.id;if(id==='ash'&&h.eff!=='burn')m*=.9;if(t.form==='rage')m*=.7;if(t.form==='gold')m*=.7;if(id==='uzi')m*=.88;const ai=a.C.id;if(ai==='sato'&&a.mv&&/smash/.test(a.mv.k))m*=1.12;else if(ai==='ayame')m*=1.1;return m;};
 const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t.dmg,sh0=t.shp,res=ah(t,h,dirX,a,o);try{if(t.jinxT>FR&&t.shp<sh0&&t.shp>0)t.shp=Math.max(0,t.shp-(sh0-t.shp)*.5);const jx=h&&(h.jinx||(h.spec&&h.spec.jinx));if(jx&&a&&a!==t&&(t.dmg>hp||t.shp<sh0))jinx(t,jx,a);const dd=t.dmg-hp;if(dd>0){
@@ -8143,6 +8143,41 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
     for(let i=0;i<f.rocks;i++){const rise=(i===f.rocks-1)?up:1,bx=ip.x-f.face*(18+i*4)+(i?f.face*40:0),ty=ip.y-54-i*6+Math.sin(FR*.07+i*2)*3,y=ip.y-4+(ty-(ip.y-4))*rise;X.save();X.globalAlpha=.35;wdisc(bx,y,13,BL);X.restore();rock(bx,y,9,FR*.02+i*1.3);wring(bx,y,12+Math.sin(FR*.1+i)*1.2,BL,1);}}catch(e){try{X.restore();}catch(e2){}}}return r;};
 }}
 
+/* ---------- Aria Blackthorn: Fortune. A Luck meter that fills when things go wrong and pays out in crits, dodges and one lucky escape; Push Your Luck is a coin flip she can keep riding ---------- */
+{const C=CH.find(q=>q.id==='aria');if(C){const fx=C.kit.fx,G='#ffd84a',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-86,t:0,life:42,col:col||G});
+ C.noSig=1;
+ const flip=M('castUp',8,22,8,null,{fx,lim:'none',cd:40});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;T.dB=flip;}
+ C.sp=['Lucky Penny (a tossed coin that finds its own way to a rival; the luckier she is, the harder it homes)','Oops! (trips forward into whoever is there; when her luck is low she sometimes just falls over)','Updraft (a convenient gust)','Push Your Luck (flips a coin: heads powers up her next hit, and each heads in a row is worth more; tails costs her damage and the lot)'];
+ C.d='She is just really lucky, and luck is a thing you can run out of. Her Luck meter fills when things go wrong for her and empties as it pays out.';
+ C.na='Normals: stumbles, flails and accidental elbows that somehow connect. Her Luck meter (the bar at her feet) fills when she is hit, when she misses, and when she loses a stock. The fuller it is, the more often her hits are LUCKY (half again the damage, up to one in three) and the more often hits aimed at her simply miss. Above 70% it also saves her once per stock from a knockout, and empties. When it is nearly empty, nothing lucky happens at all.';
+ try{if(typeof GTXT!=='undefined'&&GTXT.aria){GTXT.aria[0]='Flicks a coin. It finds its own way to a rival, and homes harder the luckier she is.';GTXT.aria[1]='Trips over nothing and falls forward into whoever is there, leaving them dizzy: left and right swapped. With her Luck below a quarter, three times in ten she really does just fall over.';
+   GTXT.aria[3]='Flips a coin everyone can see. Heads: her next hit within 12 seconds does double. Flip again before using it and a second heads makes it two and a half times, a third makes it triple. Tails at any point: she takes 5% for every flip in the run and loses the bonus. Her Luck tilts the coin slightly.';}}catch(e){}
+ const sm0=startMove;startMove=function(f,key){if(f&&f.C===C&&!f.form&&!(f.copyT>0)&&key==='sB'&&(f.lk||0)<25&&rnd()<.3&&f.ground&&GS==='play'){say(f,'OW.','#b0a8a0');sfx('thud');f.st='hit';f.hitstun=30;f.vx=f.face*2.2;f.mv=null;f.lk=Math.min(100,(f.lk||0)+8);burst(f.x,f.y-6,8,['#d8d0c0','#ffffff'],1.6,14);return false;}
+   const r=sm0(f,key);if(r&&f&&f.C===C&&f.mv){f.mv._lk0=FR;f.mv._hits=!!(f.mv.d.hits&&f.mv.d.hits.length);}return r;};
+ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a&&a.C===C&&!a.form&&a.lkB>1&&FR<a.lkBT&&a!==t){m*=a.lkB;a._lkUse=FR;}return m;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah(t,h,dirX,a,o);try{if(r==='hit'){if(a&&a.C===C&&a!==t){a._lkHit=FR;if(a._lkUse===FR&&a.lkB>1){say(a,'×'+a.lkB+'!','#ffffff');FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:G,r0:14,life:20});a.lkB=1;a.lkN=0;}if(a._lkCr===FR)a.lk=Math.max(0,(a.lk||0)-12);}
+   if(t&&t.C===C&&a!==t&&!t.form){const dmg=((h&&h.spec)?h.spec.dmg:h&&h.dmg)||0;t.lk=Math.min(100,(t.lk||0)+dmg*1.2);}}}catch(e){}return r;};
+ const ks0=(typeof koSave==='function')?koSave:null;koSave=function(f){if(ks0&&ks0(f))return true;try{if(f&&f.C===C&&!f.form&&!f._lkSaved&&(f.lk||0)>=70&&GS==='play'&&typeof STAGE!=='undefined'){const g=STAGE.main;f._lkSaved=1;f.lk=0;f.x=clamp(f.x,g.x+14,g.x+g.w-14);f.y=g.y-4;f.vx=f.vy=0;f.lx=f.ly=0;f.hitstun=0;f.tumble=false;f.mv=null;f.st='air';f.ground=null;f.inv=Math.max(f.inv||0,70);
+     say(f,'LUCKY ESCAPE!','#ffffff');sfx('counter');for(let i=0;i<3;i++)FXL.push({k:'ring',x:f.x,y:f.y-30,t:-i*4,col:i%2?'#ffffff':G,r0:10+i*8,life:22});burst(f.x,f.y-30,24,[G,'#ffffff','#7ae04a'],3,26);return true;}}catch(e){}return false;};
+ const st0=step;step=function(){st0();try{for(const f of F){if(f.C!==C||f.gone)continue;if(f.lk===undefined){f.lk=50;f.lkB=1;f.lkN=0;}
+   if(f.dead||f.st==='respawn'){if(!f._lkDead){f._lkDead=1;f.lk=Math.min(100,f.lk+35);f._lkSaved=0;f.lkB=1;f.lkN=0;}continue;}f._lkDead=0;if(f.form||f.copyT>0){f.lkC=f.lkD=undefined;continue;}
+   const k=f.lk/100;f.lkC=f.lk<12?0:.05+.28*k;f.lkD=f.lk<12?0:.03+.15*k;if(f._lkDg===FR)f.lk=Math.max(0,f.lk-15);
+   if(f.lkB>1&&FR>=f.lkBT){f.lkB=1;f.lkN=0;say(f,'IT WORE OFF','#b0a8a0');}
+   const m=f.mv;if(f._pm&&f._pm!==m){const p=f._pm;if(p._hits&&!(f._lkHit>=p._lk0)&&f.st!=='hit'&&/^(jab|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair|fsmash|usmash|dsmash)/.test(p.k))f.lk=Math.min(100,f.lk+3);}f._pm=m;
+   if(m&&m.k==='nB'&&!m._hm){for(const e of ENT){if(e.alive&&e.owner===f&&e.proj&&e.spec&&e.spec.sh==='coin'&&!e._lk){e._lk=1;m._hm=1;e.spec=Object.assign({},e.spec,{hm:.4+k*2.2});}}}
+   if(m&&m.k==='dB'&&!(f.hl>0)){const d=m.d;if(m.t===d.s){m._c0=FR;sfx('pop');}
+     if(m.t===d.s+18&&!m._res){m._res=1;const p=clamp(.5+(f.lk-50)*.003,.35,.65),heads=rnd()<p;m._heads=heads;
+       if(heads){f.lkN=Math.min(3,(f.lkN||0)+1);f.lkB=[1,2,2.5,3][f.lkN];f.lkBT=FR+720;say(f,'HEADS! ×'+f.lkB,G);sfx('power');FXL.push({k:'ring',x:f.x,y:f.y-70,t:0,col:G,r0:8,life:18});f.lk=Math.max(0,f.lk-6);}
+       else{const cost=5*((f.lkN||0)+1);f.dmg=Math.min(999,f.dmg+cost);f.lkB=1;f.lkN=0;f.lk=Math.min(100,f.lk+10);say(f,'TAILS. +'+cost+'%','#ff6a5a');sfx('thud');burst(f.x,f.y-30,10,['#ff6a5a','#ffffff'],2,16);}}}
+  }}catch(e){}};
+ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);if(f&&f.C===C&&!f.form&&!f.dead&&f.lk!==undefined&&typeof X!=='undefined'&&X){try{const ip=(typeof interpPos==='function')?interpPos(f):f,x=ip.x-16,y=ip.y+5,k=f.lk/100;
+    wr('#0c0820',x-1.5,y-1.5,35,6);wr('#3a3a4a',x,y,32,3);wr(k>=.7?'#7ae04a':k<.25?'#b0a8a0':G,x,y,32*k,3);wr('#0c0820',x+32*.7,y-1.5,1,6);for(let i=0;i<4;i++)wdisc(x-6+Math.cos(i*1.571)*2.2,y+1.5+Math.sin(i*1.571)*2.2,2.1,k>=.7&&!f._lkSaved?'#7ae04a':'#5a6a5a');
+    if(f.lkB>1){const b=Math.sin(FR*.2)*1.5;X.save();X.font='7px "Press Start 2P", monospace';X.textAlign='center';X.fillStyle='#0c0820';X.fillText('×'+f.lkB,ip.x-f.face*20+1,ip.y-46+b+1);X.fillStyle=G;X.fillText('×'+f.lkB,ip.x-f.face*20,ip.y-46+b);X.restore();}
+    const m=f.mv;if(m&&m.k==='dB'&&m._c0){const t=FR-m._c0,done=t>=18,h=done?0:Math.sin(Math.min(1,t/18)*Math.PI)*16,cx=ip.x+f.face*14,cy=ip.y-60-h,w=done?7:Math.abs(Math.cos(t*.9))*7+1;X.save();X.translate(cx,cy);X.fillStyle='#0c0820';X.beginPath();X.ellipse(0,0,w+1.6,8.6,0,0,TAU);X.fill();X.fillStyle=done&&!m._heads?'#c8b8a0':G;X.beginPath();X.ellipse(0,0,w,7,0,0,TAU);X.fill();
+      if(done){X.fillStyle='#0c0820';X.font='7px "Press Start 2P", monospace';X.textAlign='center';X.textBaseline='middle';X.fillText(m._heads?'H':'T',0.5,0.5);}X.restore();}}catch(e){try{X.restore();}catch(e2){}}}return r;};
+}}
+
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
    One row per fighter: [rise kind, dash kind]. Colours come from the fighter unless a row gives its own. */
 (function(){
@@ -8693,7 +8728,7 @@ const TR={
  chain:{k:/^(ftilt|fair|dtilt)/,n:'BIND',d:'Forward tilt, forward air and down tilt tangle the rival\'s legs for a moment (once every four seconds per rival).',h:()=>({eff:'root',rootT:34})},
  jaws:{k:/^(ftilt|dtilt|dair)/,n:'FEED',d:'Forward tilt, down tilt and down air heal you for a third of the damage they do.',p:(a,t,h)=>{if(a.dmg>0)a.dmg=Math.max(0,a.dmg-h.dmg*.34);}},
  wing:{k:/air$/,n:'GUST',d:'Every aerial does a little less damage and blows rivals much further.',h:h=>({dmg:h.dmg*.86,bkb:h.bkb+2})}};
-for(const C of CH){if(C.hidden)continue;const f=fam(C),t=f&&TR[f];if(!t)continue;C.sig=t;C.sigT=t.n+': '+t.d;}
+for(const C of CH){if(C.hidden||C.noSig)continue;const f=fam(C),t=f&&TR[f];if(!t)continue;C.sig=t;C.sigT=t.n+': '+t.d;}
 const ah=applyHit;applyHit=function(t,h,dirX,a,o){let tr=null,h2=h;try{if(a&&a!==t&&a.C&&a.C.sig&&a.mv&&!(o&&(o.proj||o.force))&&!a.form&&!(a.copyT>0)&&h&&h.b&&a.mv.d&&a.mv.d.hits&&a.mv.d.hits.indexOf(h)>=0&&!a.mv.d.beh&&/^(jab|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair)/.test(a.mv.k)&&a.C.sig.k.test(a.mv.k)){tr=a.C.sig;if(tr.h){const m=tr.h(h,a,t);if(m)h2=Object.assign({},h,m);}}}catch(e){tr=null;h2=h;}
   const r=ah.call(this,t,h2,dirX,a,o);try{if(tr&&r==='hit'){if(tr.p)tr.p(a,t,h2,a.C);if(FR-(a._sgT||-99)>20){a._sgT=FR;FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:a.C.col,r0:5,life:12});}}}catch(e){}return r;};
 /* guide text */
@@ -8760,6 +8795,7 @@ const OK={
  ryo:(f,k,o,adx)=>k!=='dB'||adx>60,
  akemi:(f,k)=>k!=='dB'||!!(f.akH&&f.akH[0]&&f.dmg-f.akH[0].dmg>=14),
  ali:(f,k,o,adx)=>k==='dB'?(f.rocks||0)<2:k==='nB'?((f.rocks||0)>0||adx<70):true,
+ aria:(f,k)=>k!=='dB'||(f.lkB||1)<2.5,
  kouji:()=>true};
 const ai0=aiInput;aiInput=function(f){const I=ai0(f);try{
   const ai=f.ai2||(f.ai2={cd:60,kc:{},hold:0,tk:0}),P=f.pi||{},lv=Math.min(9,Math.max(1,f.lvl||1)),R=.25+.75*(lv-1)/8;
