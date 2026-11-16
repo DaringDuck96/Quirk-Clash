@@ -313,6 +313,86 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
  .ovc h2{font-size:40px}
 }
 @media (pointer:coarse){.gros button,.card,.scard{-webkit-tap-highlight-color:transparent}.tb{-webkit-tap-highlight-color:transparent}}
+
+/* ===================== SMASH-STYLE SKIN: black and red, slanted panels, flat colour ===================== */
+:root{--void:#060608;--deep:#0e0e12;--panel:#16161c;--panel2:#20202a;--line:#3c3c4a;--ink:#ffffff;--dim:#b8b8c8;--p1:#f2343c;--p2:#2e86ff;--p3:#ffc81e;--p4:#2fd060;--gold:#ffd400;--hot:#f2343c;--cut:14px}
+body{background:radial-gradient(ellipse at 100% 0,rgba(242,52,60,.30) 0,transparent 46%),radial-gradient(ellipse at 0 100%,rgba(46,134,255,.14) 0,transparent 46%),repeating-linear-gradient(135deg,#101014 0 26px,#0b0b0f 26px 52px)}
+button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+/* header ribbon */
+#select .top,#stagesel .top{background:#000;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:0 16px 0 0;border-bottom:4px solid var(--hot);min-height:46px;gap:12px}
+#select .top .logo,#stagesel .top .logo{display:none}
+.rib{align-self:stretch;display:flex;align-items:center;gap:12px;background:var(--hot);color:#fff;padding:4px 46px 0 22px;clip-path:polygon(0 0,100% 0,calc(100% - 30px) 100%,0 100%);font-family:var(--display);line-height:1;white-space:nowrap}
+.rib i{font-style:italic;font-weight:500;font-size:clamp(14px,1.5vw,20px);opacity:.85;text-transform:uppercase;letter-spacing:1px}.rib i::after{content:"\203A";margin-left:10px;opacity:.7}
+.rib b{font-style:italic;font-weight:700;font-size:clamp(24px,2.8vw,40px);text-transform:uppercase;letter-spacing:1px}
+.sub{color:#d0d0dc}
+/* buttons */
+.tbtn,.btn{border-radius:0!important;background:#1e1e26;border:0!important;border-left:5px solid var(--gold)!important;clip-path:polygon(9px 0,100% 0,calc(100% - 9px) 100%,0 100%);padding:9px 22px 5px;font-style:italic;font-weight:600;text-transform:uppercase;color:#fff}
+.tbtn:hover,.btn:hover{background:var(--gold);color:#000}
+.btn.pri{background:linear-gradient(#ff5a4e,#e0202a)!important;color:#fff!important;border-left-color:#fff!important;font-weight:700}.btn.pri:hover{filter:brightness(1.12)}
+.seg{border-radius:0;background:#000;border:2px solid var(--line);padding:0;transform:skewX(-10deg)}
+.seg button{border-radius:0;padding:5px 12px 4px;font-weight:600;color:#c8c8d4}.seg button.on{background:var(--gold);color:#000;font-weight:700}
+.lab{color:#fff;font-style:italic;font-weight:600;text-transform:uppercase}
+.fight{border-radius:0!important;background:linear-gradient(#ff5a4e,#e0202a)!important;color:#fff!important;box-shadow:0 5px 0 #6a0a10,0 10px 26px rgba(242,52,60,.4)!important;text-shadow:0 2px 0 rgba(0,0,0,.35);clip-path:none;padding:12px 34px 6px;letter-spacing:1px;font-size:clamp(22px,2.2vw,34px)!important}
+.fight.go{background:linear-gradient(#fff06a,#ffd400)!important;color:#1a0a00!important;text-shadow:none;box-shadow:0 5px 0 #8a6a00,0 0 30px rgba(255,212,0,.6)!important}
+/* roster */
+.roster{gap:3px!important;background:#000;padding:3px;border:2px solid #000}
+.card{border-radius:2px!important;border:2px solid #000!important;background:linear-gradient(100deg,color-mix(in srgb,var(--cc) 62%,#2a2a34) 0 46%,#17171d 46.5% 100%)!important;transition:transform .08s}
+.card span:not(.bd){font-style:italic;font-weight:700!important;text-transform:uppercase;text-shadow:0 1px 0 #000}
+.card:hover{transform:scale(1.06);z-index:2;border-color:var(--gold)!important;box-shadow:0 0 0 2px var(--gold),0 6px 16px rgba(0,0,0,.6)}
+.card.s1{border-color:var(--p1)!important;box-shadow:inset 0 0 0 2px var(--p1)}.card.s2{border-color:var(--p2)!important;box-shadow:inset 0 0 0 2px var(--p2)}.card.s3{border-color:var(--p3)!important;box-shadow:inset 0 0 0 2px var(--p3)}.card.s4{border-color:var(--p4)!important;box-shadow:inset 0 0 0 2px var(--p4)}
+.card .bd{border-radius:0!important;color:#fff!important;font-style:italic;font-weight:700;transform:skewX(-10deg)}.card .bd.b3{color:#000!important}
+.rcard{background:repeating-linear-gradient(135deg,#2a2a34 0 10px,#1a1a20 10px 20px)!important}
+/* player panels */
+.pp{border-radius:3px!important;border:0!important;background:linear-gradient(180deg,#22222b,#101014)!important;box-shadow:0 8px 22px rgba(0,0,0,.55)!important;border-bottom:6px solid #33333e!important}
+.pp.p1{border-bottom-color:var(--p1)!important}.pp.p2{border-bottom-color:var(--p2)!important}.pp.p3{border-bottom-color:var(--p3)!important}.pp.p4{border-bottom-color:var(--p4)!important}
+.pp.active{outline:3px solid rgba(255,255,255,.14);outline-offset:-3px}
+.pp .tag{font-style:italic;font-weight:700!important;color:#fff!important;text-transform:uppercase;letter-spacing:1px;clip-path:polygon(0 0,100% 0,calc(100% - 22px) 100%,0 100%);margin-right:18%;padding:8px 30px 3px 14px!important;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+.pp.p1 .tag{background:var(--p1)!important}.pp.p2 .tag{background:var(--p2)!important}.pp.p3 .tag{background:var(--p3)!important;color:#1a1200!important;text-shadow:none}.pp.p4 .tag{background:var(--p4)!important}
+.pp canvas{background:radial-gradient(ellipse at 50% 92%,rgba(255,255,255,.16) 0,transparent 48%),repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 12px,transparent 12px 24px)!important}
+.pp.off{opacity:.6}.pp.ready{outline:3px solid var(--gold);outline-offset:-3px}
+.info h2{font-style:italic;font-weight:700;text-transform:uppercase}.info .q{color:var(--gold)}
+.padhint{background:#000;border-left:5px solid var(--hot);padding:6px 12px;color:#c8c8d4}
+.selfoot{gap:10px 20px}
+/* stage select */
+.ssgrid{gap:4px!important}.scard{border-radius:2px!important;border:2px solid #000!important;background:#101014}
+.scard b{font-style:italic;font-weight:700;text-transform:uppercase;background:linear-gradient(90deg,#000 0,#000 70%,rgba(0,0,0,.55))!important;padding:5px 10px 2px!important;font-size:clamp(13px,1.25vw,19px)!important}
+.scard:hover{transform:scale(1.04);z-index:2;border-color:var(--gold)!important}
+.scard.on{border-color:var(--gold)!important;box-shadow:0 0 0 3px var(--gold),0 0 22px rgba(255,212,0,.5)!important;z-index:1}
+.scard.rnd{background:repeating-linear-gradient(135deg,#2a2a34 0 14px,#1a1a20 14px 28px)!important}
+.sspv{border-radius:3px!important;border:3px solid #000!important;box-shadow:0 0 0 2px var(--hot)}
+.ssinfo h2{font-style:italic;text-transform:uppercase;font-weight:700}.sstags span{border-radius:0!important;background:#000!important;border:0!important;border-left:4px solid var(--gold)!important;transform:skewX(-10deg)}
+.ssvs{font-style:italic}
+/* overlays: pause, results, guide, help, nickname */
+#overlay{background:repeating-linear-gradient(135deg,rgba(8,8,10,.9) 0 26px,rgba(14,14,18,.9) 26px 52px)}
+.ovc h2{color:#fff;font-size:clamp(54px,9vw,120px);text-shadow:0 5px 0 var(--hot),0 12px 30px rgba(0,0,0,.7);letter-spacing:2px;transform:skewX(-6deg)}
+.pod{border-radius:0!important;background:#121217!important;border:0!important;border-top:8px solid var(--hot)!important;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.podblk{border-radius:0!important;background:#000!important;color:#fff!important;font-style:italic;clip-path:polygon(0 0,100% 0,calc(100% - 10px) 100%,10px 100%)}
+.podcol b{font-style:italic;font-weight:700;text-transform:uppercase}.podstats th{color:#fff;font-style:italic;text-transform:uppercase}.podstats td{border-top-color:#2c2c36}
+.rname{font-style:italic;font-weight:700;text-transform:uppercase}
+.gbox,.hbox,.nkbox{border-radius:3px!important;background:#121217!important;border:0!important;border-top:8px solid var(--hot)!important;box-shadow:0 20px 60px rgba(0,0,0,.75)}
+.gros button{border-radius:2px!important;border:2px solid #000!important;background:#1c1c24!important}.gros button.on{border-color:var(--gold)!important;box-shadow:0 0 0 2px var(--gold)}
+.gid h3,.hbox h2,.nkbox h3{font-style:italic;text-transform:uppercase}
+.gbar button{border-radius:0!important}
+/* main menu */
+.tshade{background:linear-gradient(100deg,rgba(6,6,8,.95) 0,rgba(6,6,8,.82) 46%,rgba(6,6,8,.35) 100%),repeating-linear-gradient(135deg,rgba(255,255,255,.03) 0 26px,transparent 26px 52px)!important}
+.tin{width:min(1180px,96vw);justify-items:stretch!important;text-align:left!important;margin-bottom:9vh!important;gap:clamp(6px,1.6vh,14px)!important}
+.tlogo{font-size:clamp(30px,5.4vw,84px)!important;text-align:left!important;transform:skewX(-6deg)!important}.tlogo span{display:inline!important}
+.ttag{color:#d8d8e2}
+.mm{display:grid!important;grid-template-columns:1.25fr 1fr 1fr;grid-template-rows:repeat(2,clamp(74px,17vh,150px)) auto;gap:8px!important;justify-content:stretch!important;align-items:stretch!important}
+.mt{position:relative;border:0;border-radius:0;color:#fff;text-align:left;padding:12px 18px 10px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;overflow:hidden;clip-path:polygon(var(--cut) 0,100% 0,calc(100% - var(--cut)) 100%,0 100%);transition:transform .1s,filter .1s}
+.mt::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.09) 0 18px,transparent 18px 36px);pointer-events:none}
+.mt::after{content:"";position:absolute;right:-12%;top:-40%;width:60%;height:180%;background:rgba(0,0,0,.16);transform:skewX(-18deg);pointer-events:none}
+.mt b{position:relative;z-index:1;font-family:var(--display);font-style:italic;font-weight:700;font-size:clamp(24px,3.2vw,46px);line-height:.9;letter-spacing:1px;text-shadow:0 3px 0 rgba(0,0,0,.3)}
+.mt i{position:relative;z-index:1;font-style:normal;font-size:clamp(10px,1vw,13px);opacity:.92;padding-left:2px}
+.mt:hover,.mt:focus-visible{transform:scale(1.035);filter:brightness(1.15);z-index:2;outline:none;box-shadow:inset 0 0 0 4px var(--gold)}
+.mt1{grid-row:1/3;background:linear-gradient(160deg,#ff4a44,#c0101c)}.mt1 b{font-size:clamp(44px,7.4vw,112px)}
+.mt2{background:linear-gradient(160deg,#3fd46a,#0f8a3c)}.mt3{background:linear-gradient(160deg,#4a9aff,#1450c0)}
+.mt4{background:linear-gradient(160deg,#ffd62e,#e09a00);color:#1a1000}.mt4 b{text-shadow:none}.mt5{background:linear-gradient(160deg,#a86aff,#5a22b8)}
+.mt6{grid-column:1/-1;justify-self:end;background:#1e1e26;padding:8px 26px 5px 30px;clip-path:polygon(9px 0,100% 0,calc(100% - 9px) 100%,0 100%)}.mt6 b{font-size:clamp(14px,1.5vw,20px);text-shadow:none}.mt6::before,.mt6::after{display:none}
+.tmenu>button:not(.mt){grid-column:1;grid-row:3;justify-self:start;font-size:clamp(14px,1.5vw,20px)!important;padding:8px 26px 5px!important}.mt6{grid-row:3}
+.gtabs button{border-radius:0!important;transform:skewX(-10deg);font-style:italic;font-weight:700;text-transform:uppercase}.gtabs button.on{background:var(--gold)!important;color:#000!important;border-color:var(--gold)!important}
+.tpress{font-family:var(--display)!important;font-style:italic;font-weight:600;font-size:clamp(14px,1.6vw,22px)!important;letter-spacing:1px;color:var(--gold)}
+@media (max-height:520px){.mm{grid-template-rows:repeat(2,clamp(54px,19vh,90px)) auto}.mt i{display:none}.tin{margin-bottom:4vh!important}.ttag{display:none}}
 </style>
 
 <div id="app">
@@ -321,7 +401,7 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
     <div class="tin">
       <h1 class="logo tlogo"><small>PU</small>QUIRK CLASH <span>BROS ULTIMATE</span></h1>
       <p class="ttag">Arcade quirk brawler for 1 to 4 players. Launch your rivals off a stage in Japan.</p>
-      <div class="tmenu"><button class="fight" id="tFight">FIGHT!</button><button class="btn tmode" id="tSurv">SURVIVAL</button><button class="btn tmode" id="tTrain">TRAINING</button><span class="tbrk"></span><button class="btn" id="tGuide">ROSTER &amp; MOVES</button><button class="btn" id="tHelp">HOW TO PLAY</button><button class="btn" id="tFs">FULLSCREEN</button></div>
+      <div class="tmenu mm"><button class="mt mt1" id="tFight"><b>FIGHT</b><i>1 to 4 players or CPUs. Free-for-all or teams.</i></button><button class="mt mt2" id="tSurv"><b>SURVIVAL</b><i>Hold the fortress against the waves.</i></button><button class="mt mt3" id="tTrain"><b>TRAINING</b><i>Practise on a dummy.</i></button><button class="mt mt4" id="tGuide"><b>ROSTER &amp; MOVES</b><i>Every fighter, every attack.</i></button><button class="mt mt5" id="tHelp"><b>HOW TO PLAY</b><i>Controls and rules.</i></button><button class="mt mt6" id="tFs"><b>FULLSCREEN</b></button></div>
       <p class="tpress">PRESS ANY BUTTON ON A CONTROLLER TO GRAB A POINTER</p>
       <p class="tpads"><b class="padcount"></b> · or use the mouse · Enter to start</p>
     </div>
@@ -329,7 +409,7 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
   </section>
   <section id="select" hidden>
     <div class="top">
-      <h1 class="logo"><small>PU</small>QUIRK CLASH <span>BROS ULTIMATE</span></h1>
+      <div class="rib"><i>Fight</i><b>Fighter Select</b></div><h1 class="logo"><small>PU</small>QUIRK CLASH <span>BROS ULTIMATE</span></h1>
       <span class="sub" id="modeSub">Arcade quirk brawler. Launch your rival off a stage in Japan.</span>
       <button class="tbtn gbtn" id="guideBtn">CHARACTER GUIDE</button>
       <button class="tbtn" id="helpBtn">CONTROLS &amp; MOVE LIST</button>
@@ -341,13 +421,13 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
       <div class="opt" id="timeOpt"><span class="lab">TIME</span><div class="seg" id="tmr"><button data-v="0" class="on">&infin;</button><button data-v="120">2:00</button><button data-v="180">3:00</button><button data-v="300">5:00</button></div></div>
       <div class="opt"><span class="lab">STOCKS</span><div class="seg" id="stk"><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div></div>
       <span class="padhint"><b class="padcount" style="color:var(--gold)"></b><br>🎮 <b>Stick</b> moves your pointer · <b>A</b> pick · <b>B</b> back · <b>X</b> add/remove CPU · <b>Y</b> CPU level (1&ndash;9) · <b>&minus;</b> guide · <b>+</b> next. Point at a CPU box and press A to choose its fighter.</span>
-      <button class="fight" id="fight">STAGE &rarr;</button>
+      <button class="fight" id="fight">READY! STAGE SELECT &#9656;</button>
     </div>
   </section>
 
   <section id="stagesel" hidden>
     <div class="top">
-      <h1 class="logo"><small>PU</small>QUIRK CLASH <span>BROS ULTIMATE</span></h1>
+      <div class="rib"><i>Fight</i><b>Stage Select</b></div><h1 class="logo"><small>PU</small>QUIRK CLASH <span>BROS ULTIMATE</span></h1>
       <span class="sub">Choose a battleground: landmarks across Japan, or the PU campus training grounds.</span>
       <button class="tbtn" id="ssfs">FULLSCREEN</button>
     </div>
@@ -2332,7 +2412,7 @@ function newFighter(id,ci,ctrl,lvl){const C=CH[ci];const f={id,ci,C,L:C.look,ctr
   held:null,holder:null,holdT:0,cds:{},buff:null,dot:null,frozen:0,rootT:0,stickT:0,hazeT:0,paraT:0,copyT:0,copyCi:-1,mimicCh:-1,mimicT:0,lastHurt:-999,fsm:0,kd:false,wj:0,wallT:-99,wallSide:0,
   kos:0,falls:0,dealt:0,col:PCOL[id],dead:0,gone:false,jabN:0,jabT:-99,cosmo:0,pocket:null,beacon:null,marker:null,glide:false,
   shakeHUD:0,flash:0,rot:0,trail:[],invis:false,upUsed:false};return f;}
-const PCOL=['#5fd8ff','#ff9a3c','#ff5a8a','#8aff5a'],SPAWNX=[-110,110,-40,40];
+const PCOL=['#f2343c','#2e86ff','#ffc81e','#2fd060'],SPAWNX=[-110,110,-40,40];
 /* nearest rival still in the fight */
 function opp(f){let b=null,bd=1e9;for(const o of F){if(o===f||o.gone||(f.team!==undefined&&o.team===f.team))continue;const d=Math.abs(o.x-f.x)+Math.abs(o.y-f.y)*.6+(o.dead?5000:0);if(d<bd){bd=d;b=o;}}return b||F.find(o=>o!==f);}
 function hurtR(f){const hb=f.C.hurt||[16,HH];let h=hb[1];if(f.st==='crouch'||f.st==='climb')h*=.75;if(f.mv&&f.mv.d.beh==='reflect'&&f.mv.d.bp.scale)h*=1.15;if(f.mini>0)return[f.x-4,f.y-h*.3,8,h*.3];return[f.x-hb[0]/2,f.y-h,hb[0],h];}
@@ -3878,8 +3958,8 @@ function renderScreen(){if(!GL_OK)return;pixSize();const G=GLX,V=zoomCam(camView
   drawFSCut(c);
   stageBanner(c);
   if(GS==='count'){const n=3-fl(gsT/50);if(n>0)bigText(c,String(n),640,320,190,'#f2c454');}
-  if(GS==='play'&&gsT<40)bigText(c,'GO!',640,320,190,'#5fd8ff');
-  if(GS==='over'&&gsT<120)bigText(c,'GAME!',640,320,190,'#ff5a8a');}}
+  if(GS==='play'&&gsT<40)bigText(c,'GO!',640,320,190,'#ffd400');
+  if(GS==='over'&&gsT<120)bigText(c,'GAME!',640,320,190,'#f2343c');}}
 function animOrbit(){const t=FR;ST3.strips.forEach((n,i)=>{const on=Math.sin(t*.05+i*.6)>0;n.col=on?hf('#5ff4ff'):hf('#1e5a78');});
   ST3.win.forEach((n,i)=>{n.col=((t>>5)+i*7)%9<7?hf('#5ff4ff'):hf('#2a6a88');});
   const cs=.5+Math.sin(t*.08)*.06;ST3.core.s=[cs,cs,cs];
@@ -4708,8 +4788,8 @@ function renderScreen(){if(!GL_OK)return;pixSize();const G=GLX,V=zoomCam(camView
   if(flashA>0){c.globalAlpha=flashA/16;c.fillStyle='#ffffff';c.fillRect(0,0,1280,720);c.globalAlpha=1;}
   drawHUD(c);drawFSCut(c);stageBanner(c);modeHUD(c);
   if(GS==='count'){const n=3-fl(gsT/50);if(n>0)bigText(c,String(n),640,320,190,'#f2c454');}
-  if(GS==='play'&&gsT<40)bigText(c,'GO!',640,320,190,'#5fd8ff');
-  if(GS==='over'&&gsT<120)bigText(c,'GAME!',640,320,190,'#ff5a8a');}}
+  if(GS==='play'&&gsT<40)bigText(c,'GO!',640,320,190,'#ffd400');
+  if(GS==='over'&&gsT<120)bigText(c,'GAME!',640,320,190,'#f2343c');}}
 function overlay2D(){const back=new Set(['geyser','vines','storm','smokeplat','hole','puddle','marker','splash','spike','pillar','smokehand']);
   for(const e of ENT)if(back.has(e.k)&&EK[e.k].draw)EK[e.k].draw(e);
   fsBackdrop();drawStageMech();
@@ -5135,7 +5215,7 @@ ray:['An instant laser from his eyes with very long reach.','A paralysing stare:
 oliver:['Draws his bow and looses a homing arrow. Hold B to charge it.','Throws bolas that wrap a rival\'s legs and root them to the spot for over a second. Long cooldown.','Leaps and fires an arrow straight down.','Scatters three caltrops on the floor in front of him. They stay for four and a half seconds; stepping on one hurts and slows.','Fires at everyone on screen. None of them miss.'],
 chris:['A big slow haymaker. He does not flinch while winding it up, so he can take a hit to land it.','An armoured rush straight through whatever is in the way. It costs him 3%.','A rising uppercut that hits several times.','Shrugs it off: heals 10%. Nine-second cooldown.','Refuses to go down, and takes it out on whoever is closest. He heals while he does it.'],
 evona:['Raises a wall of ice that blocks shots and shoves rivals. It stands for four and a half seconds.','Skates forward on a bridge of ice. The bridge stays for four seconds and anyone can stand on it, even over a gap.','Rides a pillar of ice upward and leaves a platform at the top for four seconds. Anyone can stand on it. New ice needs five seconds to form again.','A freezing flurry all around her. Cooldown.','Raises an ice palace around herself and freezes everyone inside.'],
-jack:['Fires the flame that is lit. Red bursts and burns; blue is fast and long; green heals him a little; violet is slow and slows whoever it touches.','A burning dash.','Rises on wings of flame.','Changes the lit flame: red, blue, green, violet.','A phoenix of every colour sweeps the stage.'],
+jack:['Fires the flame that is lit. Red bursts and burns; blue is fast and long; green heals him a little; violet is slow and slows whoever it touches.','A burning dash.','Rises on a column of flame.','Changes the lit flame: red, blue, green, violet.','A phoenix of every colour sweeps the stage.'],
 kal:['Braces. If he is hit he steps aside and cuts back for 30% more than he took.','A loud dashing cut that ends in a rising slash, popping the rival straight up.','A rising cut.','Meditates for a moment. Danger Sense comes back about three seconds sooner.','He already saw how this ends.'],
 kora:['Throws three feathers.','A wing-powered dash.','Free flight in any direction for a moment.','Slams her mace down: shockwaves on both sides that crack shields.','Dives across the stage on full wings.'],
 ash:['His arm grows into a branch that reaches half the stage in a straight line.','Snaps off three splinters and throws them.','Grows: his legs lengthen until he stands almost twice as tall, for seven seconds. His attacks come from higher up and reach further, and he is a bigger target. In the air it is only a small hop, so do not count on it to get home. Long cooldown.','Roots burst from the floor ahead of him.','A forest erupts around him and roots everyone inside.']});
@@ -6418,7 +6498,7 @@ const ING_MAX=6;
   oliver:{outfit:'hoodsuit',top:'#1e4a2a',acc:'#2a2a32',sleeve:'#1e4a2a',pants:'#2a2a32',shoe:'#1c1c22',boots:1,glove:'#1c1c22',hx:['hoodup','eyemask'],hoodC:'#1e4a2a',maskC:'#1e4a2a',wpn:'bow',ex:['quiver']},
   chris:{outfit:'stealth',top:'#1c1c22',acc:'#e8b040',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#e8b040',boots:1,glove:'#e8b040',hx:['cap','halfmask'],capC:'#1c1c22',maskC:'#1c1c22',ex:['pack'],sl:'long'},
   evona:{outfit:'coat',top:'#f4f4fa',acc:'#3a6ac8',sleeve:'#f4f4fa',pants:'#f4f4fa',skirt:'#3a6ac8',socks:'#f4f4fa',shoe:'#f4f4fa',boots:1,furC:'#7ab0e8'},
-  jack:{outfit:'tee',top:'#f4f4f8',sl:'short',pants:'#1c2030',shoe:'#1c1c22',glove:'#1c1c22',ex:['wings'],wingC:'#ff7a30',wingT:'#5ab8ff'},
+  jack:{outfit:'tee',top:'#f4f4f8',sl:'short',pants:'#1c2030',shoe:'#1c1c22',glove:'#1c1c22'},
   kal:{outfit:'plate',top:'#8a8e96',acc:'#a0ff40',sleeve:'#5a5e66',pants:'#2a2e34',shoe:'#a0ff40',boots:1,glove:'#5a5e66',hx:['helm','visor'],helmC:'#8a8e96',visorC:'#a0ff40',hair:'#8a8e96',sl:'long',wpn:'katana',wlen:26,bladeC:'#a0ff40',stance:'weapon'},
   kora:{outfit:'plate',top:'#f4f4f8',acc:'#e84ab0',sleeve:'#f4f4f8',pants:'#8a2a8a',shoe:'#e84ab0',boots:1,glove:'#f4f4f8',pauldron:1,pauldC:'#e84ab0',wpn:'wand',ex:['wings'],wingC:'#f4f4fa',wingT:'#ffd0f0',sl:'long'},
   ash:{ex:['scarf'],scarfC:'#a8282e',leafC:'#8ae060'},
@@ -7992,6 +8072,11 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
    const m=f.mv;if(m&&m.v.weak&&m.t===m.d.s+1)f.vy*=.55;if(!(m&&COST[m.k]))f.fuel=Math.min(100,f.fuel+(f.ground?.5:.08));}};
  const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.C!==S||f.dead||f.gone||f.invis||f.fuel===undefined)continue;const x=Math.round(f.x)-12,y=Math.round(f.y)+10;wr(DK,x-1,y-1,26,5);wr('#3a3660',x,y,24,3);wr(f.fuel<30?'#ff5040':'#ffb040',x,y,Math.round(24*f.fuel/100),3);for(const q of[30,60])wr(DK,x+Math.round(24*q/100),y,1,3);}}catch(e){}};
  S.na='Normals: rocket-assisted punches and kicks. FUEL: every special burns fuel from a 100-point tank that refills in about three seconds on the ground and barely at all in the air. Run him dry and he has no rockets.';}}
+/* ---- Takeshi: his tattoo wings only exist while Ink Wings is carrying him ---- */
+{const T=c('takeshi');if(T){const VAR=new Map(),wl2=L=>{let v=VAR.get(L);if(!v){v=prepLook(Object.assign({},L,{ex:(L.ex||[]).concat(['wings']),wingC:'#1c1c26',wingT:'#6a6a7c',_r:undefined,R:undefined}));VAR.set(L,v);}return v;};
+ const st3=step;step=function(){st3();for(const f of F){if(f.C!==T||f.form)continue;const m=f.mv,on=!!(m&&m.k==='uB'&&m.t>=1&&m.t<m.d.s+((m.d.bp&&m.d.bp.dur)||m.d.a)+4&&!f.dead);
+   if(on){const v=wl2(f.L);if(f.formL!==v){f.formL=v;f.S=null;if(m.t<4)for(let i=0;i<10;i++)part(f.x+rnd()*40-20,f.y-30-rnd()*30,(rnd()-.5)*2,-rnd(),16,'#1c1c26',2,0);}}
+   else if(f.formL&&f.formL.wingC==='#1c1c26'&&!f.form){f.formL=null;f.S=null;for(let i=0;i<8;i++)part(f.x+rnd()*40-20,f.y-30-rnd()*30,(rnd()-.5)*2,rnd(),16,'#1c1c26',2,.05);}}};}}
 /* ---- Maya: glow while she is holding something stolen ---- */
 {const st2=step;step=function(){st2();if(FR%6)return;for(const f of F){if(f.dead||f.gone)continue;if(f.mightT>FR)part(f.x+rnd()*20-10,f.y-rnd()*56,0,-.5,14,'#ffb060',1,0);if(f.sapT>FR)part(f.x+rnd()*20-10,f.y-20-rnd()*30,0,.4,14,'#8a8aa0',1,0);}};}
 })();
@@ -8141,9 +8226,12 @@ for(const C of CH){const r=T[C.id];if(!r)continue;const[G,A,R,D,J,N,F,W,K,E,P,X]
  S.run=2.4+(G-1)*.5;S.walk=Math.max(1.2,Math.min(2.6,S.run*.5));S.acc=ac.acc;S.trac=ac.trac;S.dash=ac.dash;S.jsq=ac.jsq;
  S.air=1.9+(R-1)*.25;S.aacc=[.09,.13,.18,.24,.32][D-1];
  S.g=.24+(F-1)*.035;S.fall=3.2+(F-1)*.45;S.ff=S.fall*1.55;
- const H=86+(J-1)*17.5;S.jump=-Math.sqrt(2*S.g*H);S.sj=-Math.sqrt(2*S.g*H*.4);S.dj=-Math.sqrt(2*S.g*H*(N>=4?.42:N===3?.55:N===2?.7:.9));S.aj=N;
+ /* jump heights are sized against the stages: side platforms sit 64 to 82 px up and the top platform about 150. An average full jump (108 px) clears a side platform and falls short of the top one; only the very best jumpers reach the top in one. */
+ const H=74+(J-1)*8.5;S.jump=-Math.sqrt(2*S.g*H);S.sj=-Math.sqrt(2*S.g*H*.4);S.dj=-Math.sqrt(2*S.g*H*(N>=4?.42:N===3?.55:N===2?.7:.9));S.aj=N;
  S.w=.72+(W-1)*.1;
  if(X.wj!==undefined)C.wjMax=X.wj;if(X.cr)C.crawl=X.cr;if(X.ll)C.landM=X.ll;
+ /* rising specials were written for average gravity: keep the height each one was designed for (trimmed a tenth) whatever this fighter's gravity is now */
+ for(const Tb of[C.mv,C.hmv].concat(C.fmv?Object.values(C.fmv):[])){if(!Tb)continue;for(const k in Tb){const d=Tb[k];if(!d||d.beh!=='leapUp'||!d.bp||!d.bp.vy||d.bp._gn)continue;d.bp._gn=1;const h0=d.bp.vy*d.bp.vy/(2*.38);d.bp.vy=-Math.sqrt(2*S.g*h0*.9);}}
  /* attacks */
  const prof=ATK[K][2],done=new Set();
  for(const Tb of[C.mv,C.hmv]){if(!Tb)continue;for(const[cat,keys]of[['J',JK],['T',TK],['S',SK],['A',AK]]){const p=prof[cat]||{};for(const k of keys){const d=Tb[k];if(!d||done.has(d)||!d.hits||!d.hits.length||d.beh)continue;done.add(d);
@@ -8156,7 +8244,7 @@ for(const C of CH){const r=T[C.id];if(!r)continue;const[G,A,R,D,J,N,F,W,K,E,P,X]
  /* words */
  const mv=[lv(G,['the slowest on the ground','slow on the ground','slow on the ground','an average runner','an average runner','a fast runner','a fast runner','very fast on the ground','among the fastest on the ground']),ac.t,
   lv(R,['sluggish in the air','slow in the air','slow in the air','ordinary in the air','ordinary in the air','quick in the air','quick in the air','very fast in the air','very fast in the air'])+(D>=4?' and turns sharply there':D<=1?' and barely steers there':''),
-  lv(J,['a tiny jump','a low jump','a low jump','an average jump','an average jump','a high jump','a high jump','a huge jump','the highest jumps in the school'])+(N>1?' with '+(N+1)+' jumps in all':''),
+  lv(J,['a tiny jump that only just reaches the side platforms','a low jump','a low jump','an average jump','an average jump','a high jump','a high jump','a huge jump','the highest jumps in the school: the top platform in one'])+(N>1?' with '+(N+1)+' jumps in all':''),
   lv(F,['falls like a feather','very floaty','floaty','a little floaty','an average fall','falls fast','falls fast','drops like a stone','drops like a stone']),
   lv(W,['a featherweight who is launched very far','very light','light','a middleweight','a middleweight','heavy','very heavy','a super-heavyweight who is very hard to launch','a super-heavyweight who is very hard to launch'])].filter(Boolean);
  const ex=[];if(X.wj===0)ex.push('cannot wall jump');else if(X.wj>=3&&X.wj<50)ex.push(X.wj+' wall jumps');if(X.cr)ex.push('crawls: hold down and tilt sideways to move while crouched');if(X.ll&&X.ll<1)ex.push('lands with almost no lag');if(X.ll&&X.ll>1)ex.push('lands heavily');
@@ -8183,6 +8271,31 @@ const FB={kimiko:[1.009,0.991],gomi:[0.864,1.148],uchuu:[1.047,0.955],akemi:[0.9
 for(const id in FB){const C=CH.find(q=>q.id===id),t=FB[id];if(!C)continue;C.atkM=(C.atkM||1)*t[0];C.kbM=(C.kbM||1)*Math.sqrt(t[0]);C.defKb=(C.defKb||1)*t[1];}
 window.FEELT=T;
 })();
+
+/* ssbuui.js — damage plates in the Smash style: a slanted name plate in the player's colour, a big italic percentage with a small decimal, stock icons, and the Final Smash meter along the bottom */
+drawHUD=function(c){const HF=F.filter(f=>f.team!==1),n=HF.length,sp=n>3?312:n>2?396:430,hs=n>3?.82:n>2?.92:1,DF='"Teko","Arial Narrow",sans-serif';
+ HF.forEach((f,i)=>{const cx=640+(i-(n-1)/2)*sp,y=606+(1-hs)*90;c.save();c.translate(cx,y);c.scale(hs,hs);const col=f.col,dark=f.id===2;
+  /* backing */
+  c.fillStyle='rgba(0,0,0,.62)';c.beginPath();c.moveTo(-148,8);c.lineTo(166,8);c.lineTo(150,92);c.lineTo(-164,92);c.closePath();c.fill();
+  /* name plate */
+  c.fillStyle=col;c.beginPath();c.moveTo(-60,66);c.lineTo(160,66);c.lineTo(155,92);c.lineTo(-65,92);c.closePath();c.fill();
+  c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.moveTo(-60,66);c.lineTo(-14,66);c.lineTo(-19,92);c.lineTo(-65,92);c.closePath();c.fill();
+  c.textBaseline='alphabetic';c.textAlign='center';c.font='italic 700 24px '+DF;c.fillStyle=dark?'#1a1200':'#ffffff';c.fillText(f.ctrl==='dummy'?'DMY':ptag(f).slice(0,8),-40,87,40);
+  c.textAlign='left';c.font='italic 700 23px '+DF;c.fillText(hudName(f),-8,87,158);
+  /* portrait */
+  c.save();c.beginPath();c.moveTo(-150,2);c.lineTo(-70,2);c.lineTo(-84,92);c.lineTo(-164,92);c.closePath();c.fillStyle=col;c.fill();c.beginPath();c.moveTo(-146,6);c.lineTo(-75,6);c.lineTo(-87,88);c.lineTo(-158,88);c.closePath();c.clip();c.fillStyle='#17171d';c.fillRect(-166,0,100,96);c.drawImage(fHead(f),-158,6,84,84);c.restore();
+  if(f.copyT>0&&f.copyCi>=0){c.save();c.beginPath();c.arc(-76,76,17,0,TAU);c.fillStyle='#ffd400';c.fill();c.beginPath();c.arc(-76,76,14.5,0,TAU);c.clip();c.fillStyle='#17171d';c.fillRect(-92,60,32,32);c.drawImage(HEADS[f.copyCi],-91,61,30,30);c.restore();}
+  /* stocks */
+  for(let k=0;k<MATCH.stocks;k++){c.globalAlpha=k<f.stocks?1:.2;c.save();c.beginPath();c.arc(-48+k*21,22,9,0,TAU);c.fillStyle=col;c.fill();c.beginPath();c.arc(-48+k*21,22,7.6,0,TAU);c.clip();c.drawImage(fHead(f),-57+k*21,13,18,18);c.restore();c.globalAlpha=1;}
+  /* damage */
+  const d=Math.floor(f.dmg),dec=Math.floor((f.dmg-d)*10),sh=f.shakeHUD>0?(rnd()*8-4):0,dc=dmgCol(d);c.lineJoin='round';c.strokeStyle='#000';
+  if(f.gone||f.noPct>0){c.font='italic 700 60px '+DF;c.textAlign='right';c.lineWidth=7;const t=f.gone?'—':'?';c.strokeText(t,150+sh,62);c.fillStyle='#fff';c.fillText(t,150+sh,62);}
+  else{c.font='italic 700 28px '+DF;c.textAlign='left';const tail='.'+dec+'%',tw=c.measureText(tail).width;c.lineWidth=6;c.strokeText(tail,154-tw+sh,60+sh*.3);c.fillStyle=dc;c.fillText(tail,154-tw+sh,60+sh*.3);
+   c.font='italic 700 '+(d>=100?62:70)+'px '+DF;c.textAlign='right';c.lineWidth=8;c.strokeText(String(d),152-tw+sh,62+sh*.3);c.fillStyle=dc;c.fillText(String(d),152-tw+sh,62+sh*.3);}
+  /* final smash meter */
+  {const w=222,fx=-64,fy=95,full=f.fsm>=100;c.fillStyle='rgba(0,0,0,.6)';c.fillRect(fx,fy,w,6);c.fillStyle=full?'hsl('+((FR*6)%360)+',100%,62%)':'#ffd400';c.fillRect(fx,fy,w*Math.min(100,f.fsm||0)/100,6);
+   if(full&&(FR>>3)%2){c.font='italic 700 18px '+DF;c.textAlign='right';c.lineWidth=4;c.strokeText('FINAL SMASH READY',158,-2);c.fillStyle='#ffffff';c.fillText('FINAL SMASH READY',158,-2);}}
+  c.restore();});};
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
