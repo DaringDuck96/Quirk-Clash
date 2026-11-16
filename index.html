@@ -10095,5 +10095,145 @@ requestAnimationFrame(tick);
 try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest('.tok'):null;return t||ct(el);};}catch(e){}
 })();
 
+/* net.js — PLAY WITH FRIENDS. No accounts, no downloads, no server of our own.
+   One player hosts: the game runs in their browser exactly as it does for couch play. Friends who open the same link become guests: they watch the host's
+   game as live video and their keyboard / controller / touch buttons are sent to the host, where each friend appears as one more controller.
+   So everything that works with four controllers on one screen (fighter select, tokens, versus, co-op campaign) works online.
+   Browsers find each other through PeerJS's free public broker; after that the connection is direct (WebRTC). */
+(function(){
+const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
+const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
+const NET={role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
+const css=E('style');css.textContent=
+ '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
+ '#netgate[hidden],#netpanel[hidden],#netview[hidden],#netchip[hidden]{display:none!important}'+
+ '.netbox{width:min(760px,100%);display:grid;gap:14px;text-align:center}.netbox h1{margin:0;font:italic 700 clamp(26px,6vw,54px)/1 var(--display,sans-serif);color:#ffd400;text-shadow:0 4px 0 #000}'+
+ '.netbox p{margin:0;font:400 15px/1.45 system-ui,sans-serif;color:#d8d8e4}.netrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media (max-width:560px){.netrow{grid-template-columns:1fr}}'+
+ '.netbtn{font:italic 700 clamp(18px,3.4vw,30px)/1.1 var(--display,sans-serif);color:#fff;border:0;padding:22px 14px;cursor:pointer;background:#f2343c;clip-path:polygon(12px 0,100% 0,calc(100% - 12px) 100%,0 100%);text-transform:uppercase}'+
+ '.netbtn.b2{background:#2e86ff}.netbtn.sm{font-size:16px;padding:10px 16px;background:#33333e}.netbtn small{display:block;font:400 13px/1.3 system-ui,sans-serif;text-transform:none;margin-top:6px;opacity:.92}.netbtn:disabled{opacity:.45;cursor:default}'+
+ '.netin{font:700 18px system-ui,sans-serif;padding:10px 12px;border:2px solid #55556a;background:#111118;color:#fff;text-transform:uppercase;text-align:center;width:min(280px,80%);justify-self:center}'+
+ '.netstat{font:700 15px/1.4 system-ui,sans-serif;color:#ffd400;min-height:1.4em}.netlist{font:400 14px/1.5 system-ui,sans-serif;color:#d8d8e4;text-align:left;justify-self:center;max-width:560px}'+
+ '#netchip{position:fixed;left:8px;bottom:8px;z-index:880;display:flex;gap:6px;align-items:center;background:rgba(10,10,16,.88);border-left:4px solid #2fd060;padding:6px 8px;font:700 12px system-ui,sans-serif;color:#fff}'+
+ '#netchip button{font:700 11px system-ui,sans-serif;background:#33333e;color:#fff;border:0;padding:5px 8px;cursor:pointer}'+
+ '#netview{background:#000;padding:0;display:block}#netview video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}'+
+ '#netview .nvbar{position:absolute;left:0;right:0;top:0;display:flex;gap:8px;align-items:center;justify-content:center;padding:6px;font:700 12px system-ui,sans-serif;background:linear-gradient(#000a,#0000);pointer-events:none;z-index:2}'+
+ '#netview .nvbar button{pointer-events:auto;font:700 11px system-ui,sans-serif;background:#33333e;color:#fff;border:0;padding:5px 8px;cursor:pointer}'+
+ '#netview .nvmsg{position:absolute;inset:0;display:grid;place-items:center;z-index:3;background:rgba(0,0,0,.8);text-align:center;padding:20px}'+
+ '#nvtouch{position:absolute;inset:0;z-index:4;pointer-events:none}#nvtouch>*{pointer-events:auto;position:absolute;touch-action:none;user-select:none;-webkit-user-select:none}'+
+ '#nvstick{left:3%;bottom:6%;width:34vmin;height:34vmin;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.4)}#nvstick i{position:absolute;left:50%;top:50%;width:40%;height:40%;margin:-20% 0 0 -20%;border-radius:50%;background:rgba(255,255,255,.55)}'+
+ '.nvb{width:15vmin;height:15vmin;border-radius:50%;border:2px solid rgba(255,255,255,.55);background:rgba(255,255,255,.14);color:#fff;font:700 4.4vmin system-ui,sans-serif;display:grid;place-items:center}.nvb.dn{background:rgba(255,255,255,.5)}';
+document.head.appendChild(css);
+const roomSlug=s=>String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,16)||'LOBBY';
+const linkFor=r=>location.origin+location.pathname+'#room='+r;
+const hashRoom=()=>{const m=/room=([A-Za-z0-9]+)/.exec(location.hash||'');return m?roomSlug(m[1]):'';};
+/* =============================================================== transport =============================================================== */
+function loadLib(){return new Promise((res,rej)=>{if(window.Peer)return res();const s=document.createElement('script');s.src=LIB;s.onload=()=>window.Peer?res():rej(new Error('PeerJS did not load'));s.onerror=()=>rej(new Error('Could not reach the connection service (are you offline, or is this page sandboxed?)'));document.head.appendChild(s);});}
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'}]};
+/* PeerJS: returns {role:'host', onGuest(cb), close()} or {role:'guest', link, close()} where link = {send, onData, onStream, onClose, sendStream, id} */
+function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{const hid=PREFIX+room;let done=false;
+  const host=new Peer(hid,{config:ICE,debug:1});
+  host.on('open',()=>{if(done)return;done=true;const cbs=[];host.on('connection',c=>{const L=mkLink(c.peer);c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};L._call=st=>{try{const call=host.call(c.peer,st);L._mc=call;tuneSender(call);}catch(e){}};cbs.forEach(f=>f(L));});c.on('data',d=>L._data(d));c.on('close',()=>L._close());c.on('error',()=>L._close());});
+    host.on('disconnected',()=>{try{host.reconnect();}catch(e){}});res({role:'host',onGuest:f=>cbs.push(f),close:()=>{try{host.destroy();}catch(e){}}});});
+  host.on('error',err=>{if(done)return;if(err&&err.type==='unavailable-id'){done=true;try{host.destroy();}catch(e){}
+      const me=new Peer(undefined,{config:ICE,debug:1});me.on('error',e2=>{if(e2&&e2.type==='peer-unavailable')L._close('The host is not there any more.');});
+      const L=mkLink(hid);me.on('open',()=>{const c=me.connect(hid,{serialization:'json',reliable:false});c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};res({role:'guest',link:L,close:()=>{try{me.destroy();}catch(e){}}});});c.on('data',d=>L._data(d));c.on('close',()=>L._close('The host left.'));c.on('error',()=>L._close('Connection lost.'));});
+      me.on('call',call=>{L._mc=call;call.answer();call.on('stream',st=>L._stream(st));});
+      setTimeout(()=>{if(!L._send)rej(new Error('Found a host but could not connect to them. One of the two networks may be blocking direct connections.'));},15000);}
+    else{done=true;rej(new Error(err&&err.type==='network'||err&&err.type==='server-error'?'Could not reach the connection service. Try again in a moment.':String(err&&err.message||err)));}});
+  setTimeout(()=>{if(!done){done=true;rej(new Error('The connection service did not answer.'));}},15000);}));}
+function mkLink(id){const L={id,_d:[],_s:[],_c:[],closed:false,send:o=>{if(L._send)L._send(o);},onData:f=>L._d.push(f),onStream:f=>L._s.push(f),onClose:f=>L._c.push(f),sendStream:st=>{if(L._call)L._call(st);},
+  _data:d=>L._d.forEach(f=>{try{f(d);}catch(e){}}),_stream:s=>L._s.forEach(f=>f(s)),_close:why=>{if(L.closed)return;L.closed=true;L._c.forEach(f=>f(why));}};return L;}
+function tuneSender(call){setTimeout(()=>{try{const pc=call.peerConnection;if(!pc)return;for(const s of pc.getSenders()){if(!s.track||s.track.kind!=='video')continue;try{s.track.contentHint='motion';}catch(e){}const p=s.getParameters();if(!p.encodings||!p.encodings.length)p.encodings=[{}];p.encodings[0].maxBitrate=3500000;p.encodings[0].maxFramerate=60;p.degradationPreference='maintain-framerate';s.setParameters(p).catch(()=>{});}}catch(e){}},800);}
+/* test transport: the same thing over a BroadcastChannel in one browser, so the game side can be checked without the internet */
+function mockTransport(room){return new Promise(res=>{const ch=new BroadcastChannel('qcnet-'+room),me=Math.random().toString(36).slice(2);let role=null;const links={},cbs=[];
+  const pcFor=(peer,L,isHost)=>{const pc=new RTCPeerConnection();L._pc=pc;const sig=o=>ch.postMessage(Object.assign({to:peer,from:me},o));
+   pc.onicecandidate=e=>{if(e.candidate)sig({ice:e.candidate.toJSON()});};pc.onconnectionstatechange=()=>{if(/failed|closed|disconnected/.test(pc.connectionState))L._close('Connection lost.');};pc.ontrack=e=>L._stream(e.streams[0]);
+   const nego=async()=>{const o=await pc.createOffer();await pc.setLocalDescription(o);sig({sdp:pc.localDescription.toJSON()});};
+   if(isHost){const dc=pc.createDataChannel('d',{ordered:false,maxRetransmits:0});dc.onopen=()=>{L._send=o=>{try{dc.send(JSON.stringify(o));}catch(e){}};cbs.forEach(f=>f(L));};dc.onmessage=e=>L._data(JSON.parse(e.data));L._call=st=>{st.getTracks().forEach(t=>pc.addTrack(t,st));nego();};nego();}
+   else pc.ondatachannel=e=>{const dc=e.channel;dc.onopen=()=>{L._send=o=>{try{dc.send(JSON.stringify(o));}catch(e2){}};res({role:'guest',link:L,close:()=>pc.close()});};dc.onmessage=ev=>L._data(JSON.parse(ev.data));};
+   L._sig=async m=>{if(m.sdp){await pc.setRemoteDescription(m.sdp);if(m.sdp.type==='offer'){const a=await pc.createAnswer();await pc.setLocalDescription(a);sig({sdp:pc.localDescription.toJSON()});}}else if(m.ice){try{await pc.addIceCandidate(m.ice);}catch(e){}}};return pc;};
+  ch.onmessage=e=>{const m=e.data;if(m.q==='who'&&role==='host'){ch.postMessage({q:'host',from:me,to:m.from});return;}
+   if(m.q==='host'&&m.to===me&&!role){role='guest';const L=links[m.from]=mkLink(m.from);pcFor(m.from,L,false);ch.postMessage({q:'join',from:me,to:m.from});return;}
+   if(m.q==='join'&&m.to===me&&role==='host'){const L=links[m.from]=mkLink(m.from);pcFor(m.from,L,true);return;}
+   if(m.to===me&&links[m.from]&&(m.sdp||m.ice))links[m.from]._sig(m);};
+  ch.postMessage({q:'who',from:me});setTimeout(()=>{if(!role){role='host';res({role:'host',onGuest:f=>cbs.push(f),close:()=>ch.close()});}},500);});}
+const transport=room=>TEST?mockTransport(room):peerTransport(room);
+/* =============================================================== host =============================================================== */
+const VP=[null,null,null];           /* virtual controllers, one per guest */
+function vpad(k){return{index:100+k,id:'Online friend '+(k+1)+' (standard)',connected:true,mapping:'standard',timestamp:0,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false,touched:false,value:0}))};}
+/* the host keeps the P1 seat: online friends take the seats after it */
+try{const ps0=padSlot;padSlot=function(gp,e){const hold=NET.role==='host'&&gp&&gp.index>=100&&PADMAP.indexOf(gp.index)<0&&PADMAP[0]===null;if(hold)PADMAP[0]=-1;try{return ps0(gp,e);}finally{if(hold&&PADMAP[0]===-1)PADMAP[0]=null;}};}catch(e){}
+{const p0=pads;pads=function(){if(NET.role==='guest')return[];const r=p0();if(NET.role==='host')for(const v of VP)if(v)r.push(v);return r;};}
+function applyPad(k,d){const v=VP[k];if(!v||!d)return;const a=d.a||[];for(let i=0;i<4;i++)v.axes[i]=+a[i]||0;const bits=d.b|0;for(let i=0;i<17;i++){const on=!!(bits&(1<<i));v.buttons[i].pressed=on;v.buttons[i].touched=on;v.buttons[i].value=on?1:0;}v.id=(d.nin?'Nintendo ':'')+'Online friend '+(k+1)+(d.joy?' Joy-Con':'')+' (standard)';v.timestamp=performance.now();}
+function dropPad(k){VP[k]=null;try{for(let n=0;n<4;n++)if(PADMAP[n]===100+k){PADMAP[n]=null;if(!running&&SEL.mode[n]==='h'&&n!==0){SEL.mode[n]='off';SEL.ready[n]=false;}}if(!$('#select').hidden)refreshSel();}catch(e){}}
+async function capture(){/* the whole tab, so menus and sound travel too; falls back to the game picture alone */
+ if(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia&&!TEST){try{const st=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:{ideal:60,max:60},width:{max:1280},height:{max:720},displaySurface:'browser'},audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false,suppressLocalAudioPlayback:false},preferCurrentTab:true,selfBrowserSurface:'include',surfaceSwitching:'exclude',systemAudio:'include'});NET.capKind='tab';return st;}catch(e){if(e&&e.name==='NotAllowedError')throw new Error('Sharing was cancelled. Friends can only see the game if you share this tab.');}}
+ const cv=document.createElement('canvas');cv.width=1280;cv.height=720;const g=cv.getContext('2d');NET._comp=()=>{try{g.fillStyle='#000';g.fillRect(0,0,1280,720);const box=document.getElementById('gamebox');if(box)for(const c of box.querySelectorAll('canvas')){if(c.width&&c.height&&c.offsetParent!==null)g.drawImage(c,0,0,1280,720);}}catch(e){}};
+ (function loop(){if(NET.role!=='host')return;NET._comp();requestAnimationFrame(loop);})();NET.capKind='canvas';return cv.captureStream(60);}
+function hostStart(T){NET.role='host';NET.T=T;NET.on=true;T.onGuest(L=>{let k=VP.findIndex(v=>!v);if(k<0||NET.guests.length>=MAXG){L.send({t:'full'});return;}VP[k]=vpad(k);const G={L,k};NET.guests.push(G);
+   L.onData(d=>{if(d&&d.t==='in')applyPad(k,d);else if(d&&d.t==='bye')L._close();});L.onClose(()=>{NET.guests=NET.guests.filter(x=>x!==G);dropPad(k);chip();try{toast('A friend left');}catch(e){}});
+   L.send({t:'hi',k,cap:NET.capKind||null,room:NET.room});if(NET.stream)L.sendStream(NET.stream);chip();try{toast('A friend connected. They press any button to join as a player.');sfx('power');}catch(e){}});chip();}
+async function hostShare(){if(NET.stream)return;NET.stream=await capture();NET.stream.getVideoTracks().forEach(t=>t.addEventListener('ended',()=>{NET.stream=null;chip();try{toast('Sharing stopped: friends cannot see the game');}catch(e){}}));for(const G of NET.guests){G.L.sendStream(NET.stream);G.L.send({t:'hi',k:G.k,cap:NET.capKind,room:NET.room});}chip();}
+let chipEl=null;function chip(){if(!chipEl){chipEl=E('div');chipEl.id='netchip';document.body.appendChild(chipEl);}chipEl.hidden=NET.role!=='host';if(NET.role!=='host')return;const n=NET.guests.length;
+ chipEl.innerHTML='<span>ONLINE · HOSTING '+NET.room+' · '+n+' friend'+(n===1?'':'s')+(NET.stream?'':' · <b style="color:#ff8a7a">NOT SHARING</b>')+'</span>';
+ const b1=E('button','', 'COPY LINK');b1.onclick=()=>{copy(linkFor(NET.room));};chipEl.appendChild(b1);if(!NET.stream){const b2=E('button','','SHARE MY GAME');b2.style.background='#f2343c';b2.onclick=()=>hostShare().catch(e=>{try{toast(e.message);}catch(x){}});chipEl.appendChild(b2);}
+ const b3=E('button','','STOP');b3.onclick=()=>{if(confirm('Stop hosting? Your friends will be disconnected.'))leave();};chipEl.appendChild(b3);}
+function copy(t){try{navigator.clipboard.writeText(t).then(()=>{try{toast('Link copied');}catch(e){}},()=>prompt('Copy this link',t));}catch(e){prompt('Copy this link',t);}}
+/* =============================================================== guest =============================================================== */
+const GK={};let view=null,tstate={x:0,y:0,b:0};
+function guestStart(T){NET.role='guest';NET.T=T;NET.on=true;const L=T.link;view=E('div');view.id='netview';view.innerHTML='<video autoplay playsinline></video><div class="nvbar"><span id="nvs">Connected. Waiting for the host to share their game…</span><button id="nvfs">FULLSCREEN</button><button id="nvsnd">SOUND ON</button><button id="nvleave">LEAVE</button></div><div class="nvmsg"><div class="netbox"><h1>CONNECTED</h1><p id="nvm">Waiting for the host to share their game…</p><p class="netlist"><b>Keyboard:</b> WASD move · Space jump · J attack · K special · L shield · U grab · T taunt · Enter start · Q / E costume.<br><b>Controller:</b> works as normal. <b>Phone:</b> on-screen stick and buttons.<br>On the menus, the stick moves your hand and <b>J / A</b> picks. Press any button to join as a player.</p></div></div>';
+ document.body.appendChild(view);const vid=view.querySelector('video'),msg=view.querySelector('.nvmsg');
+ view.querySelector('#nvleave').onclick=()=>leave();view.querySelector('#nvfs').onclick=()=>{try{(document.fullscreenElement?document.exitFullscreen():view.requestFullscreen());}catch(e){}};
+ view.querySelector('#nvsnd').onclick=e=>{vid.muted=!vid.muted;e.currentTarget.textContent=vid.muted?'SOUND OFF':'SOUND ON';};
+ L.onStream(st=>{vid.srcObject=st;const go=()=>vid.play().catch(()=>{vid.muted=true;view.querySelector('#nvsnd').textContent='SOUND OFF';vid.play().catch(()=>{});});go();msg.hidden=true;msg.style.display='none';view.querySelector('#nvs').textContent='Playing online · room '+NET.room;
+   setTimeout(()=>{try{for(const pc of allPCs(L))for(const r of pc.getReceivers()){try{r.playoutDelayHint=0;}catch(e){}try{r.jitterBufferTarget=0;}catch(e){}}}catch(e){}},500);});
+ L.onData(d=>{if(!d)return;if(d.t==='bye'){L._close('The host stopped the game.');}else if(d.t==='full'){fail('That room already has four players.');}else if(d.t==='hi'){NET.k=d.k;if(d.cap==='canvas')view.querySelector('#nvs').textContent='Playing online · the host is on a device that can only send the fight itself, not the menus';}});
+ L.onClose(why=>{if(NET.role==='guest')fail(why||'Disconnected from the host.');});
+ function fail(t){msg.hidden=false;msg.style.display='';msg.innerHTML='<div class="netbox"><h1>DISCONNECTED</h1><p>'+t+'</p><div class="netrow"><button class="netbtn b2" id="nvre">TRY AGAIN</button><button class="netbtn" id="nvalone">PLAY ALONE</button></div></div>';msg.querySelector('#nvre').onclick=()=>{const r=NET.room;leave();openPanel(r,true);};msg.querySelector('#nvalone').onclick=()=>leave();}
+ /* keys never reach the local (hidden) game while we are a guest */
+ const kd=e=>{if(NET.role!=='guest')return;const tg=e.target&&e.target.tagName;if(tg==='INPUT')return;GK[e.code]=e.type==='keydown';if(!/^F\d+$/.test(e.code)&&!e.metaKey&&!e.ctrlKey){e.preventDefault();}e.stopImmediatePropagation();};NET._kd=kd;addEventListener('keydown',kd,true);addEventListener('keyup',kd,true);
+ if(('ontouchstart' in window)||navigator.maxTouchPoints>0)touchUI();
+ NET._tm=setInterval(()=>{if(NET.role!=='guest')return;L.send(Object.assign({t:'in'},readInput()));},16);}
+function allPCs(L){const o=[];if(L._pc)o.push(L._pc);try{if(L._mc&&L._mc.peerConnection)o.push(L._mc.peerConnection);}catch(e){}return o;}
+function readInput(){let ax=[0,0,0,0],b=0,nin=0,joy=0;try{const gps=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];const gp=gps[0];if(gp){for(let i=0;i<4;i++)ax[i]=Math.round((gp.axes[i]||0)*100)/100;for(let i=0;i<17;i++){const q=gp.buttons[i];if(q&&(q.pressed||q.value>.35))b|=1<<i;}nin=isNin(gp)?1:0;joy=isJoy(gp)?1:0;}}catch(e){}
+ /* keyboard: an Xbox-style pad as the game expects it (A = button 1, B = button 0) */
+ const k=c=>!!GK[c];let kx=(k('KeyD')||k('ArrowRight')?1:0)-(k('KeyA')||k('ArrowLeft')?1:0),ky=(k('KeyS')||k('ArrowDown')?1:0)-(k('KeyW')||k('ArrowUp')?1:0);
+ if(kx||ky){ax[0]=kx;ax[1]=ky<0?-.7:ky;}
+ const kb=(on,i)=>{if(on)b|=1<<i;};kb(k('KeyJ'),1);kb(k('KeyK'),0);kb(k('Space'),2);kb(k('KeyL')||k('ShiftLeft'),6);kb(k('KeyU')||k('KeyI'),4);kb(k('KeyQ'),4);kb(k('KeyE'),5);kb(k('Enter'),9);kb(k('Backspace')||k('Escape'),8);kb(k('KeyT'),12);kb(k('KeyX'),2);kb(k('KeyY'),3);
+ if(tstate.x||tstate.y){ax[0]=tstate.x;ax[1]=tstate.y<-.74?-.7:tstate.y;}b|=tstate.b;
+ if(nin&&!(kx||ky)&&!b){}return{a:ax,b,nin,joy};}
+function touchUI(){const t=E('div');t.id='nvtouch';const st=E('div');st.id='nvstick';st.innerHTML='<i></i>';t.appendChild(st);const nub=st.firstChild;
+ const mv=e=>{const r=st.getBoundingClientRect(),p=e.touches?e.touches[0]:e;if(!p){tstate.x=tstate.y=0;nub.style.transform='';return;}let x=(p.clientX-r.left-r.width/2)/(r.width/2),y=(p.clientY-r.top-r.height/2)/(r.height/2);const m=Math.hypot(x,y);if(m>1){x/=m;y/=m;}tstate.x=Math.abs(x)<.2?0:x;tstate.y=Math.abs(y)<.2?0:y;nub.style.transform='translate('+x*60+'%,'+y*60+'%)';e.preventDefault();};
+ st.addEventListener('touchstart',mv,{passive:false});st.addEventListener('touchmove',mv,{passive:false});const end=e=>{tstate.x=tstate.y=0;nub.style.transform='';e.preventDefault();};st.addEventListener('touchend',end,{passive:false});st.addEventListener('touchcancel',end,{passive:false});
+ const B=[['A',1,'right:4%;bottom:22%'],['B',0,'right:21%;bottom:8%'],['JUMP',2,'right:21%;bottom:36%'],['SHLD',6,'right:38%;bottom:22%'],['GRAB',4,'right:4%;bottom:50%'],['START',9,'right:42%;top:8%;width:18vmin;height:9vmin;border-radius:8px;font-size:3.2vmin']];
+ for(const[l,i,pos]of B){const b=E('div','nvb',l);b.style.cssText+=';'+pos;const dn=e=>{tstate.b|=1<<i;b.classList.add('dn');e.preventDefault();},up=e=>{tstate.b&=~(1<<i);b.classList.remove('dn');e.preventDefault();};b.addEventListener('touchstart',dn,{passive:false});b.addEventListener('touchend',up,{passive:false});b.addEventListener('touchcancel',up,{passive:false});t.appendChild(b);}
+ view.appendChild(t);}
+/* =============================================================== joining and leaving =============================================================== */
+function leave(){try{if(NET.role==='guest'&&NET.T&&NET.T.link)NET.T.link.send({t:'bye'});else if(NET.role==='host')for(const G of NET.guests)G.L.send({t:'bye'});}catch(e){}const T0=NET.T;setTimeout(()=>{try{if(T0)T0.close();}catch(e){}},120);if(NET._tm)clearInterval(NET._tm);if(NET._kd){removeEventListener('keydown',NET._kd,true);removeEventListener('keyup',NET._kd,true);}for(const k in GK)delete GK[k];
+ if(NET.stream){try{NET.stream.getTracks().forEach(t=>t.stop());}catch(e){}}NET.stream=null;for(let k=0;k<3;k++)if(VP[k])dropPad(k);NET.guests=[];NET.role=null;NET.on=false;NET.T=null;if(view){view.remove();view=null;}chip();}
+NET.leave=leave;
+let panel=null;
+function openPanel(room,auto){closeGate();if(panel)panel.remove();panel=E('div');panel.id='netpanel';const r0=roomSlug(room||hashRoom()||'LOBBY');
+ panel.innerHTML='<div class="netbox"><h1>PLAY WITH FRIENDS</h1><p>Everyone opens this same link and presses the button. The first one in hosts the game; everyone else joins them. Nothing to install and no accounts.</p><input class="netin" id="netroom" maxlength="16" value="'+r0+'" aria-label="Room name"><p style="font-size:13px">Room name. Leave it as LOBBY, or agree on your own word to keep strangers out.</p><div class="netrow"><button class="netbtn b2" id="netgo">CONNECT</button><button class="netbtn sm" id="netback" style="align-self:center">← BACK</button></div><div class="netstat" id="netstat"></div></div>';
+ document.body.appendChild(panel);const stat=panel.querySelector('#netstat'),go=panel.querySelector('#netgo'),inp=panel.querySelector('#netroom');panel.querySelector('#netback').onclick=()=>{panel.remove();panel=null;};
+ const run=async()=>{const room=roomSlug(inp.value);inp.value=room;go.disabled=true;stat.textContent='Looking for room '+room+'…';try{audioInit();}catch(e){}
+  try{const T=await transport(room);NET.room=room;try{history.replaceState(null,'','#room='+room);}catch(e){}
+   if(T.role==='host'){hostStart(T);panel.querySelector('.netbox').innerHTML='<h1>YOU ARE THE HOST</h1><p>Nobody was in room <b>'+room+'</b>, so the game runs on your computer and your friends join you. Send them this link:</p><input class="netin" style="width:min(560px,96%);text-transform:none;font-size:14px" readonly value="'+linkFor(room)+'"><div class="netrow"><button class="netbtn sm" id="nethcopy" style="background:#33333e">COPY LINK</button><button class="netbtn" id="nethshare">SHARE MY GAME<small>Your browser will ask to share this tab. Say yes, with sound.</small></button></div><div class="netstat" id="netstat2"></div><p class="netlist">You play as normal with your own keyboard or controller. Each friend who connects shows up as one more controller: they press a button to join, then move their own token on fighter select. Keep this tab in front while you play. Best on Chrome or Edge on a computer.</p>';
+    panel.querySelector('#nethcopy').onclick=()=>copy(linkFor(room));const s2=panel.querySelector('#netstat2');panel.querySelector('#nethshare').onclick=async()=>{try{await hostShare();panel.remove();panel=null;try{toast(NET.capKind==='tab'?'Sharing. Friends see and hear what you see.':'Sharing the fight picture only (this device cannot share menus).');if($('#title')&&!$('#title').hidden){setMode('versus');toSelect();}}catch(e){}}catch(e){s2.textContent=e.message;}};}
+   else{panel.remove();panel=null;guestStart(T);}}
+  catch(e){stat.textContent=e.message||String(e);go.disabled=false;}};
+ go.onclick=run;inp.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')run();};if(auto)run();}
+NET.open=openPanel;
+/* the front door: two choices */
+let gate=null;function closeGate(){if(gate){gate.remove();gate=null;}}
+function openGate(){if(gate||NET.on)return;gate=E('div');gate.id='netgate';const hr=hashRoom();gate.innerHTML='<div class="netbox"><h1>PU QUIRK CLASH</h1><p>'+(hr?'You were invited to room <b>'+hr+'</b>.':'How do you want to play?')+'</p><div class="netrow"><button class="netbtn" id="ngAlone">PLAY ALONE<small>Or with friends on this screen. Works offline.</small></button><button class="netbtn b2" id="ngFriends">PLAY WITH FRIENDS<small>Online, up to four. Everyone opens this link.</small></button></div></div>';
+ document.body.appendChild(gate);gate.querySelector('#ngAlone').onclick=()=>{try{audioInit();sfx('pop');}catch(e){}closeGate();};gate.querySelector('#ngFriends').onclick=()=>{try{audioInit();sfx('power');}catch(e){}openPanel(hr,!!hr);};}
+NET.gate=openGate;
+(function wait(){const tm=document.querySelector('.tmenu'),f=document.getElementById('tFight');if(!tm||!f){setTimeout(wait,120);return;}
+  const b=E('button','mt','<b>PLAY WITH FRIENDS</b><i>Online, up to four. Everyone opens the same link.</i>');b.id='tNet';b.onclick=()=>openPanel();tm.appendChild(b);
+  if(!navigator.webdriver&&!qs.has('nogate'))openGate();})();
+})();
+
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
