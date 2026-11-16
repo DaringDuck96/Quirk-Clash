@@ -2255,7 +2255,7 @@ Object.assign(TUNE,{
  ginko:{role:'Flying powerhouse',tip:'A heavyweight with three jumps and the longest flight.',sp:1.14,pw:1.06,kb:1.08,def:.92}});
 Object.assign(TUNE,{dawson:{role:'Quirkless tactician',tip:'Trap the floor, shuriken the air, then grapple in and box.',sp:1.12,pw:1,kb:1},
  maya:{role:'Drain support',tip:'Her touch heals her. Give Essence heals teammates more.',sp:.98,pw:1,kb:1},sarah:{role:'Shadow assassin',tip:'Get behind them. Shadow Step and Lights Out both put you there.',sp:1.04,pw:1,kb:1},
- aria:{role:'Lucky wildcard',tip:'One hit in six is LUCKY; one hit in six misses her.',sp:.98,pw:1,kb:1},bryson:{role:'Reluctant berserker',tip:'Weak as himself. Fill the meter and everything changes.',sp:1,pw:1,kb:1},
+ aria:{role:'Lucky wildcard',tip:'Up smash drops a light on whoever is nearest, wherever they are standing.',sp:.98,pw:1,kb:1},bryson:{role:'Reluctant berserker',tip:'Weak as himself. Fill the meter and everything changes.',sp:1,pw:1,kb:1},
  conor:{role:'Tiny trickster',tip:'The smallest target. Coins bounce; the pot of gold hurts.',sp:1.1,pw:1,kb:1},ray:{role:'Beam zoner',tip:'Laser for reach, heat for pressure, X-Ray before a smash.',sp:1,pw:1,kb:1},
  oliver:{role:'Homing archer',tip:'Everything he fires steers itself. Stay away and aim.',sp:1,pw:1,kb:1},chris:{role:'Regenerating swordsman',tip:'Back off for a moment and he heals. Outlast them.',sp:1,pw:1,kb:1},
  evona:{role:'Ice architect',tip:'Wall them off, slide in, pillar out.',sp:1.02,pw:1,kb:1},jack:{role:'Four-flame all-rounder',tip:'Down-B changes the flame: burn, speed, heal or slow.',sp:1,pw:1,kb:1},
@@ -6648,6 +6648,7 @@ if(B){const fx=['#5aa03a','#e8f0c0'];
   H.sp[0]='Grudge Skull (hold B to charge: the longer, the bigger and stronger)';if(typeof GTXT!=='undefined'&&GTXT.hatsuko)GTXT.hatsuko[0]='Launches a purple skull. Hold B to charge it for up to a second and a third: it grows to twice the size and more than double the damage.';}
  const g0=EK.gp.draw;EK.gp.draw=function(e){const sh=e.spec&&e.spec.sh,x=e.x,y=e.y,r=e.r||6,c=(e.spec&&e.spec.c)||'#ffffff',d=Math.sign(e.vx)||e.face,t=e.t;
   switch(sh){
+  case'spotlight':wl('#3a3a44',x,y-40,x,y-r,1);wpoly('#0c0820',[x-r*.7,y-r,x+r*.7,y-r,x+r,y+r*.6,x-r,y+r*.6]);wpoly('#3a3a48',[x-r*.55,y-r*.8,x+r*.55,y-r*.8,x+r*.8,y+r*.4,x-r*.8,y+r*.4]);wr('#fff4c0',x-r*.8,y+r*.4,r*1.6,r*.3);X.globalAlpha=.25;wpoly('#fff4c0',[x-r*.8,y+r*.7,x+r*.8,y+r*.7,x+r*1.8,y+r*3,x-r*1.8,y+r*3]);X.globalAlpha=1;return;
   case'beaker':X.save();X.translate(x,y);X.rotate(t*.35*d);wpoly('#0c0820',[-2.5,-7,2.5,-7,2.5,-2,6,5,-6,5,-2.5,-2]);wpoly('#d8f4f0',[-1.5,-6,1.5,-6,1.5,-1.5,4.6,4,-4.6,4,-1.5,-1.5]);wpoly(c,[-3.4,1.5,3.4,1.5,4.6,4,-4.6,4]);wr('#ffffff',-2.5,-7.5,5,1.5);X.restore();if(t%3===0)part(x,y,0,0,8,c,1,0);return;
   case'coin':FSG.coin(x,y,r*.8,'#ffd84a','#fff4c0',t*.12);if(t%4===0)part(x-d*3,y,0,0,8,'#fff4c0',1,0);return;
   case'pot':wpoly('#0c0820',[x-r-1,y-r*.5,x+r+1,y-r*.5,x+r*.8,y+r+1,x-r*.8,y+r+1]);wpoly('#2a2a32',[x-r,y-r*.4,x+r,y-r*.4,x+r*.7,y+r,x-r*.7,y+r]);wr('#3a3a44',x-r-1,y-r*.7,r*2+2,r*.35);for(let i=0;i<4;i++)wdisc(x-r*.6+i*r*.4,y-r*.8-(i%2)*1.5,r*.28,'#ffd84a');return;
@@ -6707,6 +6708,12 @@ BEH.homing={tick(f,m,I){const d=m.d,p=d.bp;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.
 /* ---- Bentou: the jinx ---- */
 function jinx(t,n,by){if(!t||t.dead)return;if(!(t.jinxT>FR))FXL.push({k:'txt',s:'JINXED',x:t.x,y:t.y-92,t:0,life:40,col:'#c83a5a'});t.jinxT=Math.max(t.jinxT||0,FR+n);FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#c83a5a',r0:8,life:16});}
 {const h0=hurtR;hurtR=function(f){const r=h0(f);if(f.jinxT>FR){const w=r[2]*.26,h=r[3]*.18;return[r[0]-w/2,r[1]-h,r[2]+w,r[3]+h];}return r;};}
+/* ---- Aria: nothing she does is on purpose ---- */
+{const A=c('aria');if(A){const fx=A.kit.fx;
+  A.mv.fsmash=Object.assign(SMASH('f',{el:'luck',fx,an:'slashDown',far:36,dmg:15}),{lim:'none',qn:'Swings her handbag without looking. It is heavier than it should be.'});
+  A.mv.usmash=M('castUp',14,2,24,hit([[4,-64,12]],5,3.5,.05,88),{charge:1,fx,lim:'none',face:'atk',qn:'Points at something on the ceiling. A stage light falls on the nearest rival.',onStart(f){const o=F.filter(t=>t!==f&&!t.dead&&!t.gone&&t.st!=='respawn'&&(f.team===undefined||t.team!==f.team)&&Math.abs(t.x-f.x)<220).sort((a,b)=>Math.abs(a.x-f.x)-Math.abs(b.x-f.x))[0];const dx=o?(o.x-f.x)*f.face:30;const e=spawnEnt(f,{k:'gp',sh:'spotlight',vx:.01,vy:6.5,life:60,r:10,dmg:11,bkb:4.5,kbg:.09,ang:70,gnd:1,dist:dx,dy:-170});if(e&&o)e.x=o.x;}});
+  A.mv.dsmash=M('roar',9,5,22,[hit([[24,-28,18]],9,7,.07,35),hit([[-24,-28,18]],9,7,.07,145)],{charge:1,fx,lim:'none',face:'atk',qn:'Sneezes. Everyone close is blown away.',onStart(f){FXL.push({k:'txt',s:'ACHOO!',x:f.x,y:f.y-84,t:0,life:36,col:'#ffd84a'});}});
+  A.na='Normals: stumbles, flails and accidental elbows that somehow connect. Her smashes are pure accidents: a wild handbag, a sneeze, and a stage light that happens to fall on someone. One hit in six is a LUCKY hit for half again the damage, and one hit in six aimed at her simply misses.';}}
 /* ---- Jack: the lit flame colours everything he does (one colour at a time, never mixed) ---- */
 {const J=c('jack');if(J)for(const k of['sB','uB']){const d=J.mv[k];if(d&&d.hits)d.hits.forEach(h=>{if(h.eff==='burn')delete h.eff;});}}
 const JK=[{n:'RED',fx:['#ff5a30','#ffe060'],el:'fire'},{n:'BLUE',fx:['#5ab8ff','#ffffff'],el:'ice'},{n:'GREEN',fx:['#6adf6a','#e0ffe0'],el:'heal'},{n:'VIOLET',fx:['#b070ff','#f0e0ff'],el:'magic'}];
@@ -6720,6 +6727,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a.C.id==='aria'&&r
 const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);const id=t.C.id;if(id==='ash'&&h.eff!=='burn')m*=.9;if(t.form==='rage')m*=.7;if(t.form==='gold')m*=.7;if(id==='uzi')m*=.88;const ai=a.C.id;if(ai==='sato'&&a.mv&&/smash/.test(a.mv.k))m*=1.12;else if(ai==='ayame')m*=1.1;return m;};
 const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t.dmg,sh0=t.shp,res=ah(t,h,dirX,a,o);try{if(t.jinxT>FR&&t.shp<sh0&&t.shp>0)t.shp=Math.max(0,t.shp-(sh0-t.shp)*.5);const jx=h&&(h.jinx||(h.spec&&h.spec.jinx));if(jx&&a&&a!==t&&(t.dmg>hp||t.shp<sh0))jinx(t,jx,a);const dd=t.dmg-hp;if(dd>0){
   if(t.C.id==='bryson'&&!t.form){const g=t.gm||(t.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.5);}
+  if(a&&a!==t&&a.C.id==='aria'&&FR-(a.sryT||-999)>150&&rnd()<.35){a.sryT=FR;FXL.push({k:'txt',s:['oops!','sorry!!','was that me?','oh no','my bad!'][fl(rnd()*5)],x:a.x,y:a.y-84,t:0,life:40,col:'#ffffff'});}
   if(a&&a!==t&&a.C.id==='jack'&&!(o&&o.proj)){const k=(a.cycN||0)%4;if(k===0){if(!t.qdot)t.qdot={n:3,d:.5,col:'#ff5a30',by:a,next:FR+30};}else if(k===2){a.dmg=Math.max(0,a.dmg-.8);part(a.x,a.y-50,0,-.6,16,'#6adf6a',2,0);}else if(k===3)t.qslow=Math.max(t.qslow||0,FR+70);}
   if(a&&a!==t&&a.C.id==='hikari'&&!(o&&o.proj)&&t.st==='hit'){const g=a.gm||(a.gm={});g.hk=(g.hk||0)+1;if(g.hk>=4){g.hk=0;t.hitstun+=14;FXL.push({k:'txt',s:'SHOCK!',x:t.x,y:t.y-88,t:0,life:28,col:'#6aff6a'});for(let i=0;i<10;i++)part(t.x,t.y-30,rnd()*4-2,rnd()*4-2,10,i%2?'#6aff6a':'#ffffff',1,0);}}
   if(a&&a!==t&&a.C.id==='bryson'&&!a.form){const g=a.gm||(a.gm={});g.tan=Math.min(100,(g.tan||0)+dd*1.2);}}}catch(e){}return res;};
