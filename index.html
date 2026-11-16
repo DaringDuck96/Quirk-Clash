@@ -2372,7 +2372,7 @@ Object.assign(TUNE,{makiko:{role:'Sleep trickster',tip:'Put them to sleep, then 
  hana:{role:'Multi-hit rushdown',tip:'Saws hit many times and shred shields.',sp:.9,pw:.92,kb:.94},
  tomi:{role:'Growing brawler',tip:'Giant limbs for reach; Down-B for eight seconds of giant.',sp:1.06,pw:1.02,kb:1.04},
  yoko:{role:'Close-range controller',tip:'Everything near her goes up or down at her say-so.',sp:1,pw:.95,kb:.98},
- chiyoki:{role:'Fear debuffer',tip:'Frighten them with the laugh, then hit 30% harder.',sp:1,pw:.98,kb:1},
+ chiyoki:{role:'Dread builder',tip:'Stay on one rival until they freeze, then bring the shovel.',sp:1,pw:.98,kb:1},
  yurei:{role:'Ghost assassin',tip:'Fragile. Get behind them: backstabs do 30% more.',sp:.9,pw:.94,kb:.98},
  ivan:{role:'Long-armed heavy',tip:'Huge disjointed hands. Slow to start.',sp:1.2,pw:1.04,kb:1.06,def:.94},
  bisu:{role:'Shape-shifter',tip:'Shift between cheetah speed and bear strength.',sp:.95,pw:.96,kb:.98},
@@ -5982,7 +5982,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   hana:['Short reach and weak single hits; she has to stay on top of you.','Her saws do more than double damage to shields.'],
   tomi:['As a giant he is an enormous target, and it has a long cooldown.','While giant he is nearly twice his size: 25% more damage, far bigger hitboxes, much harder to launch.'],
   yoko:['Nothing she does reaches far, and she is light.','Hold Jump in the air to hover.'],
-  chiyoki:['The laugh has a cooldown, and without it he is ordinary.','Feels no pain: hits under 4% do not make him flinch. 30% more damage to frightened rivals.'],
+  chiyoki:['He has to stay on one rival: Dread fades the moment he lets up.','Feels no pain: hits under 4% do not make him flinch. DREAD: his laugh and his hits fill three marks on a rival: uneasy, panicked, then frozen.'],
   yurei:['Among the lightest fighters; one clean smash ends her stock.','Backstab: 30% more damage from behind. Fade is broken by attacking.'],
   ivan:['Slow to start, and helpless against someone already inside his reach.','His energy hands cannot be hit: his arms are never exposed.'],
   bisu:['No projectile, and his forms leave him ordinary in whatever they do not boost.','Shift lasts 15 seconds, or until he shifts again.'],
@@ -8332,6 +8332,56 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
  /* the next beaker, held at his side */
  const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&f.C===C&&!f.form&&!f.dead&&!f.gone&&!(f.copyT>0)&&f.bk!==undefined&&typeof X!=='undefined'&&X&&!(f.mv&&f.mv.k==='nB')){const ip=(typeof interpPos==='function')?interpPos(f):f,x=ip.x-f.face*13,y=ip.y-40+Math.sin(FR*.08)*1.2,c=KIND[f.bk%3].c;
     wpoly('#0c0820',[x-2.4,y-6,x+2.4,y-6,x+2.4,y-2,x+5.4,y+4.4,x-5.4,y+4.4,x-2.4,y-2]);wpoly('#d8f4f0',[x-1.4,y-5,x+1.4,y-5,x+1.4,y-1.4,x+4,y+3.4,x-4,y+3.4,x-1.4,y-1.4]);wpoly(c,[x-3,y+1,x+3,y+1,x+4,y+3.4,x-4,y+3.4]);}}catch(e){}return r;};
+}}
+
+/* ---------- Chiyoki Mananake: Hormonal Havoc. He builds DREAD on whoever he laughs at or hits: uneasy, then panicked, then frozen.
+   The Laugh can be held into a howl all round him; the Shovel is the payoff on a frozen rival; his adrenaline burst grows with the damage he has taken. ---------- */
+{const C=CH.find(q=>q.id==='chiyoki');if(C){const fx=C.kit.fx,GN='#b8ff4a',PU='#a040e0',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-90,t:0,life:40,col:col||GN});
+ const laugh=M('roar',10,12,20,hit([[30,-36,34]],1.4,1,0,45,{ri:6}),{fx,sub:'laugh',cd:90});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;T.nB=laugh;if(T.uB){T.uB=Object.assign({},T.uB,{onStart(f){f.buff={k:'tea',until:FR+110+Math.min(190,Math.round((f.dmg||0)*1.5))};}});}}
+ C.fearB=0;C.noSig=0;
+ C.sp=['The Laugh (builds DREAD on rivals in front; hold B to keep howling all round him)','Bowling Pin (lobbed; makes anyone already uneasy jump out of their skin)','Adrenaline Spike (leap, then a burst of speed that lasts longer the more hurt he is)','Shovel (slow, armoured, enormous; far worse for a FROZEN rival)'];
+ C.d='Feels no fear and no pain, and thinks that is hilarious. Anyone who hears his laugh has their nerves hijacked: first uneasy, then panicked, then frozen to the spot.';
+ C.na='Normals: lurching, unpredictable swings. Small hits do not make him flinch. Everything he lands, and every laugh, builds DREAD on that rival (the three marks over their head). UNEASY at one mark: their shield wears down faster and he hits them 10% harder. PANICKED at two: they run slower, jump lower, and he hits them 20% harder. FROZEN at three: their legs lock for a little over a second, then the Dread clears. Dread fades if he leaves them alone.';
+ try{if(typeof GTXT!=='undefined'&&GTXT.chiyoki){GTXT.chiyoki[0]='The laugh. A tap is a cackle that puts Dread on rivals in front of him. Hold B and he keeps howling: everyone near him, on either side, gains Dread for as long as he holds it (about a second and a half), but he cannot move while he does.';
+   GTXT.chiyoki[1]='Lobs a bowling pin in an arc. Bounces along the platform several times before it rolls off the edge. A rival who is already Uneasy or worse is startled by it: stunned for longer, and more Dread.';
+   GTXT.chiyoki[2]='An adrenaline-fuelled leap, followed by extra speed: about two seconds, and up to five the more damage he has taken.';
+   GTXT.chiyoki[3]='Winds up a shovel swing. Very slow, but nothing stops it and it launches enormously. Against a FROZEN rival it does 30% more and launches a quarter harder.';}}catch(e){}
+ try{const V=(typeof VTXT!=='undefined')?VTXT:null;}catch(e){}
+ const stage=t=>!t||!(t.dr>0)?0:t.dr>=66?2:t.dr>=33?1:0;
+ const mine=(a,t)=>a&&t&&a!==t&&a.C===C&&!a.form&&!(a.copyT>0)&&!(a.team!==undefined&&a.team===t.team);
+ function add(t,by,n){if(!t||t.dead||t.gone||t.frzT>FR||t.drCD>FR||t.inv>0)return;const s0=stage(t);t.dr=Math.min(100,(t.dr||0)+n);t.drBy=by;t.drT=FR;
+  if(t.dr>=100){t.dr=0;t.frzT=FR+78;t.drCD=FR+260;t.rootT=Math.max(t.rootT||0,78);say(t,'FROZEN!','#ffffff');sfx('counter');FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:PU,r0:10,life:20});burst(t.x,t.y-30,14,[PU,GN,'#ffffff'],2.4,20);if(by&&by.C===C)say(by,'HA!',GN);return;}
+  const s1=stage(t);if(s1>s0){say(t,s1===2?'PANICKED':'UNEASY',s1===2?'#ff8ad8':'#d8c0ff');}}
+ window.DREAD={add,stage};
+ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(mine(a,t)){const fz=t.frzT>FR;m*=fz?1.3:1+.1*stage(t);}}catch(e){}return m;};
+ const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);try{if(mine(a,t)&&t.frzT>FR&&a.mv&&a.mv.k==='dB')m*=1.15;}catch(e){}return m;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){const fz=t&&t.frzT>FR;const r=ah(t,h,dirX,a,o);try{if(mine(a,t)&&(r==='hit'||r==='shield')){const pin=o&&o.proj&&h&&h.spec&&h.spec.sh==='pin',lg=!pin&&a.mv&&a.mv.k==='nB'&&!(o&&o.proj),dmg=((h&&h.spec)?h.spec.dmg:h&&h.dmg)||0;
+    if(fz){if(r==='hit'){t.frzT=0;if(a.mv&&a.mv.k==='dB'){say(a,'GOTCHA!','#ffffff');if(typeof shakeA!=='undefined')shakeA=Math.max(shakeA,7);}}}
+    else if(lg)add(t,a,r==='hit'?15:8);
+    else if(pin){if(stage(t)>=1&&r==='hit'){t.hitstun=(t.hitstun||0)+12;say(t,'EEK!','#ffffff');add(t,a,22);}else add(t,a,12);}
+    else if(r==='hit')add(t,a,Math.max(4,dmg*1.3));}}catch(e){}return r;};
+ const st0=step;step=function(){st0();try{
+   for(const t of F){if(!t||t.gone)continue;
+    if(t.dead||t.st==='respawn'){t.dr=0;t.frzT=0;t.drCD=0;continue;}
+    if(t.frzT>FR){if(t.ground){t.vx*=.5;}t.rootT=Math.max(t.rootT||0,2);if(FR%5===0)part(t.x+rnd()*16-8,t.y-rnd()*50,0,-.4,12,FR%10?PU:'#ffffff',2,0);continue;}
+    if(!(t.dr>0)){t._drJ=t.st;continue;}
+    if(FR-(t.drT||0)>110)t.dr=Math.max(0,t.dr-.4);
+    const s=stage(t);
+    if(s>=1&&t.st==='shield'&&t.shp!==undefined)t.shp-=.1;
+    if(s>=2){const S=t.C.st;if(t.ground&&Math.abs(t.vx)>S.run*.72)t.vx*=.9;if(t._drJ==='jsq'&&t.st==='air'&&t.vy<0)t.vy*=.82;if(FR%7===0)part(t.x+rnd()*14-7,t.y-66,rnd()-.5,.6,14,'#9fd0ff',2,0);}
+    t._drJ=t.st;}
+   for(const f of F){if(f.C!==C||f.gone||f.dead||f.form||f.copyT>0)continue;const m=f.mv;if(!m||m.k!=='nB'||f.hl>0)continue;const d=m.d;
+    if(m.t===d.s+d.a){const near=F.some(t=>mine(f,t)&&!t.dead&&Math.hypot(t.x-f.x,t.y-f.y)<105);const hold=(f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl)))?(near&&(m._h||0)<50):!!(f.pi&&f.pi.B);
+     if(hold&&(m._h||0)<92){m._h=(m._h||0)+1;m.t--;f.vx*=.6;
+      if(m._h%8===1){sfx('pop');for(let i=0;i<2;i++)FXL.push({k:'ring',x:f.x,y:f.y-40,t:-i*3,col:i?PU:GN,r0:16,life:22});FXL.push({k:'txt',s:['HA','HEE','HO','HA HA'][(m._h>>3)%4],x:f.x+(rnd()*60-30),y:f.y-70-rnd()*30,t:0,life:26,col:(m._h>>3)%2?GN:'#ffffff'});
+       for(const t of F){if(!mine(f,t)||t.dead||t.gone)continue;if(Math.hypot(t.x-f.x,(t.y-30)-(f.y-30))<105){add(t,f,6);t.flash=2;}}}}}}
+  }catch(e){}};
+ /* the marks over a rival's head */
+ const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const t of F){if(!t||t.dead||t.gone||t.invis)continue;const fz=t.frzT>FR;if(!(t.dr>0)&&!fz)continue;const ip=(typeof interpPos==='function')?interpPos(t):t,s=stage(t),sh=s>=2?Math.sin(FR*.9)*1.2:0,x=Math.round(ip.x)+sh,y=Math.round(ip.y)-100*((t.L&&t.L.size)||1)*.92;
+    for(let i=0;i<3;i++){const on=fz||t.dr>=(i+1)*33.3-.01,part2=!on&&t.dr>i*33.3,cx=x-9+i*9;wdisc(cx,y,3.6,'#0c0820');wdisc(cx,y,2.6,on?(fz?'#ffffff':i===2?'#ff5a8a':i===1?'#ff8ad8':PU):'#3a3660');if(part2){const k=(t.dr-i*33.3)/33.3;wr(PU,cx-2,y+2.6-5.2*k*.9,4,5.2*k*.9>4?4:5.2*k*.9);}
+     if(on){wr('#0c0820',cx-.6,y-1.8,1.2,2.2);wr('#0c0820',cx-.6,y+1,1.2,1.2);}}
+    if(fz){X.save();X.globalAlpha=.5+.3*Math.sin(FR*.5);wr(PU,ip.x-12,ip.y-3,24,3);wr('#ffffff',ip.x-9,ip.y-3,18,1);X.restore();}}}catch(e){try{X.restore();}catch(e2){}}X.globalAlpha=1;};
 }}
 
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
