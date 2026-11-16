@@ -6708,6 +6708,7 @@ BEH.homing={tick(f,m,I){const d=m.d,p=d.bp;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.
 function jinx(t,n,by){if(!t||t.dead)return;if(!(t.jinxT>FR))FXL.push({k:'txt',s:'JINXED',x:t.x,y:t.y-92,t:0,life:40,col:'#c83a5a'});t.jinxT=Math.max(t.jinxT||0,FR+n);FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#c83a5a',r0:8,life:16});}
 {const h0=hurtR;hurtR=function(f){const r=h0(f);if(f.jinxT>FR){const w=r[2]*.26,h=r[3]*.18;return[r[0]-w/2,r[1]-h,r[2]+w,r[3]+h];}return r;};}
 /* ---- Jack: the lit flame colours everything he does (one colour at a time, never mixed) ---- */
+{const J=c('jack');if(J)for(const k of['sB','uB']){const d=J.mv[k];if(d&&d.hits)d.hits.forEach(h=>{if(h.eff==='burn')delete h.eff;});}}
 const JK=[{n:'RED',fx:['#ff5a30','#ffe060'],el:'fire'},{n:'BLUE',fx:['#5ab8ff','#ffffff'],el:'ice'},{n:'GREEN',fx:['#6adf6a','#e0ffe0'],el:'heal'},{n:'VIOLET',fx:['#b070ff','#f0e0ff'],el:'magic'}];
 /* ---- hooks ---- */
 const p0=preHit;preHit=function(t,h,a,o){const id=t.C.id;if(a&&a!==t&&!(o&&o.force)){
@@ -7250,7 +7251,7 @@ const Q={
  kuragari:['web',slow(60),pull(1),slow(40)],mia:['blue',shove(.8),shove(1.3),shove(.6)],shi:['dark',drain(.5),daze(5),null],takeshi:['ink',slow(40),daze(5),null],ali:['star',lift(.7),pull(1),lift(.5)],
  dawson:['white',daze(3),null,null],maya:['heal',drain(.6),drain(1),null],sarah:['dark',pull(.6),daze(5),null],aria:['gold',daze(3),null,null],
  bryson:['dust',null,shove(.6),null],conor:['gold',haste(50),null,null],ray:['spark',burn(.4),daze(5),null],oliver:['leaf',shove(.6),null,null],chris:['blood',bleed(.4),bleed(.6),null],
- evona:['snow',slow(50),slow(90),null],jack:['ember',burn(.4),burn(.6),null],kal:['aqua',daze(3),shove(.8),null],kora:['feather',lift(.7),shove(.9),lift(.5)],ash:['leaf',pull(.7),sd(1.5),null],
+ evona:['snow',slow(50),slow(90),null],jack:['ember',null,null,null],kal:['aqua',daze(3),shove(.8),null],kora:['feather',lift(.7),shove(.9),lift(.5)],ash:['leaf',pull(.7),sd(1.5),null],
  moya:['bubble',pull(.6),null,daze(3)],sato:['white',shove(.9),shove(1.2),shove(.6)],akio:['spark',haste(50),daze(4),null],sata:['aqua',daze(3),sd(1.4),null],kitsu:['star',daze(3),sd(1.5),null],
  uzi:['venom',slow(50),pull(1),null],ichigo:['spark',burn(.4),burn(.6),null],bentou:['dark',daze(3),null,null],okane:['gold',shove(.6),sd(1.5),null],goiru:['dust',shove(.7),sd(1.7),lift(.5)],
  aya:['star',bleed(.4),daze(5),null],hikari:['spark',bleed(.4),daze(5),null],ryo:['dust',bleed(.5),lift(.8),null],suzume:['web',pull(.7),daze(5),slow(40)],ayame:['gale',shove(.9),shove(1.3),lift(.7)],
