@@ -1947,13 +1947,14 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('roar',12,3,14,null,{cd:960,fx,onStart(f){f.goldT=FR+480;f.form='gold';f.formL=f.C.goldL;f.S=null;say(f,'GILDED','#ffe060');sfx('power');FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:'#ffe060',r0:12,life:22});}})}),
   sp:['Loose Change (a flicked coin)','Golden Shoulder','Ascend','Gilded (solid gold for eight seconds; long cooldown)']});
  fx=['#7a6aa8','#d8d0f0'];add({id:'goiru',n:'GOIRU',sn:'GOIRU',q:'Gargoyle',ty:'Mutant',col:'#7a6aa8',d:'Yup. He is a gargoyle. Protect, save, fight, laugh.',
-  na:'Normals: stone fists, wings and a tail. A flying heavyweight: four jumps, and nothing small makes him flinch.',
+  na:'Normals: one enormous stone fist, slow and far-reaching. A flying super-heavyweight: five wing-beat jumps, a glide if he holds Jump while falling, and nothing small makes him flinch.',
   look:K({skin:'#6a6a90',eye:'#f0f0a0',hairS:'short',hair:'#2a2a40',hx:['horns'],outfit:'bare',top:'#6a6a90',sl:'none',pants:'#3a2a3a',shoe:'#5a5a7a',stance:'guard',bw:1.26,size:1.24,ex:['wings'],wingC:'#4a4a70',wingT:'#2a2a48'}),st:ST({w:1.36,run:2.7,air:2.6,jump:-8.6,g:.4,fall:5.6,aj:3}),kit:{st:'heavy',fx,el:'stone',pow:1.12,reach:1.12},
-  mv:Object.assign(SM('stone',fx,{f:{dmg:17}}),{nB:M('slashDown',15,5,24,hit([[34,-30,20],[34,-54,16]],15,5,.1,50,{sd:1.6}),{fx,lim:'none'}),
-   sB:M('wingF',9,16,16,hit([[0,-34,20]],11,5,.075,40),{beh:'dash',bp:{spd:6.2,f0:9,f1:25,air:'float',armor:1},fx,lim:'none'}),
-   uB:M('wingUp',5,30,10,hit([[0,-34,20]],4,3.5,.04,80),{beh:'fly',bp:{dur:36,spd:3.2},fx,helpless:1,lim:'none'}),
-   dB:M('roar',10,3,12,null,{cd:540,fx,onStart(f){f.qbrace=FR+150;heal(f,3);say(f,'STONE');}})}),
-  sp:['Hammer Blow (slow; cracks shields)','Swoop (an armoured wing dash)','Take Wing (free flight for a moment)','Stone Sleep (turns to stone: nothing makes him flinch for a moment, and he heals a little)']});
+  mv:Object.assign(SM('stone',fx,{f:{dmg:17}}),{nB:M('roar',8,44,18,null,{beh:'gmaw',fx,lim:'none'}),
+   sB:M('throwF',14,1,22,null,{spawn:[[14,GP({sh:'rubble',c:'#8a84b0',vx:3.4,life:170,r:9,dmg:11,bkb:4.5,kbg:.07,ang:48})]],cd:55,fx}),
+   uB:M('wingUp',6,70,24,hit([[0,-24,24]],13,5,.08,72),{beh:'skyfall',bp:{armor:1,f0:6,f1:80},fx,lim:'none'}),
+   dB:M('punch',14,5,30,hit([[44,-38,22]],11,5,.085,40),{beh:'gfist',bp:{armor:1,f0:2,f1:13},fx,lim:'none'})}),
+  sp:['Gale Maw (his wings drag rivals into his jaws; he chews, then spits them out)','Rubble Toss (a spiked chunk of masonry that bounces along the floor)','Skyfall (an armoured leap high into the air, then he drops like a wall; Up cancels the drop)','Stone Fist (hold B to wind up, armoured; fully wound it is his hardest hit, but holding it hurts him)']});
+
  fx=['#c8a0ff','#9affea'];add({id:'aya',n:'AYA NAKAMURA',sn:'AYA',q:'Crystals',ty:'Emitter',col:'#c8a0ff',d:'Grows crystals out of her body, and every kind does something different. Here to be adored.',
   na:'Normals: glittering crystal edges on every limb. Each special is a different crystal with a different effect.',
   look:K({skin:'#f8e4dc',eye:'#8ab0e8',hairS:'long',hair:'#f0c8f0',outfit:'jacketS',top:'#1c1c26',acc:'#9affea',sleeve:'#b070e0',skirt:'#1c1c26',socks:'#f0f0f8',shoe:'#c8a0ff',stance:'cool',smile:1,earring:1,ex:[]},1),st:ST({w:.86,run:3.1,air:2.8}),kit:{st:'brawler',fx,el:'crystal',pow:.96},
@@ -2267,7 +2268,7 @@ Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be
  akio:{role:'Speedster',tip:'Homing Attack to start, Spin Dash to chase, Spring Jump to get home.',sp:1.2,pw:1,kb:1},sata:{role:'Armoured zoner',tip:'Charge the shot, harass with missiles, bomb-jump to stay in the air.',sp:1,pw:1,kb:1},kitsu:{role:'Rainbow surfer',tip:'Beam from range, surf the Rainbow Road in and out, rain bolts on anyone below.',sp:1,pw:1,kb:1},
  uzi:{role:'Resilient grappler',tip:'Melt under their attacks, Engulf them when they shield.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest, and let the arm swat anyone who gets through.',sp:.96,pw:1,kb:1},
  bentou:{role:'Jinx specialist',tip:'Keep them JINXED: bigger target, weaker shield, softer hits.',sp:.98,pw:1,kb:1},okane:{role:'Gilded duelist',tip:'Go gold to trade blows and take hits, go flesh to chase and recover. Statue punishes anyone who swings first.',sp:1,pw:1,kb:1},
- goiru:{role:'Flying heavyweight',tip:'Four jumps and armour. Drop the hammer from above.',sp:.9,pw:1,kb:1,armor:1},aya:{role:'Crystal caster',tip:'A different crystal on every button.',sp:1,pw:1,kb:1},
+ goiru:{role:'Flying super-heavyweight',tip:'Float above them on five jumps, bounce rubble at them, and wind up the Stone Fist when they hesitate.',sp:.9,pw:1,kb:1,armor:1},aya:{role:'Crystal caster',tip:'A different crystal on every button.',sp:1,pw:1,kb:1},
  hikari:{role:'Twin-blade rushdown',tip:'Count your hits: every fourth one shocks.',sp:1.1,pw:1,kb:1},ryo:{role:'Burrowing brawler',tip:'Tunnel under projectiles and come up swinging.',sp:1,pw:1,kb:1},
  suzume:{role:'Web rocker',tip:'Yank them in, then Encore.',sp:1.06,pw:1,kb:1},ayame:{role:'Defensive air master',tip:'Blast them away and reflect what they throw.',sp:1.02,pw:1,kb:1},
  sota:{role:'Burst mover',tip:'Nobody covers ground or height faster.',sp:1.1,pw:1,kb:1},tiki:{role:'Spirit summoner',tip:'Leave Osore on guard, send Tantou hunting, and march Kofun through whatever is left.',sp:1,pw:1,kb:1}});
@@ -4938,7 +4939,7 @@ uzi:['Lobs a glob of slime that sticks to whoever it hits.','Lunges and swallows
 ichigo:['Lobs a grenade. It explodes.','Launches a drone that flies out and comes back.','Her robotic arm grabs a lift drone, which carries her in any direction. The rotors cut anyone above her.','Plants a proximity mine. One at a time.','Unfolds the prototype mech she has been working on and fires its main gun.'],
 bentou:['A drifting curse that hunts a rival and JINXES them for seven seconds: they become a quarter bigger to hit, their shield takes half again as much damage, and their attacks do 12% less.','Blesses himself: faster for four seconds, and his next hit lands 30% harder. Long cooldown.','A rising leap.','He saw it coming: the longest counter window in the school. The counter-hit jinxes for five seconds.','Everyone on screen gets what is coming to them.'],
 okane:['Statue: turns solid gold for half a second. Hits clang off him and stagger whoever threw them, and projectiles shatter. In the air he drops like a statue and crushes anyone below.','A contemptuous shoulder charge, gilded as it lands.','A rising leap. Much lower while he is gold.','Gilded: switches between flesh and solid gold. Gold hits 20% harder and is launched 30% less, but is slow, jumps low and sinks fast. It drains the gold meter (ten seconds from full), which refills while he is flesh.','Demonstrates, at length, why he is better than this.'],
-goiru:['Brings his hammer down. Slow, heavy and it cracks shields.','An armoured swoop on his wings.','Free flight for a moment.','Turns to stone: for two and a half seconds nothing makes him flinch, and he heals 3%.','Drops out of the sky onto a rival.'],
+goiru:['Gale Maw: beats his wings inward and drags rivals in front of him into his jaws. He chews, then spits them out across the stage.','Throws a spiked chunk of masonry that bounces along the floor five times before it breaks.','Skyfall: an armoured leap far into the air, then he drops straight down and cracks the floor, throwing rubble to both sides. Press Up on the way down to cancel into a fall.','Stone Fist: hold B to wind up his fist; he cannot be flinched while winding and can shuffle sideways. Release to punch. Fully wound it hits for 30%, but holding it there costs him 1% every third of a second.','Drops out of the sky onto a rival.'],
 aya:['Quartz: a fast, sharp shard.','Amethyst: a beam that swaps a rival\'s left and right. Cooldown.','Rides a crystal spire upward.','Rose quartz: heals 5% and a crystal shell eats the next hit. Long cooldown.','Turns the stage into her stage. Everything on it glitters and cuts.'],
 hikari:['Throws a crescent of current off her blade.','A dashing cut, very fast.','A rising cut.','Drives both blades into the floor: a stunning discharge all around her. Cooldown.','Becomes a live wire and cuts through everyone in the lane.'],
 ryo:['A rapid flurry of claws.','Burrows across the stage. He cannot be hit while he is underground.','Bursts up out of the floor in a spray of rock.','Feels the hit coming through the ground, sidesteps and counters.','Collapses the ground under everyone near him.'],
@@ -5690,7 +5691,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
  const W2={moya:['Light, and his damage is low.','Two of his specials cannot be hit at all.'],sato:['The lowest damage of any brawler.','AIRBAGS: his smash attacks send rivals 12% further.'],akio:['Small, light, and he overshoots: a missed roll leaves him wide open.','The fastest runner in the school, and Spring Jump does not leave him helpless.'],
   sata:['Slow on the ground, and floaty: she is easy to juggle.','Bomb jumps keep her airborne, and her grab is a grapple beam.'],kitsu:['Light, and little up close: he needs room for his beams.','Rainbow Road carries him across the whole stage, on the ground or in the air.'],uzi:['Slow, and a big soft target.','SLIME: launched 12% less, and regenerates slowly when left alone.'],
   ichigo:['Light, slow, and her arm hits softly.','ROBOTIC ARM: every normal, smash and grab is the arm on her backpack, so they out-reach most rivals. Mines, drones and grenades on top.'],bentou:['Small, light and he hits softly; against a rival who is not jinxed he has very little.','JINX: his curses make a rival a bigger target with a weaker shield and softer hits. A parry window half again as long as normal.'],okane:['As gold he is slow and sinks like a statue, so he recovers badly; as flesh he is ordinary.','GILDED: switch to solid gold at will for 20% more damage and 30% less knockback, for as long as the gold meter lasts.'],
-  goiru:['A huge target with a slow start to everything.','Four jumps. Hits under 5% do not make him flinch.'],aya:['Light, with little knockout power.','A different crystal on every special.'],hikari:['Short reach for a blade fighter and light.','SHOCK: every fourth hit she lands holds the rival a moment longer.'],
+  goiru:['A huge target, and the slowest starts in the game.','Five jumps and a glide. Hits under 5% do not make him flinch, and his biggest moves are armoured.'],aya:['Light, with little knockout power.','A different crystal on every special.'],hikari:['Short reach for a blade fighter and light.','SHOCK: every fourth hit she lands holds the rival a moment longer.'],
   ryo:['No projectile and average speed.','Cannot be confused, and sees cloaked rivals.'],suzume:['Light; her best hits need the web to land first.','Three jumps.'],ayame:['Very low damage: she wins by ring-out.','Her hits push 10% further.'],
   sota:['His dashes commit him; miss and he is wide open.','The fastest dash and the highest jump in the school.'],tiki:['Slow projectiles and no fast escape.','His spirits do the fighting: his attacks never expose his arms, and three of his specials keep working after he has moved on.'],
   dawson:['No quirk: nothing he has is a trump card, and he is a little light.','GLIDER CAPE: hold Jump while falling to glide forward. His shuriken and grapple have no cooldown.'],
@@ -7486,7 +7487,7 @@ const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.
 
 /* ================= projectile flight patterns ================= */
 const FP={'kimiko.nB':'charge','gomi.nB':'charge','maho.sB':'charge','tenmetsu.nB':'stall','shuko.nB':'brake','tatsuya.nB':'wave','akemi.nB':'accel','sai.sB':'split','tai.nB':'homing','hatsuko.nB':'charge','chiyoki.sB':'skip','yoko.sB':'grow',
- 'ivan.nB':'brake','sarah.nB':'charge','sata.nB':'charge','sata.sB':'charge','takeshi.sB':'bounce','ali.nB':'steer','ginko.nB':'grow','daku.nB':'bounce','taru.nB':'accel','marina.nB':'wave','hippo.nB':'zig','tamashi.sB':'lob','soran.nB':'accel','hake.nB':'zig',
+ 'ivan.nB':'brake','goiru.sB':'bounce','sarah.nB':'charge','sata.nB':'charge','sata.sB':'charge','takeshi.sB':'bounce','ali.nB':'steer','ginko.nB':'grow','daku.nB':'bounce','taru.nB':'accel','marina.nB':'wave','hippo.nB':'zig','tamashi.sB':'lob','soran.nB':'accel','hake.nB':'zig',
  'maho.ftilt':'zig','mia.ftilt':'grow','uchuu.fair':'curve','tsuki.fsmash':'lob','ali.fsmash':'steer','ginko.fsmash':'grow','gomi.fsmash':'accel','makiko.ftilt':'wave','takeshi.ftilt':'lob','kimiko.fsmash':'brake','tamashi.ftilt':'lob','shi.nB':'wave'};
 const FPN={charge:'Hold B to charge it: bigger, faster and stronger.',stall:'Flies out, hangs in the air for a beat, then carries on.',brake:'Starts fast, then slows and lingers.',wave:'Weaves up and down as it flies.',accel:'Starts slow and keeps speeding up.',split:'Splits into copies in flight.',
  homing:'Curves toward the nearest rival.',curve:'Flies in a rising arc and dips back down.',grow:'Grows as it travels.',lob:'Lobbed in an arc.',bounce:'Bounces along the ground.',steer:'Steer it up and down with the stick while it flies.',zig:'Zigzags.',skip:'Bounces along the platform several times before it rolls off the edge.'};
@@ -7670,6 +7671,55 @@ const gd=EK.gp.draw;EK.gp.draw=function(e){const s=e.spec;if(s.sh==='rbolt'){con
    return'miss';}
   return ah0.apply(this,arguments);};
  const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.C!==C||f.dead||f.gone||f.invis||f.form==='gold'||f.goldM===undefined||f.goldM>=MAX)continue;const x=Math.round(f.x)-12,y=Math.round(f.y)+10;wr('#0c0820',x-1,y-1,26,5);wr('#4a4020',x,y,24,3);wr(f.goldM<120?'#a08a50':'#e8c040',x,y,Math.round(24*f.goldM/MAX),3);}}catch(e){}};
+}}
+
+/* ---------- Goiru: a flying gargoyle super-heavyweight with one enormous stone fist ---------- */
+{const C=CH.find(q=>q.id==='goiru');if(C){const ST1='#8a84b0',ST2='#5a5680',DK='#0c0820',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-96,t:0,life:42,col:col||'#d8d0f0'});
+ Object.assign(C.st,{w:1.4,run:2.45,air:2.3,jump:-9,dj:-6.6,g:.36,fall:5.8,aj:5});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;const f=T.fsmash;if(f&&!f._g){f._g=1;f.s=22;f.r=30;f.hits.forEach(h=>{h.dmg=22;h.bkb=5;h.kbg=.115;h.b=[[46,-38,22],[24,-38,16]];});}
+  const u=T.usmash;if(u&&!u._g){u._g=1;u.s=14;u.hits.forEach(h=>{h.dmg=17;h.b.forEach(q=>q[2]+=5);});}const d=T.dsmash;if(d&&!d._g){d._g=1;d.hits.forEach(h=>{h.dmg=15;h.b.forEach(q=>{q[0]*=1.3;q[2]+=4;});});}}
+ /* Gale Maw: beats his wings inward, drags rivals into his jaws, chews, and spits them out */
+ BEH.gmaw={tick(f,m,I){const d=m.d;
+  if(m.v.held){const o=m.v.held;if(o.holder!==f||o.dead){m.v.held=null;return;}o.x=f.x+f.face*14;o.y=f.y;o.vx=o.vy=o.lx=o.ly=0;o.st='held';m.v.ht++;
+   if(m.v.ht%10===0){o.dmg+=2;f.dealt+=2;o.flash=4;burst(o.x,o.y-34,5,[ST1,'#ffffff'],1.5,10);sfx('hit');}
+   if(m.v.ht>=26){m.v.held=null;o.holder=null;applyHit(o,{dmg:8,bkb:7,kbg:.075,ang:28,fx:[ST1]},f.face,f,{force:1});say(f,'PTOO!');m.t=d.s+d.a;}else m.t=Math.min(m.t,d.s+d.a-1);return;}
+  if(m.t>=d.s&&m.t<d.s+d.a){f.vx*=.8;const mx=f.x+f.face*18,my=f.y-52;
+   if(m.t%2===0){const r=40+rnd()*100,a=(rnd()-.5)*.9;part(mx+f.face*Math.cos(a)*r,my+Math.sin(a)*r,-f.face*Math.cos(a)*r/12,-Math.sin(a)*r/12,12,rnd()<.5?'#d8d0f0':'#ffffff',1,0);}
+   for(const o of F){if(o===f||intangible(o)||o.holder||o.st==='ledge'||(f.team!==undefined&&o.team===f.team))continue;const dx=(o.x-f.x)*f.face,dy=o.y-f.y;if(dx<-6||dx>140||Math.abs(dy)>64)continue;
+    if(dx<34&&Math.abs(dy)<44){releaseHolds(o);m.v.held=o;m.v.ht=0;o.holder=f;o.st='held';o.mv=null;sfx('grab');say(f,'CHOMP');break;}
+    o.x-=f.face*2.1;if(!o.ground)o.y-=Math.sign(dy)*Math.min(1,Math.abs(dy));}}}};
+ /* Skyfall: an armoured leap far into the air, then he drops like masonry. Up cancels the drop. */
+ BEH.skyfall={tick(f,m,I){const d=m.d;if(m.t<d.s){f.vx*=.7;return;}
+  if(m.t===d.s){f.vy=-14.2;f.ground=null;m.v.ph=0;if(Math.abs(I.x)>.3)f.face=Math.sign(I.x);sfx('jump');burst(f.x,f.y,14,[ST1,'#d8d0f0'],3,16);return;}
+  if(m.v.done)return;
+  if(f.ground&&m.t>d.s+3){m.v.done=1;m.t=d.s+d.a;f.ff=false;burst(f.x,f.y,26,[ST1,ST2,'#ffffff'],4,22);sfx('boom');if(!RM)shakeA=Math.max(shakeA,7);
+   for(const s of[-1,1]){const e=spawnEnt(f,{k:'gp',sh:'rubble',c:ST1,vx:.01,life:20,r:9,dmg:7,bkb:4.5,kbg:.05,ang:70,dy:-8,dx:0});if(e){e.vx=s*4.6;e.x=f.x+s*16;}}return;}
+  f.vx+=(I.x*1.9-f.vx)*.15;m.t=Math.min(m.t,d.s+d.a-2);
+  if(!m.v.ph&&f.vy>=-.5){m.v.ph=1;}
+  if(m.v.ph){if(I.y<-.6&&m.t>d.s+10){f.mv=null;f.st='helpless';f.ff=false;return;}f.ff=true;f.vy=Math.max(f.vy,7.6);if(m.t%2===0)part(f.x+rnd()*24-12,f.y-70,0,-1,10,'#d8d0f0',1,0);}}};
+ /* Stone Fist: hold B to wind it up (armoured, and he can shuffle); let go to throw it. Fully wound, it hurts him to hold. */
+ BEH.gfist={tick(f,m,I){const d=m.d;if(m.v.fired)return;
+  if(m.t===d.s-1){const ch=m.v.ch||0;if(I.B&&ch<170&&!m.v.rel){m.v.ch=ch+1;m.t--;f.vx=f.ground?I.x*.9:f.vx;if(ch%5===0)part(f.x-f.face*(20+rnd()*10),f.y-50+rnd()*20,0,-.6,12,ch>=100?'#ffb040':'#d8d0f0',ch>=100?2:1,0);
+    if(ch===100){say(f,'FULL POWER','#ffb040');sfx('power');}if(ch>100&&ch%20===0){f.dmg+=1;f.flash=3;}return;}
+   const k=Math.min(1,ch/100);m.v.fired=1;m.v.k=k;m.d=Object.assign({},d,{hits:[hit([[44,-38,22+6*k],[22,-38,16]],11+19*k,5+1.5*k,.085+.035*k,40,{sd:1+k})]});f.vx=f.face*(2+4*k);sfx('boom');if(!RM&&k>.6)shakeA=Math.max(shakeA,6);}
+  if(!I.B)m.v.rel=1;}};
+ /* held-jump glide on spread wings */
+ const st0=step;step=function(){st0();for(const f of F){if(f.C!==C)continue;if(f.ground||f.st==='ledge'||f.dead){f.glF=0;continue;}
+  if(f.pi&&f.pi.J&&f.vy>1&&(f.glF||0)<170&&(f.st==='air')&&!f.mv){f.vy=1;f.glF=(f.glF||0)+1;f.x+=f.face*.7;if(FR%5===0)part(f.x-f.face*22,f.y-60,-f.face*.5,.2,10,'#d8d0f0',1,0);}}};
+ /* the fist itself */
+ function fist(x,y,r,fc,hot){const w=r*1.7,h=r*1.7,x0=x-w/2,y0=y-h/2,kx=fc>0?x0+w:x0,kr=h/8+1.5;
+  wr(DK,x0-2,y0-1,w+4,h+2);for(let i=0;i<4;i++)wdisc(kx,y0+kr-1+i*(h/4),kr+2,DK);
+  wr(ST2,x0,y0+1,w,h-2);wr(ST1,x0,y0+1,w,h-6);wr('#b0aad0',x0+2,y0+2,w-4,2);
+  for(let i=0;i<4;i++){wdisc(kx,y0+kr-1+i*(h/4),kr,hot?'#ffb040':ST1);wdisc(kx-fc,y0+kr-2+i*(h/4),kr-2,hot?'#ffe0a0':'#b0aad0');}
+  for(let i=1;i<4;i++)wr(DK,fc>0?x0+w*.45:x0,y0+i*(h/4)-1,w*.55,1);
+  const tx=fc>0?x0+w*.3:x0+w*.2;wr(DK,tx-1,y0+h*.55-1,w*.5+2,h*.3+2);wr(ST1,tx,y0+h*.55,w*.5,h*.3);wr('#b0aad0',tx+1,y0+h*.55+1,w*.5-2,1);
+  wr(DK,fc>0?x0+3:x0+w-8,y0+5,5,1);wr(DK,fc>0?x0+6:x0+w-8,y0+6,1,4);}
+ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&f.C===C&&f.mv&&!f.dead&&!f.invis){const m=f.mv,d=m.d,ip=(typeof interpPos==='function')?interpPos(f):f;
+   if(m.k==='dB'){const ch=m.v.ch||0,k=Math.min(1,ch/100);if(!m.v.fired){fist(ip.x-f.face*(22+k*8)+(ch>=100?rnd()*2-1:0),ip.y-46,13+k*9,f.face,ch>=100);}else if(m.t<d.s+d.a+6)fist(ip.x+f.face*44,ip.y-38,15+(m.v.k||0)*10,f.face,(m.v.k||0)>=1);}
+   else if(m.k==='fsmash'&&!m.charging){if(m.t<d.s)fist(ip.x-f.face*(10+m.t),ip.y-46,16,f.face,0);else if(m.t<d.s+d.a+6)fist(ip.x+f.face*46,ip.y-38,21,f.face,0);}
+   else if(m.k==='fsmash')fist(ip.x-f.face*24,ip.y-46,16+Math.sin(FR*.5),f.face,0);}}catch(e){}return r;};
+ const gd=EK.gp.draw;EK.gp.draw=function(e){const s=e.spec;if(s.sh==='rubble'){const x=e.x,y=e.y,r=e.r||8,a0=e.t*.25*(Math.sign(e.vx)||1);for(let i=0;i<6;i++){const a=a0+i*1.047;wtri(DK,x+Math.cos(a-.35)*r,y+Math.sin(a-.35)*r,x+Math.cos(a)*(r+6),y+Math.sin(a)*(r+6),x+Math.cos(a+.35)*r,y+Math.sin(a+.35)*r);}
+   wdisc(x,y,r+1,DK);wdisc(x,y,r-.5,ST2);wdisc(x-1,y-1,r-3,ST1);wl(DK,x-r*.5,y-r*.2,x+r*.1,y+r*.3,1);wl(DK,x+r*.1,y+r*.3,x+r*.5,y-r*.1,1);return;}gd(e);};
 }}
 
 </script>
