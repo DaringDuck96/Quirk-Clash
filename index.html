@@ -8442,6 +8442,95 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
   }}catch(e){}};
 }}
 
+/* ---------- Maya Sewak: Essence Transfer. She takes essence from rivals and stores it, then lets it all go at once.
+   Neutral-B is a spirit hand that drags a rival to her; everything she lands fills her ESSENCE; Down-B releases it as a burst that grows from a shove to a finisher. ---------- */
+{const C=CH.find(q=>q.id==='maya');if(C){const fx=C.kit.fx,TL='#5ad8b0',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-88,t:0,life:42,col:col||TL});
+ const hand=M('palm',9,6,20,hit([[26,-36,14],[46,-36,13],[66,-36,12]],5,1,0,60,{eff:'yank'}),{fx,lim:'none',cd:46}),
+       burst0=M('roar',9,5,24,hit([[0,-34,58]],6,4,.05,62),{fx,lim:'none'});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;T.nB=hand;T.dB=burst0;}
+ C.sp=['Draw Essence (a spirit hand reaches out and drags a rival to her; heals her 3%)','Take Speed (a homing arrow: the rival is slowed and she is sped up for four seconds)','Spirit Leap','Release (spends all her stored ESSENCE in a burst around her: the more she holds, the bigger it is and the harder it launches)'];
+ C.na='Normals: calm, flowing palm strikes; her tilts draw a little health out of whoever they touch. Everything she lands fills her ESSENCE: a quarter for Draw Essence, less for arrows and ordinary hits. It stays until she uses it or loses a stock.';
+ try{if(typeof GTXT!=='undefined'&&GTXT.maya){GTXT.maya[0]='A spirit hand reaches about three body-lengths in front of her. Whoever it touches is dragged right up to her, and she is healed 3%. It fills a quarter of her ESSENCE. A rival who was dragged in the last few seconds is only tapped, not pulled.';
+   GTXT.maya[3]='Release. Needs at least a quarter of her ESSENCE, and spends all of it in a burst around her. At a quarter it is a shove for about 9%; full, it is a wide blast for about 19% that finishes rivals at high damage.';}}catch(e){}
+ const ok=f=>f&&f.C===C&&!f.form&&!(f.copyT>0);
+ const gain=(f,n)=>{const w=f.es||0;f.es=Math.min(100,w+n);if(w<100&&f.es>=100){say(f,'ESSENCE FULL','#ffffff');sfx('power');FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:TL,r0:10,life:20});}};
+ const sm0=startMove;startMove=function(f,key){if(ok(f)&&key==='dB'&&(f.es||0)<25){if(FR-(f._nyT||-99)>40){f._nyT=FR;say(f,'NOT ENOUGH','#b0a8a0');}return false;}
+   const r=sm0(f,key);try{if(r&&ok(f)&&f.mv&&key==='dB'){const k=clamp((f.es||0)/100,0,1),m=f.mv;m._k=k;f.es=0;const R=40+34*k;m.d=Object.assign({},m.d,{hits:m.d.hits.map(h=>Object.assign({},h,{dmg:5+14*k,bkb:3.6+3.6*k,kbg:.045+.075*k,b:[[0,-34,R]]}))});m._R=R;}}catch(e){}return r;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){const d0=t?t.dmg:0;const r=ah(t,h,dirX,a,o);try{if(r==='hit'&&ok(a)&&a!==t&&!(a.team!==undefined&&a.team===t.team)){const m=a.mv,proj=o&&o.proj;
+    if(proj)gain(a,15);else if(m&&m.k==='nB'){gain(a,25);a.dmg=Math.max(0,a.dmg-3);for(let i=0;i<6;i++)part(lerp(t.x,a.x,i/6),t.y-34,0,-.4,16,TL,2,0);t.hitstun=Math.max(t.hitstun||0,16);}
+    else if(m&&m.k==='dB'){if(m._k>=.99&&!m._sd){m._sd=1;say(a,'FULL RELEASE','#ffffff');if(typeof shakeA!=='undefined')shakeA=Math.max(shakeA,7);}}
+    else gain(a,Math.max(4,(t.dmg-d0)*1.1));}}catch(e){}return r;};
+ const st0=step;step=function(){st0();try{for(const f of F){if(f.C!==C||f.gone)continue;if(f.es===undefined)f.es=0;if(f.dead||f.st==='respawn'){f.es=0;continue;}if(!ok(f))continue;
+   const k=f.es/100;if(k>=.5&&FR%(k>=1?4:9)===0)part(f.x+rnd()*22-11,f.y-10-rnd()*52,0,-.6,16,k>=1?'#ffffff':TL,2,0);
+   const m=f.mv;if(m&&m.k==='dB'&&m.t===m.d.s&&!m._fx){m._fx=1;const R=m._R||50;for(let i=0;i<3;i++)FXL.push({k:'ring',x:f.x,y:f.y-34,t:-i*3,col:i%2?'#ffffff':TL,r0:R*.4+i*6,life:18});burst(f.x,f.y-34,Math.round(10+18*(m._k||0)),[TL,'#f4e0b0','#ffffff'],2+2*(m._k||0),22);sfx('power');}
+   if((f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl)))&&!m&&f.ground&&FR%7===0&&GS==='play'&&(f.st==='idle'||f.st==='walk'||f.st==='run')&&!(f.cds&&f.cds.nB>FR)){for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team))continue;const dx=(o.x-f.x)*f.face;if(dx>34&&dx<78&&Math.abs(o.y-f.y)<26&&rnd()<.3){startMove(f,'nB');break;}}}
+   if((f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl)))&&!m&&f.es>=60&&FR%8===0&&GS==='play'&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')){for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team))continue;if(Math.hypot(o.x-f.x,o.y-f.y)<(40+34*f.es/100)*.8){startMove(f,'dB');break;}}}
+  }}catch(e){}};
+}}
+
+/* ---------- Rei Ramakata: Battle Mind, rebuilt as a heavy, technical close-range fighter with hidden inputs.
+   SLIDE STEP (forward, down, down-forward) into THUNDER PALM (A; press A on the same frame as the last direction for the PERFECT version) or SWEEP (B);
+   RISING ELBOW (hold down-forward + A); LUNGE (tap forward twice, then A); and the EIGHT GATES string (A A A A A B A B, each press only if the last one landed).
+   At 100% damage or more he is IN THE ZONE: 12% more damage. ---------- */
+{const C=CH.find(q=>q.id==='rei');if(C){const fx=C.kit.fx,VI='#c8a0ff',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-90,t:0,life:42,col:col||VI});
+ const MV={
+  cd:M('dashF',2,12,6,null,{beh:'dash',bp:{spd:5.4,f0:1,f1:12},fx,lim:'none'}),
+  tp:M('uppercut',5,5,22,hit([[20,-40,15],[16,-60,13]],13,6.4,.075,84),{fx,lim:'hF',bp:{armor:1,f0:1,f1:6}}),
+  tpx:M('uppercut',4,5,20,hit([[20,-40,16],[16,-60,14]],16,6.8,.08,86,{eff:'para'}),{fx:['#7ae0ff','#ffffff'],lim:'hF',bp:{armor:1,f0:1,f1:6}}),
+  sw:M('sweep',7,5,19,hit([[26,-8,12],[44,-8,11],[60,-8,9]],8,3.2,.02,78),{fx,lim:'fF'}),
+  elbow:M('uppercut',6,4,17,hit([[18,-44,13]],8,4.8,.05,86),{fx,lim:'hF'}),
+  lunge:M('punch',11,5,25,hit([[30,-38,15],[16,-38,12]],15,5.6,.105,38),{beh:'dash',bp:{spd:6.2,f0:5,f1:13},fx,lim:'hF',imp:[[11,3]]}),
+  c4:M('punch',4,3,13,hit([[28,-36,14],[14,-36,11]],3,1.4,.004,70),{fx,lim:'hF',beh:'dash',bp:{spd:6.6,f0:0,f1:3}}),
+  c5:M('kickLow',5,3,14,hit([[28,-14,13],[14,-16,11]],4,1.4,.004,70),{fx,lim:'fF'}),
+  c6:M('kickUp',6,4,15,hit([[24,-42,15],[12,-40,11]],5,2.2,.006,82),{fx,lim:'fF'}),
+  c7:M('punch',5,3,15,hit([[26,-44,15],[14,-40,12]],5,1.6,.004,62),{fx,lim:'hF'}),
+  c8:M('kickF',8,5,27,hit([[30,-40,17],[16,-38,13]],10,6,.11,40),{fx,lim:'fF',imp:[[8,3]]})};
+ for(const T of[C.mv,C.hmv]){if(!T)continue;for(const k in MV)T[k]=MV[k];
+  /* heavier hands: every normal hits about a seventh harder */
+  for(const k of['jab1','jab2','jab3','ftilt','utilt','dtilt','dash','nair','fair','bair','uair','dair','fsmash','usmash','dsmash']){const d=T[k];if(d&&d.hits&&!d._rei){T[k]=Object.assign({},d,{_rei:1,hits:d.hits.map(h=>Object.assign({},h,{dmg:Math.round(h.dmg*1.14*10)/10}))});}}}
+ const NEXT={jab3:['A','c4'],c4:['A','c5'],c5:['B','c6'],c6:['A','c7'],c7:['B','c8']};
+ C.secret=[['→ ↓ ↘','SLIDE STEP','A low, fast step forward. Everything below starts from it.'],['Slide Step, then A','THUNDER PALM','A rising palm that launches straight up: 13%. He does not flinch as it starts.'],['↘ and A on the same frame','PERFECT THUNDER PALM','Press A at the exact moment the stick reaches down-forward: 16%, and the rival is paralysed in the air.'],['Slide Step, then B','SWEEP','A low sweep that pops the rival up at his feet.'],
+  ['Hold ↘ + A','RISING ELBOW','A quick launcher, no slide needed: 8%.'],['→ → A','LUNGE','Tap forward twice, then A: a stepping straight punch. 15%, his best finisher.'],['A A A A A B A B','EIGHT GATES','Jab three times, then keep going: punch, low kick, knee (B), elbow (A), roundhouse (B). Each press only comes out if the last hit landed. About 40% in all.'],
+  ['↓ ↘ → before B','PERFECT FORM','Roll the stick before any special: 30% more damage and extra launch.'],['100% damage or more','IN THE ZONE','He deals 12% more.']];
+ C.sp=['Read (dodge and counter)','Step In (slips behind, pops them up)','Rising Knee','Bullet Time (slows everyone nearby)'];
+ C.d='Thinks and reacts in bullet time, and has drilled every form until it is automatic. Slow on his feet, frightening up close, and far deeper than he looks.';
+ C.na='Normals: heavy, exact martial arts. He walks and runs slower than most, weighs more, and every normal hits about a seventh harder. No projectiles. His parry window is twice as long as anyone else’s. SECRET INPUTS (also on the pause menu under Controls): '+C.secret.map(s=>s[1]+' ['+s[0]+']').join('; ')+'.';
+ const ok=f=>f&&f.C===C&&!f.form&&!(f.copyT>0);
+ const code=f=>{const I=f.pi||{},x=(I.x||0)*f.face,y=I.y||0;return y>.5?(Math.abs(x)>.5?(x>0?3:1):2):y<-.5?(Math.abs(x)>.5?(x>0?9:7):8):(Math.abs(x)>.5?(x>0?6:4):5);};
+ const free=f=>!f.mv&&f.ground&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='crouch'||f.st==='dash'||f.st==='turn');
+ const go=(f,k)=>{f.mv=null;f.st=f.ground?'idle':'air';if(f.cds)f.cds[k]=0;return sm0(f,k);};
+ /* was there a forward press, then down, shortly before index i (which should be the down)? */
+ const slideBefore=(H,i)=>{if(i<0||!H[i]||H[i][0]!==2)return false;for(let k=i-1;k>=Math.max(0,i-3);k--){if(H[k][0]===6)return FR-H[k][1]<=22;if(H[k][0]!==5&&H[k][0]!==3)return false;}return false;};
+ const sm0=startMove;startMove=function(f,key){try{if(ok(f)&&f.ground&&!f._reiGo&&(key==='jab1'||key==='ftilt'||key==='dtilt'||key==='dash'||key==='fsmash'||key==='dsmash')){const H=f._rh||[],c=code(f);
+    /* forward, forward, A */
+    const n=H.length;if(n>=3&&H[n-1][0]===6&&H[n-2][0]===5&&H[n-3][0]===6&&FR-H[n-3][1]<=18&&FR-H[n-1][1]<=10){f._reiGo=1;try{const r=sm0(f,'lunge');if(r){say(f,'LUNGE');return r;}}finally{f._reiGo=0;}}
+    if(c===3){const just=n&&(H[n-1][0]===2||(H[n-1][0]===3&&FR-H[n-1][1]<=1)),slid=just&&slideBefore(H,H[n-1][0]===3?n-2:n-1);
+      f._reiGo=1;try{const r=sm0(f,slid?'tpx':'elbow');if(r)return r;}finally{f._reiGo=0;}}}}catch(e){}
+   return sm0(f,key);};
+ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(ok(a)&&a!==t&&a.dmg>=100)m*=1.12;}catch(e){}return m;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah(t,h,dirX,a,o);try{if(r==='hit'&&ok(a)&&a.mv&&a!==t){const m=a.mv;m._landed=FR;if(/^c[4-7]$/.test(m.k)){t.lx=a.face*.5;t.ly=0;t.vy=0;t.vx=0;if(t.ground===null&&m.k==='c6'){}t.hitstun=Math.max(t.hitstun||0,20);}if(m.k==='tpx'&&!m._s){m._s=1;say(a,'PERFECT!','#7ae0ff');sfx('counter');FXL.push({k:'ring',x:t.x,y:t.y-36,t:0,col:'#7ae0ff',r0:12,life:20});if(typeof shakeA!=='undefined')shakeA=Math.max(shakeA,6);}
+    else if(m.k==='c8'&&!m._s){m._s=1;say(a,'EIGHT GATES','#ffffff');}}}catch(e){}return r;};
+ const st0=step;step=function(){st0();try{if(!C._heavy){C._heavy=1;C.st=Object.assign({},C.st,{w:Math.max(C.st.w,1.06),walk:C.st.walk*.82,run:C.st.run*.86});}for(const f of F){if(f.C!==C||f.gone||f.dead)continue;if(!ok(f)){f._rh=null;continue;}
+   const I=f.pi||{},A=!!I.A,B=!!I.B,aP=A&&!f._ra,bP=B&&!f._rb;f._ra=A;f._rb=B;const cpu=f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl));
+   const H=f._rh||(f._rh=[]),c=code(f);if(!H.length||H[H.length-1][0]!==c){H.push([c,FR]);if(H.length>8)H.shift();}
+   if(f.dmg>=100&&!f._zone){f._zone=1;say(f,'IN THE ZONE','#ffffff');}else if(f.dmg<100)f._zone=0;if(f._zone&&FR%10===0)part(f.x+rnd()*18-9,f.y-rnd()*60,0,-.7,14,VI,2,0);
+   const m=f.mv,n=H.length;
+   /* SLIDE STEP: forward, (neutral), down, down-forward */
+   if(free(f)&&GS==='play'&&n>=3&&H[n-1][0]===3&&H[n-1][1]===FR&&slideBefore(H,n-2)){if(aP){go(f,'tpx');}else if(go(f,'cd')){f.mv._t0=FR;}}
+   if(aP)f._raT=FR;if(bP)f._rbT=FR;
+   if(m&&m.k==='cd'){if(aP){if(FR-(m._t0||0)<=1)go(f,'tpx');else go(f,'tp');}else if(bP)go(f,'sw');}
+   /* the string */
+   else if(m&&NEXT[m.k]){const nx=NEXT[m.k];if(m._s0===undefined)m._s0=FR-m.t;const lp=nx[0]==='A'?(f._raT||-99):(f._rbT||-99);if(m._landed&&((lp>m._s0+1&&FR-lp<=12)||(cpu&&FR-m._landed>=4&&(m.k!=='jab3'||f._cs))))m._want=1;if(m._want&&m.t>=m.d.s+m.d.a-1&&!(f.hl>0)){go(f,nx[1]);}}
+   /* CPU: uses the slide and the palm, and commits to the string about half the time */
+   if(cpu&&GS==='play'){if(m&&m.k==='jab1'&&m.t===1)f._cs=rnd()<.5;if(free(f)&&FR%10===0){let near=1e9,nd=0;for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team))continue;const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<near){near=d;nd=o.x-f.x;}}
+      const lv=(+f.lvl||(/^\d$/.test(String(f.ctrl))?+f.ctrl:5))/9;if(near>46&&near<120&&Math.sign(nd)===f.face&&rnd()<.05+.12*lv){if(go(f,'cd'))f.mv._cpu=1+(rnd()<.2*lv?1:0);}else if(near>70&&near<130&&Math.sign(nd)===f.face&&rnd()<.03*lv)go(f,'lunge');}
+     if(m&&m.k==='cd'&&m._cpu&&m.t>=6){go(f,m._cpu>1?'tpx':(rnd()<.75?'tp':'sw'));}}
+  }}catch(e){}};
+ /* the secret inputs, on the pause menu's Controls page */
+ try{const pc0=pauseCtl;pauseCtl=function(){const r=pc0.apply(this,arguments);try{const box=document.querySelector('#overlay .pctl');const seen=new Set();for(const f of F){if(f.gone||!f.C.secret||seen.has(f.C.id))continue;seen.add(f.C.id);const d=document.createElement('div');d.className='psecret';d.style.cssText='margin-top:12px;border-left:4px solid '+f.col+';padding:6px 10px;background:rgba(255,255,255,.04)';
+     d.innerHTML='<h3 style="margin:0 0 6px">'+gEsc(f.C.sn)+': SECRET INPUTS</h3>'+f.C.secret.map(s=>'<div style="display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:10px;padding:3px 0;font-size:13px;line-height:1.35"><kbd style="white-space:normal;text-align:center">'+gEsc(s[0])+'</kbd><span><b>'+gEsc(s[1])+'</b> '+gEsc(s[2])+'</span></div>').join('')+'<p style="font-size:12px;opacity:.75;margin:6px 0 0">Directions are for facing right; mirror them when he faces left.</p>';box.appendChild(d);}}catch(e){}return r;};}catch(e){}
+}}
+
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
    One row per fighter: [rise kind, dash kind]. Colours come from the fighter unless a row gives its own. */
 (function(){
@@ -9286,6 +9375,7 @@ function hudMeterOf(f){if(!f||!f.C||f.gone)return null;const id=f.C.id,g=f.gm||{
   case 'aya':{const CR=f.C.crystals,a=(f.ayT>FR&&f.ayA>=0)?f.ayA:-1;if(!CR)return null;if(a<0)return{l:'CRYSTAL',t:'bar',v:0,col:'#888'};return{l:CR[a].n,t:'bar',v:(f.ayT-FR)/600,col:CR[a].c,lc:CR[a].c};}
   case 'bryson':if(f.form==='rage')return{l:'RAGE',t:'bar',v:(f.rageT-FR)/720,col:'#7ae04a',lc:'#7ae04a'};if(f.exT>FR)return{l:'TIRED',t:'bar',v:(f.exT-FR)/300,col:'#8a90a8',lc:'#9fd0ff'};return{l:'TEMPER',t:'bar',v:(g.tan||0)/100,col:(g.tan||0)>=80?'#ff6a5a':(g.tan||0)>=50?'#e8c040':'#5aa03a',full:'#7ae04a',marks:[.5]};
   case 'chris':if(f.hg===undefined)return null;if(f.mendT>FR)return{l:'MENDING',t:'bar',v:(f.mendT-FR)/150,col:'#7af0a0',lc:'#7af0a0'};return{l:'HEAL',t:'bar',v:f.hg/100,col:'#3aa870',full:'#7af0a0',lc:f.hg>=100?'#7af0a0':null};
+  case 'maya':if(f.es===undefined)return null;return{l:'ESSENCE',t:'bar',v:f.es/100,col:f.es>=25?'#5ad8b0':'#3a7a68',full:'#ffffff',marks:[.25]};
   case 'hikari':return{l:'CHARGE',t:'pips',n:g.hk||0,max:3,col:'#6aff6a'};
   case 'kal':{const v=(FR-(f.dsT===undefined?-999:f.dsT))/480;return{l:'SENSE',t:'bar',v,col:'#5a8a2a',full:'#a0ff40'};}
  }
@@ -10123,7 +10213,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const NET={role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1116-2226';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10150,19 +10240,24 @@ const hashRoom=()=>{const m=/room=([A-Za-z0-9]+)/.exec(location.hash||'');return
 /* =============================================================== transport =============================================================== */
 function loadLib(){return new Promise((res,rej)=>{if(window.Peer)return res();const s=document.createElement('script');s.src=LIB;s.onload=()=>window.Peer?res():rej(new Error('PeerJS did not load'));s.onerror=()=>rej(new Error('Could not reach the connection service (are you offline, or is this page sandboxed?)'));document.head.appendChild(s);});}
 /* STUN finds a direct route; the TURN relays (PeerJS's own free ones) carry the connection when a home router or phone network will not allow a direct one */
-const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}],sdpSemantics:'unified-plan'};
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},{urls:['turn:staticauth.openrelay.metered.ca:80','turn:staticauth.openrelay.metered.ca:443','turn:staticauth.openrelay.metered.ca:443?transport=tcp','turns:staticauth.openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}],sdpSemantics:'unified-plan'};
 /* PeerJS: returns {role:'host', onGuest(cb), close()} or {role:'guest', link, close()} where link = {send, onData, onStream, onClose, sendStream, id} */
 function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{const hid=PREFIX+room;let done=false;
   const host=new Peer(hid,{config:ICE,debug:1});
-  host.on('open',()=>{if(done)return;done=true;const cbs=[];host.on('connection',c=>{const L=mkLink(c.peer);c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};L._call=st=>{try{const call=host.call(c.peer,st);L._mc=call;tuneSender(call);}catch(e){}};cbs.forEach(f=>f(L));});c.on('data',d=>L._data(d));c.on('close',()=>L._close());c.on('error',()=>L._close());});
+  host.on('open',()=>{if(done)return;done=true;const cbs=[];host.on('connection',c=>{const L=mkLink(c.peer);try{toast('A friend is connecting…');}catch(e){}setTimeout(()=>{if(L._send||L.closed)return;diag(c.peerConnection).then(d=>{try{toast('A friend could not get through ('+d.ice+(d.relay?' r':'')+'). Ask them to reload and try again.');}catch(e){}});},22000);c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};L._call=st=>{try{const call=host.call(c.peer,st);L._mc=call;tuneSender(call);}catch(e){}};cbs.forEach(f=>f(L));});c.on('data',d=>L._data(d));c.on('close',()=>L._close());c.on('error',()=>L._close());});
     host.on('disconnected',()=>{try{host.reconnect();}catch(e){}});res({role:'host',onGuest:f=>cbs.push(f),close:()=>{try{host.destroy();}catch(e){}}});});
   host.on('error',err=>{if(done)return;if(err&&err.type==='unavailable-id'){done=true;try{host.destroy();}catch(e){}
       const me=new Peer(undefined,{config:ICE,debug:1});me.on('error',e2=>{if(e2&&e2.type==='peer-unavailable')L._close('The host is not there any more.');});
-      const L=mkLink(hid);me.on('open',()=>{const c=me.connect(hid,{serialization:'json',reliable:false});c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};res({role:'guest',link:L,close:()=>{try{me.destroy();}catch(e){}}});});c.on('data',d=>L._data(d));c.on('close',()=>L._close('The host left.'));c.on('error',()=>L._close('Connection lost.'));});
+      const L=mkLink(hid);let gc=null;me.on('open',()=>{const c=gc=me.connect(hid,{serialization:'json',reliable:false});c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};res({role:'guest',link:L,close:()=>{try{me.destroy();}catch(e){}}});});c.on('data',d=>L._data(d));c.on('close',()=>L._close('The host left.'));c.on('error',()=>L._close('Connection lost.'));});
       me.on('call',call=>{L._mc=call;call.answer();call.on('stream',st=>L._stream(st));});
-      setTimeout(()=>{if(!L._send)rej(new Error('Found the host but could not get a connection through to them, even by relay. Both of you: reload the page and try once more. If it keeps failing, one of you is likely on a network that blocks this (work, school, some mobile data): try home wifi or a phone hotspot.'));},25000);}
+      setTimeout(()=>{if(L._send)return;diag(gc&&gc.peerConnection).then(d=>{try{me.destroy();}catch(e){}rej(new Error(diagText(d)));});},22000);}
     else{done=true;rej(new Error(err&&err.type==='browser-incompatible'?noRTC():err&&err.type==='network'||err&&err.type==='server-error'?'Could not reach the connection service. Try again in a moment.':String(err&&err.message||err)));}});
   setTimeout(()=>{if(!done){done=true;rej(new Error('The connection service did not answer.'));}},15000);}));}
+/* what actually happened to a connection attempt, so a failure says something useful */
+async function diag(pc){const d={ice:'none',answered:false,relay:false,direct:false};try{if(!pc)return d;d.ice=pc.iceConnectionState+'/'+pc.connectionState;d.answered=!!pc.remoteDescription;const st=await pc.getStats();st.forEach(r=>{if(r.type==='local-candidate'){if(r.candidateType==='relay')d.relay=true;if(r.candidateType==='srflx'||r.candidateType==='host')d.direct=true;}});}catch(e){}return d;}
+function diagText(d){if(!d.answered)return'The room is marked as taken, but its host did not answer. They may have closed or reloaded the page: the room frees itself about a minute later. Both of you reload, then the host presses Play With Friends first and the guest joins after.';
+ if(!d.relay)return'The host answered, but no direct route between your two networks worked and the free relay servers could not be reached from here. Try a different network on one side (home wifi instead of mobile data, or a phone hotspot).';
+ return'The host answered and a relay was available, but the connection still did not complete. Both of you reload and try once more; if it repeats, tell Claude this code: '+d.ice+(d.direct?' d':'')+(d.relay?' r':'')+'.';}
 /* why this browser cannot do it, in words someone can act on */
 function noRTC(){let framed=false;try{framed=window.self!==window.top;}catch(e){framed=true;}const has=!!window.RTCPeerConnection,ua=navigator.userAgent||'',inapp=/FBAN|FBAV|Instagram|Line\/|Discord|Snapchat|Twitter|TikTok|; wv\)|Claude/i.test(ua);
  if(framed)return'Online play cannot run inside this embedded page. Open the game at its own address in Chrome, Edge, Safari or Firefox: '+(/github\.io/.test(location.host)?location.origin+location.pathname:'https://daringduck96.github.io/Quirk-Clash/');
@@ -10199,7 +10294,7 @@ async function capture(){/* the whole tab, so menus and sound travel too; falls 
  (function loop(){if(NET.role!=='host')return;NET._comp();requestAnimationFrame(loop);})();NET.capKind='canvas';return cv.captureStream(60);}
 function hostStart(T){NET.role='host';NET.T=T;NET.on=true;T.onGuest(L=>{let k=VP.findIndex(v=>!v);if(k<0||NET.guests.length>=MAXG){L.send({t:'full'});return;}VP[k]=vpad(k);const G={L,k};NET.guests.push(G);
    L.onData(d=>{if(d&&d.t==='in')applyPad(k,d);else if(d&&d.t==='bye')L._close();});L.onClose(()=>{NET.guests=NET.guests.filter(x=>x!==G);dropPad(k);chip();try{toast('A friend left');}catch(e){}});
-   L.send({t:'hi',k,cap:NET.capKind||null,room:NET.room});if(NET.stream)L.sendStream(NET.stream);chip();try{toast('A friend connected. They press any button to join as a player.');sfx('power');}catch(e){}});chip();}
+   L.send({t:'hi',k,cap:NET.capKind||null,room:NET.room,build:BUILD});if(NET.stream)L.sendStream(NET.stream);chip();try{toast('A friend connected. They press any button to join as a player.');sfx('power');}catch(e){}});chip();}
 async function hostShare(){if(NET.stream)return;NET.stream=await capture();NET.stream.getVideoTracks().forEach(t=>t.addEventListener('ended',()=>{NET.stream=null;chip();try{toast('Sharing stopped: friends cannot see the game');}catch(e){}}));for(const G of NET.guests){G.L.sendStream(NET.stream);G.L.send({t:'hi',k:G.k,cap:NET.capKind,room:NET.room});}chip();}
 let chipEl=null;function chip(){if(!chipEl){chipEl=E('div');chipEl.id='netchip';document.body.appendChild(chipEl);}chipEl.hidden=NET.role!=='host';if(NET.role!=='host')return;const n=NET.guests.length;
  chipEl.innerHTML='<span>ONLINE · HOSTING '+NET.room+' · '+n+' friend'+(n===1?'':'s')+(NET.stream?'':' · <b style="color:#ff8a7a">NOT SHARING</b>')+'</span>';
@@ -10214,7 +10309,7 @@ function guestStart(T){NET.role='guest';NET.T=T;NET.on=true;const L=T.link;view=
  view.querySelector('#nvsnd').onclick=e=>{vid.muted=!vid.muted;e.currentTarget.textContent=vid.muted?'SOUND OFF':'SOUND ON';};
  L.onStream(st=>{vid.srcObject=st;const go=()=>vid.play().catch(()=>{vid.muted=true;view.querySelector('#nvsnd').textContent='SOUND OFF';vid.play().catch(()=>{});});go();msg.hidden=true;msg.style.display='none';view.querySelector('#nvs').textContent='Playing online · room '+NET.room;
    setTimeout(()=>{try{for(const pc of allPCs(L))for(const r of pc.getReceivers()){try{r.playoutDelayHint=0;}catch(e){}try{r.jitterBufferTarget=0;}catch(e){}}}catch(e){}},500);});
- L.onData(d=>{if(!d)return;if(d.t==='bye'){L._close('The host stopped the game.');}else if(d.t==='full'){fail('That room already has four players.');}else if(d.t==='hi'){NET.k=d.k;if(d.cap==='canvas')view.querySelector('#nvs').textContent='Playing online · the host is on a device that can only send the fight itself, not the menus';}});
+ L.onData(d=>{if(!d)return;if(d.t==='bye'){L._close('The host stopped the game.');}else if(d.t==='full'){fail('That room already has four players.');}else if(d.t==='hi'){NET.k=d.k;if(d.build&&d.build!==BUILD){const e=view.querySelector('#nvs');if(e)e.textContent='You and the host are on different versions of the game ('+BUILD+' / '+d.build+'). Both reload the page.';}if(d.cap==='canvas')view.querySelector('#nvs').textContent='Playing online · the host is on a device that can only send the fight itself, not the menus';}});
  L.onClose(why=>{if(NET.role==='guest')fail(why||'Disconnected from the host.');});
  function fail(t){msg.hidden=false;msg.style.display='';msg.innerHTML='<div class="netbox"><h1>DISCONNECTED</h1><p>'+t+'</p><div class="netrow"><button class="netbtn b2" id="nvre">TRY AGAIN</button><button class="netbtn" id="nvalone">PLAY ALONE</button></div></div>';msg.querySelector('#nvre').onclick=()=>{const r=NET.room;leave();openPanel(r,true);};msg.querySelector('#nvalone').onclick=()=>leave();}
  /* keys never reach the local (hidden) game while we are a guest */
@@ -10241,7 +10336,7 @@ function leave(){try{if(NET.role==='guest'&&NET.T&&NET.T.link)NET.T.link.send({t
 NET.leave=leave;
 let panel=null;
 function openPanel(room,auto){closeGate();if(panel)panel.remove();panel=E('div');panel.id='netpanel';const r0=roomSlug(room||hashRoom()||'LOBBY');
- panel.innerHTML='<div class="netbox"><h1>PLAY WITH FRIENDS</h1><p>Everyone opens this same link and presses the button. The first one in hosts the game; everyone else joins them. Nothing to install and no accounts.</p><input class="netin" id="netroom" maxlength="16" value="'+r0+'" aria-label="Room name"><p style="font-size:13px">Room name. Leave it as LOBBY, or agree on your own word to keep strangers out.</p><div class="netrow"><button class="netbtn b2" id="netgo">CONNECT</button><button class="netbtn sm" id="netback" style="align-self:center">← BACK</button></div><div class="netstat" id="netstat"></div></div>';
+ panel.innerHTML='<div class="netbox"><h1>PLAY WITH FRIENDS</h1><p>Everyone opens this same link and presses the button. The first one in hosts the game; everyone else joins them. Nothing to install and no accounts.</p><input class="netin" id="netroom" maxlength="16" value="'+r0+'" aria-label="Room name"><p style="font-size:13px">Room name. Leave it as LOBBY, or agree on your own word to keep strangers out.</p><div class="netrow"><button class="netbtn b2" id="netgo">CONNECT</button><button class="netbtn sm" id="netback" style="align-self:center">← BACK</button></div><div class="netstat" id="netstat"></div><p style="font-size:11px;opacity:.6">build '+BUILD+'</p></div>';
  document.body.appendChild(panel);const stat=panel.querySelector('#netstat'),go=panel.querySelector('#netgo'),inp=panel.querySelector('#netroom');panel.querySelector('#netback').onclick=()=>{panel.remove();panel=null;};
  const run=async()=>{const room=roomSlug(inp.value);inp.value=room;go.disabled=true;stat.textContent='Looking for room '+room+'…';try{audioInit();}catch(e){}
   try{const T=await transport(room);NET.room=room;try{history.replaceState(null,'','#room='+room);}catch(e){}
@@ -10277,6 +10372,23 @@ try{const say0=say;say=function(t,o){if(CV.on&&CV.ok&&(t==='Ready?'||t==='Go!'))
 /* pausing or leaving during the countdown cuts the voice off */
 try{const tp=togglePause;togglePause=function(){const r=tp.apply(this,arguments);try{if(typeof paused!=='undefined'&&paused&&GS==='count')stop();}catch(e){}return r;};}catch(e){}
 setInterval(()=>{try{if(CV.src&&(!running||typeof GS==='undefined'||(GS!=='count'&&!(GS==='play'&&gsT<140))))stop();if(AC&&!CV.tried)load();}catch(e){}},200);
+})();
+
+/* posture.js — everyone stands tall. The idle, walk and shield poses used to lean the torso forward and sink the hips, which read as a hunch.
+   Now the chest is up and the legs are straight when standing; running keeps a modest forward lean. Zabu and Bentou keep their own slouch,
+   and animal forms and non-human bodies are left alone. */
+(function(){
+const KEEP=new Set(['zabu','bentou']);window.POSTURE={on:true,KEEP};
+const ex0=exaggerate;exaggerate=function(p,f){const o=ex0(p,f);try{if(!POSTURE.on||!f||!f.C||f.form||f.formL||(f.L&&f.L.body)||o.lie||KEEP.has(f.C.id))return o;const st=f.st;
+  if(st==='idle'){const t=f.anim||0,br=Math.sin(t*.06);o.tl=-.035+br*.01+clamp((o.tl||0)-.2,-.02,.02);o.hd=clamp(o.hd||0,-.09,.03);o.py=Math.min(o.py||0,-1.1+br*.45);
+    if(o.lF)o.lF=[clamp(o.lF[0],3.6,5.4),o.lF[1]];if(o.lB)o.lB=[clamp(o.lB[0],-5.4,-3.8),o.lB[1]];
+    /* arms that hung low and forward with the slouch come back to the sides */
+    if(o.aF&&o.aF[1]>-27&&o.aF[0]<9)o.aF=[6.5,-27.5+br*.4];if(o.aB&&o.aB[1]>-27)o.aB=[-7,-28.5+br*.4];}
+  else if(st==='walk'){o.tl=Math.min(o.tl||0,.07);o.hd=Math.max(o.hd||0,-.05);}
+  else if(st==='run'){o.tl=Math.min(o.tl||0,.2);o.hd=Math.max(o.hd||0,-.1);o.py=Math.min(o.py||0,3);}
+  else if(st==='shield'||st==='shieldstun'){o.tl=Math.min(o.tl||0,.08);}
+  else if(st==='win'){o.tl=Math.min(o.tl||0,0);}
+ }catch(e){}return o;};
 })();
 
 </script>
