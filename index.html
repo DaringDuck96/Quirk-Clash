@@ -2396,7 +2396,7 @@ CH.forEach(C=>{if(!['mech','oni','cosmic','tail','mimic','phase','gale'].include
 
 /* ===================== ENGINE: stage, fighters, combat ===================== */
 const WW=640,WH=360;
-const STAGE={main:{x:60,y:250,w:520,h:26,solid:1},plats:[{x:110,y:165,w:120},{x:410,y:165,w:120},{x:255,y:85,w:130}],temp:[]};
+const STAGE={main:{x:60,y:250,w:520,h:60,solid:1},plats:[{x:110,y:165,w:120},{x:410,y:165,w:120},{x:255,y:85,w:130}],temp:[]};
 const BLAST={l:-220,r:860,t:-190,b:490};
 const CAMB={x0:-200,x1:840,y0:-170,y1:470};
 const LEDGES=[{x:60,y:250,side:-1,occ:null},{x:580,y:250,side:1,occ:null}];
@@ -2728,8 +2728,8 @@ function applyPhys(f,grav){const S=f.C.st;
       else{f.x=px<m.x+m.w/2?m.x-HW:m.x+m.w+HW;f.vx=0;f.lx*=-.4;f.wallT=FR;f.wallSide=px<m.x+m.w/2?1:-1;}}
     if(!f.ground&&f.y>m.y+6&&f.y-HH<m.y+96){if(Math.abs(f.x-(m.x-HW))<7){f.wallT=FR;f.wallSide=1;}else if(Math.abs(f.x-(m.x+m.w+HW))<7){f.wallT=FR;f.wallSide=-1;}}
     if(!f.ground&&tvy>=0&&f.dropT<=0&&!(f.raw.y>.7&&f.st!=='hit'))for(const p of STAGE.plats.concat(STAGE.temp)){if(f.x>p.x-2&&f.x<p.x+p.w+2&&py<=p.y+.5&&f.y>=p.y){touchDown(f,p,tvy);break;}}}
-  if(!f.ground&&f.ledgeCD<=0&&f.hitstun<=0&&tvy>=-1&&(f.st==='air'||f.st==='helpless'||f.st==='glide'||(f.st==='move'&&f.mv&&f.mv.k==='uB'))){
-    for(const L of LEDGES){if(L.occ&&(L.occ===f||L.occ.stT<14||(f.team!==undefined&&L.occ.team===f.team)))continue;const dx=(f.x-L.x)*L.side;if(dx>-6&&dx<28&&f.y>L.y+14&&f.y<L.y+72){grabLedge(f,L);break;}}}
+  if(!f.ground&&f.ledgeCD<=0&&f.hitstun<=0&&tvy>=-2.6&&!(f.raw&&f.raw.y>.6)&&(f.st==='air'||f.st==='helpless'||f.st==='glide'||(f.st==='move'&&f.mv&&(f.mv.k==='uB'||f.mv.k==='sB'||f.mv.t>f.mv.d.s+f.mv.d.a)))){
+    for(const L of LEDGES){if(L.occ&&(L.occ===f||L.occ.stT<14||(f.team!==undefined&&L.occ.team===f.team)))continue;const dx=(f.x-L.x)*L.side;if(dx>-8&&dx<34&&f.y>L.y+8&&f.y<L.y+80&&!(f.vx*L.side>2.5&&dx>20)){grabLedge(f,L);break;}}}
   if(f.x<BLAST.l||f.x>BLAST.r||f.y>BLAST.b||(f.y<BLAST.t&&f.st==='hit'))ko(f);}
 function touchDown(f,s,tvy){
   if(f.st==='hit'&&tvy>3.6){if(FR-f.lastS<=20){f.y=s.y;f.ground=s;f.vy=f.lx=f.ly=0;f.vx=0;f.hitstun=0;f.st='tech';f.stT=0;f.inv=Math.max(f.inv,20);dust(f.x,f.y,8);sfx('tech');if(Math.abs(f.raw.x)>.5){f.st='roll';f.rollDir=Math.sign(f.raw.x);}return;}
@@ -7703,10 +7703,10 @@ const A={
  tiki:['JONETSU','heal',{amt:4,team:1},10,'Calls Jonetsu, the spirit of passion: heals him and teammates beside him for 4%.'],
  kongu:['CHEST BEAT','hype',{},10,'Beats his chest: his next hit lands 30% harder.'],
  hippo:['SPOILERS','fear',{r:140,conf:55},11,'Tells everyone nearby how the fight ends. They get left and right mixed up.']};
-const FORMA={elephant:['TRUNK SPRAY','push',{r:160,f:1.7,water:1},6,'Sprays water from his trunk, pushing rivals away. No damage.'],cheetah:['SPRINT','haste',{dur:170},8,'Runs even faster for a few seconds.'],snake:['HYPNOSIS','fear',{r:150,front:1,slow:130},9,'Rivals in front of him are slowed to a crawl.'],hound:['TRIPLE HOWL','roar',{r:130,f:5,sd:16},9,'Three heads howl: rivals are shoved back and shields crack.']};
+const FORMA={elephant:['STAND FIRM','brace',{dur:100},11,'Plants all four feet: nothing makes the elephant flinch for a moment.'],cheetah:['SPRINT','haste',{dur:170},8,'Runs even faster for a few seconds.'],snake:['HYPNOSIS','fear',{r:150,front:1,slow:130},9,'Rivals in front of him are slowed to a crawl.'],hound:['TRIPLE HOWL','roar',{r:130,f:5,sd:16},9,'Three heads howl: rivals are shoved back and shields crack.']};
 for(const id in A){const C=c(id);if(!C)continue;const a=A[id];C.qa=a;C.mv.qa=M(a[1]==='updraft'||a[1]==='blink'?'float':a[1]==='roar'||a[1]==='fear'||a[1]==='hype'?'roar':'cast',5,a[1]==='push'||a[1]==='pull'?16:6,a[1]==='brace'||a[1]==='guard'||a[1]==='hype'?8:13,null,{fx:C.kit&&C.kit.fx,lim:'none'});
   C.mv.qa.qn=a[0]+' — '+a[4]+' ('+a[3]+'s cooldown)';C.trait=(C.trait?C.trait+' ':'')+'QUIRK ACTION (Shield + B): '+a[0]+' — '+a[4];}
-{const B=c('bisu');if(B)B.trait+=' As an elephant it becomes TRUNK SPRAY (a water jet that pushes), as a cheetah SPRINT, as an anaconda HYPNOSIS.';const D=c('daku');if(D)D.trait+=' As the hound it becomes TRIPLE HOWL.';}
+{const B=c('bisu');if(B)B.trait+=' As an elephant it becomes STAND FIRM (nothing makes it flinch), as a cheetah SPRINT, as an anaconda HYPNOSIS.';const D=c('daku');if(D)D.trait+=' As the hound it becomes TRIPLE HOWL.';}
 if(typeof RVM!=='undefined'){const i=RVM.findIndex(r=>r[0]==='taunt');RVM.splice(i<0?RVM.length:i,0,['qa','Quirk action','Shield + B','SPECIAL']);}
 const actOf=f=>(f.form&&FORMA[f.form])||f.C.qa;
 function fire(f){const a=actOf(f);if(!a)return;f.qaCD=FR+a[3]*60;say(f,a[0],cols(f)[0]);try{P[a[1]](f,a[2]);}catch(e){}}
@@ -8823,6 +8823,70 @@ if(typeof gDetail==='function'||true){for(const C of CH){if(C.hidden||!C.sigT)co
 window.NORMALS={SET,FSET,TR,changed};
 })();
 
+/* ---------- Bisu Toboi: three animals, three fighters. Each form has its own hand-built normals, its own specials and its own rules. ---------- */
+{const C=CH.find(q=>q.id==='bisu');if(C&&C.fmv){const fx=['#5ad85a','#e8ffd0'],WT='#6ac8ff',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-86,t:0,life:38,col:col||'#5ad85a'});
+ const V=(sub,b)=>({k:'H',el:'beast',sub,x:b[0],y:b[1],r:b[2]+2});
+ /* mk(anim, startup, active, recovery, boxes, dmg, bkb, kbg, angle, effect-sub, extra) */
+ const mk=(an,s,a,r,b,dmg,bkb,kbg,ang,sub,o)=>M(an,s,a,r,hit(b,dmg,bkb,kbg,ang,o&&o.h),Object.assign({fx,lim:'none',vfx:V(sub,b[0])},o||{},{h:undefined}));
+ const keep=(t,ks)=>{const o={};for(const k of ks)if(t[k])o[k]=t[k];return o;};
+ /* ===== CHEETAH: speed and mobility. Fast, light hits that chain; nothing here kills early. ===== */
+ const ch=C.fmv.cheetah;Object.assign(ch,{
+  jab:mk('punch',2,2,6,[[18,-20,9]],2.2,1.4,.008,60),jab1:mk('punch',2,2,6,[[18,-20,9]],2.2,1.4,.008,60),
+  ftilt:mk('lunge',4,3,9,[[26,-20,11],[12,-20,9]],6,3,.045,36,undefined,{imp:[[3,3.2,0]]}),
+  utilt:mk('uppercut',3,4,8,[[8,-36,12],[2,-22,9]],5,3.2,.04,88),
+  dtilt:mk('kickLow',3,3,8,[[24,-6,10]],5,2.6,.03,22),
+  dash:mk('dive',4,8,10,[[20,-18,13]],7,3.4,.05,48,undefined,{imp:[[4,5.4,0]]}),
+  fsmash:M('lunge',7,8,14,[hit([[22,-22,12]],5,1.5,0,30,{f0:7,f1:9}),hit([[28,-22,14]],8,4.6,.082,38,{f0:11,f1:14})],{fx,lim:'none',charge:1,vfx:V(undefined,[28,-22,14]),imp:[[7,3,0]]}),
+  usmash:mk('kickUp',6,5,13,[[6,-40,15],[0,-22,11]],10,4.4,.08,86,undefined,{charge:1}),
+  dsmash:mk('spin',5,5,14,[[22,-8,12],[-22,-8,12]],9,4,.07,28,undefined,{charge:1}),
+  nair:M('spin',3,14,8,hit([[0,-20,18]],1.6,1,0,60,{ri:4}),{finisher:hit([[0,-20,20]],3,3.4,.05,50),fx,lim:'none'}),
+  fair:mk('fairK',3,3,8,[[20,-24,12]],6.5,3.2,.05,42),bair:mk('bairK',4,3,9,[[-22,-24,12]],8,3.6,.065,140),
+  uair:mk('uairK',3,4,8,[[2,-44,13]],5.5,3.2,.04,84),dair:mk('dive',5,10,10,[[4,-6,12]],8,3.6,.05,-60,undefined,{onStart(f){if(!f.ground){f.vy=7.5;f.vx=f.face*2.4;}}})});
+ /* ===== ELEPHANT: a wall. Slow, enormous, shrugs off small hits, and a trunk that sprays rivals away. ===== */
+ const el=C.fmv.elephant,quake=el.nB;Object.assign(el,{
+  jab:mk('punch',7,4,14,[[34,-36,16],[18,-36,12]],6.5,3.6,.03,50,'tusk'),jab1:mk('punch',7,4,14,[[34,-36,16],[18,-36,12]],6.5,3.6,.03,50,'tusk'),
+  ftilt:mk('shoulder',11,5,19,[[38,-34,18],[20,-34,14]],12.5,4.6,.075,36,'tusk'),
+  utilt:mk('uppercut',10,6,18,[[16,-70,18],[20,-46,15]],11.5,4.8,.07,90,'tusk'),
+  dtilt:mk('castDown',10,5,18,[[34,-6,18],[-24,-6,14]],10,4.2,.05,70,'tusk'),
+  dash:mk('shoulder',12,14,22,[[30,-34,22]],13,5,.07,44,'tusk',{bp:{armor:1,f0:8,f1:26},imp:[[12,3.4,0]]}),
+  fsmash:mk('shoulder',18,6,28,[[44,-36,22],[22,-36,18]],22,5.6,.1,38,'tusk',{charge:1,bp:{armor:1,f0:12,f1:24}}),
+  usmash:mk('uppercut',16,7,26,[[10,-82,22],[16,-52,18]],19,5.4,.095,88,'tusk',{charge:1}),
+  dsmash:Object.assign({},quake,{charge:1}),
+  nair:mk('balloon',9,16,16,[[0,-36,34]],14,4.6,.07,50,'tusk'),fair:mk('fairP',12,5,20,[[40,-40,20]],13.5,4.8,.08,40,'tusk'),
+  bair:mk('bairK',11,5,20,[[-34,-36,22]],15,5.2,.09,140,'tusk'),uair:mk('castUp',10,6,18,[[12,-80,18]],11,4.6,.07,86,'tusk'),
+  dair:mk('dive',14,14,24,[[0,-4,28]],16,5,.085,-80,'tusk',{onStart(f){if(!f.ground)f.vy=6;}}),
+  nB:M('cast',10,70,16,null,{fx,lim:'none',bp:{armor:1,f0:8,f1:80},spray:1})});
+ /* ===== ANACONDA: bite and bind. Long, low strikes that poison, a tail that pins, coils that hold. ===== */
+ const sn=C.fmv.snake,coil=sn.sB,PO={bite:1};Object.assign(sn,{
+  jab:mk('lunge',4,3,10,[[30,-22,10],[16,-22,9]],4,2.2,.015,50,'fang',PO),jab1:mk('lunge',4,3,10,[[30,-22,10],[16,-22,9]],4,2.2,.015,50,'fang',PO),
+  ftilt:mk('lunge',8,4,15,[[58,-22,11],[40,-22,10],[22,-22,10]],9,3.4,.06,38,'fang',PO),
+  utilt:mk('uppercut',7,5,14,[[10,-58,12],[6,-36,11]],8,3.8,.06,88,'fang'),
+  dtilt:mk('sweep',6,5,13,[[50,-5,10],[30,-5,10]],7,2.4,.03,14,'coil'),
+  dash:mk('dive',7,10,15,[[36,-14,13],[16,-14,11]],9,3.6,.055,44,'fang',{imp:[[7,3.6,0]]}),
+  fsmash:mk('lunge',14,5,24,[[74,-24,13],[52,-24,12],[30,-24,12]],17,4.6,.094,38,'fang',Object.assign({charge:1},PO)),
+  usmash:mk('uppercut',12,6,22,[[8,-72,14],[6,-46,13]],15,4.6,.09,88,'fang',{charge:1}),
+  dsmash:Object.assign({},coil,{charge:1}),
+  nair:mk('spin',6,12,12,[[0,-18,24]],9,3.4,.06,50,'coil'),fair:mk('lunge',7,4,14,[[44,-24,12],[24,-24,11]],9,3.6,.065,42,'fang',PO),
+  bair:mk('tailF',8,5,15,[[-48,-18,13],[-26,-18,12]],11,4.2,.08,140,'coil'),uair:mk('uppercut',6,5,13,[[6,-54,13]],8,3.6,.055,86,'fang'),
+  dair:mk('dive',9,8,18,[[6,-2,13]],10,4,.07,-70,'coil'),
+  sB:M('tailF',11,5,22,hit([[78,-10,12],[56,-10,11],[34,-10,11]],5,1.2,0,60,{eff:'root',rootT:70}),{fx,lim:'none',vfx:V('coil',[56,-10,14]),cd:150})});
+ C.sp=['Himself: Rooster Peck. Cheetah: Claw Flurry. Elephant: Trunk Spray (hold: a jet of water that shoves rivals away). Anaconda: Constrict (grab, squeeze, throw).','Himself: Bull Charge. Cheetah: Sprint (jump cancels). Elephant: Stampede (armoured). Anaconda: Tail Snare (long lash that pins a rival in place).','Himself: Hawk Flight. Cheetah: Great Leap. Elephant: Trumpet Hop. Anaconda: Uncoil (poison strike).','Shift (cheetah, elephant, anaconda, himself). Each animal has its own normal attacks, smashes and aerials.'];
+ C.na='Four fighters in one. Himself: scrappy claws and kicks. CHEETAH: the fastest moves in the game, light hits that chain, three jumps, launched easily. ELEPHANT: a wall: slow, huge attacks, armour on its big moves, and hits under 6% do not make it flinch. ANACONDA: long low bites that leave a little poison (3% over two seconds), a tail sweep that trips, coils that hold.';
+ C.trait='Three complete animal movesets on Down-B.';C.weak='The cheetah cannot kill early and dies early. The elephant is a huge target that can barely recover. The anaconda is slow and has to commit to every strike.';C.tip='Cheetah to rack up damage, elephant to hold the ledge and finish, anaconda to pin a rival who keeps running.';
+ try{if(typeof GTXT!=='undefined'&&GTXT.bisu){GTXT.bisu[0]='Himself: a rooster-fast flurry of pecks. Cheetah: an advancing claw flurry. Elephant: plants its feet and sprays water from its trunk for as long as you hold B (a little over a second): rivals in the jet take almost no damage but are shoved steadily back, off the stage if they let it. It cannot be interrupted while spraying. Anaconda: lunges, wraps a rival up and squeezes before throwing them.';
+   GTXT.bisu[1]='Himself: an armoured bull charge. Cheetah: a sprint across the stage you can jump out of. Elephant: a slow, unstoppable stampede. Anaconda: a long tail lash along the floor. A rival it catches is pinned to the spot for over a second.';
+   GTXT.bisu[3]='Changes his whole body, and with it every attack he has. Cheetah: fastest, three jumps, weak hits. Elephant: enormous and slow, ignores hits under 6%, very hard to launch. Anaconda: longest reach, bites poison, slow to move. Then back to himself.';}}catch(e){}
+ if(typeof FORMA!=='undefined'){/* qact keeps its own table; the elephant's shield special becomes a brace, since the spray is now its neutral special */}
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){if(a&&a.C===C&&a.form==='snake'&&a.mv&&a.mv.d.bite&&a!==t){const r=ah(t,h,dirX,a,o);if(r==='hit'&&(!t.dot||t.dot.n<2))t.dot={n:2,t:0,c:'#a0ff40'};return r;}try{if(t&&t.C===C&&t.form==='elephant'&&!(o&&o.force)&&t.st!=='hit'&&!t.dead&&!(t.inv>0)){const dmg=((h&&h.spec)?h.spec.dmg:h&&h.dmg)||0;if(dmg>0&&dmg<6&&!(h&&h.eff)){t.dmg=Math.min(999,t.dmg+dmg*.8);if(a&&a!==t){a.dealt=(a.dealt||0)+dmg*.8;if(!(o&&o.proj))a.hl=3;}t.flash=4;if(FR-(t._thT||-99)>24){t._thT=FR;say(t,'THICK HIDE','#b8b0a8');}sfx('hit');if(h&&h.alive!==undefined&&o&&o.proj)h.alive=false;return 'armor';}}}catch(e){}return ah(t,h,dirX,a,o);};
+ const st0=step;step=function(){st0();try{for(const f of F){if(f.C!==C||f.gone||f.dead)continue;
+   if(f.form==='cheetah'){if(f.ground)f._cj=1;else if(f._cj&&f.jumps===0&&f.st!=='hit'){f._cj=0;f.jumps=1;}if(!f.ground&&!f.hitstun&&(f.st==='air'))f.x+=f.vx*.22;}
+   const m=f.mv;if(m&&m.d.spray&&!(f.hl>0)){const d=m.d,I=f.pi||{};if(m.t>=d.s){if(!I.B&&m.t>d.s+16&&m.t<d.s+d.a-2)m.t=d.s+d.a-2;
+       if(m.t<=d.s+d.a){const ay=clamp((I.y||0),-1,1)*.35,x0=f.x+f.face*34,y0=f.y-46;for(let i=0;i<4;i++)part(x0+f.face*rnd()*10,y0+rnd()*8-4,f.face*(7+rnd()*3.5),ay*8+rnd()*1.6-.8,20,i%2?WT:'#e8f8ff',rnd()<.5?4:3,.04);if(FR%9===0)sfx('swing');
+         for(const o of F){if(o===f||o.dead||o.gone||o.st==='ledge'||o.st==='held'||(typeof sameTeam==='function'&&sameTeam(f,o)))continue;const dx=(o.x-x0)*f.face,dy=(o.y-30)-(y0+ay*dx);if(dx>-8&&dx<170&&Math.abs(dy)<26+dx*.16){const k=1-dx/230;o.vx+=f.face*1.25*k;o.vx=clamp(o.vx,-8.5,8.5);if(!o.ground)o.vy+=ay*.6;if(o.ground&&Math.abs(o.vx)>1.2&&o.st!=='hit'&&o.st!=='shield'&&!o.mv)o.x+=f.face*1.6*k;else if(o.ground)o.x+=f.face*2.1*k;if(FR%8===0){o.dmg=Math.min(999,o.dmg+.5);f.dealt=(f.dealt||0)+.5;}if(FR%4===0)part(o.x,o.y-30+rnd()*20-10,f.face*2,-1,10,WT,2,.1);}}
+         for(const e of ENT){if(!e.alive||!e.proj||e.owner===f)continue;const dx=(e.x-x0)*f.face;if(dx>-8&&dx<150&&Math.abs(e.y-y0)<26){e.vx+=f.face*.9;if(Math.sign(e.vx)===f.face&&Math.abs(e.vx)>2){e.owner=f;e.hits={};}}}}}}
+  }}catch(e){}};
+}}
+
 /* sound2.js — hits sound like the quirk that landed them, and every fighter has a voice: a short blip when they taunt, win, or get launched. */
 (function(){
 const FAM={blade:'sharp',claw:'sharp',dagger:'sharp',saw:'sharp',spike:'sharp',fist:'heavy',mace:'heavy',pan:'clang',jaws:'heavy',hand:'heavy',blast:'energy',laser:'energy',orb:'energy',bolt:'zap',rainbow:'energy',portal:'warp',
@@ -9505,6 +9569,17 @@ const cs=curScreen;curScreen=function(){if(document.getElementById('replay'))ret
   const a=el('button','mt mta','<b>ARCADE</b><i>Seven fights to the top.</i>');a.id='tArc';const t=el('button','mt mtt','<b>TOURNAMENT</b><i>A bracket for 4, 8 or 16.</i>');t.id='tTrn';tm.classList.add('has8');(document.getElementById('tTrain')||f).insertAdjacentElement('afterend',a);a.insertAdjacentElement('afterend',t);
   a.onclick=()=>{try{audioInit();}catch(e){}sfx('power');arcPick();};t.onclick=()=>{try{audioInit();}catch(e){}sfx('power');if(TRN.d)trnView();else trnSetup();};})();
 window.MODES2={RULES,ARC,TRN,REC,arcPick,arcStart,arcLadder,arcFight,trnSetup,trnView,trnPlay,rulesPop,keysPop,playReplay};
+})();
+
+/* ledge.js — the main stage is drawn as a clearly defined block: a bright top edge, a dark outlined base, and a ledge cap at each corner that lights up when it can be grabbed. */
+(function(){const DKc='#0c0820';
+const ov=overlay2D;overlay2D=function(){try{if(typeof STAGE!=='undefined'&&STAGE&&STAGE.main&&typeof X!=='undefined'&&X&&(GS==='play'||GS==='count'||GS==='over')){const m=STAGE.main;
+   const H=m.h||60;X.save();X.globalAlpha=.5;wr(DKc,m.x,m.y+2,m.w,3);X.globalAlpha=.55;wr(DKc,m.x,m.y+H-2,m.w,2);X.restore();for(const sx of[m.x,m.x+m.w-12]){wr(DKc,sx-1,m.y+1,14,H);wr('#4a4658',sx,m.y+2,12,H-2);wr('#6a6680',sx+(sx===m.x?0:9),m.y+2,3,H-2);for(let yy=m.y+14;yy<m.y+H-4;yy+=14)wr('#2e2c3a',sx,yy,12,1.5);}
+   wr('#ffffff',m.x,m.y-.5,m.w,1.5);
+   for(const L of LEDGES){const s=L.side,x=L.x,y=L.y,free=!L.occ,blink=free?(FR%40<28):false,c=L.occ?'#ff8a3a':blink?'#7aff9a':'#3a9a5a';
+     wr(DKc,s<0?x-5:x-3,y-2.5,8,13);wr('#f4f0e0',s<0?x-4:x-2,y-1.5,6,11);wr(c,s<0?x-4:x-2,y-1.5,6,3);wr('#b8b0a0',s<0?x-4:x+2,y+2,2,7.5);wr(DKc,s<0?x-6:x+3,y+9,3,2);}
+   for(const p of STAGE.plats){X.save();X.globalAlpha=.9;wr('#ffffff',p.x,p.y-.5,p.w,1);X.globalAlpha=.6;wr(DKc,p.x,p.y+.5,p.w,1.5);wr(DKc,p.x-1,p.y-.5,1,3.5);wr(DKc,p.x+p.w,p.y-.5,1,3.5);X.restore();}}}catch(e){try{X.restore();}catch(e2){}}
+  return ov.apply(this,arguments);};
 })();
 
 /* pixel.js — one pixel grid. Everything drawn as a shape on the play-field canvas (props, projectiles, hit effects, meters, trees, feathers) is rasterised on the
