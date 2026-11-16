@@ -2356,7 +2356,7 @@ Object.assign(TUNE,{dawson:{role:'Quirkless tactician',tip:'Trap the floor, shur
  maya:{role:'Drain support',tip:'Her touch heals her. Give Essence heals teammates more.',sp:.98,pw:1,kb:1},sarah:{role:'Shadow assassin',tip:'Get behind them. Shadow Step and Lights Out both put you there.',sp:1.04,pw:1,kb:1},
  aria:{role:'Lucky wildcard',tip:'Up smash drops a light on whoever is nearest, wherever they are standing.',sp:.98,pw:1,kb:1},bryson:{role:'Reluctant berserker',tip:'Weak as himself. Fill the meter and everything changes.',sp:1,pw:1,kb:1},
  conor:{role:'Tiny trickster',tip:'The smallest target. Coins bounce; the pot of gold hurts.',sp:1.1,pw:1,kb:1},ray:{role:'Beam zoner',tip:'Stare to freeze them, X-Ray (Shield + B), then laser or smash.',sp:1,pw:1,kb:1},
- oliver:{role:'Homing archer',tip:'Everything he fires steers itself. Stay away and aim.',sp:1,pw:1,kb:1},chris:{role:'Regenerating brawler',tip:'Trade hits on purpose. He heals; they do not.',sp:1,pw:1,kb:1},
+ oliver:{role:'Homing archer',tip:'Everything he fires steers itself. Stay away and aim.',sp:1,pw:1,kb:1},chris:{role:'Regenerating brawler',tip:'Keep hitting to fill HEAL, then find a quiet second to spend it.',sp:1,pw:1,kb:1},
  evona:{role:'Ice architect',tip:'Wall them off, slide in, pillar out.',sp:1.02,pw:1,kb:1},jack:{role:'Four-flame all-rounder',tip:'Down-B changes the flame: burn, speed, heal or slow.',sp:1,pw:1,kb:1},
  kal:{role:'Precognitive swordsman',tip:'Every eight seconds one hit misses him. Swing first.',sp:1.04,pw:1,kb:1},kora:{role:'Winged skirmisher',tip:'Four jumps and a hover. Fight from above.',sp:1,pw:1,kb:1},ash:{role:'Long-limbed heavy',tip:'Grow to hit from above and reach the ledge; Branch keeps them at arm\'s length.',sp:.96,pw:1,kb:1}});
 Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be hit at all. Slip through, whip them back.',sp:1,pw:1,kb:1},sato:{role:'Knockback specialist',tip:'Low damage, huge shove. Win at the edge.',sp:1,pw:1,kb:1},
@@ -5973,7 +5973,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   maya:['Low damage; she wins slowly.','Her tilts and Draw Essence heal her.'],sarah:['Light, and her best moves leave her exposed if they miss.','BACKSTAB: 30% more damage from behind. Her attacks are shadow constructs, so they never expose her arms.'],
   aria:['Nothing about her is reliable, including the luck.','LUCKY: one hit in six does 50% more. One hit in six aimed at her misses.'],bryson:['As himself he is the weakest hitter in the school.','TANTRUM: a full meter turns him into the beast for twelve seconds: huge, armoured against small hits, 35% stronger, and he cannot shield.'],
   conor:['The shortest reach in the school and very light.','The smallest target in the school.'],ray:['His beams leave him standing still; get inside and he struggles.','Every eye at once: laser, thermal, paralysing stare, flash, X-ray and Future Sight are all available at any time.'],
-  oliver:['Weak up close and has no kill move without space.','His arrows home.'],chris:['No projectile, average speed, and his best moves are slow.','HEALING FACTOR: after a second and a half without being hit he regenerates about 1.5% per second. Two of his specials do not flinch.'],
+  oliver:['Weak up close and has no kill move without space.','His arrows home.'],chris:['No projectile and average speed, and he only heals if he keeps landing hits.','HEALING FACTOR: landing hits fills his HEAL gauge; a full gauge can be spent to mend 14%. He does not heal any other way.'],
   evona:['Low knockout power; she controls rather than finishes.','Her wall blocks projectiles.'],jack:['Master of none: each flame is weaker than a specialist\'s.','Four flames, one at a time: the lit colour changes every attack he has, not just his fireball.'],
   kal:['When Danger Sense is on cooldown he is an ordinary swordsman.','DANGER SENSE: every eight seconds the next hit aimed at him misses.'],kora:['Floaty and a big target with her wings out.','Four jumps, and holding Jump in the air hovers.'],
   ash:['Slow, his long limbs are slow to pull back, and his up-special barely lifts him.','Wood: burning attacks do 20% more to him, but everything else launches him 10% less.'],
@@ -7027,7 +7027,7 @@ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for
   else if(id==='uzi'){if(f.dmg>0&&FR-(f.lastHurt||0)>120)f.dmg=Math.max(0,f.dmg-.012);}
   else if(id==='ryo'){f.confT=0;f.qslow=Math.min(f.qslow||0,FR);for(const o of F)if(o!==f&&o.qcloak>FR&&Math.abs(o.x-f.x)<200){o.qcloak=0;o.invis=false;}}
   else if(id==='ray'){if(f.qhype>FR)for(const o of F)if(o!==f&&o.qcloak>FR&&Math.abs(o.x-f.x)<220){o.qcloak=0;o.invis=false;}}
-  else if(id==='chris'){if(f.dmg>0&&FR-(f.lastHurt||0)>90){f.dmg=Math.max(0,f.dmg-.025);if(FR%20===0)part(f.x+rnd()*16-8,f.y-10-rnd()*40,0,-.5,16,'#7af0a0',1,0);}}
+  else if(id==='chris'){/* healing now comes from the HEAL gauge (chris.js) */}
   else if(id==='ash'){if(f.tallT>FR&&f.ground&&(f.st==='run'||f.st==='walk'))f.x+=f.vx*.14;}
   else if(id==='dawson'){if(f.ground)f.glF=0;else if(f.pi&&f.pi.J&&f.vy>1.3&&(f.glF||0)<120&&(f.st==='air'||f.st==='helpless')){f.vy=1.3;f.x+=f.face*1.7;f.glF=(f.glF||0)+1;if(FR%4===0)part(f.x-f.face*10,f.y-44,-f.face*.6,.2,10,'#3a5a9a',1,0);}}
   else if(id==='kora'){if(f.ground)f.hovF=0;else if(f.pi&&f.pi.J&&f.vy>.8&&(f.hovF||0)<80&&f.st!=='hit'){f.vy=.8;f.hovF=(f.hovF||0)+1;if(FR%5===0)part(f.x+rnd()*24-12,f.y-30,0,.6,12,'#ffffff',1,0);}}
@@ -8384,6 +8384,44 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
     if(fz){X.save();X.globalAlpha=.5+.3*Math.sin(FR*.5);wr(PU,ip.x-12,ip.y-3,24,3);wr('#ffffff',ip.x-9,ip.y-3,18,1);X.restore();}}}catch(e){try{X.restore();}catch(e2){}}X.globalAlpha=1;};
 }}
 
+/* ---------- Chris Duncan: Healing Factor. A scrappy, mouthy brawler who heals only by fighting:
+   landing hits fills his HEAL gauge, and a full gauge can be spent with Down-B to mend over a couple of seconds (getting hit stops it).
+   Neutral-B is a three-part string: one-two, knee, flip kick. ---------- */
+{const C=CH.find(q=>q.id==='chris');if(C){const fx=C.kit.fx,GN='#7af0a0',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-88,t:0,life:44,col:col||'#ffffff'});
+ const HEAL=14,DUR=150,FILL=1.5;
+ const n1=M('punch',6,4,15,hit([[26,-38,13],[14,-38,10]],4,1.6,.004,70),{fx,lim:'hF'}),
+       n2=M('kickUp',5,4,15,hit([[22,-34,14],[20,-52,12]],5,3.4,.012,84),{fx,lim:'fF'}),
+       n3=M('kickF',7,5,24,hit([[30,-38,15],[16,-36,12]],8,5.4,.1,40),{fx,lim:'fF',imp:[[7,3]]}),
+       mend=M('eat',16,6,20,null,{fx,lim:'none'});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;T.nB=n1;T.nB2=n2;T.nB3=n3;T.dB=mend;}
+ C.sp=['One-Two-Boot (B, B, B: a jab-cross, a knee, then a flip kick; each part only comes out if the last one landed)','Reckless Charge (an armoured rush that costs him 3%)','Rising Uppercut (hits several times)','Walk It Off (only with a full HEAL gauge: empties it and mends 14% over two and a half seconds; getting hit stops it)'];
+ C.d='His cells repair themselves far faster than anyone else\'s, but only when his blood is up. So he picks fights, talks through all of them, and treats getting hit as a scheduling problem.';
+ C.na='Normals: loose, scrappy punches and kicks from someone who is enjoying this far too much. Every hit he lands fills his HEAL gauge (about 65% dealt fills it). When it is full, Down-B empties it and he mends 14% over two and a half seconds; if he is hit while mending, the rest is lost. He does not heal any other way.';
+ try{if(typeof GTXT!=='undefined'&&GTXT.chris){GTXT.chris[0]='One-Two-Boot. B is a fast jab-cross. If it lands, B again is a knee that pops the rival up; if that lands, B a third time is a flip kick that launches. Miss any part and the string ends.';
+   GTXT.chris[3]='Walk It Off. Needs a full HEAL gauge, which only fills by landing hits. Empties the gauge and mends 14% over two and a half seconds. Being hit while mending throws away whatever was left.';}}catch(e){}
+ const OW=['OW. RUDE.',"THAT'LL GROW BACK.",'I FELT THAT ONE.','NOT THE FACE.','IS THAT IT?'],HIT=['BOOP.','AND ANOTHER.','STAY DOWN. OR DON\'T.'];
+ const quip=(f,arr)=>{if(FR<(f._qT||0))return;f._qT=FR+260;say(f,arr[fl(rnd()*arr.length)],'#f0c860');};
+ const ok=f=>f&&f.C===C&&!f.form&&!(f.copyT>0);
+ const sm0=startMove;startMove=function(f,key){if(ok(f)&&key==='dB'){if((f.hg||0)<100||f.mendT>FR){if(FR-(f._nyT||-99)>40){f._nyT=FR;say(f,f.mendT>FR?'ALREADY ON IT':'NOT YET','#b0a8a0');}return false;}}
+   if(ok(f)&&key==='nB'&&f.mv&&f.mv._chain)return false;
+   return sm0(f,key);};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){const d0=t?t.dmg:0;const r=ah(t,h,dirX,a,o);try{
+   if(r==='hit'&&ok(a)&&a!==t&&!(a.team!==undefined&&a.team===t.team)){const dd=Math.max(0,t.dmg-d0);if(!(a.mendT>FR)){const was=a.hg||0;a.hg=Math.min(100,was+dd*FILL);if(was<100&&a.hg>=100){say(a,'HEAL READY',GN);sfx('power');FXL.push({k:'ring',x:a.x,y:a.y-30,t:0,col:GN,r0:10,life:20});}}
+     if(a.mv&&/^nB/.test(a.mv.k))a.mv._landed=FR;if(a.mv&&a.mv.k==='nB3')quip(a,HIT);}
+   if(r==='hit'&&ok(t)&&a!==t){const dd=Math.max(0,t.dmg-d0);if(t.mendT>FR){t.mendT=0;say(t,'HEY! I WAS HEALING.','#ff8a7a');}else if(dd>=11)quip(t,OW);}
+  }catch(e){}return r;};
+ const st0=step;step=function(){st0();try{for(const f of F){if(f.C!==C||f.gone)continue;if(f.hg===undefined)f.hg=0;
+   if(f.dead||f.st==='respawn'){f.hg=0;f.mendT=0;continue;}if(!ok(f))continue;
+   const m=f.mv;
+   if((f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl)))&&(f.hg||0)>=100&&f.dmg>=18&&!m&&f.ground&&(f.st==='idle'||f.st==='walk'||f.st==='run')&&!(f.mendT>FR)&&FR%6===0&&GS==='play'){let near=1e9;for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team))continue;near=Math.min(near,Math.hypot(o.x-f.x,o.y-f.y));}if(near>95)startMove(f,'dB');}
+   if(m&&m.k==='dB'&&m.t===m.d.s&&!m._go){m._go=1;f.hg=0;f.mendT=FR+DUR;say(f,'WALK IT OFF',GN);sfx('power');}
+   if(f.mendT>FR){f.dmg=Math.max(0,f.dmg-HEAL/DUR);if(FR%5===0)part(f.x+rnd()*18-9,f.y-10-rnd()*46,0,-.7,18,GN,2,0);if(f.mendT===FR+1)say(f,'GOOD AS NEW',GN);}
+   /* the string: B again once the last part has landed */
+   if(m&&(m.k==='nB'||m.k==='nB2')&&!m._chain){const cpu=f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl)),B=!!(f.pi&&f.pi.B);if(m._landed&&((B&&!m._pb)||(cpu&&FR-m._landed>=4)))m._want=1;m._pb=B;
+    if(m._want&&m.t>=m.d.s+m.d.a-1&&!(f.hl>0)){const nx=m.k==='nB'?'nB2':'nB3';m._chain=1;f.mv=null;f.st=f.ground?'idle':'air';if(f.cds)f.cds[nx]=0;sm0(f,nx);}}
+  }}catch(e){}};
+}}
+
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
    One row per fighter: [rise kind, dash kind]. Colours come from the fighter unless a row gives its own. */
 (function(){
@@ -9059,6 +9097,7 @@ function kind(C,k){const c=C._aik||(C._aik={});if(c[k]!==undefined)return c[k];c
 const CD={far:75,mid:85,near:55,def:100,self:330};
 /* fighters whose specials are switches or meters need to know when not to press the button */
 const OK={
+ chris:(f,k,o,adx)=>k==='dB'?((f.hg||0)>=100&&f.dmg>=18&&!(f.mendT>FR)&&(adx===undefined||adx>90)):true,
  bryson:(f,k)=>k==='dB'?(!!f.form||((f.gm&&f.gm.tan)||0)>=50):true,
  okane:(f,k,o,adx)=>k!=='dB'||(f.form!=='gold'&&(f.goldM||0)>=320&&adx<150),
  aya:(f,k)=>k!=='nB'||!(f.ayT>FR),
@@ -9226,6 +9265,7 @@ function hudMeterOf(f){if(!f||!f.C||f.gone)return null;const id=f.C.id,g=f.gm||{
   case 'sota':if(f.fuel===undefined)return null;return{l:'FUEL',t:'bar',v:f.fuel/100,col:f.fuel<30?'#ff5040':'#ffb040',marks:[.3,.6]};
   case 'aya':{const CR=f.C.crystals,a=(f.ayT>FR&&f.ayA>=0)?f.ayA:-1;if(!CR)return null;if(a<0)return{l:'CRYSTAL',t:'bar',v:0,col:'#888'};return{l:CR[a].n,t:'bar',v:(f.ayT-FR)/600,col:CR[a].c,lc:CR[a].c};}
   case 'bryson':if(f.form==='rage')return{l:'RAGE',t:'bar',v:(f.rageT-FR)/720,col:'#7ae04a',lc:'#7ae04a'};if(f.exT>FR)return{l:'TIRED',t:'bar',v:(f.exT-FR)/300,col:'#8a90a8',lc:'#9fd0ff'};return{l:'TEMPER',t:'bar',v:(g.tan||0)/100,col:(g.tan||0)>=80?'#ff6a5a':(g.tan||0)>=50?'#e8c040':'#5aa03a',full:'#7ae04a',marks:[.5]};
+  case 'chris':if(f.hg===undefined)return null;if(f.mendT>FR)return{l:'MENDING',t:'bar',v:(f.mendT-FR)/150,col:'#7af0a0',lc:'#7af0a0'};return{l:'HEAL',t:'bar',v:f.hg/100,col:'#3aa870',full:'#7af0a0',lc:f.hg>=100?'#7af0a0':null};
   case 'hikari':return{l:'CHARGE',t:'pips',n:g.hk||0,max:3,col:'#6aff6a'};
   case 'kal':{const v=(FR-(f.dsT===undefined?-999:f.dsT))/480;return{l:'SENSE',t:'bar',v,col:'#5a8a2a',full:'#a0ff40'};}
  }
