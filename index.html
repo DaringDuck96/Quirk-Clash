@@ -8271,6 +8271,69 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
 }}catch(e){}return r;};
 }}
 
+/* ---------- Bryson Beckstead: Tantrum. A boy trying very hard to stay calm.
+   TEMPER above half makes his hits stronger and sloppier; beakers cycle acid / smoke / fizz; Side-B is a flinch that shoves back twice as hard if he is hit as it starts;
+   the beast grabs and hurls, and when the rage ends he is worn out for a few seconds. ---------- */
+{const C=CH.find(q=>q.id==='bryson');if(C){const fx=C.kit.fx,GR='#7ae04a',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-88,t:0,life:42,col:col||GR});
+ const KIND=[{n:'ACID',c:'#b8ff4a',spec:{dmg:4,bkb:2.6,kbg:.03,ang:55}},{n:'SMOKE',c:'#b8b4c8',spec:{dmg:2,bkb:2,kbg:.02,ang:70}},{n:'FIZZ',c:'#ff8ad8',spec:{dmg:5,bkb:6.6,kbg:.062,ang:88}}];
+ const PUD=[],SMK=[],WATCH=[];window.BRYSON={PUD,SMK,KIND};
+ const NORM=/^(jab|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair|fsmash|usmash|dsmash)/;
+ const slip=f=>(f&&f.C===C&&!f.form&&!(f.copyT>0)&&f.gm)?clamp(((f.gm.tan||0)-50)/50,0,1):0;
+ const tired=f=>f&&f.C===C&&!f.form&&f.exT>FR;
+ /* the beast's Side-B: seize, crush, hurl */
+ if(C.fmv&&C.fmv.rage){C.fmv.rage.sB=M('lunge',10,7,24,null,{beh:'cgrab',bp:{box:[6,-70,44,66],mode:'constrict',eff:null},fx,lim:'none',cd:70});}
+ C.sp=['Beaker Toss (lobbed; each throw is the next of ACID, SMOKE, FIZZ, and the one in his hand shows which)','Flinch (a shove; if he is hit as it starts he shoves back twice as hard and his Temper jumps)','Scramble (a nervous jump)','Let It Out (transforms early if Temper is at least half full)'];
+ C.na='Normals: careful, weak pokes from a boy trying to stay calm. Every hit given or taken fills his TEMPER. Above half he starts to slip: his hits launch up to 30% harder but take longer to recover from. When it is full he becomes the beast for twelve seconds whether he likes it or not: huge, armoured against small hits, with its own moves (ground pound, a grab that crushes and hurls, a roar). When the rage ends he is WORN OUT for five seconds: weaker, slower, and his Temper will not build.';
+ try{if(typeof GTXT!=='undefined'&&GTXT.bryson){GTXT.bryson[0]='Lobs a beaker from the lab. Each throw is the next of three: ACID leaves a puddle that eats at anyone standing in it, SMOKE bursts into a cloud that slows rivals inside and hides whoever is in it, FIZZ pops whoever it hits straight up. The flask beside him shows which is next. As the beast: a ground pound that hits both sides.';
+   GTXT.bryson[1]='Flinch: a short shove that barely hurts but pushes hard. If he is hit in the first moment of it, he takes half the damage, does not budge, and shoves back twice as hard; his Temper jumps by a fifth. As the beast: seizes a rival, crushes them, and hurls them.';
+   GTXT.bryson[3]='Stops fighting it. If his Temper is at least half full he transforms straight away, for less time the less Temper he had. As the beast: a roar that pushes everyone back.';}}catch(e){}
+ try{if(typeof AIOK!=='undefined')AIOK.bryson=(f,k)=>k==='dB'?(f.form?true:((f.gm&&f.gm.tan)||0)>=50):true;}catch(e){}
+ const sm0=startMove;startMove=function(f,key){const r=sm0(f,key);try{if(r&&f&&f.C===C&&f.mv&&!f.form&&!(f.copyT>0)){const m=f.mv,k=slip(f);
+    if(k>0&&NORM.test(m.k)){m.d=Object.assign({},m.d,{r:m.d.r+Math.round(2+6*k)});m._slip=k;}
+    if(tired(f)&&NORM.test(m.k)){m.d=Object.assign({},m.d,{s:m.d.s+2,r:m.d.r+3});}}}catch(e){}return r;};
+ const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);try{if(a&&a.C===C&&a!==t){if(a.mv&&a.mv._slip&&!(o&&o.proj))m*=1+.3*a.mv._slip;if(a.mv&&a.mv.k==='sB'&&a.mv._fl&&!a.form)m*=2;if(tired(a))m*=.8;}}catch(e){}return m;};
+ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(a&&a.C===C&&a!==t){if(a.mv&&a.mv._slip&&!(o&&o.proj))m*=1+.12*a.mv._slip;if(tired(a))m*=.75;}}catch(e){}return m;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){try{
+   /* Flinch: hit in the first moment of Side-B */
+   if(t&&t.C===C&&!t.form&&!(t.copyT>0)&&t.mv&&t.mv.k==='sB'&&t.mv.t<=7&&!t.mv._fl&&a&&a!==t&&!(o&&o.force)&&GS==='play'){const dmg=((h&&h.spec)?h.spec.dmg:h&&h.dmg)||0,m=t.mv;m._fl=1;t.dmg+=dmg*.5;if(a.dealt!==undefined)a.dealt+=dmg*.5;
+     const g=t.gm||(t.gm={});g.tan=Math.min(99,(g.tan||0)+20);m.t=Math.max(m.t,m.d.s-1);t.hl=6;if(!(o&&o.proj))a.hl=6;t.flash=6;if(!(o&&o.proj)){t.face=a.x>=t.x?1:-1;}
+     say(t,"DON'T TOUCH ME!",'#ffffff');sfx('counter');FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:GR,r0:10,life:18});return 'armor';}
+   /* the beast's hurl is a real throw */
+   if(a&&a.C===C&&a.form==='rage'&&a.mv&&a.mv.k==='sB'&&o&&o.force&&h&&h.ang===45&&!h._hurl){h=Object.assign({},h,{dmg:9,bkb:7.4,kbg:.095,ang:36,_hurl:1});say(a,'HURL!','#ffffff');if(typeof shakeA!=='undefined')shakeA=Math.max(shakeA,5);}
+   if(tired(t)&&a&&a!==t){/* worn out: nothing special, he is just soft */}
+  }catch(e){}
+  const res=ah(t,h,dirX,a,o);
+  try{if(tired(t)&&t.gm)t.gm.tan=0;if(tired(a)&&a.gm)a.gm.tan=0;}catch(e){}return res;};
+ const floorUnder=(x,y)=>{let best=null;try{for(const s of surfaces()){if(x>=s.x-4&&x<=s.x+s.w+4&&s.y>=y-14&&(best===null||s.y<best.y))best=s;}}catch(e){}return best;};
+ const st0=step;step=function(){st0();try{
+   for(const f of F){if(f.C!==C||f.gone)continue;if(f.bk===undefined)f.bk=0;
+    if(f.dead||f.st==='respawn'){f.exT=0;f._wasRage=false;continue;}
+    /* rage ending -> worn out */
+    const rg=f.form==='rage';if(f._wasRage&&!rg&&!f.dead){f.exT=FR+300;say(f,'WORN OUT','#9aa0c0');}f._wasRage=rg;
+    if(tired(f)){if(f.gm)f.gm.tan=0;if(f.ground&&Math.abs(f.vx)>1.9)f.vx*=.9;if(FR%14===0)part(f.x+rnd()*10-5,f.y-62,0,.5,16,'#9fd0ff',2,0);}
+    const k=slip(f);if(k>0&&FR%(k>.6?5:9)===0)part(f.x+rnd()*18-9,f.y-56-rnd()*20,rnd()-.5,-.9,14,k>.6?'#ff6a5a':GR,2,0);
+    if(f.copyT>0)continue;
+    /* tag beakers as they are thrown */
+    for(const e of ENT){if(!e.alive||e.owner!==f||e._bk!==undefined||!e.spec||e.spec.sh!=='beaker')continue;if(f.form){e._bk=-1;continue;}const K=KIND[f.bk%3];e._bk=f.bk%3;e.spec=Object.assign({},e.spec,K.spec,{c:K.c});e.dmg=K.spec.dmg;e.bkb=K.spec.bkb;e.kbg=K.spec.kbg;e.ang=K.spec.ang;WATCH.push({e,x:e.x,y:e.y});say(f,K.n,K.c);f.bk=(f.bk+1)%3;}}
+   for(let i=WATCH.length-1;i>=0;i--){const w=WATCH[i],e=w.e;if(e.alive){let land=null;try{for(const q of surfaces()){if(e.x>=q.x&&e.x<=q.x+q.w&&w.y<=q.y+1&&e.y>=q.y&&e.vy>0){land=q;break;}}}catch(er){}if(land){e.y=land.y-1;e.alive=false;e._landed=1;w.x=e.x;w.y=e.y;}else{w.x=e.x;w.y=e.y;continue;}}WATCH.splice(i,1);if(GS!=='play')continue;
+    if(e._bk===0){const s=floorUnder(w.x,w.y);if(s){const x0=clamp(w.x-24,s.x,s.x+s.w-48);PUD.push({x:x0,y:s.y,w:48,until:FR+270,owner:e.owner});if(PUD.length>4)PUD.shift();sfx('pop');burst(w.x,s.y-4,10,['#b8ff4a','#ffffff'],2,16);}}
+    else if(e._bk===1){SMK.push({x:w.x,y:w.y-(e._landed?26:4),r:50,t0:FR,until:FR+190,owner:e.owner});if(SMK.length>3)SMK.shift();sfx('pop');}
+    else if(e._bk===2){burst(w.x,w.y,14,['#ff8ad8','#ffffff','#ffe060'],3,18);}}
+   for(let i=PUD.length-1;i>=0;i--){const p=PUD[i];if(p.until<=FR){PUD.splice(i,1);continue;}if(FR%26!==0)continue;
+    for(const t of F){if(t===p.owner||t.dead||t.gone||!t.ground||(p.owner.team!==undefined&&t.team===p.owner.team)||t.inv>0)continue;if(t.x>p.x-4&&t.x<p.x+p.w+4&&Math.abs(t.y-p.y)<8){t.dmg+=1.2;if(p.owner.dealt!==undefined)p.owner.dealt+=1.2;t.flash=3;burst(t.x,t.y-6,5,['#b8ff4a','#ffffff'],1.2,12);}}}
+   for(let i=SMK.length-1;i>=0;i--){const s=SMK[i];if(s.until<=FR){SMK.splice(i,1);continue;}
+    for(const t of F){if(t===s.owner||t.dead||t.gone||(s.owner.team!==undefined&&t.team===s.owner.team))continue;if(Math.hypot(t.x-s.x,t.y-30-s.y)<s.r)t.hazeT=Math.max(t.hazeT||0,12);}}
+  }catch(e){}};
+ /* puddles under the fighters, smoke over them */
+ (window.UNDER=window.UNDER||[]).push(function(){try{for(const p of PUD){const left=p.until-FR;if(left<50&&FR%6<2)continue;wr('#0c0820',p.x-1,p.y-2,p.w+2,4);wr('#6aa82a',p.x,p.y-1.5,p.w,3);wr('#b8ff4a',p.x+2,p.y-1.5,p.w-4,1.5);for(let i=0;i<3;i++){const bx=p.x+6+((i*17+FR*.3)%(p.w-10)),by=p.y-3-((FR*.4+i*9)%10);X.globalAlpha=.8;wr('#d8ff9a',bx,by,1.6,1.6);X.globalAlpha=1;}}}catch(e){}});
+ const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const s of SMK){const age=FR-s.t0,left=s.until-FR,a=Math.min(1,age/10,left/30),gr=Math.min(1,age/14);X.save();
+    for(let i=0;i<9;i++){const an=i*.7+FR*.01*(i%2?1:-1),rr=s.r*.55*gr,px=s.x+Math.cos(an)*rr*(.4+((i*37)%10)/14),py=s.y+Math.sin(an)*rr*.6*(.4+((i*53)%10)/14)-age*.03,r=(13+((i*29)%9))*gr;X.globalAlpha=.9*a;wdisc(px,py+1.5,r+1.5,'#3a3848');wdisc(px,py,r,i%3?'#b8b4c8':'#d8d4e4');}
+    X.restore();}}catch(e){try{X.restore();}catch(e2){}}X.globalAlpha=1;};
+ /* the next beaker, held at his side */
+ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&f.C===C&&!f.form&&!f.dead&&!f.gone&&!(f.copyT>0)&&f.bk!==undefined&&typeof X!=='undefined'&&X&&!(f.mv&&f.mv.k==='nB')){const ip=(typeof interpPos==='function')?interpPos(f):f,x=ip.x-f.face*13,y=ip.y-40+Math.sin(FR*.08)*1.2,c=KIND[f.bk%3].c;
+    wpoly('#0c0820',[x-2.4,y-6,x+2.4,y-6,x+2.4,y-2,x+5.4,y+4.4,x-5.4,y+4.4,x-2.4,y-2]);wpoly('#d8f4f0',[x-1.4,y-5,x+1.4,y-5,x+1.4,y-1.4,x+4,y+3.4,x-4,y+3.4,x-1.4,y-1.4]);wpoly(c,[x-3,y+1,x+3,y+1,x+4,y+3.4,x-4,y+3.4]);}}catch(e){}return r;};
+}}
+
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
    One row per fighter: [rise kind, dash kind]. Colours come from the fighter unless a row gives its own. */
 (function(){
@@ -8946,6 +9009,7 @@ function kind(C,k){const c=C._aik||(C._aik={});if(c[k]!==undefined)return c[k];c
 const CD={far:75,mid:85,near:55,def:100,self:330};
 /* fighters whose specials are switches or meters need to know when not to press the button */
 const OK={
+ bryson:(f,k)=>k==='dB'?(!!f.form||((f.gm&&f.gm.tan)||0)>=50):true,
  okane:(f,k,o,adx)=>k!=='dB'||(f.form!=='gold'&&(f.goldM||0)>=320&&adx<150),
  aya:(f,k)=>k!=='nB'||!(f.ayT>FR),
  sota:(f)=>f.fuel===undefined||f.fuel>=38,
@@ -9111,7 +9175,7 @@ function hudMeterOf(f){if(!f||!f.C||f.gone)return null;const id=f.C.id,g=f.gm||{
   case 'okane':if(f.form==='gold')return{l:'GILDED',t:'bar',v:(f.goldT-FR)/480,col:'#ffe060',lc:'#ffe060'};if(f.goldM===undefined)return null;return{l:'GOLD',t:'bar',v:f.goldM/600,col:f.goldM<120?'#a08a50':'#e8c040',marks:[.2]};
   case 'sota':if(f.fuel===undefined)return null;return{l:'FUEL',t:'bar',v:f.fuel/100,col:f.fuel<30?'#ff5040':'#ffb040',marks:[.3,.6]};
   case 'aya':{const CR=f.C.crystals,a=(f.ayT>FR&&f.ayA>=0)?f.ayA:-1;if(!CR)return null;if(a<0)return{l:'CRYSTAL',t:'bar',v:0,col:'#888'};return{l:CR[a].n,t:'bar',v:(f.ayT-FR)/600,col:CR[a].c,lc:CR[a].c};}
-  case 'bryson':if(f.form==='rage')return{l:'RAGE',t:'bar',v:(f.rageT-FR)/720,col:'#7ae04a',lc:'#7ae04a'};return{l:'TEMPER',t:'bar',v:(g.tan||0)/100,col:'#5aa03a',full:'#7ae04a',marks:[.5]};
+  case 'bryson':if(f.form==='rage')return{l:'RAGE',t:'bar',v:(f.rageT-FR)/720,col:'#7ae04a',lc:'#7ae04a'};if(f.exT>FR)return{l:'TIRED',t:'bar',v:(f.exT-FR)/300,col:'#8a90a8',lc:'#9fd0ff'};return{l:'TEMPER',t:'bar',v:(g.tan||0)/100,col:(g.tan||0)>=80?'#ff6a5a':(g.tan||0)>=50?'#e8c040':'#5aa03a',full:'#7ae04a',marks:[.5]};
   case 'hikari':return{l:'CHARGE',t:'pips',n:g.hk||0,max:3,col:'#6aff6a'};
   case 'kal':{const v=(FR-(f.dsT===undefined?-999:f.dsT))/480;return{l:'SENSE',t:'bar',v,col:'#5a8a2a',full:'#a0ff40'};}
  }
