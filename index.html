@@ -1922,14 +1922,14 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('sink',6,20,12,hit([[0,-6,18]],2.4,2,.02,70,{ri:6,qk:{k:'slow',t:90}}),{beh:'dash',bp:{spd:5.6,f0:6,f1:26,air:'grav',intang:1},fx,lim:'none',cd:70,spawn:[[6,{k:'puddle',life:300,r:16,dmg:2,bkb:1,kbg:0,ang:90,eff:'root',max:1}]]})}),
   sp:['Slime Glob (lobbed; sticks to whoever it hits)','Engulf (swallows a rival in slime, squeezes, and spits them out; beats shields)','Geyser (a column of slime throws her upward)','Melt (pours herself across the floor as a puddle: cannot be hit, slows whoever she passes under, and leaves a sticky pool behind)']});
 
- fx=['#b8c860','#ff8a30'];add({id:'ichigo',n:'ICHIGO TANAKA',sn:'ICHIGO',q:'Big Brain',ty:'Mutant',col:'#b8c860',d:'A genius who builds things that should not fit in a backpack. Independent, always tinkering, and very fond of explosions.',
-  na:'Normals: wrenches, spare parts and a mechanical third arm. Mediocre up close; everything she has built is what you should worry about.',
+ fx=['#b8c860','#ff8a30'];add({id:'ichigo',n:'ICHIGO TANAKA',sn:'ICHIGO',q:'Big Brain',ty:'Mutant',col:'#b8c860',d:'A genius who builds things that should not fit in a backpack, starting with the robotic arm that unfolds out of it. Independent, always tinkering, and very fond of explosions.',
+  na:'Normals: she keeps her hands in her pockets. The robotic arm on her backpack does every jab, smash and grab, so her strikes reach well past her body.',
   look:K({skin:'#f0d8c0',eye:'#6a8a3a',hairS:'bun',hair:'#b8c860',hx:['goggles'],gogC:'#5af0ff',outfit:'jacketS',top:'#5a6a3a',acc:'#3a3a30',sleeve:'#5a6a3a',pants:'#6a6048',shoe:'#3a3028',glove:'#2a2a24',stance:'cool',ex:['pack']},1),st:ST({w:.9,run:2.9,air:2.6}),kit:{st:'brawler',fx,el:'tech',pow:.92},
   mv:Object.assign(SM('tech',fx),{nB:M('throwF',11,1,18,null,{spawn:[[11,GP({sh:'grenade',c:'#ff8a30',vx:3.4,vy:-4.4,g:.26,life:70,r:7,dmg:9,bkb:4,kbg:.06,ang:50,ex:1})]],cd:40,fx}),
    sB:M('throwF',12,1,18,null,{spawn:[[12,GP({sh:'drone',c:'#b8c860',bm:1,vx:5.6,life:86,r:8,dmg:6,bkb:3,kbg:.045,ang:40})]],cd:90,fx}),
-   uB:M('float',5,30,10,hit([[0,-6,14]],3,3,.03,-75,{eff:'burn'}),{beh:'fly',bp:{dur:40,spd:3.4},fx,helpless:1}),
+   uB:M('float',5,30,10,hit([[0,-92,15]],2.5,3,.03,82,{ri:8}),{beh:'fly',bp:{dur:42,spd:3.4},fx,helpless:1}),
    dB:M('castDown',12,1,16,null,{spawn:[[12,GP({sh:'mine',c:'#ff5030',vx:.01,life:420,r:8,dmg:12,bkb:5,kbg:.08,ang:70,ex:1,max:1,dy:-6})]],cd:120,fx})}),
-  sp:['Grenade (lobbed; explodes)','Drone (flies out and comes back)','Jetpack (free flight for a moment)','Proximity Mine (one at a time)']});
+  sp:['Grenade (lobbed; explodes)','Attack Drone (flies out and comes back)','Lift Drone (her arm grabs a drone and it carries her; the rotors cut anyone above)','Proximity Mine (one at a time)']});
  fx=['#c83a5a','#8a9ab8'];add({id:'bentou',n:'BENTOU BAKEMONO',sn:'BENTOU',q:'Portent',ty:'Emitter',col:'#c83a5a',d:'Fills people with good luck or bad, and sees things coming. Convinced he is Karma\'s chosen.',
   na:'Normals: he never touches anyone. Every basic attack is a small curse flicked from a distance, with long reach and little damage, and nothing of his to hit back. A JINXED rival is a bigger target, has a weaker shield and hits a little softer; Bentou wins by keeping someone jinxed. His parry window is half again as long as normal.',
   look:K({skin:'#8a9ab8',eye:'#f0e0a0',hairS:'messy',hair:'#2a3048',hx:['horns','halfmask'],maskC:'#a8283e',outfit:'wrap',top:'#5a4a3a',acc:'#a8283e',sleeve:'#5a4a3a',pants:'#3a3a44',shoe:'#5a4030',stance:'cast',size:.8,ex:[]}),st:ST({w:.84,run:2.9,air:2.8}),kit:{st:'brawler',fx,el:'omen',pow:.9,reach:1.25},
@@ -2265,7 +2265,7 @@ Object.assign(TUNE,{dawson:{role:'Quirkless tactician',tip:'Trap the floor, shur
  kal:{role:'Precognitive swordsman',tip:'Every eight seconds one hit misses him. Swing first.',sp:1.04,pw:1,kb:1},kora:{role:'Winged skirmisher',tip:'Four jumps and a hover. Fight from above.',sp:1,pw:1,kb:1},ash:{role:'Long-limbed heavy',tip:'Grow to hit from above and reach the ledge; Branch keeps them at arm\'s length.',sp:.96,pw:1,kb:1}});
 Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be hit at all. Slip through, whip them back.',sp:1,pw:1,kb:1},sato:{role:'Knockback specialist',tip:'Low damage, huge shove. Win at the edge.',sp:1,pw:1,kb:1},
  akio:{role:'Speedster',tip:'Homing Attack to start, Spin Dash to chase, Spring Jump to get home.',sp:1.2,pw:1,kb:1},sata:{role:'Armoured zoner',tip:'Charge the shot, harass with missiles, bomb-jump to stay in the air.',sp:1,pw:1,kb:1},kitsu:{role:'Rainbow surfer',tip:'Beam from range, surf the Rainbow Road in and out, rain bolts on anyone below.',sp:1,pw:1,kb:1},
- uzi:{role:'Resilient grappler',tip:'Melt under their attacks, Engulf them when they shield.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest.',sp:.96,pw:1,kb:1},
+ uzi:{role:'Resilient grappler',tip:'Melt under their attacks, Engulf them when they shield.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest, and let the arm swat anyone who gets through.',sp:.96,pw:1,kb:1},
  bentou:{role:'Jinx specialist',tip:'Keep them JINXED: bigger target, weaker shield, softer hits.',sp:.98,pw:1,kb:1},okane:{role:'Gilded duelist',tip:'Save Gilded for when it matters; it has a long cooldown.',sp:1,pw:1,kb:1},
  goiru:{role:'Flying heavyweight',tip:'Four jumps and armour. Drop the hammer from above.',sp:.9,pw:1,kb:1,armor:1},aya:{role:'Crystal caster',tip:'A different crystal on every button.',sp:1,pw:1,kb:1},
  hikari:{role:'Twin-blade rushdown',tip:'Count your hits: every fourth one shocks.',sp:1.1,pw:1,kb:1},ryo:{role:'Burrowing brawler',tip:'Tunnel under projectiles and come up swinging.',sp:1,pw:1,kb:1},
@@ -4935,7 +4935,7 @@ akio:['Curls into a ball, hangs in the air for a beat, then shoots straight at t
 sata:['Charge Shot. Tap for a small fast shot; hold B to charge it into a blast twice the size and well over double the damage.','A missile that homes in on a rival and bursts. Hold B for a moment to launch a faster, harder one.','Screw Attack: a rising spin that hits again and again and launches at the top.','Drops a bomb at her feet that bursts a moment later. In the air each bomb bounces her upward a little.','Opens every weapon port and fires down the lane.'],
 kitsu:['A beam of rainbow light. Tilt the stick up or down while he winds up to aim it diagonally.','Rainbow Road: he lays a rainbow in front of him and surfs it, ramming rivals. Steer up and down, press Jump to hop off. Once per trip into the air.','Over the Rainbow: rides a rising arc of light, hitting all the way up.','Spectrum Burst: seven bolts, one in each colour, fan out above him and rain down on both sides.','A wall of every colour at once sweeps the stage. He takes a bow.'],
 uzi:['Lobs a glob of slime that sticks to whoever it hits.','Lunges and swallows a rival whole: squeezes them inside her, then spits them out. Shields do not stop it.','A geyser of slime erupts under her and throws her upward.','Melts into a puddle and pours across the floor. She cannot be hit, slows anyone she passes under, and leaves a sticky pool that roots.','Becomes a wave of slime taller than the stage.'],
-ichigo:['Lobs a grenade. It explodes.','Launches a drone that flies out and comes back.','A jetpack carries her in any direction; the exhaust burns anyone below.','Plants a proximity mine. One at a time.','Unfolds the prototype mech she has been working on and fires its main gun.'],
+ichigo:['Lobs a grenade. It explodes.','Launches a drone that flies out and comes back.','Her robotic arm grabs a lift drone, which carries her in any direction. The rotors cut anyone above her.','Plants a proximity mine. One at a time.','Unfolds the prototype mech she has been working on and fires its main gun.'],
 bentou:['A drifting curse that hunts a rival and JINXES them for seven seconds: they become a quarter bigger to hit, their shield takes half again as much damage, and their attacks do 12% less.','Blesses himself: faster for four seconds, and his next hit lands 30% harder. Long cooldown.','A rising leap.','He saw it coming: the longest counter window in the school. The counter-hit jinxes for five seconds.','Everyone on screen gets what is coming to them.'],
 okane:['Flicks a coin, fast and flat.','A contemptuous shoulder charge.','A rising leap.','Turns to solid gold for eight seconds: 20% more damage and much harder to launch, but slower. Long cooldown.','Demonstrates, at length, why he is better than this.'],
 goiru:['Brings his hammer down. Slow, heavy and it cracks shields.','An armoured swoop on his wings.','Free flight for a moment.','Turns to stone: for two and a half seconds nothing makes him flinch, and he heals 3%.','Drops out of the sky onto a rival.'],
@@ -5689,7 +5689,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
 (function(){const c=id=>CH.find(x=>x.id===id);
  const W2={moya:['Light, and his damage is low.','Two of his specials cannot be hit at all.'],sato:['The lowest damage of any brawler.','AIRBAGS: his smash attacks send rivals 12% further.'],akio:['Small, light, and he overshoots: a missed roll leaves him wide open.','The fastest runner in the school, and Spring Jump does not leave him helpless.'],
   sata:['Slow on the ground, and floaty: she is easy to juggle.','Bomb jumps keep her airborne, and her grab is a grapple beam.'],kitsu:['Light, and little up close: he needs room for his beams.','Rainbow Road carries him across the whole stage, on the ground or in the air.'],uzi:['Slow, and a big soft target.','SLIME: launched 12% less, and regenerates slowly when left alone.'],
-  ichigo:['Weak up close and easy to launch.','Mines, drones and grenades all at once.'],bentou:['Small, light and he hits softly; against a rival who is not jinxed he has very little.','JINX: his curses make a rival a bigger target with a weaker shield and softer hits. A parry window half again as long as normal.'],okane:['Gilded has a sixteen-second cooldown, and he is ordinary without it.','GILDED: 20% more damage and 30% less knockback taken for eight seconds.'],
+  ichigo:['Light, slow, and her arm hits softly.','ROBOTIC ARM: every normal, smash and grab is the arm on her backpack, so they out-reach most rivals. Mines, drones and grenades on top.'],bentou:['Small, light and he hits softly; against a rival who is not jinxed he has very little.','JINX: his curses make a rival a bigger target with a weaker shield and softer hits. A parry window half again as long as normal.'],okane:['Gilded has a sixteen-second cooldown, and he is ordinary without it.','GILDED: 20% more damage and 30% less knockback taken for eight seconds.'],
   goiru:['A huge target with a slow start to everything.','Four jumps. Hits under 5% do not make him flinch.'],aya:['Light, with little knockout power.','A different crystal on every special.'],hikari:['Short reach for a blade fighter and light.','SHOCK: every fourth hit she lands holds the rival a moment longer.'],
   ryo:['No projectile and average speed.','Cannot be confused, and sees cloaked rivals.'],suzume:['Light; her best hits need the web to land first.','Three jumps.'],ayame:['Very low damage: she wins by ring-out.','Her hits push 10% further.'],
   sota:['His dashes commit him; miss and he is wide open.','The fastest dash and the highest jump in the school.'],tiki:['Slow projectiles and no fast escape.','His spirits do the fighting: his attacks never expose his arms, and three of his specials keep working after he has moved on.'],
@@ -7526,16 +7526,16 @@ for(const C of CH){const S=C.st,id=C.id,w=S.w,hv=w>1.15?-1:w<.9?1:0;if(KEEP.has(
   if(A)A.st.run=Math.max(A.st.run,mx+.6);if(Z)Z.st.run=Math.max(Z.st.run,mx+.15);if(Y)Y.st.jump=Math.min(Y.st.jump,mj-.6);if(So)So.st.jump=Math.min(So.st.jump,mj-.2);}
 for(const C of CH)if(C.styleT)C.trait=(C.trait?C.trait+' ':'')+'STYLE: '+C.styleT[0]+' — '+C.styleT[1];
 /* grab reach */
-const GR={sata:72,minato:80,kichi:84,ivan:62,suzume:78,kuragari:74,ash:66,taru:64,moya:58,uzi:56,dawson:66,oliver:56,zabu:46,tamashi:52,keanu:48,hari:36,kongu:33,goiru:32,sanshou:30,ryuko:30,tomi:31,koki:30,shiki:30,bryson:24,
+const GR={ichigo:62,sata:72,minato:80,kichi:84,ivan:62,suzume:78,kuragari:74,ash:66,taru:64,moya:58,uzi:56,dawson:66,oliver:56,zabu:46,tamashi:52,keanu:48,hari:36,kongu:33,goiru:32,sanshou:30,ryuko:30,tomi:31,koki:30,shiki:30,bryson:24,
   conor:17,riku:19,akio:22,hana:22,maho:22,aya:22,makiko:21,kairi:23,emi:23,tori:22};
 for(const C of CH){if(GR[C.id])C.grabR=GR[C.id];else if(!C.grabR)C.grabR=Math.round(23+u(C.id,'grab')*8);}
 /* tethers: hold GRAB in the air near a ledge */
-const TE={minato:[125,'a stretched arm'],kichi:[125,'a chain'],kuragari:[130,'a web line'],suzume:[130,'a web line'],dawson:[120,'a grapple line'],ivan:[110,'a giant hand'],oliver:[110,'a line arrow'],ash:[100,'a branch'],moya:[100,'a tendril of mist'],uzi:[92,'a rope of slime'],taru:[100,'a vine'],sata:[120,'a grapple beam'],keanu:[90,'his hook'],tamashi:[90,'puppet strings'],zabu:[74,'his tail']};
+const TE={minato:[125,'a stretched arm'],kichi:[125,'a chain'],kuragari:[130,'a web line'],suzume:[130,'a web line'],dawson:[120,'a grapple line'],ivan:[110,'a giant hand'],oliver:[110,'a line arrow'],ash:[100,'a branch'],moya:[100,'a tendril of mist'],uzi:[92,'a rope of slime'],taru:[100,'a vine'],sata:[120,'a grapple beam'],ichigo:[105,'her robotic arm'],keanu:[90,'his hook'],tamashi:[90,'puppet strings'],zabu:[74,'his tail']};
 for(const id in TE){const C=c(id);if(!C)continue;C.tether=TE[id][0];C.trait=(C.trait?C.trait+' ':'')+'TETHER GRAB: his or her grab is '+TE[id][1]+' thrown out to arm\'s length and beyond, and holding GRAB in the air near a ledge catches it from a distance.';}
 const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined'||GS!=='play')return;for(const f of F){const R=f.C.tether;if(!R||f.dead||f.gone||f.ground||f.form)continue;if(f.st!=='air'&&f.st!=='helpless')continue;if(f.ledgeCD>0||f.vy<-1)continue;
   const want=f.ctrl==='cpu'?(f.vy>1&&(f.x<LEDGES[0].x-6||f.x>LEDGES[1].x+6)):(f.pi&&f.pi.G);if(!want)continue;
   for(const L of LEDGES){if(L.occ)continue;const dx=(f.x-L.x)*L.side,dy=f.y-L.y;if(dx>-10&&dx<R&&dy>-40&&dy<R&&Math.hypot(dx,dy-30)<R){f.teFX={x0:f.x,y0:f.y-36,x1:L.x,y1:L.y,until:FR+12};grabLedge(f,L);sfx('grab');break;}}}};
-const TC={sata:['line','#5ab8ff'],minato:['arm'],kichi:['chain','#c8ccd8'],kuragari:['line','#f0f0f8'],suzume:['line','#f0f0f8'],dawson:['hook','#c8d8f0'],ivan:['arm','#7af0ff'],oliver:['hook','#d8f0c0'],ash:['arm','#7a5230'],moya:['wisp','#d0e4ff'],uzi:['arm','#7ae04a'],keanu:['hook','#c8a878'],tamashi:['line','#e8dcc0'],zabu:['arm','#b0b0b8'],taru:['vine','#3aa84a']};
+const TC={ichigo:['arm','#9aa6c0'],sata:['line','#5ab8ff'],minato:['arm'],kichi:['chain','#c8ccd8'],kuragari:['line','#f0f0f8'],suzume:['line','#f0f0f8'],dawson:['hook','#c8d8f0'],ivan:['arm','#7af0ff'],oliver:['hook','#d8f0c0'],ash:['arm','#7a5230'],moya:['wisp','#d0e4ff'],uzi:['arm','#7ae04a'],keanu:['hook','#c8a878'],tamashi:['line','#e8dcc0'],zabu:['arm','#b0b0b8'],taru:['vine','#3aa84a']};
 const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){const tc=TC[f.C.id];if(tc&&f.st==='grab'&&!f.dead&&!f.form){const R=f.C.grabR||26,u=f.stT<=7?Math.min(1,f.stT/6):Math.max(0,1-(f.stT-8)/8),L=R*u,x0=f.x+f.face*8,y=f.y-30*(lookOf(f).size||1),x1=x0+f.face*L,col=tc[1]||(lookOf(f).skin)||'#f0d0b8';
     if(L>2){if(tc[0]==='chain'){for(let i=0;i<L;i+=4)wring(x0+f.face*i,y+(i%8?1:-1),2,i%8?'#8a8e9a':col,1.5);}else if(tc[0]==='vine'){X.strokeStyle='#1e5a2a';X.lineWidth=4;X.beginPath();for(let i=0;i<=L;i+=3)X[i?'lineTo':'moveTo'](x0+f.face*i,y+Math.sin(i*.25+FR*.3)*2.5);X.stroke();X.strokeStyle=col;X.lineWidth=2;X.stroke();for(let i=8;i<L;i+=12)wdisc(x0+f.face*i,y-3+Math.sin(i*.25+FR*.3)*2.5,1.6,'#8ae060');}
       else if(tc[0]==='line'||tc[0]==='hook'){wl('#0c0820',x0,y,x1,y,2.5);wl(col,x0,y,x1,y,1);}else if(tc[0]==='wisp'){X.globalAlpha=.6;for(let i=0;i<L;i+=5)wdisc(x0+f.face*i,y+Math.sin(i*.3+FR*.2)*2,3-i/L*1.5,col);X.globalAlpha=1;}
@@ -7618,6 +7618,33 @@ const ov=overlay2D;overlay2D=function(){ov();try{const LIFE=56;while(RBT.length&
 /* rainbow bolts keep their own colour */
 const gd=EK.gp.draw;EK.gp.draw=function(e){const s=e.spec;if(s.sh==='rbolt'){const l=Math.hypot(e.vx,e.vy)||1,ux=e.vx/l,uy=e.vy/l;wl(s.c,e.x-ux*11,e.y-uy*11,e.x,e.y,3.4);wl('#ffffff',e.x-ux*4,e.y-uy*4,e.x,e.y,1.4);if(e.t%2===0)part(e.x-ux*10,e.y-uy*10,0,0,7,s.c,1,0);return;}gd(e);};
 }
+
+/* ---------- Ichigo Tanaka: one robotic arm on her backpack does the fighting ---------- */
+{const C=CH.find(q=>q.id==='ichigo');if(C){C.disjoint=1;
+ const AN={jab1:'cast',jab2:'cast',jab3:'cast',jab:'cast',ftilt:'cast',utilt:'castUp',dtilt:'castDown',fsmash:'cast',usmash:'castUp',dsmash:'castDown',fair:'cast',bair:'cast',uair:'castUp',dair:'castDown'};
+ for(const T of[C.mv,C.hmv]){if(!T)continue;for(const k in AN){const d=T[k];if(!d||!d.hits||!d.hits.length||d._ia)continue;d._ia=1;d.an=AN[k];d.lim='none';delete d.ph;delete d.pw;d.hits.forEach(h=>h.b.forEach(q=>{q[0]*=1.2;q[1]=q[1]*1.08;})); }}
+ const ST='#9aa6c0',DK='#0c0820',JT='#ff8a30';
+ function target(f,x,y){const m=f.mv,fc=f.face;
+  if(f.st==='hit'||f.st==='held'||f.tumble)return[x-fc*16,y-26,0];
+  if(f.st==='ledge')return[x+fc*10,y-64,1];
+  if(m){const d=m.d;if(d.beh==='fly')return[x,y-86,1];
+   if(d.hits&&d.hits.length){const h=d.hits[0];let b=h.b[0];for(const q of h.b)if(Math.abs(q[0])+Math.abs(q[1]+34)>Math.abs(b[0])+Math.abs(b[1]+34))b=q;
+    if(m.t<d.s){const k=m.t/Math.max(1,d.s);return[x-fc*(6+10*k),y-58-6*k,0];}
+    if(m.t<d.s+d.a+3)return[x+fc*b[0],y+b[1],1];return[x+fc*b[0]*.5,y-50,0];}
+   if(m.t<d.s+8)return[x+fc*(m.t<d.s?4:24),y-(m.t<d.s?62:40),m.t>=d.s?0:1];}
+  if(f.st==='run')return[x-fc*10,y-66+Math.sin(FR*.3)*2,0];
+  return[x+fc*7,y-70+Math.sin(FR*.06+f.idx)*2.5,(FR+f.idx*40)%140<10?1:0];}
+ function drawArm(f){const ip=(typeof interpPos==='function')?interpPos(f):f,x=ip.x,y=ip.y,fc=f.face,mx=x-fc*9,my=y-44;
+  const T=target(f,x,y),a=f._arm||(f._arm={x:T[0],y:T[1]});const sp=f.mv&&f.mv.t>=f.mv.d.s?.6:.3;
+  if(Math.hypot(T[0]-a.x,T[1]-a.y)>160){a.x=T[0];a.y=T[1];}a.x+=(T[0]-a.x)*sp;a.y+=(T[1]-a.y)*sp;
+  const dx=a.x-mx,dy=a.y-my,D=Math.hypot(dx,dy)||1,L=Math.max(20,D/2+3),h=Math.sqrt(Math.max(0,L*L-D*D/4)),ex=mx+dx/2+(dy/D)*h*fc,ey=my+dy/2-(dx/D)*h*fc-(h<4?3:0);
+  wl(DK,mx,my,ex,ey,5.5);wl(DK,ex,ey,a.x,a.y,4.5);wl(ST,mx,my,ex,ey,3);wl('#c8d2e8',ex,ey,a.x,a.y,2.2);
+  wdisc(mx,my,3.5,DK);wdisc(mx,my,2.2,JT);wdisc(ex,ey,3.2,DK);wdisc(ex,ey,2,JT);
+  const an=Math.atan2(a.y-ey,a.x-ex),op=T[2]?.25:.7;for(const s of[-1,1]){const px=a.x+Math.cos(an+s*op)*7,py=a.y+Math.sin(an+s*op)*7;wl(DK,a.x,a.y,px,py,3.6);wl('#e8eefc',a.x,a.y,px,py,1.8);}
+  wdisc(a.x,a.y,2.8,DK);wdisc(a.x,a.y,1.6,'#5af0ff');
+  const m=f.mv;if(m&&m.d.beh==='fly'&&m.t>=m.d.s){const qx=x,qy=y-92,w=FR%4<2?13:5;wr(DK,qx-10,qy-4,20,7);wr('#3a3e5a',qx-9,qy-3,18,5);wr('#b8c860',qx-2,qy-3,4,5);for(const s of[-9,9]){wr('#e8f4ff',qx+s-w/2,qy-7,w,1);wr(DK,qx+s,qy-6,1,3);}}}
+ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&f.C&&f.C.id==='ichigo'&&!f.dead&&!f.gone&&!f.invis&&f.st!=='respawn')drawArm(f);}catch(e){}return r;};
+ window._ichArm=drawArm;}}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
