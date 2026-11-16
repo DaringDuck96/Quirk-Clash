@@ -8082,6 +8082,42 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
 {const st2=step;step=function(){st2();if(FR%6)return;for(const f of F){if(f.dead||f.gone)continue;if(f.mightT>FR)part(f.x+rnd()*20-10,f.y-rnd()*56,0,-.5,14,'#ffb060',1,0);if(f.sapT>FR)part(f.x+rnd()*20-10,f.y-20-rnd()*30,0,.4,14,'#8a8aa0',1,0);}};}
 })();
 
+/* ---------- Akemi Tanaka: Speed Manipulation. A Tempo meter that makes her faster the better she is doing, Accelerate, Fast Forward and Rewind ---------- */
+{const C=CH.find(q=>q.id==='akemi');if(C){const fx=C.kit.fx,Y='#ffe060',B='#5a8aff',say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-84,t:0,life:40,col:col||Y});
+ const acc=M('palm',6,5,13,hit([[25,-34,13],[12,-34,10]],7,5,.07,38),{fx,lim:'hF'});
+ const ffw=M('dashF',5,4,13,hit([[0,-30,17]],5,3,.03,62),{fx,lim:'none',cd:42});
+ const rew=M('cast',8,2,16,null,{fx,lim:'none',cd:600});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;T.nB=acc;T.sB=ffw;T.dB=rew;}
+ C.sp=['Accelerate (a palm strike that sends rivals flying faster; any projectile in front of her is flung forward at double speed and becomes hers)','Fast Forward (blinks ahead in the direction held; costs a little Tempo)','Velocity Jump','Rewind (snaps back to where she stood two seconds ago, with the damage she had then; 10 second cooldown)'];
+ C.d='Changes the speed of anything she touches, herself included. Her Tempo meter builds as she runs and lands hits, and everything she does gets faster with it.';
+ C.na='Normals: fast, light strikes that leave speed lines. Her Tempo meter (the chevrons at her feet) fills as she runs and lands hits: the fuller it is, the faster she moves and the sooner her attacks recover. Getting hit knocks it down.';
+ if(C.qa)C.qa[4]='Slows time around her: nearby rivals move at a crawl. Costs a quarter of her Tempo.';
+ try{if(typeof GTXT!=='undefined'&&GTXT.akemi){GTXT.akemi[0]='A palm strike that launches rivals at high speed, so they have less time to react. Any projectile in front of her, hers or not, is flung forward at double speed and now belongs to her.';GTXT.akemi[1]='Blinks a short way in the direction you hold, passing through rivals and hitting them lightly. Costs a little Tempo; with none, the blink is shorter.';GTXT.akemi[3]='Snaps back to where she was two seconds ago, with the damage she had then. A faint clock marks the spot. 10 second cooldown.';}}catch(e){}
+ const H=f=>f.akH||(f.akH=[]);
+ const sm0=startMove;startMove=function(f,key){if(f&&f.C===C&&!f.form&&!(f.copyT>0)){if(key==='qa'&&(f.tp||0)<25){if(FR-(f._ntT||-99)>30){f._ntT=FR;say(f,'NO TEMPO','#b0a070');}return false;}if(key==='dB'&&H(f).length<8)return false;}
+   const r=sm0(f,key);if(r&&f.C===C&&f.mv&&!f.form){if(key==='qa')f.tp=Math.max(0,(f.tp||0)-25);if(key==='sB'){const I=f.pi||{};f._ffd=Math.abs(I.x||0)>.3?Math.sign(I.x):f.face;f.face=f._ffd;}}return r;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah(t,h,dirX,a,o);try{if(r==='hit'){if(a&&a.C===C&&a!==t&&!a.form){const sp=h&&h.spec,dmg=(sp?sp.dmg:h.dmg)||0;a.tp=Math.min(100,(a.tp||0)+dmg*1.5);
+     if(a.mv&&a.mv.k==='nB'&&!(o&&o.proj)){t.vx*=1.45;t.vy*=1.45;t.hitstun=Math.max(8,Math.round(t.hitstun*.72));for(let i=0;i<6;i++)part(t.x,t.y-30+rnd()*20-10,-t.vx*.3,0,12,i%2?Y:'#ffffff',2,0);}}
+   if(t&&t.C===C&&a!==t&&!t.form){const dmg=((h&&h.spec)?h.spec.dmg:h&&h.dmg)||0;t.tp=Math.max(0,(t.tp||0)-(8+dmg));}}}catch(e){}return r;};
+ const st0=step;step=function(){st0();try{for(const f of F){if(f.C!==C||f.gone)continue;if(f.tp===undefined)f.tp=0;if(f.dead||f.st==='respawn'){f.tp=0;f.akH=[];continue;}if(f.form||f.copyT>0)continue;
+   const k=f.tp/100,m=f.mv;if((f.st==='run'||f.st==='dash')&&f.ground)f.tp=Math.min(100,f.tp+.045);
+   if(k>0&&!(f.hl>0)){if(f.ground&&(f.st==='run'||f.st==='walk'||f.st==='dash'))f.x+=f.vx*.3*k;else if(!f.ground&&(f.st==='air'||f.st==='jump'||f.st==='fall')&&!f.hitstun)f.x+=f.vx*.16*k;
+     if(m&&m.d&&m.t>m.d.s+m.d.a+1&&m.t<m.d.s+m.d.a+m.d.r-1&&!m.d.beh){f._ra=(f._ra||0)+.3*k;if(f._ra>=1){f._ra-=1;m.t++;}}
+     if(k>.5&&FR%4===0&&Math.abs(f.vx)>1.5)part(f.x-f.face*10,f.y-12-rnd()*34,-f.face*1.6,0,9,rnd()<.5?Y:B,1,0);}
+   const h=H(f);if(FR%6===0&&f.st!=='hit'&&!f.hitstun){h.push({x:f.x,y:f.y,dmg:f.dmg,face:f.face,g:!!f.ground});if(h.length>21)h.shift();}
+   if(m&&!(f.hl>0)){const d=m.d;
+     if(m.k==='nB'&&m.t>=d.s-1&&m.t<=d.s+d.a){for(const e of ENT){if(!e.alive||!e.proj||e._acc===f.id)continue;const dx=(e.x-f.x)*f.face;if(dx>-10&&dx<52&&Math.abs(e.y-(f.y-32))<34){e.owner=f;e._acc=f.id;e.face=f.face;e.vx=f.face*Math.max(9,Math.abs(e.vx)*2);e.vy=(e.vy||0)*.3;if(e.dmg)e.dmg*=1.6;if(e.spec&&e.spec.dmg)e.spec=Object.assign({},e.spec,{dmg:e.spec.dmg*1.6});e.hits={};e.life=Math.max(e.life||0,44);f.tp=Math.min(100,f.tp+6);say(f,'ACCELERATED');sfx('reflect');FXL.push({k:'ring',x:e.x,y:e.y,t:0,col:Y,r0:6,life:14});}}}
+     if(m.k==='sB'&&m.t===d.s&&!m._bl){m._bl=1;const dir=f._ffd||f.face,full=f.tp>=12,dist=full?96:58;if(full)f.tp-=12;const x0=f.x;let nx=f.x+dir*dist;nx=clamp(nx,-40,WW+40);f._gh={x:x0,y:f.y,x1:nx,t:FR};f.x=nx;f.lx=0;f.vx=dir*2.2;if(!f.ground)f.vy=Math.min(f.vy,0);f.inv=Math.max(f.inv||0,8);sfx('warp');for(let i=0;i<8;i++)part(x0+(nx-x0)*i/8,f.y-30+rnd()*24-12,-dir*.8,0,12,i%2?Y:B,2,0);
+       for(const t of F){if(t===f||t.dead||t.gone||(typeof sameTeam==='function'&&sameTeam(f,t)))continue;if(t.x>Math.min(x0,nx)-12&&t.x<Math.max(x0,nx)+12&&Math.abs(t.y-f.y)<46&&!(t.inv>0))try{applyHit(t,d.hits[0],dir,f,{});}catch(e){}}}
+     if(m.k==='dB'&&m.t===d.s&&!m._rw){m._rw=1;const p=h[0];if(p){f._gh={x:f.x,y:f.y,x1:p.x,t:FR,rw:1};const heal=f.dmg-p.dmg;f.x=p.x;f.y=p.y-(p.g?3:0);f.lx=f.ly=0;f.vx=f.vy=0;f.face=p.face;f.ground=null;if(heal>0)f.dmg=p.dmg;f.inv=Math.max(f.inv||0,14);f.akH=[];say(f,'REWIND',B);sfx('warp');FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:B,r0:26,life:20});FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:'#ffffff',r0:10,life:14});}}}
+  }}catch(e){}};
+ const df=drawFighter;drawFighter=function(f){if(f&&f.C===C&&!f.form&&!f.dead&&typeof X!=='undefined'&&X){try{const ip=(typeof interpPos==='function')?interpPos(f):f;
+    const g=f._gh;if(g&&FR-g.t<14){const a=1-(FR-g.t)/14;X.save();X.globalAlpha=a*.6;for(let i=0;i<5;i++){const x=g.x+(g.x1-g.x)*i/5;wr(i%2?Y:B,x-5,g.y-52+i*2,10,48-i*4);}X.restore();}
+    const h=f.akH;if(h&&h.length>=8&&!(f.cds&&f.cds.dB>FR)){const p=h[0];X.save();X.globalAlpha=.55+Math.sin(FR*.15)*.15;wring(p.x,p.y-30,9,B,1.6);wl(B,p.x,p.y-30,p.x,p.y-37,1.4);wl(B,p.x,p.y-30,p.x+Math.cos(-FR*.12)*5,p.y-30+Math.sin(-FR*.12)*5,1.4);X.restore();}
+    const n=Math.round((f.tp||0)/20);X.save();for(let i=0;i<5;i++){const x=ip.x-17+i*7.4,y=ip.y+7,on=i<n;X.globalAlpha=on?1:.35;wtri('#0c0820',x-1.4,y-4.4,x-1.4,y+4.4,x+6.4,y);wtri(on?(n>=5?'#ffffff':Y):'#3a3a4a',x,y-3,x,y+3,x+4.6,y);}X.restore();}catch(e){try{X.restore();}catch(e2){}}}
+   return df.apply(this,arguments);};
+}}
+
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
    One row per fighter: [rise kind, dash kind]. Colours come from the fighter unless a row gives its own. */
 (function(){
@@ -8697,6 +8733,7 @@ const OK={
  aya:(f,k)=>k!=='nB'||!(f.ayT>FR),
  sota:(f)=>f.fuel===undefined||f.fuel>=38,
  ryo:(f,k,o,adx)=>k!=='dB'||adx>60,
+ akemi:(f,k)=>k!=='dB'||!!(f.akH&&f.akH[0]&&f.dmg-f.akH[0].dmg>=14),
  kouji:()=>true};
 const ai0=aiInput;aiInput=function(f){const I=ai0(f);try{
   const ai=f.ai2||(f.ai2={cd:60,kc:{},hold:0,tk:0}),P=f.pi||{},lv=Math.min(9,Math.max(1,f.lvl||1)),R=.25+.75*(lv-1)/8;
