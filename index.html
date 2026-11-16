@@ -8223,6 +8223,48 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
      if(m.k==='nB'&&m._thr&&FR-m._thT<10){const t=m._thr,y=f.y-38,x1=t.x+f.face*68;wl(DKc,t.x,y,x1,y,8);wl(BR,t.x,y,x1,y,5);wdisc(x1,y,5,BR);wdisc(x1+f.face*3,y-4,3,GR2);}}}catch(e){}};
 }}
 
+/* ---------- Bara Kusa-Boke: Peacock. A ninja whose tail is a quiver of steel feathers: he throws them, leaves them in the stage and in his rivals, and calls them all back at once ---------- */
+{const C=CH.find(q=>q.id==='bara');if(C){const fx=['#d8e0ee','#ff4a5a'],SL='#d8e0ee',SD='#8a96ac',RD='#ff4a5a',DKc='#0c0820',MAX=12,say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-86,t:0,life:36,col:col||SL});
+ const STUCK=[],RET=[],LIVE=[];window.BARAQ={STUCK,RET};
+ const thr=M('throwF',4,1,8,null,{fx,lim:'none'}),stepM=M('slashF',7,4,13,hit([[20,-34,15],[8,-34,11]],8,4,.062,58),{fx,lim:'w',cd:38}),rec=M('cast',8,3,13,null,{fx,lim:'none',cd:45});
+ for(const T of[C.mv,C.hmv]){if(!T)continue;T.nB=thr;T.sB=stepM;T.dB=rec;}
+ C._aik={nB:'far',sB:'mid',dB:'self'};
+ C.d='A ninja whose tail is a quiver of light, razor-sharp steel feathers. He throws them, leaves them where they land, and calls every one of them back when it suits him.';
+ C.na='Normals: quick, exact cuts with a steel feather held like a short blade. Hits at the end of his reach do more. His tail holds twelve feathers (the row at his feet) and regrows one every second and a half.';
+ C.sp=['Steel Feather (throws one feather, fast and straight; tap again for more, hold up or down to angle it; feathers that hit stay in the rival, feathers that miss stay in the floor)','Shadow Step (vanishes and reappears behind the nearest rival ahead of him with a cut; with nobody ahead it is a short dash)','Peacock Glide','Recall (every feather he has left in the stage or in a rival flies back to him, cutting what it passes; feathers in a rival tear out and drag them toward him)'];
+ if(C.qa)C.qa=['SUBSTITUTION','guard',{dur:110},11,'Leaves a decoy of feathers: the next hit within two seconds passes through it.'];
+ try{if(typeof GTXT!=='undefined'&&GTXT.bara){GTXT.bara[0]='Throws one steel feather, fast and straight. Each costs a feather from his tail. Press again to keep throwing; hold up or down as you throw to angle it. A feather that hits stays in the rival (up to six). A feather that misses sticks in the floor where it lands.';
+   GTXT.bara[1]='Vanishes and reappears behind the nearest rival in front of him, already cutting. With nobody in reach it is a short dash forward.';
+   GTXT.bara[3]='Calls his feathers home. Each one stuck in the stage flies back to him and cuts any rival in its path. Each one stuck in a rival tears out: the more there are, the more it hurts, and the rival is dragged toward him. Recalled feathers go back into his tail.';}}catch(e){}
+ const emb=t=>(t._emb||[]).filter(e=>e.until>FR);
+ const gd=EK.gp.draw;EK.gp.draw=function(e){const s=e.spec;if(s.sh==='quill'){const a=Math.atan2(e.vy||0,e.vx||1),ux=Math.cos(a),uy=Math.sin(a),nx=-uy,ny=ux,x=e.x,y=e.y;wtri(DKc,x-ux*9+nx*3.6,y-uy*9+ny*3.6,x-ux*9-nx*3.6,y-uy*9-ny*3.6,x+ux*10,y+uy*10);wtri(SL,x-ux*8+nx*2.4,y-uy*8+ny*2.4,x-ux*8-nx*2.4,y-uy*8-ny*2.4,x+ux*8.5,y+uy*8.5);wl('#ffffff',x-ux*6,y-uy*6,x+ux*6,y+uy*6,.9);wdisc(x-ux*8,y-uy*8,1.8,RD);return;}gd(e);};
+ const quillAt=(x,y,a,c)=>{const ux=Math.cos(a),uy=Math.sin(a),nx=-uy,ny=ux;wtri(DKc,x+nx*3.2,y+ny*3.2,x-nx*3.2,y-ny*3.2,x+ux*13,y+uy*13);wtri(c||SL,x+nx*2,y+ny*2,x-nx*2,y-ny*2,x+ux*11.5,y+uy*11.5);wdisc(x+ux*11,y+uy*11,1.7,RD);};
+ const sm0=startMove;startMove=function(f,key){if(f&&f.C===C&&!f.form&&!(f.copyT>0)){if(key==='nB'&&(f.qf===undefined?MAX:f.qf)<=0){if(FR-(f._nfT||-99)>40){f._nfT=FR;say(f,'NO FEATHERS',SD);}return false;}}
+   const r=sm0(f,key);if(r&&f&&f.C===C&&f.mv&&key==='sB'){const I=f.pi||{};if(Math.abs(I.x||0)>.3)f.face=Math.sign(I.x);}return r;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah(t,h,dirX,a,o);try{if(h&&h._quill&&o&&o.proj){if(r==='hit'){h._hit=1;const E=t._emb=emb(t);if(E.length<6)E.push({by:h._quill,until:FR+600,a:rnd()*1.2-.6,o:rnd()*20-10});}else if(r==='shield'||r==='miss')h._hit=1;}}catch(e){}return r;};
+ const st0=step;step=function(){st0();try{if(typeof GS!=='undefined'&&GS==='count'&&gsT<2){STUCK.length=0;RET.length=0;LIVE.length=0;}
+  for(let i=LIVE.length-1;i>=0;i--){const e=LIVE[i];if(e.alive){e._lx=e.x;e._ly=e.y;continue;}LIVE.splice(i,1);if(e._hit)continue;const x=e._lx===undefined?e.x:e._lx,y0=e._ly===undefined?e.y:e._ly;let best=null;for(const s of surfaces()){if(x>s.x&&x<s.x+s.w&&s.y>=y0-6&&(!best||s.y<best.y))best=s;}if(best&&best.y-y0<160)STUCK.push({x,y:best.y,owner:e._quill,until:FR+540,a:-1.2-rnd()*.7});}
+  for(let i=STUCK.length-1;i>=0;i--)if(FR>STUCK[i].until||STUCK[i].owner.gone)STUCK.splice(i,1);
+  for(let i=RET.length-1;i>=0;i--){const q=RET[i],f=q.owner,tx=f.x,ty=f.y-34,dx=tx-q.x,dy=ty-q.y,d=Math.hypot(dx,dy)||1;if(f.dead||f.gone||++q.t>90){RET.splice(i,1);continue;}if(d<16){RET.splice(i,1);f.qf=Math.min(MAX,(f.qf||0)+1);if(FR%2===0)sfx('pop');continue;}q.vx=dx/d*13;q.vy=dy/d*13;q.x+=q.vx;q.y+=q.vy;
+    for(const o of F){if(o===f||o.dead||o.gone||o.inv>0||q.hit[o.id]||(typeof sameTeam==='function'&&sameTeam(f,o)))continue;if(Math.abs(o.x-q.x)<14&&Math.abs((o.y-30)-q.y)<30){q.hit[o.id]=1;try{applyHit(o,{dmg:3.5,bkb:2.6,kbg:.03,ang:72,b:[[0,0,6]],fx},Math.sign(q.vx)||1,f,{proj:1});}catch(e){}}}}
+  for(const f of F){if(f.C!==C||f.gone)continue;if(f.qf===undefined)f.qf=MAX;if(f.dead||f.st==='respawn'){f.qf=MAX;continue;}if(f.form||f.copyT>0)continue;
+    if(f.qf<MAX){f._qr=(f._qr||0)+1;if(f._qr>=90){f._qr=0;f.qf++;}}
+    const m=f.mv;if(!m||f.hl>0)continue;const d=m.d,I=f.pi||{};
+    if(m.k==='nB'&&m.t===d.s&&!m._th&&f.qf>0){m._th=1;f.qf--;let ay=0;if((I.y||0)<-.4)ay=-.62;else if((I.y||0)>.4&&!f.ground)ay=.62;const ax=Math.sqrt(1-ay*ay)*f.face;const e=spawnEnt(f,{k:'gp',sh:'quill',c:SL,vx:11.5,life:34,r:4,dmg:3.4,bkb:1.5,kbg:.012,ang:38,dy:-36,dx:12});if(e){e.vx=ax*11.5;e.vy=ay*11.5;e._quill=f;LIVE.push(e);}sfx('swing');}
+    if(m.k==='sB'&&m.t===d.s-2&&!m._st){m._st=1;let best=null,bd=150;for(const o of F){if(o===f||o.dead||o.gone||(typeof sameTeam==='function'&&sameTeam(f,o)))continue;const dx=(o.x-f.x)*f.face;if(dx>10&&dx<bd&&Math.abs(o.y-f.y)<70){bd=dx;best=o;}}
+      const x0=f.x,y0=f.y;for(let i=0;i<8;i++)part(x0+rnd()*14-7,y0-rnd()*50,(rnd()-.5)*2,-rnd(),16,i%2?SL:RD,2,0);
+      if(best){f.x=clamp(best.x+f.face*26,-30,WW+30);f.y=best.y;if(!best.ground)f.ground=null;f.face=-f.face;f.vx=0;f.vy=Math.min(f.vy,0);}else{f.x=clamp(f.x+f.face*78,-30,WW+30);f.vx=f.face*2;}f.lx=f.ly=0;f.inv=Math.max(f.inv||0,7);sfx('warp');FXL.push({k:'ring',x:x0,y:y0-30,t:0,col:SL,r0:8,life:12});}
+    if(m.k==='dB'&&m.t===d.s&&!m._rc){m._rc=1;let n=0;for(let i=STUCK.length-1;i>=0;i--){const q=STUCK[i];if(q.owner!==f)continue;STUCK.splice(i,1);RET.push({x:q.x,y:q.y-8,owner:f,t:0,hit:{},vx:0,vy:0});n++;}
+      for(const o of F){if(o===f||o.dead||o.gone)continue;const E=emb(o),mine=E.filter(e=>e.by===f);if(!mine.length)continue;o._emb=E.filter(e=>e.by!==f);const k=mine.length,dir=Math.sign(f.x-o.x)||1;n+=k;for(let i=0;i<k;i++)RET.push({x:o.x+rnd()*10-5,y:o.y-30+rnd()*20-10,owner:f,t:0,hit:{[o.id]:1},vx:0,vy:0});
+        try{applyHit(o,{dmg:1.5+2.6*k,bkb:3+k*.9,kbg:.03+.011*k,ang:48,b:[[0,0,8]],fx},dir,f,{proj:1,force:1});}catch(e){}burst(o.x,o.y-30,6+k*3,[SL,RD,'#ffffff'],2.4,18);}
+      if(n){say(f,'RECALL');sfx('reflect');FXL.push({k:'ring',x:f.x,y:f.y-34,t:0,col:SL,r0:30,life:16});}else say(f,'NOTHING OUT',SD);}
+  }}catch(e){}};
+ const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const q of STUCK){if(q.until-FR<60&&FR%6<2)continue;quillAt(q.x,q.y+1,q.a);}for(const q of RET){quillAt(q.x,q.y,Math.atan2(q.vy,q.vx)+Math.PI);wl(SL,q.x,q.y,q.x-q.vx*1.4,q.y-q.vy*1.4,1);}}catch(e){}};
+ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&typeof X!=='undefined'&&X&&!f.dead){const ip=(typeof interpPos==='function')?interpPos(f):f;
+    if(f._emb&&f._emb.length){for(const e of f._emb){if(e.until<=FR)continue;quillAt(ip.x+e.o*.5,ip.y-30+e.o,-1.57+e.a);}}
+    if(f.C===C&&!f.form&&f.qf!==undefined){const x=ip.x-17.5,y=ip.y+5;for(let i=0;i<MAX;i++){const on=i<f.qf;wr(DKc,x+i*3-.6,y-.6,2.6,6.2);wr(on?SL:'#3a3a4a',x+i*3,y,1.4,5);if(on)wr(RD,x+i*3,y+4,1.4,1);}}}}catch(e){}return r;};
+}}
+
 /* flair.js — every rising special and every dash shows HOW that fighter does it: a vine, a jet, a wing beat, a shadow.
    One row per fighter: [rise kind, dash kind]. Colours come from the fighter unless a row gives its own. */
 (function(){
@@ -8298,7 +8340,7 @@ window.FLAIR={R,D,RISE,DASH,OPT};
 /* props.js — every fighter's smash attacks and throws are drawn with their own quirk: an ice spike, a shark's jaws, a chain, a giant hand.
    One row per fighter: [prop, colour, second colour]. The prop is drawn from the fighter's body out to where the attack lands. */
 (function(){
-const T={kimiko:['spike','#8fe4ff'],keanu:['wave','#5fd0ff'],bara:['wing','#3ac8a0','#ffd84a'],tori:['hand','#b890ff'],minato:['fist','#f3d4ba'],oro:['jaws','#e8f0f4','#a0ff40'],gomi:['blast','#ff6a1a','#ffe060'],kouji:['orb','#ffffff','#2a2450'],
+const T={kimiko:['spike','#8fe4ff'],keanu:['wave','#5fd0ff'],bara:['dagger','#d8e0ee','#b8202c'],tori:['hand','#b890ff'],minato:['fist','#f3d4ba'],oro:['jaws','#e8f0f4','#a0ff40'],gomi:['blast','#ff6a1a','#ffe060'],kouji:['orb','#ffffff','#2a2450'],
  emi:['wing','#e8b040','#fff4c8'],soran:['hand','#8a60ff'],ryuko:['fist','#ff40c0'],shiki:['fist','#7aa8ff'],zabu:['whip','#b0b0b8','#16161c'],marina:['swarm','#f4b020',null,'fish'],uchuu:['orb','#b890ff','#ffd860'],shuko:['blast','#d8d0c0','#ffffff'],
  torabi:['pan','#3a3a44'],suze:['swarm','#ffc020',null,'bee'],tatsuya:['hand','#e8c040'],riku:['blast','#b8b4d8','#ffffff'],sanshou:['fist','#5aa84a'],kairi:['whip','#ff8ac8','#e8f4ff'],kichi:['chain','#c8ccd8'],tamashi:['whip','#e8dcc0','#c88aff'],
  akemi:['bolt','#ffe060'],taru:['blast','#ff7a20','#5fd0ff'],sai:['fist','#8affc8'],tenmetsu:['orb','#5ad8ff','#ffffff'],yado:['whip','#e83a2a','#ff9a9a'],hari:['spike','#d8dce8'],toguchi:['portal','#9a70ff'],pitto:['fist','#e84a3a'],
@@ -8627,10 +8669,10 @@ window.FEELT=T;
 /* persona.js — personality outside the fighting: every fighter has their own taunt line and one of eight taunt, victory and idle-fidget styles. */
 (function(){
 const TYPES={bold:'gomi pitto raion daku sota akio shiki kongu zabu ryuko hana torabi ray koki hikari sato tomi',calm:'kimiko rei kal sanshou tenmetsu kurai shi ayame evona sata moya kichi hari taru ivan tatsuya oro ryo',
- joker:'hippo conor minato riku soran aria takeshi uzi suze kitsu chiyoki yado bisu sai',shy:'bryson suzume tamashi makiko kairi mia',proud:'okane bara aya ginko akemi kora yoko emi',
- kind:'goiru tai maya chris marina tsuki keanu oliver kouji jack uchuu',grim:'hatsuko sarah kuragari homura shuko bentou yurei',nerd:'ichigo maho dawson ali toguchi tiki'};
+ joker:'hippo conor minato riku soran aria takeshi uzi suze kitsu chiyoki yado bisu sai',shy:'bryson suzume tamashi makiko kairi mia',proud:'okane aya ginko akemi kora yoko emi',
+ kind:'goiru tai maya chris marina tsuki keanu oliver kouji jack uchuu',grim:'bara hatsuko sarah kuragari homura shuko bentou yurei',nerd:'ichigo maho dawson ali toguchi tiki'};
 const TYPE={};for(const t in TYPES)for(const id of TYPES[t].split(' '))TYPE[id]=t;const typeOf=C=>TYPE[C.id]||'kind';
-const LINE={kimiko:'COLD ENOUGH FOR YOU?',keanu:'THE TIDE ALWAYS WINS.',bara:'LOOK AT THESE FEATHERS.',tori:'CAN\'T TOUCH THIS. LITERALLY.',minato:'I CAN STRETCH THIS OUT ALL DAY.',oro:'ONE BITE IS ALL IT TAKES.',gomi:'IS IT HOT IN HERE, OR IS IT ME?',kouji:'BALANCE.',
+const LINE={kimiko:'COLD ENOUGH FOR YOU?',keanu:'THE TIDE ALWAYS WINS.',bara:'ENOUGH TALK.',tori:'CAN\'T TOUCH THIS. LITERALLY.',minato:'I CAN STRETCH THIS OUT ALL DAY.',oro:'ONE BITE IS ALL IT TAKES.',gomi:'IS IT HOT IN HERE, OR IS IT ME?',kouji:'BALANCE.',
  emi:'EYES UP HERE. WAY UP.',soran:'TAG. YOU\'RE IT.',ryuko:'MY HEART\'S JUST WARMING UP!',shiki:'ONI DON\'T BACK DOWN.',zabu:'FINDERS KEEPERS.',marina:'PLENTY MORE FISH IN THE SEA.',uchuu:'EVERYTHING REVOLVES AROUND ME.',shuko:'YOU WON\'T SEE IT COMING.',
  torabi:'ORDER UP!',suze:'BOW TO YOUR QUEEN.',tatsuya:'ANYTHING YOU CAN DO...',riku:'SMALL TARGET. BIG PROBLEM.',sanshou:'HIT ME. GO ON.',kairi:'CAREFUL. I STING.',kichi:'YOU\'RE ALREADY CAUGHT.',tamashi:'DANCE FOR ME.',
  akemi:'TOO SLOW.',taru:'PICK AN ELEMENT.',sai:'PLENTY OF ME TO GO AROUND.',tenmetsu:'BLINK AND YOU\'LL MISS ME.',yado:'LOOK, DON\'T TOUCH.',hari:'JUST A LITTLE PINCH.',toguchi:'I KNOW A SHORTCUT.',pitto:'HOP TO IT!',
@@ -8644,7 +8686,7 @@ const LINE={kimiko:'COLD ENOUGH FOR YOU?',keanu:'THE TIDE ALWAYS WINS.',bara:'LO
 const WINL={bold:['TOO EASY! WHO\'S NEXT?','THAT\'S HOW IT\'S DONE!','I COULD GO AGAIN RIGHT NOW!'],calm:['A GOOD MATCH.','AS EXPECTED.','BREATHE. IT IS OVER.'],joker:['DID I WIN? I WASN\'T LOOKING.','GG! NO REMATCH. OKAY, MAYBE.','SOMEBODY CLIP THAT!'],
  shy:['OH. I... I WON?','SORRY! GOOD GAME!','PLEASE DON\'T ALL LOOK AT ME.'],proud:['NATURALLY.','WAS THERE EVER ANY DOUBT?','REMEMBER THIS FACE.'],kind:['GREAT FIGHT, EVERYONE!','YOU ALL DID AMAZING!','LUNCH AFTER THIS? MY TREAT.'],
  grim:['STAY DOWN.','IT\'S DONE.','NEXT.'],nerd:['EXACTLY AS CALCULATED.','THE DATA NEVER LIES.','INTERESTING. I\'LL TAKE NOTES.']};
-const WINF={kimiko:'THAT\'S WHAT I CALL ON ICE.',keanu:'THE ISLANDS SEND THEIR REGARDS.',bara:'ADMIRE ME. YOU\'VE EARNED IT.',tori:'YOU NEVER LAID A HAND ON ME.',minato:'I DIDN\'T EVEN HAVE TO STRETCH.',oro:'THE VENOM DOES THE REST.',gomi:'BURNED OUT ALREADY?',kouji:'LIGHT AND DARK. BOTH WON.',
+const WINF={kimiko:'THAT\'S WHAT I CALL ON ICE.',keanu:'THE ISLANDS SEND THEIR REGARDS.',bara:'NO WASTED MOTION.',tori:'YOU NEVER LAID A HAND ON ME.',minato:'I DIDN\'T EVEN HAVE TO STRETCH.',oro:'THE VENOM DOES THE REST.',gomi:'BURNED OUT ALREADY?',kouji:'LIGHT AND DARK. BOTH WON.',
  emi:'THE VIEW IS BETTER FROM UP HERE.',soran:'PASS IT ON: I WON.',ryuko:'MY HEART\'S STILL RACING!',shiki:'THE ONI STANDS.',zabu:'I\'LL BE TAKING THE TROPHY TOO.',marina:'CAUGHT YOU. HOOK AND LINE.',uchuu:'YOU WERE IN MY ORBIT ALL ALONG.',shuko:'LOST IN THE WHITE. EVERY TIME.',
  torabi:'SERVED. WELL DONE.',suze:'THE HIVE THANKS YOU.',tatsuya:'...I CAN DO BETTER.',riku:'BIG THINGS. SMALL PACKAGE.',sanshou:'NOT A SCRATCH.',kairi:'TOLD YOU I STING.',kichi:'NO ONE SLIPS THE CHAIN.',tamashi:'THE STRINGS NEVER LIE.',
  akemi:'WERE YOU EVEN MOVING?',taru:'FIRE, WATER, EARTH, AIR. PICK YOUR LOSS.',sai:'WE WON! ALL OF US!',tenmetsu:'YOU BLINKED.',yado:'I DID WARN YOU.',hari:'THAT\'S GOING TO SWELL.',toguchi:'I TOOK THE SHORTCUT TO VICTORY.',pitto:'KNOCKOUT! BOING!',
@@ -8842,6 +8884,7 @@ const OK={
  ali:(f,k,o,adx)=>k==='dB'?(f.rocks||0)<2:k==='nB'?((f.rocks||0)>0||adx<70):true,
  aria:(f,k)=>k!=='dB'||(f.lkB||1)<2.5,
  ash:(f,k)=>k!=='dB'||(typeof ASHTREES!=='undefined'&&ASHTREES.filter(t=>t.owner===f).length<2),
+ bara:(f,k,o)=>k==='nB'?(f.qf||0)>0:k==='dB'?!!(typeof BARAQ!=='undefined'&&(BARAQ.STUCK.some(q=>q.owner===f)||(o&&o._emb&&o._emb.some(e=>e.by===f&&e.until>FR)))):true,
  kouji:()=>true};
 const ai0=aiInput;aiInput=function(f){const I=ai0(f);try{
   const ai=f.ai2||(f.ai2={cd:60,kc:{},hold:0,tk:0}),P=f.pi||{},lv=Math.min(9,Math.max(1,f.lvl||1)),R=.25+.75*(lv-1)/8;
