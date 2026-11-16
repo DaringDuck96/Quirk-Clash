@@ -1904,14 +1904,15 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('castDown',5,1,12,null,{spawn:[[5,GP({sh:'mine',c:'#5ab8ff',vx:.01,life:34,r:9,dmg:5,bkb:4,kbg:.04,ang:80,ex:1,dy:-6,dx:0})]],cd:24,fx,onStart(f){if(!f.ground)f.vy=Math.min(f.vy,-4.6);}})}),
   sp:['Charge Shot (hold B: from a pea to a huge blast)','Missile (homes in; hold B briefly for a faster, harder one)','Screw Attack (a rising spin that hits many times)','Bomb (drops at her feet and bursts a moment later; in the air it bounces her upward)']});
 
- fx=['#ff9ad0','#9affea'];add({id:'kitsu',n:'KITSU OBUNTO',sn:'KITSU',q:'Prism',ty:'Emitter',col:'#ff9ad0',d:'Bends the colour and density of light into solid shapes, in any colour he likes. A showman first and a hero second.',
-  na:'Normals: every strike is a hard-light construct, so they reach further than his arms and keep his body out of it.',
-  look:K({skin:'#f2dcc4',eye:'#c8a040',hairS:'short',hair:'#e8d488',hx:['glasses'],outfit:'jacketS',top:'#f0c8d8',acc:'#e8782a',sleeve:'#7a9a6a',pants:'#3a3a48',shoe:'#f0f0f4',stance:'cast',smile:1,ex:[]}),st:ST({w:.92,run:3.1,air:2.8}),kit:{st:'brawler',fx,el:'light',pow:1.02,reach:1.14},
-  mv:Object.assign(SM('light',fx,{f:{far:38}}),{nB:M('throwF',9,1,16,null,{spawn:[[9,GP({sh:'blade',c:'#9affea',vx:6.6,life:44,r:6,dmg:7,bkb:3.5,kbg:.05,ang:36})]],fx}),
-   sB:M('slashDown',16,5,24,hit([[40,-30,22],[40,-56,18]],15,5,.1,48,{sd:1.5}),{fx,lim:'none'}),
-   uB:LEAP(fx,-10.6),
-   dB:M('palm',6,14,16,hit([[26,-36,22]],4,6,.02,30),{beh:'reflect',bp:{f0:6,f1:20},fx,cd:60})}),
-  sp:['Light Blade (a spinning hard-light blade)','Giant Hammer (a slow hard-light hammer; cracks shields)','Light Stair','Prism Wall (reflects projectiles)']});
+ fx=['#ff9ad0','#9affea'];add({id:'kitsu',n:'KITSU OBUNTO',sn:'KITSU',q:'Prism',ty:'Emitter',col:'#ff9ad0',d:'Throws light in every colour at once: rainbow beams from his hands, and a rainbow road he lays down in front of himself and surfs. A showman first and a hero second.',
+  na:'Normals: quick flashes of coloured light that reach further than his arms. Light and slippery: he fights from range and from above, riding his rainbow wherever he likes.',
+  look:K({skin:'#f2dcc4',eye:'#c8a040',hairS:'short',hair:'#e8d488',hx:['glasses'],outfit:'jacketS',top:'#f0c8d8',acc:'#e8782a',sleeve:'#7a9a6a',pants:'#3a3a48',shoe:'#f0f0f4',stance:'cast',smile:1,ex:[]}),st:ST({w:.9,run:3.1,air:3}),kit:{st:'brawler',fx,el:'light',pow:1.02,reach:1.14},
+  mv:Object.assign(SM('light',fx,{f:{far:38}}),{nB:M('cast',10,4,17,null,{spawn:[[10,{k:'rbow',len:185,life:13,dmg:8,bkb:3.5,kbg:.055,ang:34}]],fx,cd:30}),
+   sB:M('board',6,36,12,hit([[14,-18,13]],8,4.5,.055,42),{beh:'rsurf',bp:{spd:5.3},fx,lim:'none'}),
+   uB:M('board',5,30,14,hit([[8,-22,15]],1.5,2.5,.02,72,{ri:6}),{beh:'rsurf',bp:{up:1,spd:3.6,rise:8.6},helpless:1,fx,lim:'none',finisher:hit([[8,-26,17]],4,5,.07,62)}),
+   dB:M('roar',7,8,20,null,{spawn:[[7,GP({sh:'rbolt',c:'#ff4a5a',vx:-5.37,vy:-3.10,g:.2,life:54,r:5,dmg:3.5,bkb:3,kbg:.035,ang:62,dx:0,dy:-44})],[8,GP({sh:'rbolt',c:'#ff9a3a',vx:-3.99,vy:-4.75,g:.2,life:54,r:5,dmg:3.5,bkb:3,kbg:.035,ang:62,dx:0,dy:-44})],[9,GP({sh:'rbolt',c:'#ffe14a',vx:-2.12,vy:-5.83,g:.2,life:54,r:5,dmg:3.5,bkb:3,kbg:.035,ang:62,dx:0,dy:-44})],[10,GP({sh:'rbolt',c:'#5ae06a',vx:0.00,vy:-6.20,g:.2,life:54,r:5,dmg:3.5,bkb:3,kbg:.035,ang:62,dx:0,dy:-44})],[11,GP({sh:'rbolt',c:'#4ab8ff',vx:2.12,vy:-5.83,g:.2,life:54,r:5,dmg:3.5,bkb:3,kbg:.035,ang:62,dx:0,dy:-44})],[12,GP({sh:'rbolt',c:'#b070ff',vx:3.99,vy:-4.75,g:.2,life:54,r:5,dmg:3.5,bkb:3,kbg:.035,ang:62,dx:0,dy:-44})],[13,GP({sh:'rbolt',c:'#ff6ad0',vx:5.37,vy:-3.10,g:.2,life:54,r:5,dmg:3.5,bkb:3,kbg:.035,ang:62,dx:0,dy:-44})]],fx,cd:50})}),
+  sp:['Rainbow Beam (tilt up or down as he winds up to aim it)','Rainbow Road (surfs a path of light; steer up and down, Jump to hop off)','Over the Rainbow (rides a rising arc of light)','Spectrum Burst (seven coloured bolts fan up and rain down around him)']});
+
  fx=['#7ae04a','#d8ffc0'];add({id:'uzi',n:'UZI UEHARA',sn:'UZI',q:'Slime',ty:'Mutant',col:'#7ae04a',d:'Her whole body is tough green slime that she shapes however she wants. Sweet about it.',
   na:'Normals: her arms and legs stretch into whips and hammers of slime, and her forward smash is a fist bigger than she is. Hits sink into her: she is launched 12% less than her weight suggests and slowly pulls herself back together.',
   look:K({skin:'#8ae05a',eye:'#f0f060',hairS:'long',hair:'#2a7a3a',outfit:'coat',top:'#1c1c26',acc:'#7ae04a',sleeve:'#1c1c26',pants:'#2a3a4a',shoe:'#1c1c26',stance:'cool',smile:1,ex:[]},1),st:ST({w:1.06,run:2.9,air:2.6}),kit:{st:'brawler',fx,el:'slime',pow:1,reach:1.12},
@@ -2263,7 +2264,7 @@ Object.assign(TUNE,{dawson:{role:'Quirkless tactician',tip:'Trap the floor, shur
  evona:{role:'Ice architect',tip:'Wall them off, slide in, pillar out.',sp:1.02,pw:1,kb:1},jack:{role:'Four-flame all-rounder',tip:'Down-B changes the flame: burn, speed, heal or slow.',sp:1,pw:1,kb:1},
  kal:{role:'Precognitive swordsman',tip:'Every eight seconds one hit misses him. Swing first.',sp:1.04,pw:1,kb:1},kora:{role:'Winged skirmisher',tip:'Four jumps and a hover. Fight from above.',sp:1,pw:1,kb:1},ash:{role:'Long-limbed heavy',tip:'Grow to hit from above and reach the ledge; Branch keeps them at arm\'s length.',sp:.96,pw:1,kb:1}});
 Object.assign(TUNE,{moya:{role:'Untouchable drifter',tip:'Two specials cannot be hit at all. Slip through, whip them back.',sp:1,pw:1,kb:1},sato:{role:'Knockback specialist',tip:'Low damage, huge shove. Win at the edge.',sp:1,pw:1,kb:1},
- akio:{role:'Speedster',tip:'Homing Attack to start, Spin Dash to chase, Spring Jump to get home.',sp:1.2,pw:1,kb:1},sata:{role:'Armoured zoner',tip:'Charge the shot, harass with missiles, bomb-jump to stay in the air.',sp:1,pw:1,kb:1},kitsu:{role:'Hard-light bruiser',tip:'Constructs do the hitting. The hammer breaks shields.',sp:1,pw:1,kb:1},
+ akio:{role:'Speedster',tip:'Homing Attack to start, Spin Dash to chase, Spring Jump to get home.',sp:1.2,pw:1,kb:1},sata:{role:'Armoured zoner',tip:'Charge the shot, harass with missiles, bomb-jump to stay in the air.',sp:1,pw:1,kb:1},kitsu:{role:'Rainbow surfer',tip:'Beam from range, surf the Rainbow Road in and out, rain bolts on anyone below.',sp:1,pw:1,kb:1},
  uzi:{role:'Resilient grappler',tip:'Melt under their attacks, Engulf them when they shield.',sp:.96,pw:1,kb:1},ichigo:{role:'Gadget zoner',tip:'Mine the floor, drone the air, grenade the rest.',sp:.96,pw:1,kb:1},
  bentou:{role:'Jinx specialist',tip:'Keep them JINXED: bigger target, weaker shield, softer hits.',sp:.98,pw:1,kb:1},okane:{role:'Gilded duelist',tip:'Save Gilded for when it matters; it has a long cooldown.',sp:1,pw:1,kb:1},
  goiru:{role:'Flying heavyweight',tip:'Four jumps and armour. Drop the hammer from above.',sp:.9,pw:1,kb:1,armor:1},aya:{role:'Crystal caster',tip:'A different crystal on every button.',sp:1,pw:1,kb:1},
@@ -3044,7 +3045,7 @@ Object.assign(FSD,{moya:{name:'WHITEOUT TIDE',type:'zone',r:180,dur:85,tick:2.2,
  sato:{name:'TOTAL RECALL',type:'zone',r:150,dur:60,tick:2,ri:8,fin:[11,13,.13,45],col:['#f0e0b0','#ffffff'],vis:'gen'},
  akio:{name:'RED ROCKET',type:'rush',spd:11,win:22,dur:70,tick:2.2,ri:4,fin:[13,9.5,.115,50],col:['#e83a3a','#ffe060'],vis:'gen'},
  sata:{name:'FULL ARSENAL',type:'beam',len:300,h:70,dur:85,tick:2.4,ri:6,fin:[14,10,.115,42],col:['#5ab8ff','#ffffff'],vis:'gen'},
- kitsu:{name:'SHOWSTOPPER',type:'wave',w:120,h:150,spd:5,dur:90,tick:2.4,ri:7,fin:[14,10,.12,55],col:['#ff9ad0','#9affea'],vis:'gen'},
+ kitsu:{name:'FULL SPECTRUM',type:'wave',w:120,h:150,spd:5,dur:90,tick:2.4,ri:7,fin:[14,10,.12,55],col:['#ff9ad0','#9affea'],vis:'gen'},
  uzi:{name:'SLIME TITAN',type:'wave',w:120,h:150,spd:4.4,dur:95,tick:2.5,ri:8,fin:[14,10,.12,60],col:['#7ae04a','#d8ffc0'],vis:'gen'},
  ichigo:{name:'PROTOTYPE MECH',type:'beam',len:280,h:80,dur:85,tick:2.5,ri:6,eff:'burn',fin:[14,10,.12,45],col:['#b8c860','#ff8a30'],vis:'gen'},
  bentou:{name:'KARMA',type:'zone',r:999,dur:70,tick:1.7,ri:9,fin:[12,9.5,.11,60],col:['#c83a5a','#8a9ab8'],vis:'gen'},
@@ -4932,7 +4933,7 @@ moya:['A long tendril of mist that drags whoever it touches toward him.','Turns 
 sato:['A quick pistol shot.','An airbag bursts off his fist: little damage, a very large shove, and the recoil pushes him backward.','An airbag under his feet launches him upward and hits anyone below.','An airbag catches the next hit and bursts in the attacker\'s face.','Every airbag he has goes off at once.'],
 akio:['Curls into a ball, hangs in the air for a beat, then shoots straight at the nearest rival.','Hops, then rolls across the stage at speed, hitting again and again.','Bounces off a spring: very high, and he can still attack on the way down. The spring falls on anyone below.','Revs up on the spot, then rolls further and faster than Spin Dash and does not flinch while rolling.','Runs through everyone faster than they can see.'],
 sata:['Charge Shot. Tap for a small fast shot; hold B to charge it into a blast twice the size and well over double the damage.','A missile that homes in on a rival and bursts. Hold B for a moment to launch a faster, harder one.','Screw Attack: a rising spin that hits again and again and launches at the top.','Drops a bomb at her feet that bursts a moment later. In the air each bomb bounces her upward a little.','Opens every weapon port and fires down the lane.'],
-kitsu:['Throws a spinning blade of solid light.','Builds a giant hammer and brings it down. Slow, strong, and it cracks shields.','Runs up a stair of light.','A wall of hard light that reflects projectiles and shoves rivals.','A parade of constructs sweeps the stage. He takes a bow.'],
+kitsu:['A beam of rainbow light. Tilt the stick up or down while he winds up to aim it diagonally.','Rainbow Road: he lays a rainbow in front of him and surfs it, ramming rivals. Steer up and down, press Jump to hop off. Once per trip into the air.','Over the Rainbow: rides a rising arc of light, hitting all the way up.','Spectrum Burst: seven bolts, one in each colour, fan out above him and rain down on both sides.','A wall of every colour at once sweeps the stage. He takes a bow.'],
 uzi:['Lobs a glob of slime that sticks to whoever it hits.','Lunges and swallows a rival whole: squeezes them inside her, then spits them out. Shields do not stop it.','A geyser of slime erupts under her and throws her upward.','Melts into a puddle and pours across the floor. She cannot be hit, slows anyone she passes under, and leaves a sticky pool that roots.','Becomes a wave of slime taller than the stage.'],
 ichigo:['Lobs a grenade. It explodes.','Launches a drone that flies out and comes back.','A jetpack carries her in any direction; the exhaust burns anyone below.','Plants a proximity mine. One at a time.','Unfolds the prototype mech she has been working on and fires its main gun.'],
 bentou:['A drifting curse that hunts a rival and JINXES them for seven seconds: they become a quarter bigger to hit, their shield takes half again as much damage, and their attacks do 12% less.','Blesses himself: faster for four seconds, and his next hit lands 30% harder. Long cooldown.','A rising leap.','He saw it coming: the longest counter window in the school. The counter-hit jinxes for five seconds.','Everyone on screen gets what is coming to them.'],
@@ -5687,7 +5688,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
 /* ---- traits, weaknesses, smash effects, sweet spots ---- */
 (function(){const c=id=>CH.find(x=>x.id===id);
  const W2={moya:['Light, and his damage is low.','Two of his specials cannot be hit at all.'],sato:['The lowest damage of any brawler.','AIRBAGS: his smash attacks send rivals 12% further.'],akio:['Small, light, and he overshoots: a missed roll leaves him wide open.','The fastest runner in the school, and Spring Jump does not leave him helpless.'],
-  sata:['Slow on the ground, and floaty: she is easy to juggle.','Bomb jumps keep her airborne, and her grab is a grapple beam.'],kitsu:['His constructs are slow to build.','Constructs keep his body out of his attacks.'],uzi:['Slow, and a big soft target.','SLIME: launched 12% less, and regenerates slowly when left alone.'],
+  sata:['Slow on the ground, and floaty: she is easy to juggle.','Bomb jumps keep her airborne, and her grab is a grapple beam.'],kitsu:['Light, and little up close: he needs room for his beams.','Rainbow Road carries him across the whole stage, on the ground or in the air.'],uzi:['Slow, and a big soft target.','SLIME: launched 12% less, and regenerates slowly when left alone.'],
   ichigo:['Weak up close and easy to launch.','Mines, drones and grenades all at once.'],bentou:['Small, light and he hits softly; against a rival who is not jinxed he has very little.','JINX: his curses make a rival a bigger target with a weaker shield and softer hits. A parry window half again as long as normal.'],okane:['Gilded has a sixteen-second cooldown, and he is ordinary without it.','GILDED: 20% more damage and 30% less knockback taken for eight seconds.'],
   goiru:['A huge target with a slow start to everything.','Four jumps. Hits under 5% do not make him flinch.'],aya:['Light, with little knockout power.','A different crystal on every special.'],hikari:['Short reach for a blade fighter and light.','SHOCK: every fourth hit she lands holds the rival a moment longer.'],
   ryo:['No projectile and average speed.','Cannot be confused, and sees cloaked rivals.'],suzume:['Light; her best hits need the web to land first.','Three jumps.'],ayame:['Very low damage: she wins by ring-out.','Her hits push 10% further.'],
@@ -6792,7 +6793,7 @@ const UT={minato:['tether',{h:1.1}],shiki:['armor',{}],torabi:['drop',{spec:GPs(
  dawson:['tether',{h:1}],maya:['eff',{qk:{k:'drain',v:2},t:'The strike heals her a little.'}],aria:['act',{h:.9}],bryson:['inv',{n:8}],
  conor:['drop',{spec:GPs({sh:'coin',c:'#ffd84a',n:3,spread:.5,vx:.01,vy:5,life:44,r:5,dmg:3,bkb:2,kbg:.02,ang:80}),t:'Coins shower down behind him.'}],
  ray:['drop',{spec:GPs({sh:'eyebeam',c:'#ff4a4a',vx:.01,vy:9,life:30,r:5,dmg:6,bkb:3,kbg:.04,ang:-70}),t:'He looks down as he rises and fires a beam at the floor.'}],
- chris:['multi',{}],jack:['glide',{}],kal:['angled',{vx:3.2,h:.95}],ash:['wide',{}],kitsu:['act',{h:.9}],bentou:['inv',{n:14}],okane:['armor',{}],hikari:['multi',{eff:null}],sato:['angled',{vx:2.6,h:1}],sota:['eff',{t:'',eff:'burn'}]};
+ chris:['multi',{}],jack:['glide',{}],kal:['angled',{vx:3.2,h:.95}],ash:['wide',{}],bentou:['inv',{n:14}],okane:['armor',{}],hikari:['multi',{eff:null}],sato:['angled',{vx:2.6,h:1}],sota:['eff',{t:'',eff:'burn'}]};
 for(const id in UT){const C=c(id);if(!C||!C.mv.uB||!C.mv.uB.bp)continue;const[k,o]=UT[id];try{const d=C.mv.uB;if(!d.hits||!d.hits.length)continue;const t=U[k](d,o);if(t)note(id,'uB',t);}catch(e){}}
 /* ---- side-dash twists ---- */
 const S={
@@ -7585,6 +7586,38 @@ function heroDefault(){try{for(let n=0;n<4;n++){if(SEL.p[n]!==LASTP[n]){LASTP[n]
 
 /* roster cards and the guide list show the default (hero) costume */
 {const m0=makeHeads;makeHeads=function(){m0();try{CH.forEach((C,i)=>{const s=defSkin(i);if(!s)return;const c=CARDS[i];portrait(i,c,'head','idle',s);});}catch(e){}};}
+
+/* ---------- Kitsu Obunto: rainbow beams and a rainbow road to surf on ---------- */
+{const RB=['#ff4a5a','#ff9a3a','#ffe14a','#5ae06a','#4ab8ff','#b070ff'],RBT=[];window.RBT=RBT;
+/* aimable rainbow beam: tilt the stick up or down while it winds up */
+EK.rbow={init(e,f,s){e.attached=1;e.len=s.len;e.r=6;const y=(f.pi&&f.pi.y)||0;e.an=y<-.4?-.45:y>.4?.4:0;e.w=s.w||1;},
+ upd(e){const o=e.owner;if(o.hitstun>0||o.dead){e.alive=false;return;}e.face=o.face;e.ox=o.x+o.face*16;e.oy=o.y-40;e.x=e.ox+o.face*Math.cos(e.an)*e.len*.5;e.y=e.oy+Math.sin(e.an)*e.len*.5;},
+ hitTest(e,R){if(e.ox===undefined)return false;const cx=e.face*Math.cos(e.an),sy=Math.sin(e.an),pad=4+3*e.w;for(let i=0;i<=e.len;i+=8){const px=e.ox+cx*i,py=e.oy+sy*i;if(px>=R[0]-pad&&px<=R[0]+R[2]+pad&&py>=R[1]-pad&&py<=R[1]+R[3]+pad)return true;}return false;},
+ draw(e){if(e.ox===undefined)return;const cx=e.face*Math.cos(e.an),sy=Math.sin(e.an),nx=-sy,ny=cx,k=Math.min(1,e.life/8)*e.w,L=Math.min(e.len,e.t*60+40);
+  for(let i=0;i<6;i++){const o=(i-2.5)*2.1*k;wl(RB[i],e.ox+nx*o,e.oy+ny*o,e.ox+cx*L+nx*o,e.oy+sy*L+ny*o,Math.max(1,2.2*k));}
+  wl('#ffffff',e.ox,e.oy,e.ox+cx*L,e.oy+sy*L,1);wdisc(e.ox,e.oy,3+2*k,'#ffffff');
+  for(let i=0;i<5;i++){const q=rnd()*L;wp(RB[fl(rnd()*6)],e.ox+cx*q+nx*(rnd()*18-9),e.oy+sy*q+ny*(rnd()*18-9));}}};
+/* rainbow road: he lays a path of light ahead of him and surfs it */
+BEH.rsurf={tick(f,m,I){const d=m.d,p=d.bp,t=m.t-d.s;
+  if(t<0){f.vx*=.8;if(!f.ground)f.vy=Math.min(f.vy,.4);if(Math.abs(I.x)>.4&&t===-1)f.face=Math.sign(I.x);return;}
+  if(t===0){m.v.seg=FR;sfx('beam');if(p.up)f.ground=null;}
+  if(t<d.a){const k=t/d.a;f.vx=f.face*p.spd;
+   if(p.up){f.ground=null;f.vy=-p.rise*(1-k*.9);}
+   else{const ty=I.y*2.4;m.v.vy=(m.v.vy||0)+(ty-(m.v.vy||0))*.2;if(f.ground&&m.v.vy<-.5)f.ground=null;if(!f.ground)f.vy=m.v.vy;
+    if(I.jP&&t>4){f.mv=null;f.st='air';f.ground=null;f.vy=f.C.st.jump*.85;return;}}
+   RBT.push({x:f.x,y:f.y+2,t:FR,s:m.v.seg});if(RBT.length>500)RBT.splice(0,100);
+   if(t%2===0)part(f.x-f.face*(8+rnd()*10),f.y-rnd()*6,-f.face*.6,-.4-rnd()*.5,14,RB[fl(rnd()*6)],rnd()<.4?2:1,0);}
+  else{f.vx*=.86;}}};
+const sm0=startMove;startMove=function(f,key){if(f.C.id==='kitsu'&&key==='sB'&&!f.ground){if(f.rsU)return false;const r=sm0(f,key);if(r)f.rsU=1;return r;}return sm0(f,key);};
+const st0=step;step=function(){st0();for(const f of F)if(f.C.id==='kitsu'&&(f.ground||f.st==='ledge'||f.dead))f.rsU=0;};
+const ov=overlay2D;overlay2D=function(){ov();try{const LIFE=56;while(RBT.length&&FR-RBT[0].t>LIFE)RBT.shift();
+  for(let j=1;j<RBT.length;j++){const a=RBT[j-1],b=RBT[j];if(a.s!==b.s)continue;const age=FR-b.t,n=age<32?6:Math.max(1,6-fl((age-32)/4));const o0=(6-n)>>1;
+   for(let i=0;i<n;i++)wl(RB[i+o0],a.x,a.y+(i+o0)*2,b.x,b.y+(i+o0)*2,2.4);
+   if(age<3)wl('#ffffff',a.x,a.y-1,b.x,b.y-1,1);}
+  for(const f of F){const m=f.mv;if(f.dead||f.gone||!m||m.d.beh!=='rsurf'||m.t<m.d.s||m.t>=m.d.s+m.d.a)continue;const l=Math.hypot(f.vx,f.vy)||1,ux=f.vx/l,uy=f.vy/l;for(let q=0;q<5;q++){const n=6-q,o0=q>>1;for(let i=0;i<n;i++)wl(RB[i+o0],f.x+ux*q*10,f.y+2+uy*q*10+(i+o0)*2,f.x+ux*(q+1)*10,f.y+2+uy*(q+1)*10+(i+o0)*2,2.4);}}}catch(e){}};
+/* rainbow bolts keep their own colour */
+const gd=EK.gp.draw;EK.gp.draw=function(e){const s=e.spec;if(s.sh==='rbolt'){const l=Math.hypot(e.vx,e.vy)||1,ux=e.vx/l,uy=e.vy/l;wl(s.c,e.x-ux*11,e.y-uy*11,e.x,e.y,3.4);wl('#ffffff',e.x-ux*4,e.y-uy*4,e.x,e.y,1.4);if(e.t%2===0)part(e.x-ux*10,e.y-uy*10,0,0,7,s.c,1,0);return;}gd(e);};
+}
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
