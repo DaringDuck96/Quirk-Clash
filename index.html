@@ -8198,12 +8198,12 @@ const P={
  flask(x0,y0,x1,y1,r,t,c,c2){const R=Math.max(8,r*.62),a=Math.atan2(y1-y0,x1-x0);seg(x0,y0,x1-Math.cos(a)*R,y1-Math.sin(a)*R,3,'#f0d4b8');X.save();X.translate(x1,y1);X.rotate(a+PI/2+Math.sin(t*.5)*.2);wr(DK,-3.6,-R-9,7.2,10);wr(c2||'#d8f4ff',-2.2,-R-8,4.4,9);wr(DK,-4.6,-R-10,9.2,2.6);wdisc(0,0,R+1.6,DK);wdisc(0,0,R,c2||'#d8f4ff');X.fillStyle=c;X.beginPath();X.arc(0,0,R-1.4,.15,PI-.15);X.fill();wdisc(-R*.35,-R*.3,R*.22,'#ffffff');X.restore();for(let i=0;i<6;i++){const q=a+(i-2.5)*.38,L=R+5+((t*3+i*7)%9);wdisc(x1+Math.cos(q)*L,y1+Math.sin(q)*L,2.6-(i%2),c);}},
  talisman(x0,y0,x1,y1,r,t,c,c2){const dx=x1-x0,dy=y1-y0,l=Math.hypot(dx,dy)||1,nx=-dy/l,ny=dx/l,W=Math.max(4.5,r*.3),H=Math.max(10,r*.72);X.globalAlpha=.55;wl(c2||'#c83a5a',x0,y0,x1,y1,1.6);X.globalAlpha=1;for(let i=0;i<3;i++){const k=1.1-i*.3,o=(i-1)*r*.55*(i===1?0:1),px=x0+dx*k+nx*o,py=y0+dy*k+ny*o;X.save();X.translate(px,py);X.rotate(Math.sin(t*.4+i*2)*.35+(i-1)*.3);wr(DK,-W-1.4,-H-1.4,W*2+2.8,H*2+2.8);wr(c,-W,-H,W*2,H*2);wr(c2||'#c83a5a',-W*.5,-H*.7,W,1.6);wr(c2||'#c83a5a',-.8,-H*.7,1.6,H*1.2);wr(c2||'#c83a5a',-W*.6,H*.2,W*1.2,1.6);wring(0,-H*.2,W*.5,c2||'#c83a5a',1.2);X.restore();}wring(x1,y1,Math.max(8,r*.8)+Math.sin(t*.5)*2,c2||'#c83a5a',1.6);},
  pillow(x0,y0,x1,y1,r,t,c,c2){const mx=(x0+x1)/2,my=(y0+y1)/2,R=Math.max(11,r)*(1+Math.sin(t*.8)*.06);X.save();X.translate(mx,my);X.scale(1.15,.9);wdisc(0,0,R+1.8,DK);wdisc(0,0,R,c);wdisc(-R*.28,-R*.3,R*.42,'#fff8dc');X.strokeStyle=c2||'#b89a50';X.lineWidth=1.3;X.setLineDash([2.4,2.4]);X.beginPath();X.arc(0,0,R*.74,0,TAU);X.stroke();X.setLineDash([]);wl(c2||'#b89a50',-R*.74,0,R*.74,0,1);X.restore();}};
-const BIGK=/smash/;
+const BIGK=/smash/,NRMK=/^(ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair)$/;
 function drawProp(f){const m=f.mv;if(!m||f.dead||f.gone||f.invis||f.form||f.copyT>0)return;const row=T[f.C.id];if(!row)return;const d=m.d,ip=(typeof interpPos==='function')?interpPos(f):f,x=ip.x,y=ip.y,fn=P[row[0]];if(!fn)return;
   if(m.v.throwT&&/throw$/.test(m.k)){const o=m.v.throwT;if(!o||o.holder!==f)return;fn(x+f.face*6,y-36,o.x,o.y-30,13,m.t,row[1],row[2],f.face,row[3]);return;}
-  if(row[4]&&m.k.indexOf(row[4])>=0)return;if(!BIGK.test(m.k)||!d.hits||!d.hits.length||d.beh)return;const t=m.t-d.s;if(m.charging){fn(x-f.face*4,y-38,x-f.face*16,y-44,8+Math.sin(FR*.5),FR,row[1],row[2],f.face,row[3]);return;}if(t<-2||t>d.a+5)return;
+  const big=BIGK.test(m.k);if(big&&row[4]&&m.k.indexOf(row[4])>=0)return;if(!big&&!(NRMK.test(m.k)&&f.C._pn))return;if(!d.hits||!d.hits.length||d.beh)return;const t=m.t-d.s,ns=big?1:.7;if(!big&&(t<-1||t>d.a+3))return;if(m.charging){fn(x-f.face*4,y-38,x-f.face*16,y-44,8+Math.sin(FR*.5),FR,row[1],row[2],f.face,row[3]);return;}if(t<-2||t>d.a+5)return;
   const k=t<0?.5:t<2?.75+t*.12:t<=d.a?1:Math.max(.2,1-(t-d.a)/5);
-  for(const h of d.hits){let b=h.b[0];for(const q of h.b)if(Math.abs(q[0])+Math.abs(q[1]+34)>Math.abs(b[0])+Math.abs(b[1]+34))b=q;const sx=x+f.face*Math.sign(b[0]||0)*6,sy=y-(b[1]>-20?16:36),hx=sx+(x+f.face*b[0]-sx)*k,hy=sy+(y+b[1]-sy)*k;fn(sx,sy,hx,hy,Math.max(9,b[2])*Math.min(1,k+.15),m.t,row[1],row[2],f.face*(Math.sign(b[0])||1),row[3]);}X.globalAlpha=1;}
+  for(const h of d.hits){let b=h.b[0];for(const q of h.b)if(Math.abs(q[0])+Math.abs(q[1]+34)>Math.abs(b[0])+Math.abs(b[1]+34))b=q;const sx=x+f.face*Math.sign(b[0]||0)*6,sy=y-(b[1]>-20?16:36),hx=sx+(x+f.face*b[0]-sx)*k,hy=sy+(y+b[1]-sy)*k;fn(sx,sy,hx,hy,Math.max(big?9:6,b[2]*ns)*Math.min(1,k+.15),m.t,row[1],row[2],f.face*(Math.sign(b[0])||1),row[3]);}X.globalAlpha=1;}
 const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&f.C)drawProp(f);}catch(e){X.globalAlpha=1;try{X.restore();}catch(e2){}}return r;};
 /* the prop replaces the shared smash flash, and gives each family of quirks its own kind of throw */
 const TW={whip:['f',{kbg:1.2,dmg:.85},'slings rivals a long way'],chain:['f',{kbg:1.2,dmg:.85},'slings rivals a long way'],wave:['f',{kbg:1.18,dmg:.9},'washes rivals a long way'],jaws:['d',{dmg:1.45,kbg:.85},'chews before letting go'],fist:['b',{kbg:1.18},'is a heavy suplex'],hand:['d',{kbg:.75,dmg:1.1},'sets rivals down close, ready for a follow-up'],shadow:['d',{kbg:.75,dmg:1.1},'drops rivals close, ready for a follow-up'],
@@ -8214,6 +8214,55 @@ const TWID={goiru:['d',{dmg:1.2,kbg:1.1},'drives rivals into the floor under a s
 for(const C of CH){const row=T[C.id];if(!row)continue;for(const Tb of[C.mv,C.hmv]){if(!Tb)continue;for(const k of['fsmash','usmash','dsmash']){const d=Tb[k];if(d&&d.hits&&d.hits.length&&!d.beh&&!d._pr&&!(row[4]&&k.indexOf(row[4])>=0)){d._pr=1;d.vfx=null;}}}
   const tw=TWID[C.id]||TW[row[0]];if(tw&&C.mv){const d=C.mv[tw[0]+'throw'];if(d&&d.hits&&d.hits[0]&&!d._tw){d._tw=1;const h=d.hits[0];if(tw[1].kbg)h.kbg*=tw[1].kbg;if(tw[1].dmg)h.dmg=Math.round(h.dmg*tw[1].dmg*10)/10;C.throwK=tw[0]+'throw';C.throwT=({f:'Forward',b:'Back',u:'Up',d:'Down'})[tw[0]]+' throw '+tw[2]+'.';}}}
 window.PROPS={T,P};
+})();
+
+/* props2.js — fighters who shared a prop (a fist, a blast, an orb, a hand) each get their own version of it. */
+(function(){if(typeof PROPS==='undefined')return;const T=PROPS.T,P=PROPS.P,DK='#0c0820';
+const V={minato:'stretch',ryuko:'piston',shiki:'club',sanshou:'plate',sai:'twin',pitto:'glove',tomi:'big',kongu:'fur',hippo:'star',uzi:'drip',okane:'gem',goiru:'plate',
+ shuko:'smoke',riku:'spore',moya:'smoke',ayame:'gust',sata:'beam',sota:'jet',homura:'lava',jack:'halo',chiyoki:'spore',taru:'duo',
+ uchuu:'planet',tenmetsu:'aura',maho:'star',ginko:'moon',yoko:'hole',mia:'hex',ali:'rings',
+ ivan:'big',tai:'cross',tatsuya:'outline',maya:'drain',rei:'eye',soran:'twin'};
+for(const id in V)if(T[id])T[id][3]=V[id];
+const dir=(x0,y0,x1,y1)=>{const a=Math.atan2(y1-y0,x1-x0);return[a,Math.cos(a),Math.sin(a)];};
+const f0=P.fist;P.fist=function(x0,y0,x1,y1,r,t,c,c2,face,sh){const[a,ux,uy]=dir(x0,y0,x1,y1),R=Math.max(9,r*.8);
+  if(sh==='big'){f0(x0,y0,x1,y1,r*1.35,t,c,c2,face);return;}
+  if(sh==='twin'){f0(x0,y0-6,x1,y1-R*.7,r*.8,t,c,c2,face);f0(x0,y0+4,x1-ux*6,y1+R*.7,r*.8,t,c,c2,face);return;}
+  if(sh==='stretch'){let px=x0,py=y0;for(let i=1;i<=8;i++){const k=i/8,w=Math.sin(k*9+t*.8)*4*(1-k),qx=x0+(x1-x0)*k-uy*w,qy=y0+(y1-y0)*k+ux*w;wl(DK,px,py,qx,qy,7);wl(c,px,py,qx,qy,4.4);px=qx;py=qy;}f0(x1-ux*3,y1-uy*3,x1,y1,r,t,c,c2,face);return;}
+  f0(x0,y0,x1,y1,r,t,c,c2,face);
+  if(sh==='piston'){for(let i=1;i<=3;i++){const k=i/4;wl(DK,x0+(x1-x0)*k-uy*6,y0+(y1-y0)*k+ux*6,x0+(x1-x0)*k+uy*6,y0+(y1-y0)*k-ux*6,4.6);wl('#d8dce8',x0+(x1-x0)*k-uy*5,y0+(y1-y0)*k+ux*5,x0+(x1-x0)*k+uy*5,y0+(y1-y0)*k-ux*5,2.4);}wdisc(x1,y1,R*.3,'#d8dce8');}
+  else if(sh==='plate'){for(const o of[-.4,.25]){wl(DK,x1+ux*R*o-uy*R*.9,y1+uy*R*o+ux*R*.9,x1+ux*R*o+uy*R*.9,y1+uy*R*o-ux*R*.9,1.6);}wl('rgba(255,255,255,.6)',x1-uy*R*.5-ux*R*.5,y1+ux*R*.5-uy*R*.5,x1-uy*R*.7+ux*R*.2,y1+ux*R*.7+uy*R*.2,1.6);}
+  else if(sh==='glove'){wdisc(x1,y1,R+2,DK);wdisc(x1,y1,R,'#e83a3a');wdisc(x1-R*.3,y1-R*.35,R*.32,'#ff9a9a');wl(DK,x1-ux*R-uy*R*.7,y1-uy*R+ux*R*.7,x1-ux*R+uy*R*.7,y1-uy*R-ux*R*.7,6);wl('#ffffff',x1-ux*R-uy*R*.6,y1-uy*R+ux*R*.6,x1-ux*R+uy*R*.6,y1-uy*R-ux*R*.6,3.4);}
+  else if(sh==='club'){for(let i=0;i<7;i++){const q=a-1.3+i*.43;wtri(DK,x1+Math.cos(q-.2)*R,y1+Math.sin(q-.2)*R,x1+Math.cos(q+.2)*R,y1+Math.sin(q+.2)*R,x1+Math.cos(q)*(R+7),y1+Math.sin(q)*(R+7));wtri('#f0f0f6',x1+Math.cos(q-.14)*R,y1+Math.sin(q-.14)*R,x1+Math.cos(q+.14)*R,y1+Math.sin(q+.14)*R,x1+Math.cos(q)*(R+5),y1+Math.sin(q)*(R+5));}}
+  else if(sh==='fur'){for(let i=0;i<12;i++){const q=i*.5236+.2;wl(DK,x1+Math.cos(q)*(R-1),y1+Math.sin(q)*(R-1),x1+Math.cos(q+.3)*(R+4),y1+Math.sin(q+.3)*(R+4),2);}wdisc(x1+ux*R*.2,y1+uy*R*.2,R*.5,'#5a5a66');}
+  else if(sh==='drip'){for(let i=0;i<4;i++){const k=.3+i*.22,dy=((t*2+i*7)%14);wdisc(x0+(x1-x0)*k,y0+(y1-y0)*k+6+dy,2.8-i*.4,c);}wdisc(x1-R*.2,y1-R*.3,R*.26,'rgba(255,255,255,.7)');}
+  else if(sh==='star'||sh==='gem'){for(let i=0;i<4;i++){const q=t*.25+i*1.571,d=R+6;wtri(sh==='gem'?'#fff6c0':'#ffffff',x1+Math.cos(q)*d-1.6,y1+Math.sin(q)*d,x1+Math.cos(q)*d+1.6,y1+Math.sin(q)*d,x1+Math.cos(q)*d,y1+Math.sin(q)*d-5);wtri(sh==='gem'?'#fff6c0':'#ffffff',x1+Math.cos(q)*d-1.6,y1+Math.sin(q)*d,x1+Math.cos(q)*d+1.6,y1+Math.sin(q)*d,x1+Math.cos(q)*d,y1+Math.sin(q)*d+5);}}};
+const b0=P.blast;P.blast=function(x0,y0,x1,y1,r,t,c,c2,face,sh){const[a,ux,uy]=dir(x0,y0,x1,y1),R=Math.max(12,r*1.25);c2=c2||'#ffffff';
+  if(sh==='smoke'){X.save();for(let i=0;i<7;i++){const k=i/6,w=Math.sin(t*.5+i*1.7)*R*.3;X.globalAlpha=.75-k*.35;wdisc(x0+(x1-x0)*k*1.15-uy*w,y0+(y1-y0)*k*1.15+ux*w,R*(.35+k*.45),i%2?c:c2);}X.restore();return;}
+  if(sh==='spore'){for(let i=0;i<14;i++){const k=((i*37+t*5)%100)/100,w=((i*53)%21-10)/10*R*.7*k;wdisc(x0+(x1-x0)*k*1.25-uy*w,y0+(y1-y0)*k*1.25+ux*w,1.6+(i%3),i%2?c:c2);}wdisc(x1,y1,R*.3,c);return;}
+  if(sh==='gust'){X.save();X.lineCap='round';for(let i=0;i<4;i++){const rr=R*(.5+i*.3)+((t*2+i*3)%6);X.strokeStyle=i%2?c:c2;X.globalAlpha=.9-i*.15;X.lineWidth=3.4-i*.5;X.beginPath();X.arc(x0+ux*rr*.3,y0+uy*rr*.3,rr,a-.75,a+.75);X.stroke();}X.restore();return;}
+  if(sh==='beam'){const ex=x0+(x1-x0)*1.25,ey=y0+(y1-y0)*1.25;wl(DK,x0,y0,ex,ey,R*.62);wl(c,x0,y0,ex,ey,R*.48);wl(c2,x0,y0,ex,ey,R*.2);wdisc(ex,ey,R*.5,c);wdisc(ex,ey,R*.26,c2);for(let i=0;i<3;i++)wring(x0+(x1-x0)*(.3+i*.3),y0+(y1-y0)*(.3+i*.3),R*.45,c2,1.2);return;}
+  if(sh==='jet'){const L=Math.hypot(x1-x0,y1-y0)+R,fl=1+((t*3)%4)*.06;wtri(DK,x0-uy*R*.42,y0+ux*R*.42,x0+uy*R*.42,y0-ux*R*.42,x0+ux*L*fl+ux*3,y0+uy*L*fl+uy*3);wtri(c,x0-uy*R*.34,y0+ux*R*.34,x0+uy*R*.34,y0-ux*R*.34,x0+ux*L*fl,y0+uy*L*fl);wtri(c2,x0-uy*R*.16,y0+ux*R*.16,x0+uy*R*.16,y0-ux*R*.16,x0+ux*L*.62,y0+uy*L*.62);for(let i=0;i<3;i++)wring(x0+ux*L*(.25+i*.2),y0+uy*L*(.25+i*.2),R*(.3-i*.05),'#ffffff',1);return;}
+  b0(x0,y0,x1,y1,sh==='halo'?r*.8:r,t,c,c2,face);
+  if(sh==='lava'){for(let i=0;i<5;i++){const k=.25+i*.2,dy=((t*2.4+i*9)%18);wdisc(x0+(x1-x0)*k,y0+(y1-y0)*k+5+dy,3.2-i*.35,i%2?c:'#2a1410');}}
+  else if(sh==='halo'){wring(x1,y1,R*.95,'#fff6c0',2.4);wring(x1,y1,R*1.2+Math.sin(t*.5)*2,c2,1.2);}
+  else if(sh==='duo'){for(let i=0;i<6;i++){const q=t*.4+i*1.047;wdisc(x1+Math.cos(q)*R*.8,y1+Math.sin(q)*R*.8,2.6,i%2?c:c2);}}};
+const o0=P.orb;P.orb=function(x0,y0,x1,y1,r,t,c,c2,face,sh){const R=Math.max(10,r*.95);c2=c2||'#ffffff';
+  if(sh==='planet'){wdisc(x1,y1,R*.8+2,DK);wdisc(x1,y1,R*.8,c);wdisc(x1-R*.25,y1-R*.25,R*.3,'rgba(255,255,255,.5)');X.strokeStyle=c2;X.lineWidth=2.4;X.beginPath();X.ellipse(x1,y1,R*1.35,R*.4,-.4,0,TAU);X.stroke();wdisc(x1+Math.cos(t*.3)*R*1.35,y1+Math.sin(t*.3)*R*.5,2.4,c2);return;}
+  if(sh==='aura'){X.save();for(let i=0;i<4;i++){X.globalAlpha=.9-i*.2;wring(x1,y1,R*(.35+i*.3)+((t+i*2)%4),i%2?c2:c,2.6-i*.4);}X.restore();wdisc(x1,y1,R*.22,c2);return;}
+  if(sh==='star'){const pts=[],pd=[];for(let i=0;i<10;i++){const q=t*.15+i*.6283-1.571,rr=i%2?R*.5:R*1.15;pts.push(x1+Math.cos(q)*rr,y1+Math.sin(q)*rr);pd.push(x1+Math.cos(q)*(rr+2.4),y1+Math.sin(q)*(rr+2.4));}wpoly(DK,pd);wpoly(c2,pts);wdisc(x1,y1,R*.36,c);return;}
+  if(sh==='moon'){wdisc(x1,y1,R+2,DK);wdisc(x1,y1,R,c);wdisc(x1+R*.42,y1-R*.2,R*.82,DK);for(let i=0;i<3;i++)wdisc(x1+R*(.3+i*.35),y1-R*(.9-i*.5),1.6,c2);return;}
+  if(sh==='hole'){wdisc(x1,y1,R*1.15,c);wdisc(x1,y1,R*.9,'#06040e');X.strokeStyle=c2;X.lineWidth=1.6;for(let i=0;i<3;i++){X.beginPath();X.arc(x1,y1,R*(1.25+i*.22),t*.3+i*2.1,t*.3+i*2.1+1.6);X.stroke();}return;}
+  if(sh==='hex'){const p=[],q=[];for(let i=0;i<6;i++){const g=i*1.0472+.52;p.push(x1+Math.cos(g)*R*1.1,y1+Math.sin(g)*R*1.1);q.push(x1+Math.cos(g)*(R*1.1+2.4),y1+Math.sin(g)*(R*1.1+2.4));}wpoly(DK,q);X.save();X.globalAlpha=.55;wpoly(c,p);X.restore();X.strokeStyle=c2;X.lineWidth=1.6;X.beginPath();X.moveTo(p[0],p[1]);for(let i=2;i<12;i+=2)X.lineTo(p[i],p[i+1]);X.closePath();X.stroke();wl(c2,x1-R*.4,y1-R*.5,x1+R*.1,y1-R*.7,1.4);return;}
+  if(sh==='rings'){for(let i=0;i<3;i++){const rr=R*(.4+((t*.06+i/3)%1));X.save();X.globalAlpha=1-((t*.06+i/3)%1)*.8;wring(x1,y1,rr,i%2?c2:c,2.4);X.restore();}wdisc(x1,y1,R*.3,c);return;}
+  o0(x0,y0,x1,y1,r,t,c,c2,face);};
+const h0=P.hand;P.hand=function(x0,y0,x1,y1,r,t,c,c2,face,sh){const R=Math.max(9,r*.8);
+  if(sh==='big'){h0(x0,y0,x1,y1,r*1.4,t,c,c2,face);wring(x1,y1,R*1.4,DK,1.6);return;}
+  if(sh==='twin'){h0(x0,y0-5,x1,y1-R*.8,r*.75,t,c,c2,face);h0(x0,y0+3,x1-4,y1+R*.8,r*.75,t,'#ffffff',c2,face);return;}
+  if(sh==='outline'){const a=Math.atan2(y1-y0,x1-x0);X.save();X.setLineDash([3,2.4]);wring(x1,y1,R,c,2);for(let i=-2;i<=2;i++){const fa=a+i*.33;wl(c,x1+Math.cos(fa)*R,y1+Math.sin(fa)*R,x1+Math.cos(fa)*R*1.75,y1+Math.sin(fa)*R*1.75,2);}X.restore();wl(c,x0,y0,x1,y1,1.4);return;}
+  h0(x0,y0,x1,y1,r,t,c,c2,face);
+  if(sh==='cross'){wr('#ffffff',x1-R*.14,y1-R*.5,R*.28,R);wr('#ffffff',x1-R*.5,y1-R*.14,R,R*.28);wring(x1,y1,R*1.3+Math.sin(t*.4)*2,c,1.4);}
+  else if(sh==='drain'){for(let i=0;i<6;i++){const k=1-((t*.07+i/6)%1);wdisc(x0+(x1-x0)*k,y0+(y1-y0)*k+Math.sin(k*9+i)*4,2.2,i%2?c:'#ffffff');}}
+  else if(sh==='eye'){wdisc(x1,y1,R*.5,'#ffffff');wdisc(x1,y1,R*.26,DK);wdisc(x1-1,y1-1,R*.1,'#ffffff');}};
 })();
 
 /* polish.js — smaller, shorter hit flashes; no leftovers from replaced move sets; a wind-up and a lunge on every normal;
@@ -8522,6 +8571,73 @@ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);tr
 const st0=step;step=function(){st0();try{if(GS==='over'&&gsT===62&&typeof winner!=='undefined'&&winner&&winner.C&&!winner.C.hidden&&!winner.dead){say(winner,winLine(winner),64);if(typeof VOICE==='function')VOICE(winner,'win');}}catch(e){}};
 const sr=showResults;showResults=function(){const r=sr.apply(this,arguments);try{const w=winner,box=document.querySelector('#overlay .res');if(w&&w.C&&!w.C.hidden&&box&&!box.classList.contains('cres')&&!box.querySelector('.vq')&&(typeof MODE==='undefined'||MODE==='versus')){const q=document.createElement('p');q.className='vq';q.textContent='"'+winLine(w)+'"';q.style.cssText='margin:0 0 8px;font-size:clamp(11px,2vw,17px);font-style:italic;font-weight:800;letter-spacing:.5px;color:'+w.C.col+';text-shadow:1px 1px 0 #0c0820';const h=box.querySelector('h2');if(h&&h.nextSibling)box.insertBefore(q,h.nextSibling);else box.appendChild(q);}}catch(e){}return r;};
 window.PERSONA={TYPE,LINE,WINL,typeOf,winLine};
+})();
+
+/* normals.js — the A button. Fighters who shared the stock punch-and-kick set now attack the way their quirk does: their own body animations,
+   their quirk drawn on tilts and aerials, and one signature trait on a few of their normals. */
+(function(){
+const NK=['ftilt','utilt','dtilt','dash','nair','fair','bair','uair','dair'];
+const DEF={ftilt:'kickF',utilt:'uppercut',dtilt:'kickLow',dash:'lunge',nair:'spin',fair:'fairK',bair:'bairK',uair:'uairK',dair:'dairK'};
+/* how each kind of quirk moves the body */
+const SET={
+ striker:{ftilt:'punch',utilt:'uppercut',dtilt:'sweep',dash:'shoulder',nair:'spin',fair:'fairP',uair:'uairP',dair:'dairP'},
+ caster:{ftilt:'palm',utilt:'castUp',dtilt:'castDown',dash:'dashF',nair:'fan',fair:'cast',uair:'castUp',dair:'castDown'},
+ emitter:{ftilt:'cast',utilt:'castUp',dtilt:'kickLow',dash:'shoulder',nair:'spinW',fair:'fairP',uair:'uairP',dair:'dairP'},
+ cutter:{ftilt:'slashF',utilt:'slashUp',dtilt:'slashLow',dash:'slashF',nair:'spinW',fair:'fairS',uair:'uairS',dair:'dairS'},
+ lasher:{ftilt:'slashF',utilt:'slashUp',dtilt:'sweep',dash:'lunge',nair:'spinW',fair:'fairS',uair:'uairP',dair:'dairK'},
+ biter:{ftilt:'lunge',utilt:'uppercut',dtilt:'kickLow',dash:'dive',nair:'spin',fair:'fairP',uair:'uairP',dair:'dairP'},
+ flier:{ftilt:'wingF',utilt:'wingUp',dtilt:'sweep',dash:'dashF',nair:'wingBoth',fair:'fairK',uair:'wingUp',dair:'dairK'}};
+const FSET={fist:'striker',arm:'striker',pillow:'striker',mace:'striker',pan:'striker',hand:'caster',portal:'caster',orb:'caster',shadow:'caster',talisman:'caster',dice:'caster',flask:'caster',swarm:'caster',ink:'caster',
+ blast:'emitter',laser:'emitter',bolt:'emitter',rainbow:'emitter',wave:'emitter',blade:'cutter',dagger:'cutter',saw:'cutter',spike:'cutter',claw:'cutter',whip:'lasher',chain:'lasher',jaws:'biter',wing:'flier'};
+/* personality changes a few of them again, so two fighters with the same kind of quirk still move differently */
+const PV={bold:{dash:'shoulder'},calm:{dash:'lunge',dtilt:'sweep'},joker:{dash:'spin',nair:'fan'},shy:{dash:'dashF',ftilt:'palm'},proud:{utilt:'kickUp',nair:'spinW'},kind:{dtilt:'sweep'},grim:{dash:'dive',utilt:'kickUp'},nerd:{ftilt:'palm',dtilt:'castDown'}};
+const fam=C=>(typeof PROPS!=='undefined'&&PROPS.T[C.id])?PROPS.T[C.id][0]:null,ptype=C=>(typeof PERSONA!=='undefined')?PERSONA.typeOf(C):'kind';
+let changed=0;const COMMON=new Set(['kickF','uppercut','kickLow','lunge','spin','fairK','uairK','dairK','shoulder','cast','castUp','castDown','punch','fairP','uairP','dairP']);
+for(const C of CH){if(C.hidden||!C.mv)continue;const f=fam(C);if(!f)continue;const row=PROPS.T[C.id],wpn=C.look&&C.look.wpn;
+  C._pn=!wpn&&!row[4]&&!C.look.body; /* quirk drawn on tilts and aerials, unless a weapon or a custom arm already is */
+  if(wpn||C.look.body)continue;const stock=NK.every(k=>C.mv[k]&&C.mv[k].an===DEF[k]),w=(C.st&&C.st.w)||1,WV=w>1.15?{dtilt:'sweep',fair:'fairP',dair:'dairP'}:w<.92?{fair:'fairK',uair:'uairK',dair:'dairK'}:{};
+  let set;if(stock)set=Object.assign({},SET[FSET[f]||'striker'],WV,PV[ptype(C)]||{});else{set={};const v=Object.assign({},WV,PV[ptype(C)]||{});for(const k in v){const d=C.mv[k];if(d&&COMMON.has(d.an))set[k]=v[k];}}
+  for(const k of NK){const d=C.mv[k],an=set[k];if(!d||!an||!ANIM[an]||d.beh)continue;d.an=an;if(d.lim&&d.lim!=='w')d.lim=ANIM[an].lim;if(d.airAlt&&d.airAlt.an===DEF[k])d.airAlt.an=an;}
+  if(C._pn)for(const k of NK){const d=C.mv[k];if(d&&d.vfx&&!d.beh)d.vfx=null;}
+  changed++;}
+/* one signature trait per kind of quirk */
+const far=(a,t,h)=>{const b=h.b&&h.b[0];if(!b)return false;return Math.abs(t.x-a.x)>(Math.abs(b[0])+b[2])*.62;};
+const bleed=(t,n,c)=>{if(!t.dot||t.dot.n<n)t.dot={n,t:0,c};};
+const TR={
+ fist:{k:/^(ftilt|fair|dash)/,n:'KNUCKLE',d:'Forward tilt, forward air and dash attack launch harder.',h:h=>({bkb:h.bkb+1.2,kbg:h.kbg*1.08})},
+ arm:{k:/^(ftilt|fair|utilt)/,n:'FULL EXTENSION',d:'Forward tilt, forward air and up tilt hit 20% harder at the very end of the arm, and softer up close.',h:(h,a,t)=>({dmg:h.dmg*(far(a,t,h)?1.2:.88)})},
+ mace:{k:/^(ftilt|dtilt|dair)/,n:'CRUSH',d:'Forward tilt, down tilt and down air launch much harder.',h:h=>({bkb:h.bkb+1.6})},
+ pan:{k:/^(ftilt|fair|utilt)/,n:'CLANG',d:'Forward tilt, forward air and up tilt ring the rival\'s bell: they stay stunned a little longer.',p:(a,t)=>{t.hitstun+=8;}},
+ pillow:{k:/^(ftilt|fair|bair)/,n:'BOUNCE',d:'Forward tilt, forward air and back air do less damage and shove much further.',h:h=>({dmg:h.dmg*.72,bkb:h.bkb+3})},
+ hand:{k:/^(utilt|uair)/,n:'GRASP',d:'Up tilt and up air pull the rival to you instead of launching them (works once every four seconds per rival).',h:()=>({eff:'yank'})},
+ portal:{k:/^(bair|dtilt)/,n:'STEP THROUGH',d:'Landing a back air or down tilt on the ground puts you on the other side of the rival.',p:(a,t)=>{if(a.ground){const g=a.ground,s=Math.sign(t.x-a.x)||a.face;a.x=clamp(t.x+s*24,g.x+8,g.x+g.w-8);a.face=-s;burst(a.x,a.y-30,10,['#9a70ff','#ffffff'],1.8,16);}}},
+ orb:{k:/^(nair|utilt|uair)/,n:'ORBIT',d:'Neutral air, up tilt and up air lift rivals straight up and hold them longer, ready for a follow-up.',h:h=>({ang:(h.ang+90)/2,kbg:h.kbg*.9}),p:(a,t)=>{t.hitstun+=5;}},
+ shadow:{k:/./,n:'BACKSTAB',d:'Every normal attack does 25% more from behind.',h:(h,a,t)=>(Math.sign(t.face)===Math.sign(t.x-a.x)?{dmg:h.dmg*1.25}:null)},
+ talisman:{k:/^(ftilt|fair|dtilt)/,n:'HEX',d:'Forward tilt, forward air and down tilt leave rivals stunned a little longer.',p:(a,t)=>{t.hitstun+=7;}},
+ dice:{k:/./,n:'LUCKY ROLL',d:'One normal attack in six is a critical hit: 60% more damage.',h:h=>(Math.random()<1/6?{dmg:h.dmg*1.6,_crit:1}:null),p:(a,t,h)=>{if(h._crit)FXL.push({k:'txt',s:'LUCKY!',x:t.x,y:t.y-84,t:0,life:34,col:'#ffd84a'});}},
+ flask:{k:/^(ftilt|fair|dair)/,n:'SPILL',d:'Forward tilt, forward air and down air splash the rival: 3% more over the next two seconds.',p:(a,t)=>bleed(t,2,'#7ae04a')},
+ swarm:{k:/./,n:'STINGS',d:'Every normal attack leaves a sting that keeps hurting: 1.5% more a moment later.',p:(a,t,h,C)=>bleed(t,1,C.col)},
+ ink:{k:/^(ftilt|dtilt|fair)/,n:'SMEAR',d:'Forward tilt, down tilt and forward air cover the rival in ink and slow them (once every four seconds per rival).',h:()=>({eff:'stick'})},
+ blast:{k:/^(ftilt|fair|nair)/,n:'SHOCKWAVE',d:'Forward tilt, forward air and neutral air push rivals further back, and fire quirks set them alight.',h:(h,a)=>({bkb:h.bkb+.9,eff:h.eff||(a.C.kit&&/fire|magma|flame/.test(a.C.kit.el||'')?'burn':h.eff)})},
+ laser:{k:/^(ftilt|fair)/,n:'SCORCH',d:'Forward tilt and forward air burn.',h:h=>({eff:h.eff||'burn'})},
+ bolt:{k:/^(nair|dash|fair)/,n:'JOLT',d:'Neutral air, dash attack and forward air jolt the rival: they stay stunned a little longer.',p:(a,t)=>{t.hitstun+=7;}},
+ rainbow:{k:/./,n:'SPECTRUM',d:'Each normal attack rolls a colour. Red burns, blue stuns a little longer, yellow launches harder.',h:h=>{const r=Math.random()*3|0;return r===0?{eff:h.eff||'burn'}:r===2?{bkb:h.bkb+1.2}:{_blue:1};},p:(a,t,h)=>{if(h._blue)t.hitstun+=7;}},
+ wave:{k:/^(dtilt|dash|ftilt)/,n:'UNDERTOW',d:'Down tilt, dash attack and forward tilt send rivals skimming low along the floor.',h:h=>({ang:16,bkb:h.bkb+1})},
+ blade:{k:/^(ftilt|fair|uair)/,n:'EDGE',d:'Forward tilt, forward air and up air do 20% more at the tip, and less up close.',h:(h,a,t)=>({dmg:h.dmg*(far(a,t,h)?1.2:.88)})},
+ dagger:{k:/^(jab|ftilt|dtilt)/,n:'NICK',d:'Jab, forward tilt and down tilt leave a cut: 3% more over the next two seconds.',p:(a,t)=>bleed(t,2,'#e84a5a')},
+ saw:{k:/^(nair|ftilt|dash)/,n:'GRIND',d:'Neutral air, forward tilt and dash attack keep cutting after they land: 4.5% more over the next few seconds.',p:(a,t)=>bleed(t,3,'#ffb060')},
+ spike:{k:/^(utilt|uair|dair)/,n:'IMPALE',d:'Up tilt, up air and down air launch straighter and harder.',h:h=>({ang:h.ang<0?h.ang:(h.ang+90)/2,kbg:h.kbg*1.14})},
+ claw:{k:/^(nair|fair|dtilt)/,n:'RAKE',d:'Neutral air, forward air and down tilt leave claw marks: 3% more over the next two seconds.',p:(a,t)=>bleed(t,2,'#e84a5a')},
+ whip:{k:/^(ftilt|fair)/,n:'CRACK',d:'Forward tilt and forward air do 25% more at the very tip, and much less up close.',h:(h,a,t)=>({dmg:h.dmg*(far(a,t,h)?1.25:.8)})},
+ chain:{k:/^(ftilt|fair|dtilt)/,n:'BIND',d:'Forward tilt, forward air and down tilt tangle the rival\'s legs for a moment (once every four seconds per rival).',h:()=>({eff:'root',rootT:34})},
+ jaws:{k:/^(ftilt|dtilt|dair)/,n:'FEED',d:'Forward tilt, down tilt and down air heal you for a third of the damage they do.',p:(a,t,h)=>{if(a.dmg>0)a.dmg=Math.max(0,a.dmg-h.dmg*.34);}},
+ wing:{k:/air$/,n:'GUST',d:'Every aerial does a little less damage and blows rivals much further.',h:h=>({dmg:h.dmg*.86,bkb:h.bkb+2})}};
+for(const C of CH){if(C.hidden)continue;const f=fam(C),t=f&&TR[f];if(!t)continue;C.sig=t;C.sigT=t.n+': '+t.d;}
+const ah=applyHit;applyHit=function(t,h,dirX,a,o){let tr=null,h2=h;try{if(a&&a!==t&&a.C&&a.C.sig&&a.mv&&!(o&&(o.proj||o.force))&&!a.form&&!(a.copyT>0)&&h&&h.b&&a.mv.d&&a.mv.d.hits&&a.mv.d.hits.indexOf(h)>=0&&!a.mv.d.beh&&/^(jab|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair)/.test(a.mv.k)&&a.C.sig.k.test(a.mv.k)){tr=a.C.sig;if(tr.h){const m=tr.h(h,a,t);if(m)h2=Object.assign({},h,m);}}}catch(e){tr=null;h2=h;}
+  const r=ah.call(this,t,h2,dirX,a,o);try{if(tr&&r==='hit'){if(tr.p)tr.p(a,t,h2,a.C);if(FR-(a._sgT||-99)>20){a._sgT=FR;FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:a.C.col,r0:5,life:12});}}}catch(e){}return r;};
+/* guide text */
+if(typeof gDetail==='function'||true){for(const C of CH){if(C.hidden||!C.sigT)continue;C.na=(C.na?C.na+' ':'')+'Signature: '+C.sigT;}}
+window.NORMALS={SET,FSET,TR,changed};
 })();
 
 /* sound2.js — hits sound like the quirk that landed them, and every fighter has a voice: a short blip when they taunt, win, or get launched. */
