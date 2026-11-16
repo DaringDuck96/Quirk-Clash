@@ -8976,6 +8976,34 @@ const ai0=aiInput;aiInput=function(f){const I=ai0(f);try{
  }catch(e){}return I;};
 })();
 
+/* smashai.js — CPUs fight in rhythm, the way Smash CPUs do: they space, wait, shield and punish instead of attacking on every free frame.
+   After each attack a CPU drops back to neutral for a while (long at low levels, short at level 9), holds a spacing distance, and commits again when the
+   wait runs out, when a rival whiffs in front of it, or when a rival is still reeling and a follow-up is on. Recovery, ledge play and shield reactions are untouched.
+   Set SMASHAI.on=false for the old always-attacking behaviour. */
+var SMASHAI={on:true,defLo:.1,defHi:.8,waitLo:190,waitHi:66,goLo:50,goHi:80};
+(function(){const lerp2=(a,b,k)=>a+(b-a)*k;
+const ai0=aiInput;aiInput=function(f){const I=ai0(f);if(!SMASHAI.on)return I;try{
+  if(!f||!f.C||f.dead||f.gone||typeof GS==='undefined'||GS!=='play')return I;const L=Math.min(9,Math.max(1,f.lvl||1)),k=(L-1)/8,s=f.ai3||(f.ai3={mode:'wait',t:20+rnd()*40,pm:null,j:rnd()*30-15});
+  const o=(typeof opp==='function')?opp(f):null;if(!o||o.dead||o.gone||o.st==='respawn')return I;const g=STAGE.main,off=f.x<g.x-4||f.x>g.x+g.w+4;
+  const m=f.mv;if(s.pm&&!m){const hit=f._lastLand&&FR-f._lastLand<50;s.mode='wait';s.t=lerp2(SMASHAI.waitLo,SMASHAI.waitHi,k)*(.6+rnd()*.9)*(hit&&L>=6?.55:1);s.j=rnd()*36-18;}s.pm=m;
+  if(off||f.st==='ledge'||f.st==='climb'||f.st==='hit'||f.hitstun>0||f.st==='held'||f.st==='hold'||m)return I;
+  const dx=o.x-f.x,dy=o.y-f.y,adx=Math.abs(dx),dir=Math.sign(dx)||1;
+  /* defence: read the rival's attack as it starts and, level permitting, shield it and punish, or get out of the way */
+  {const om=o.mv,P=f.pi||{};if(om&&om!==s.seen&&om.d&&om.d.hits&&om.d.hits.length&&!/throw/.test(om.k)&&adx<100&&Math.abs(dy)<64){s.seen=om;const r=rnd(),p=SMASHAI.defLo+(SMASHAI.defHi-SMASHAI.defLo)*k;s.def=r<p?{mv:om,act:(f.shp===undefined||f.shp>16)?(rnd()<.78?'shield':'jump'):'jump',at:FR+Math.round(lerp2(13,3,k)+rnd()*3)}:null;}
+   const d=s.def;if(d){if(o.mv!==d.mv){if(d.on&&adx<48&&L>=5&&f.ground&&!P.G&&!P.S){I.x=0;I.y=0;I.A=0;I.B=0;I.J=0;I.S=0;I.G=1;s.def=null;s.mode='go';s.t=36;return I;}if(d.on&&P.S){s.def.rel=1;I.S=0;I.A=I.B=I.G=I.J=0;I.x=0;return I;}if(!d.rel||!P.S)s.def=null;if(d.rel){s.def=null;s.mode='go';s.t=30;}}
+     else if(FR>=d.at&&!f.ground&&!d.on&&f.st==='air'&&adx<70&&rnd()<.6){d.on=1;I.A=0;I.B=0;I.G=0;I.J=0;I.x=-dir;I.S=P.S?0:1;return I;}else if(FR>=d.at&&f.ground){const od=o.mv.d;if(d.act==='shield'){if(o.mv.t<=od.s+od.a+1){d.on=1;I.x=0;I.y=0;I.A=0;I.B=0;I.G=0;I.J=0;I.sm=0;I.S=1;return I;}}else if(!d.on){d.on=1;I.A=0;I.B=0;I.G=0;I.S=0;I.x=-dir;I.J=P.J?0:1;return I;}}}}
+  if(s.mode==='go'){if(--s.t<=0){s.mode='wait';s.t=lerp2(SMASHAI.waitLo,SMASHAI.waitHi,k)*(.5+rnd()*.7);}return I;}
+  s.t--;const whiff=o.mv&&o.mv.d&&o.mv.t>o.mv.d.s+o.mv.d.a&&adx<76&&Math.abs(dy)<54,reel=o.hitstun>6&&adx<110&&L>=5,open=o.st==='dizzy'||o.st==='helpless'||(o.st==='down'&&adx<60);
+  if(s.t<=0||(whiff&&rnd()<.2+.75*k)||(reel&&rnd()<.3+.3*k)||(open&&L>=3)){s.mode='go';s.t=lerp2(SMASHAI.goLo,SMASHAI.goHi,k)|0;return I;}
+  /* neutral: no offence, hold a spacing distance, keep whatever defence the base AI chose */
+  I.A=0;I.B=0;I.G=0;I.sm=0;I.T=0;if(I.S)return I;
+  if(!f.ground){I.x=I.x*.5;return I;}
+  const want=lerp2(128,84,k)+s.j;if(adx<want-16){const nx=f.x-dir*26;I.x=(nx>g.x+34&&nx<g.x+g.w-34)?-dir*(L>=6?1:.6):0;}else if(adx>want+34)I.x=dir*(L>=5?1:.55);else{I.x=0;if(L>=7&&(FR+f.id*17)%64<7)I.x=((FR>>6)%2?1:-1)*.9;}
+  I.y=0;if(I.J&&rnd()>.12)I.J=0;
+ }catch(e){}return I;};
+const ah=applyHit;applyHit=function(t,h,d,a,o){const r=ah(t,h,d,a,o);if(r==='hit'&&a&&a!==t)a._lastLand=FR;return r;};
+})();
+
 /* extras.js — training hitbox display and frame data, a playable tutorial, and search / filter / favourites on the fighter select screen. */
 (function(){
 /* ---------- 1. training: hitboxes and frame data ---------- */
