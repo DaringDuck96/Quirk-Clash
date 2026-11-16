@@ -9626,14 +9626,20 @@ var STAGELIT=true;
 const LITS={fuji:['#ffb0c8',.07,'#fff2d8',-1],shibuya:['#6a48d0',.13,'#3af0ff',1],inari:['#ff9050',.11,'#ffd8a0',-1],miyajima:['#ff8060',.12,'#ffe0a0',1],tower:['#3858b0',.14,'#ff7a6a',-1],osaka:['#a8c8ff',.06,'#ffffff',-1],
  orbit:['#5a38b0',.16,'#c8a8ff',1],mockcity:['#ffffff',0,'#ffffff',-1],arena:['#fff0c0',.05,'#ffffff',1],dome:['#80c0ff',.08,'#e0f4ff',-1],gym:['#ffe0a0',.06,'#fff4d8',1],sewers:['#3aa060',.16,'#a8ffb8',-1],
  train:['#ff9a60',.1,'#ffe4b8',1],prom:['#8a48c8',.15,'#ff7ad0',1],ramen:['#ffb060',.12,'#ffe4a8',-1]};
-let _litT=null;
+let _litT=null,_litSlow=0,_litLast=0;
+/* the lit overlay is rebuilt only when the sprite is repainted, and the whole effect switches itself off for the session if the game is running slowly */
+if(typeof paintSprite==='function'){const ps=paintSprite;paintSprite=function(B){const r=ps.apply(this,arguments);try{if(B)B._lv=(B._lv||0)+1;}catch(e){}return r;};}
 function stageLit(f,B,alpha){if(!STAGELIT||!B||!B.cv||typeof STGD==='undefined'||!STGD)return;const P=LITS[STGD.id],L=f._lit&&FR-f._lit.t<12?f._lit:null;if(!P&&!L)return;if(f.invis||alpha<.3)return;
-  const w=B.cv.width,h=B.cv.height;if(!_litT||_litT.width!==w||_litT.height!==h){_litT=document.createElement('canvas');_litT.width=w;_litT.height=h;}const g=_litT.getContext('2d'),rs=(typeof RS!=='undefined'?RS:2);
-  const wash=(col,a)=>{g.globalCompositeOperation='copy';g.drawImage(B.cv,0,0);g.globalCompositeOperation='source-in';g.fillStyle=col;g.fillRect(0,0,w,h);X.globalAlpha=alpha*a;X.drawImage(_litT,-B.ox,-B.oy);};
-  if(P&&P[1]>0)wash(P[0],P[1]);
-  if(P){const sx=-P[3]*f.face*rs,sy=rs;g.globalCompositeOperation='copy';g.drawImage(B.cv,0,0);g.globalCompositeOperation='destination-out';g.drawImage(B.cv,sx,sy);g.globalCompositeOperation='source-in';g.fillStyle=P[2];g.fillRect(0,0,w,h);X.globalAlpha=alpha*.62;X.drawImage(_litT,-B.ox,-B.oy);}
-  if(L)wash(L.c,.34*(1-(FR-L.t)/12));
-  g.globalCompositeOperation='source-over';X.globalAlpha=alpha;}
+  const w=B.cv.width,h=B.cv.height,rs=(typeof RS!=='undefined'?RS:2);if(!_litT||_litT.width!==w||_litT.height!==h){_litT=document.createElement('canvas');_litT.width=w;_litT.height=h;}const g=_litT.getContext('2d');
+  if(P){let O=B._lo;const key=(B._lv||0)+'|'+STGD.id+'|'+f.face;if(!O||O.width!==w||O.height!==h){O=B._lo=document.createElement('canvas');O.width=w;O.height=h;B._lk=null;}
+    if(B._lk!==key){B._lk=key;const o=O.getContext('2d');o.globalCompositeOperation='copy';o.globalAlpha=1;o.drawImage(B.cv,0,0);o.globalCompositeOperation='source-in';o.fillStyle=P[0];o.globalAlpha=1;o.fillRect(0,0,w,h);
+      /* O now holds the sprite's shape in the wash colour; it is drawn at the wash strength. The rim sliver is built in the scratch canvas and added at full strength. */
+      const sx=-P[3]*f.face*rs,sy=rs;g.globalCompositeOperation='copy';g.drawImage(B.cv,0,0);g.globalCompositeOperation='destination-out';g.drawImage(B.cv,sx,sy);g.globalCompositeOperation='source-in';g.fillStyle=P[2];g.fillRect(0,0,w,h);g.globalCompositeOperation='source-over';
+      let R=B._lr;if(!R||R.width!==w||R.height!==h){R=B._lr=document.createElement('canvas');R.width=w;R.height=h;}const rc=R.getContext('2d');rc.globalCompositeOperation='copy';rc.drawImage(_litT,0,0);}
+    if(P[1]>0){X.globalAlpha=alpha*P[1];X.drawImage(O,-B.ox,-B.oy);}X.globalAlpha=alpha*.62;X.drawImage(B._lr,-B.ox,-B.oy);}
+  if(L){g.globalCompositeOperation='copy';g.drawImage(B.cv,0,0);g.globalCompositeOperation='source-in';g.fillStyle=L.c;g.fillRect(0,0,w,h);g.globalCompositeOperation='source-over';X.globalAlpha=alpha*.34*(1-(FR-L.t)/12);X.drawImage(_litT,-B.ox,-B.oy);}
+  X.globalAlpha=alpha;}
+if(typeof renderScreen==='function'){const rs0=renderScreen;renderScreen=function(){const r=rs0.apply(this,arguments);try{if(STAGELIT&&typeof running!=='undefined'&&running&&typeof paused!=='undefined'&&!paused){const now=performance.now(),dt=now-_litLast;_litLast=now;if(dt>24&&dt<200){if(++_litSlow>150)STAGELIT=false;}else if(dt<=24&&_litSlow>0)_litSlow-=2;}}catch(e){}return r;};}
 (function(){const ah=applyHit;applyHit=function(t,h,d,a,o){const r=ah(t,h,d,a,o);try{if(r==='hit'){const c=(h&&h.fx&&h.fx[0])||(a&&a.mv&&a.mv.d.fx&&a.mv.d.fx[0])||(a&&a.C&&a.C.col)||'#ffffff';if(/^#[0-9a-f]{6}$/i.test(c)){t._lit={c,t:FR};if(a&&a!==t&&!(o&&o.proj))a._lit={c,t:FR};}}}catch(e){}return r;};})();
 
 /* pace.js — Smash-like pacing. Weak hits leave a grounded fighter standing (SLIDEKB, used by the engine), and smash attacks, tilts and dash attacks take a little longer,
