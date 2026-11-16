@@ -420,7 +420,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
       <div class="opt" id="teamOpt"><span class="lab">TEAMS</span><div class="seg" id="tm"><button data-v="0" class="on">OFF</button><button data-v="1">ON</button></div></div>
       <div class="opt" id="timeOpt"><span class="lab">TIME</span><div class="seg" id="tmr"><button data-v="0" class="on">&infin;</button><button data-v="120">2:00</button><button data-v="180">3:00</button><button data-v="300">5:00</button></div></div>
       <div class="opt"><span class="lab">STOCKS</span><div class="seg" id="stk"><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div></div>
-      <span class="padhint"><b class="padcount" style="color:var(--gold)"></b><br>🎮 <b>Stick</b> moves your hand · <b>A</b> drop your token on a fighter (A on a token picks it up, a CPU&rsquo;s too) · <b>B</b> take it back · <b>L / R</b> costume · <b>X</b> add/remove CPU · <b>Y</b> CPU level · <b>&minus;</b> guide · <b>+</b> next. Mouse: click a token to pick it up, click a fighter to drop it; <b>Q / E</b> costume.</span>
+      <span class="padhint"><b class="padcount" style="color:var(--gold)"></b><br>🎮 <b>Stick</b> hand · <b>A</b> drop or pick up a token · <b>B</b> take it back · <b>L / R</b> costume · <b>X</b> add CPU · <b>Y</b> CPU level · <b>&minus;</b> guide · <b>+</b> next. Mouse: click a token, then a fighter; <b>Q / E</b> costume.</span>
       <button class="fight" id="fight">READY! STAGE SELECT &#9656;</button>
     </div>
   </section>
@@ -8381,7 +8381,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
  try{if(typeof GTXT!=='undefined'&&GTXT.chiyoki){GTXT.chiyoki[0]='The laugh. A tap is a cackle that puts Dread on rivals in front of him. Hold B and he keeps howling: everyone near him, on either side, gains Dread for as long as he holds it (about a second and a half), but he cannot move while he does.';
    GTXT.chiyoki[1]='Lobs a bowling pin in an arc. Bounces along the platform several times before it rolls off the edge. A rival who is already Uneasy or worse is startled by it: stunned for longer, and more Dread.';
    GTXT.chiyoki[2]='An adrenaline-fuelled leap, followed by extra speed: about two seconds, and up to five the more damage he has taken.';
-   GTXT.chiyoki[3]='Winds up a shovel swing. Very slow, but nothing stops it and it launches enormously. Against a FROZEN rival it does 30% more and launches a quarter harder.';}}catch(e){}
+   GTXT.chiyoki[3]='Winds up a shovel swing. Very slow, but nothing stops it and it launches enormously. Against a FROZEN rival it does 20% more and launches a little harder.';}}catch(e){}
  try{const V=(typeof VTXT!=='undefined')?VTXT:null;}catch(e){}
  const stage=t=>!t||!(t.dr>0)?0:t.dr>=66?2:t.dr>=33?1:0;
  const mine=(a,t)=>a&&t&&a!==t&&a.C===C&&!a.form&&!(a.copyT>0)&&!(a.team!==undefined&&a.team===t.team);
@@ -8389,8 +8389,8 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
   if(t.dr>=100){t.dr=0;t.frzT=FR+78;t.drCD=FR+260;t.rootT=Math.max(t.rootT||0,78);say(t,'FROZEN!','#ffffff');sfx('counter');FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:PU,r0:10,life:20});burst(t.x,t.y-30,14,[PU,GN,'#ffffff'],2.4,20);if(by&&by.C===C)say(by,'HA!',GN);return;}
   const s1=stage(t);if(s1>s0){say(t,s1===2?'PANICKED':'UNEASY',s1===2?'#ff8ad8':'#d8c0ff');}}
  window.DREAD={add,stage};
- const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(mine(a,t)){const fz=t.frzT>FR;m*=fz?1.3:1+.1*stage(t);}}catch(e){}return m;};
- const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);try{if(mine(a,t)&&t.frzT>FR&&a.mv&&a.mv.k==='dB')m*=1.15;}catch(e){}return m;};
+ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(mine(a,t)){const fz=t.frzT>FR;m*=fz?1.2:1+.1*stage(t);}}catch(e){}return m;};
+ const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);try{if(mine(a,t)&&t.frzT>FR&&a.mv&&a.mv.k==='dB')m*=1.08;}catch(e){}return m;};
  const ah=applyHit;applyHit=function(t,h,dirX,a,o){const fz=t&&t.frzT>FR;const r=ah(t,h,dirX,a,o);try{if(mine(a,t)&&(r==='hit'||r==='shield')){const pin=o&&o.proj&&h&&h.spec&&h.spec.sh==='pin',lg=!pin&&a.mv&&a.mv.k==='nB'&&!(o&&o.proj),dmg=((h&&h.spec)?h.spec.dmg:h&&h.dmg)||0;
     if(fz){if(r==='hit'){t.frzT=0;if(a.mv&&a.mv.k==='dB'){say(a,'GOTCHA!','#ffffff');if(typeof shakeA!=='undefined')shakeA=Math.max(shakeA,7);}}}
     else if(lg)add(t,a,r==='hit'?15:8);
@@ -8465,7 +8465,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
   sB:M('spin',8,22,17,[hit([[22,-34,16],[-20,-34,15]],2.4,1.8,.008,65,{ri:5,f0:8,f1:25}),hit([[22,-34,17],[-20,-34,16]],5,4.8,.085,48,{f0:27,f1:30})],{beh:'dash',bp:{spd:4.4,f0:8,f1:29,air:'float'},fx,lim:'fF'}),
   sBx:M('spin',7,30,18,[hit([[24,-34,17],[-22,-34,16]],2.1,1.8,.008,65,{ri:5,f0:7,f1:32}),hit([[24,-34,18],[-22,-34,17]],6,5.2,.095,46,{f0:34,f1:37})],{beh:'dash',bp:{spd:5.2,f0:7,f1:36,air:'float'},fx,lim:'fF'}),
   uBx:M('uppercut',3,12,22,[hit([[12,-36,15]],9,2.4,.004,88,{f0:3,f1:4}),hit([[10,-28,18],[8,-54,16]],8,6.2,.105,84,{f0:5,f1:10})],{beh:'leapUp',bp:{vy:-11.6,vx:1.8,intang:0},helpless:1,fx,lim:'hF'}),
-  rush:M('punch',13,5,24,hit([[30,-38,16],[16,-38,12]],15,5.4,.1,40),{beh:'dash',bp:{spd:5.2,f0:6,f1:12,armor:1},fx,lim:'hF',imp:[[13,3]]}),
+  rush:M('punch',13,6,24,hit([[30,-38,17],[14,-38,14],[-4,-38,13],[-22,-38,12]],15,5.4,.1,40),{beh:'dash',bp:{spd:4.2,f0:6,f1:11,armor:1},fx,lim:'hF',imp:[[13,3]]}),
   grit:M('punch',14,5,24,hit([[26,-38,15],[14,-38,12]],9,4,.06,50),{fx,lim:'hF',bp:{armor:1,f0:1,f1:18}})};
  for(const T of[C.mv,C.hmv]){if(!T)continue;for(const k in MV)T[k]=MV[k];}
  C._aik=Object.assign(C._aik||{},{sB:'mid',sBx:null,uBx:null,rush:null,grit:null});
@@ -8488,6 +8488,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
  const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah(t,h,dirX,a,o);try{if(r==='hit'&&ok(a)&&a.mv&&a!==t&&!(o&&o.proj)){const m=a.mv;if(NORM.test(m.k))m._hitC=FR;if(m.k==='grit'&&m._full&&!m._s){m._s=1;if(t.st!=='dizzy'){t.st='dizzy';t.dz=56;t.hitstun=0;}say(a,'CRUMPLE!','#ffffff');sfx('counter');}}}catch(e){}return r;};
  const st0=step;step=function(){st0();try{for(const f of F){if(f.C!==C||f.gone||f.dead||!ok(f))continue;const I=f.pi||{},B=!!I.B,A=!!I.A,bP=B&&!f._cb,m=f.mv,cpu=f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl));if(bP)f._cbT=FR;f._cb=B;
    const H=f._ch2||(f._ch2=[]),c=code(f);if(!H.length||H[H.length-1][0]!==c){H.push([c,FR]);if(H.length>8)H.shift();}
+   if(!m&&cpu&&f.ground&&GS==='play'&&FR%6===0&&(f.st==='idle'||f.st==='walk'||f.st==='run')){for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team))continue;const dx=(o.x-f.x)*f.face;if(dx>6&&dx<40&&Math.abs(o.y-f.y)<24&&rnd()<.22){startMove(f,rnd()<.7?'nB':'grit');break;}}}
    if(!m)continue;const d=m.d;
    /* hold A: the heavy tilt */
    if(m._lt&&m.t===3&&(A||(cpu&&rnd()<.4))){const b=m._base;m._lt=0;m._hv=1;m.d=Object.assign({},b,{s:b.s+3,hits:b.hits.map(h=>Object.assign({},h,{dmg:Math.round(h.dmg*1.22*10)/10,kbg:h.kbg*1.12}))});}
@@ -8549,7 +8550,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
   /* heavier hands: every normal hits about a seventh harder */
   for(const k of['jab1','jab2','jab3','ftilt','utilt','dtilt','dash','nair','fair','bair','uair','dair','fsmash','usmash','dsmash']){const d=T[k];if(d&&d.hits&&!d._rei){T[k]=Object.assign({},d,{_rei:1,hits:d.hits.map(h=>Object.assign({},h,{dmg:Math.round(h.dmg*1.14*10)/10}))});}}}
  const NEXT={jab3:['A','c4'],c4:['A','c5'],c5:['B','c6'],c6:['A','c7'],c7:['B','c8']};
- C.secret=[['→ ↓ ↘','SLIDE STEP','A low, fast step forward. Everything below starts from it.'],['Slide Step, then A','THUNDER PALM','A rising palm that launches straight up: 13%. He does not flinch as it starts.'],['↘ and A on the same frame','PERFECT THUNDER PALM','Press A at the exact moment the stick reaches down-forward: 16%, and the rival is paralysed in the air.'],['Slide Step, then B','SWEEP','A low sweep that pops the rival up at his feet.'],
+ C.secret=[['→ ↓ ↘','SLIDE STEP','A low, fast step forward. Everything below starts from it.'],['Slide Step, then A','THUNDER PALM','A rising palm that launches straight up: 13%. He does not flinch as it starts.'],['A just as the stick hits ↘','PERFECT THUNDER PALM','Press A within a blink of the stick reaching down-forward (about a twentieth of a second): 16%, and the rival is paralysed in the air.'],['Slide Step, then B','SWEEP','A low sweep that pops the rival up at his feet.'],
   ['Hold ↘ + A','RISING ELBOW','A quick launcher, no slide needed: 8%.'],['→ → A','LUNGE','Tap forward twice, then A: a stepping straight punch. 15%, his best finisher.'],['A A A A A B A B','EIGHT GATES','Jab three times, then keep going: punch, low kick, knee (B), elbow (A), roundhouse (B). Each press only comes out if the last hit landed. About 40% in all.'],
   ['↓ ↘ → before B','PERFECT FORM','Roll the stick before any special: 30% more damage and extra launch.'],['100% damage or more','IN THE ZONE','He deals 12% more.']];
  C.sp=['Read (dodge and counter)','Step In (slips behind, pops them up)','Rising Knee','Bullet Time (slows everyone nearby)'];
@@ -8564,7 +8565,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
  const sm0=startMove;startMove=function(f,key){try{if(ok(f)&&f.ground&&!f._reiGo&&(key==='jab1'||key==='ftilt'||key==='dtilt'||key==='dash'||key==='fsmash'||key==='dsmash')){const H=f._rh||[],c=code(f);
     /* forward, forward, A */
     const n=H.length;if(n>=3&&H[n-1][0]===6&&H[n-2][0]===5&&H[n-3][0]===6&&FR-H[n-3][1]<=18&&FR-H[n-1][1]<=10){f._reiGo=1;try{const r=sm0(f,'lunge');if(r){say(f,'LUNGE');return r;}}finally{f._reiGo=0;}}
-    if(c===3){const just=n&&(H[n-1][0]===2||(H[n-1][0]===3&&FR-H[n-1][1]<=1)),slid=just&&slideBefore(H,H[n-1][0]===3?n-2:n-1);
+    if(c===3){const just=n&&(H[n-1][0]===2||(H[n-1][0]===3&&FR-H[n-1][1]<=3)),slid=just&&slideBefore(H,H[n-1][0]===3?n-2:n-1);
       f._reiGo=1;try{const r=sm0(f,slid?'tpx':'elbow');if(r)return r;}finally{f._reiGo=0;}}}}catch(e){}
    return sm0(f,key);};
  const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(ok(a)&&a!==t&&a.dmg>=100)m*=1.12;}catch(e){}return m;};
@@ -8578,7 +8579,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
    /* SLIDE STEP: forward, (neutral), down, down-forward */
    if(free(f)&&GS==='play'&&n>=3&&H[n-1][0]===3&&H[n-1][1]===FR&&slideBefore(H,n-2)){if(aP){go(f,'tpx');}else if(go(f,'cd')){f.mv._t0=FR;}}
    if(aP)f._raT=FR;if(bP)f._rbT=FR;
-   if(m&&m.k==='cd'){if(aP){if(FR-(m._t0||0)<=1)go(f,'tpx');else go(f,'tp');}else if(bP)go(f,'sw');}
+   if(m&&m.k==='cd'){if(aP){if(FR-(m._t0||0)<=3)go(f,'tpx');else go(f,'tp');}else if(bP)go(f,'sw');}
    /* the string */
    else if(m&&NEXT[m.k]){const nx=NEXT[m.k];if(m._s0===undefined)m._s0=FR-m.t;const lp=nx[0]==='A'?(f._raT||-99):(f._rbT||-99);if(m._landed&&((lp>m._s0+1&&FR-lp<=12)||(cpu&&FR-m._landed>=4&&(m.k!=='jab3'||f._cs))))m._want=1;if(m._want&&m.t>=m.d.s+m.d.a-1&&!(f.hl>0)){go(f,nx[1]);}}
    /* CPU: uses the slide and the palm, and commits to the string about half the time */
@@ -8700,6 +8701,8 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
  C._aik=Object.assign(C._aik||{},{dB:'near'});
  C.sp=[C.sp[0],C.sp[1],C.sp[2],'Numbing Spike (a slow jab with his toxic spike: stuns for about a second; six-second cooldown)'];
  try{if(typeof GTXT!=='undefined'&&GTXT.yado)GTXT.yado[3]='Winds up and jabs with the toxic spike on his fist. It is slow to come out, short, and does almost no damage, but a rival it touches is stunned for a little over a second (mashing buttons shakes it off sooner). Six-second cooldown, and a rival who was stunned or frozen in the last four seconds is only tapped.';}catch(e){}
+ const st0=step;step=function(){st0();try{if(GS!=='play'||FR%6)return;for(const f of F){if(f.C!==C||f.gone||f.dead||f.form||f.mv||!f.ground||!(f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl)))||!(f.st==='idle'||f.st==='walk'||f.st==='run')||(f.cds&&f.cds.dB>FR))continue;
+   for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team)||(o.ccT&&FR-o.ccT<240))continue;const dx=(o.x-f.x)*f.face;if(dx>8&&dx<46&&Math.abs(o.y-f.y)<24&&(o.st==='shield'||o.mv||rnd()<.3)){startMove(f,'dB');break;}}}}catch(e){}};
  const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah(t,h,dirX,a,o);try{if(r==='hit'&&a&&a.C===C&&!a.form&&a.mv&&a.mv.k==='dB'&&t.st==='dizzy'&&!a.mv._s){a.mv._s=1;t.dz=66;FXL.push({k:'txt',s:'NUMB!',x:t.x,y:t.y-90,t:0,life:40,col:'#a0ff40'});for(let i=0;i<2;i++)FXL.push({k:'ring',x:t.x,y:t.y-34,t:-i*3,col:i?'#ffffff':'#a0ff40',r0:10,life:18});sfx('counter');}}catch(e){}return r;};
 }}
 
@@ -8753,8 +8756,8 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
      if(!c.on&&!c.land){c.vy=Math.min(8,c.vy+.4);c.y+=c.vy;try{for(const s of surfaces()){if(c.x>=s.x&&c.x<=s.x+s.w&&c.y>=s.y-2&&c.y-c.vy<=s.y+2){c.y=s.y-2;c.land=true;break;}}}catch(e){}if(c.y>(typeof BLAST!=='undefined'?BLAST.b:900))f.c4=null;}
      if(f.c4&&FR-c.t0>C4LIFE){f.c4=null;say(f,'DEAD CHARGE','#9aa0b0');}
      if(f.c4&&m&&m.k==='det'&&m.t===m.d.s){f.c4=null;blastAt(f,c.x,c.y-6,32,17,6.2,.1);say(f,'BOOM');}
-     if(f.c4&&cpu&&!m&&FR%5===0&&FR-c.t0>30&&f.st!=='hit'){for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team))continue;if(Math.hypot(o.x-c.x,(o.y-30)-(c.y-6))<34){startMove(f,'dB');break;}}}}
-   else if(cpu&&!m&&f.ground&&GS==='play'&&FR%30===0&&rnd()<.18&&(f.st==='idle'||f.st==='walk'||f.st==='run'))startMove(f,'dB');
+     if(f.c4&&cpu&&!m&&FR%5===0&&FR-c.t0>30&&f.st!=='hit'){for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team))continue;if(Math.hypot(o.x-c.x,(o.y-30)-(c.y-6))<30&&rnd()<.3){startMove(f,'dB');break;}}}}
+   else if(cpu&&!m&&f.ground&&GS==='play'&&FR%30===0&&rnd()<.07&&(f.st==='idle'||f.st==='walk'||f.st==='run'))startMove(f,'dB');
   }}catch(e){}};
  /* the grenade in the arm, and the charge wherever it is */
  const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&f.C===C&&!f.dead&&!f.gone&&typeof X!=='undefined'&&X){const ip=(typeof interpPos==='function')?interpPos(f):f;
@@ -9978,7 +9981,7 @@ const mk0=modeKO;modeKO=function(f){if(MODE!=='campaign')return mk0(f);const n=C
   if(f.boss){f.hp-=f.hpMax*.12;f.stocks=99;FXL.push({k:'txt2',s:'RING OUT!  -12%',x:CAM.x,y:CAM.y-70,t:0,life:70,col:'#ffd400'});if(f.hp<=0){f.dead=0;f.gone=true;finish('win');return true;}return false;}
   if(f.stocks>0)return false;f.dead=0;f.gone=true;
   if(f.team===1){if(f.grunt){CS.left=Math.max(0,CS.left-1);F=F.filter(x=>x!==f);}if(n.rule==='hold'||n.adds)return true;if(!F.some(x=>x.team===1&&!x.gone)&&(n.rule!=='waves'||CS.left<=0))finish('win');return true;}
-  if((f===F[0]&&!(CS.np>1))||!F.some(x=>x.team===0&&!x.gone))finish('lose');return true;};
+  if((f===F[0]&&!(CS.np>1))||!F.some(x=>x.team===0&&!x.gone))finish(CS.fin?'win':'lose');return true;};
 const mt0=modeTick;modeTick=function(){mt0();if(MODE!=='campaign'||typeof GS==='undefined'||GS!=='play')return;const n=CS.node;CS.t++;
   if(n.time){CS.time--;if(CS.time<=0){finish(n.rule==='hold'?'win':'lose');return;}if(CS.time<=300&&CS.time%60===0)sfx('tick');}
   if(n.rule==='waves'||n.rule==='hold'||n.adds){const alive=F.filter(f=>f.team===1&&!f.gone&&!f.boss).length,pend=n.rule==='waves'?CS.left-alive:99;if(alive<n.cap&&pend>0&&CS.t%50===10)spawnGrunt(n);}
@@ -10446,7 +10449,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1116-2310';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1116-2345';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10622,6 +10625,19 @@ const ex0=exaggerate;exaggerate=function(p,f){const o=ex0(p,f);try{if(!POSTURE.o
   else if(st==='shield'||st==='shieldstun'){o.tl=Math.min(o.tl||0,.08);}
   else if(st==='win'){o.tl=Math.min(o.tl||0,0);}
  }catch(e){}return o;};
+})();
+
+/* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
+   first the stage's middle and foreground layers, then the pixel-edge effect. It never turns them back on mid-session, and says so once. */
+(function(){
+const P={lv:0,avg:16.7,bad:0,last:0};window.PERF=P;
+function tick(now){requestAnimationFrame(tick);const dt=now-P.last;P.last=now;try{if(typeof running==='undefined'||!running||(typeof paused!=='undefined'&&paused)||typeof GS==='undefined'||GS!=='play'||document.hidden||dt>120||dt<=0){P.bad=0;return;}
+  P.avg+=(dt-P.avg)*.03;if(P.avg>22.5)P.bad+=dt;else P.bad=Math.max(0,P.bad-dt*2);
+  if(P.bad>3500&&P.lv<2){P.lv++;P.bad=0;P.avg=16.7;if(P.lv===1){if(window.LAYERS)LAYERS.on=false;}else{try{PIXELFX=false;}catch(e){}}
+   try{toast(P.lv===1?'Stage extras turned off to keep the game smooth':'Pixel-edge effect turned off to keep the game smooth');}catch(e){}}}catch(e){}}
+requestAnimationFrame(tick);
+/* modes2 re-reads the pixel-edge rule every step, so hold it off here once we have decided */
+const st0=step;step=function(){const r=st0.apply(this,arguments);if(P.lv>=2){try{PIXELFX=false;}catch(e){}}return r;};
 })();
 
 </script>
