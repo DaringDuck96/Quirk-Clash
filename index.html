@@ -1796,13 +1796,14 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('throwF',14,1,22,null,{spawn:[[14,GP({sh:'pot',c:'#ffd84a',vx:2.6,vy:-6,g:.3,life:90,r:10,dmg:13,bkb:5,kbg:.08,ang:60,gnd:1})]],cd:150,fx})}),
   sp:['Gold Coin (bounces along the ground)','Rainbow Slide (rides a rainbow across the stage)','End of the Rainbow (a very high leap)','Pot of Gold (lobbed, heavy and slow)']});
  fx=['#ff4a4a','#ffe0a0'];add({id:'ray',n:'RAY STEVENS',sn:'RAY',q:'Ocular Shift',ty:'Emitter',col:'#ff4a4a',d:'His eyes do whatever he needs them to: lasers, heat, seeing straight through people. He is not patient about using them.',
-  na:'Normals: aggressive brawling, with eye-beams built into his forward attacks. Most of his reach comes from where he is looking.',
+  na:'Normals: aggressive brawling with a different kind of vision behind each smash: a thermal blast forward, a blinding flash around him. He can use any of his eyes at any time; nothing has to be switched on.',
   look:K({skin:'#f0d4bc',eye:'#ff4a4a',hairS:'messy',hair:'#6a4628',outfit:'track',top:'#1c1c22',acc:'#f0f0f4',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#f0f0f4',stance:'cool',ex:[]}),st:ST({w:.98,run:3.2,air:2.7}),kit:{st:'brawler',fx,el:'eye',pow:1.02},
   mv:Object.assign(SM('eye',fx),{nB:M('cast',11,3,18,null,{spawn:[[11,{k:'laser',len:170,life:12,dmg:9,bkb:3.5,kbg:.055,ang:28,dy:-52}]],fx,cd:36}),
-   sB:M('cast',14,1,22,null,{spawn:[[14,GP({sh:'sun',c:'#ff8a30',vx:3.2,life:70,r:9,dmg:10,bkb:4,kbg:.06,ang:45,ex:1,eff:'burn',dy:-50})]],cd:70,fx}),
+   sB:M('cast',13,3,22,null,{spawn:[[13,{k:'ray',len:150,life:10,dmg:3,bkb:1.5,kbg:.01,ang:40,eff:'para',dy:-52}]],cd:300,fx}),
    uB:M('uppercut',5,10,15,hit([[4,-56,14]],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-10.4,vx:1.6},helpless:1,fx}),
-   dB:M('roar',10,3,14,null,{cd:540,fx,onStart(f){f.qhype=FR+420;f.xrayT=FR+420;say(f,'X-RAY: WEAK POINT');sfx('power');}})}),
-  sp:['Laser Vision (a long instant beam from his eyes)','Thermal Vision (a slow ball of heat that bursts and burns)','Look Up (leap)','X-Ray Vision (finds a weak point: his next hit lands 30% harder)']});
+   dB:M('roar',8,3,12,null,{cd:540,fx,onStart(f){f.qguard=FR+150;say(f,'FUTURE SIGHT','#ffe0a0');sfx('power');}})}),
+  sp:['Laser Vision (a long instant beam from his eyes)','Paralysing Stare (a look that freezes a rival in place; long cooldown)','Look Up (leaps and fires a beam at the floor)','Future Sight (sees the next hit coming: it misses)']});
+
  fx=['#3a8a4a','#d8f0c0'];add({id:'oliver',n:'OLIVER KING',sn:'OLIVER',q:'Bullseye',ty:'Emitter',col:'#3a8a4a',d:'Perfect aim. He can throw or shoot anything at all and it goes exactly where he wants.',
   na:'Normals: bow-staff jabs with decent reach but little power. Everything dangerous about him flies, and most of it steers itself.',
   look:K({skin:'#f2d6bc',eye:'#3a8a5a',hairS:'short',hair:'#e8c860',outfit:'sweater',top:'#2a6a3a',acc:'#1c2a20',sleeve:'#2a6a3a',pants:'#3a3a44',shoe:'#2a2a30',wpn:'bow',stance:'cool',ex:['quiver']}),st:ST({w:.92,run:3.1,air:2.8}),kit:{st:'brawler',fx,el:'aim',pow:.9},
@@ -2256,7 +2257,7 @@ Object.assign(TUNE,{
 Object.assign(TUNE,{dawson:{role:'Quirkless tactician',tip:'Trap the floor, shuriken the air, then grapple in and box.',sp:1.12,pw:1,kb:1},
  maya:{role:'Drain support',tip:'Her touch heals her. Give Essence heals teammates more.',sp:.98,pw:1,kb:1},sarah:{role:'Shadow assassin',tip:'Get behind them. Shadow Step and Lights Out both put you there.',sp:1.04,pw:1,kb:1},
  aria:{role:'Lucky wildcard',tip:'Up smash drops a light on whoever is nearest, wherever they are standing.',sp:.98,pw:1,kb:1},bryson:{role:'Reluctant berserker',tip:'Weak as himself. Fill the meter and everything changes.',sp:1,pw:1,kb:1},
- conor:{role:'Tiny trickster',tip:'The smallest target. Coins bounce; the pot of gold hurts.',sp:1.1,pw:1,kb:1},ray:{role:'Beam zoner',tip:'Laser for reach, heat for pressure, X-Ray before a smash.',sp:1,pw:1,kb:1},
+ conor:{role:'Tiny trickster',tip:'The smallest target. Coins bounce; the pot of gold hurts.',sp:1.1,pw:1,kb:1},ray:{role:'Beam zoner',tip:'Stare to freeze them, X-Ray (Shield + B), then laser or smash.',sp:1,pw:1,kb:1},
  oliver:{role:'Homing archer',tip:'Everything he fires steers itself. Stay away and aim.',sp:1,pw:1,kb:1},chris:{role:'Regenerating swordsman',tip:'Back off for a moment and he heals. Outlast them.',sp:1,pw:1,kb:1},
  evona:{role:'Ice architect',tip:'Wall them off, slide in, pillar out.',sp:1.02,pw:1,kb:1},jack:{role:'Four-flame all-rounder',tip:'Down-B changes the flame: burn, speed, heal or slow.',sp:1,pw:1,kb:1},
  kal:{role:'Precognitive brawler',tip:'Every eight seconds one hit misses him. Swing first.',sp:1.04,pw:1,kb:1},kora:{role:'Winged skirmisher',tip:'Four jumps and a hover. Fight from above.',sp:1,pw:1,kb:1},ash:{role:'Long-limbed heavy',tip:'Grow to hit from above and reach the ledge; Branch keeps them at arm\'s length.',sp:.96,pw:1,kb:1}});
@@ -4949,7 +4950,7 @@ sarah:['Builds a fist out of shadow and throws it. Hold B to build a bigger, str
 aria:['Flicks a coin. It finds its own way to a rival.','Trips over nothing and falls forward into whoever is there.','A convenient gust carries her up.','Something lucky happens: half the time a snack (heals 8%), sometimes a power-up for her next hit, rarely a chunk of Final Smash meter. Long cooldown.','Everything goes right at once, for her, and wrong for everyone else.'],
 bryson:['Lobs a beaker from the lab.','A short shove forward.','A nervous jump.','Stops fighting it. If his Tantrum meter is at least half full he transforms straight away.','Loses it completely.'],
 conor:['Tosses a gold coin that bounces along the ground.','Rides a rainbow across the stage.','Leaps to the end of the rainbow. Very high.','Lobs his pot of gold. Slow and heavy.','Shows everyone exactly where the rainbow ends.'],
-ray:['An instant laser from his eyes with very long reach.','A slow ball of heat that bursts and burns.','A rising leap.','X-Ray Vision: finds a weak point, so his next hit within seven seconds lands 30% harder. Long cooldown.','Stares down the whole lane until it catches fire.'],
+ray:['An instant laser from his eyes with very long reach.','A paralysing stare: an instant line of sight that freezes whoever it lands on. Almost no damage. Long cooldown.','A rising leap; he looks down as he goes and fires a beam at the floor.','Future Sight: he sees a split second ahead, so the next hit aimed at him within two and a half seconds misses. Long cooldown.','Stares down the whole lane until it catches fire.'],
 oliver:['A homing arrow. Hold B to charge it bigger and faster.','Three arrows at once; each steers toward a rival.','Leaps and fires an arrow straight down.','Throws a blade that skips along the ground.','Fires at everyone on screen. None of them miss.'],
 chris:['A stepping sword cut.','A long lunging thrust.','A rising cut.','Shrugs it off: heals 10%. Nine-second cooldown.','An endless combo; he heals while he does it.'],
 evona:['Raises a wall of ice ahead of her. It blocks shots, shoves and chills rivals. One at a time.','Skates across the stage on her own ice.','Rides a pillar of ice upward.','A freezing flurry all around her. Cooldown.','Raises an ice palace around herself and freezes everyone inside.'],
@@ -5693,7 +5694,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   dawson:['No quirk: nothing he has is a trump card, and he is a little light.','GLIDER CAPE: hold Jump while falling to glide forward. His shuriken and grapple have no cooldown.'],
   maya:['Low damage; she wins slowly.','Her tilts and Draw Essence heal her.'],sarah:['Light, and her best moves leave her exposed if they miss.','BACKSTAB: 30% more damage from behind. Her attacks are shadow constructs, so they never expose her arms.'],
   aria:['Nothing about her is reliable, including the luck.','LUCKY: one hit in six does 50% more. One hit in six aimed at her misses.'],bryson:['As himself he is the weakest hitter in the school.','TANTRUM: a full meter turns him into the beast for twelve seconds: huge, armoured against small hits, 35% stronger, and he cannot shield.'],
-  conor:['The shortest reach in the school and very light.','The smallest target in the school.'],ray:['His beams leave him standing still; get inside and he struggles.','The longest instant-hit attack in the school.'],
+  conor:['The shortest reach in the school and very light.','The smallest target in the school.'],ray:['His beams leave him standing still; get inside and he struggles.','Every eye at once: laser, thermal, paralysing stare, flash, X-ray and Future Sight are all available at any time.'],
   oliver:['Weak up close and has no kill move without space.','His arrows home.'],chris:['No projectile, average speed.','HEALING FACTOR: after a second and a half without being hit he regenerates about 1.5% per second.'],
   evona:['Low knockout power; she controls rather than finishes.','Her wall blocks projectiles.'],jack:['Master of none: each flame is weaker than a specialist\'s.','Four flames, one at a time: the lit colour changes every attack he has, not just his fireball.'],
   kal:['When Danger Sense is on cooldown he is an ordinary brawler.','DANGER SENSE: every eight seconds the next hit aimed at him misses.'],kora:['Floaty and a big target with her wings out.','Four jumps, and holding Jump in the air hovers.'],
@@ -6708,6 +6709,10 @@ BEH.homing={tick(f,m,I){const d=m.d,p=d.bp;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.
 /* ---- Bentou: the jinx ---- */
 function jinx(t,n,by){if(!t||t.dead)return;if(!(t.jinxT>FR))FXL.push({k:'txt',s:'JINXED',x:t.x,y:t.y-92,t:0,life:40,col:'#c83a5a'});t.jinxT=Math.max(t.jinxT||0,FR+n);FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#c83a5a',r0:8,life:16});}
 {const h0=hurtR;hurtR=function(f){const r=h0(f);if(f.jinxT>FR){const w=r[2]*.26,h=r[3]*.18;return[r[0]-w/2,r[1]-h,r[2]+w,r[3]+h];}return r;};}
+/* ---- Ray: a different eye for each smash ---- */
+{const Ry=c('ray');if(Ry){const fx=Ry.kit.fx;
+  Ry.mv.fsmash=M('cast',14,6,24,hit([[30,-46,16],[52,-46,18]],15,4.5,.1,40,{eff:'burn'}),{charge:1,fx:['#ff8a30','#ffe0a0'],lim:'none',face:'atk',qn:'Thermal vision: a cone of heat from his eyes. Burns.',vfx:{k:'H',el:'fire',x:44,y:-46,r:18}});
+  Ry.mv.dsmash=M('roar',9,4,22,[hit([[26,-34,20]],11,4,.085,35,{eff:'conf'}),hit([[-26,-34,20]],11,4,.085,145,{eff:'conf'})],{charge:1,fx:['#ffffff','#ffe0a0'],lim:'none',face:'atk',qn:'A blinding flash from his eyes on both sides. Rivals it hits have left and right swapped for a second.',onStart(f){FXL.push({k:'ring',x:f.x,y:f.y-46,t:0,col:'#ffffff',r0:10,life:14});}});}}
 /* ---- Aria: nothing she does is on purpose ---- */
 {const A=c('aria');if(A){const fx=A.kit.fx;
   A.mv.fsmash=Object.assign(SMASH('f',{el:'luck',fx,an:'slashDown',far:36,dmg:15}),{lim:'none',qn:'Swings her handbag without looking. It is heavier than it should be.'});
@@ -6742,6 +6747,7 @@ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for
   else if(id==='okane'){if(f.form==='gold'){if(FR>=f.goldT){f.form=null;f.formL=null;f.S=null;}else{if(f.ground&&(f.st==='run'||f.st==='walk'))f.x-=f.vx*.15;if(FR%6===0)part(f.x+rnd()*20-10,f.y-rnd()*56,0,-.3,12,'#ffe060',1,0);}}}
   else if(id==='uzi'){if(f.dmg>0&&FR-(f.lastHurt||0)>120)f.dmg=Math.max(0,f.dmg-.012);}
   else if(id==='ryo'){f.confT=0;f.qslow=Math.min(f.qslow||0,FR);for(const o of F)if(o!==f&&o.qcloak>FR&&Math.abs(o.x-f.x)<200){o.qcloak=0;o.invis=false;}}
+  else if(id==='ray'){if(f.qhype>FR)for(const o of F)if(o!==f&&o.qcloak>FR&&Math.abs(o.x-f.x)<220){o.qcloak=0;o.invis=false;}}
   else if(id==='chris'){if(f.dmg>0&&FR-(f.lastHurt||0)>90){f.dmg=Math.max(0,f.dmg-.025);if(FR%20===0)part(f.x+rnd()*16-8,f.y-10-rnd()*40,0,-.5,16,'#7af0a0',1,0);}}
   else if(id==='ash'){if(f.tallT>FR&&f.ground&&(f.st==='run'||f.st==='walk'))f.x+=f.vx*.14;}
   else if(id==='dawson'){if(f.ground)f.glF=0;else if(f.pi&&f.pi.J&&f.vy>1.3&&(f.glF||0)<120&&(f.st==='air'||f.st==='helpless')){f.vy=1.3;f.x+=f.face*1.7;f.glF=(f.glF||0)+1;if(FR%4===0)part(f.x-f.face*10,f.y-44,-f.face*.6,.2,10,'#3a5a9a',1,0);}}
@@ -7417,7 +7423,7 @@ const A={
  dawson:['SMOKE BOMB','cloak',{dur:110},9,'Drops smoke and vanishes for a couple of seconds.'],
  maya:['SHARE','heal',{amt:4,team:1},10,'Heals herself and teammates beside her for 4%.'],sarah:['LIGHTS OUT','cloak',{dur:130},10,'Becomes a shadow on the floor: unseen for two seconds.'],
  aria:['WHOOPS','fear',{r:120,turn:1,slow:60},9,'Drops everything she is carrying. Rivals nearby get turned around in the confusion.'],bryson:['DEEP BREATH','heal',{amt:3},8,'Counts to ten: heals 3% and bleeds off some of his Tantrum meter.'],
- conor:['RAINBOW HOP','blink',{d:110},5,'Vanishes and reappears a rainbow\'s length away in the held direction.'],ray:['THERMAL SCAN','fear',{r:170,front:1,slow:90},9,'Stares rivals down: everyone in front of him is slowed, and cloaked rivals are revealed.'],
+ conor:['RAINBOW HOP','blink',{d:110},5,'Vanishes and reappears a rainbow\'s length away in the held direction.'],ray:['X-RAY','hype',{},9,'X-ray vision finds a weak point: his next hit lands 30% harder, and anyone hiding nearby is revealed.'],
  oliver:['LINE SHOT','pull',{r:210,f:1.1,front:1},8,'Fires a line arrow and reels in everyone in front of him. No damage.'],chris:['WALK IT OFF','brace',{dur:110},10,'Ignores pain for two seconds: nothing makes him flinch.'],
  evona:['BLACK ICE','push',{r:130,f:1.1,slow:120},7,'Ices the floor ahead: rivals slide backward and are slowed.'],jack:['BACKDRAFT','roar',{r:115,f:5,sd:14},9,'A burst of hot air shoves rivals back and cracks shields.'],
  kal:['GUT FEELING','guard',{dur:150},10,'Trusts his gut: the next hit within two and a half seconds misses.'],kora:['WING BEAT','push',{r:140,f:1.5,lift:1},7,'One beat of her wings blows rivals away.'],
