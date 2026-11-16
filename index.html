@@ -8273,7 +8273,7 @@ window.FEELT=T;
 })();
 
 /* ssbuui.js — damage plates in the Smash style: a slanted name plate in the player's colour, a big italic percentage with a small decimal, stock icons, and the Final Smash meter along the bottom */
-drawHUD=function(c){const HF=F.filter(f=>f.team!==1),n=HF.length,sp=n>3?312:n>2?396:430,hs=n>3?.82:n>2?.92:1,DF='"Teko","Arial Narrow",sans-serif';
+drawHUD=function(c){const HF=(typeof MODE!=='undefined'&&MODE==='campaign')?F.filter(f=>!f.gone&&(f.team!==1||f.plate)).slice(0,4):F.filter(f=>f.team!==1),n=HF.length,sp=n>3?312:n>2?396:430,hs=n>3?.82:n>2?.92:1,DF='"Teko","Arial Narrow",sans-serif';
  HF.forEach((f,i)=>{const cx=640+(i-(n-1)/2)*sp,y=606+(1-hs)*90;c.save();c.translate(cx,y);c.scale(hs,hs);const col=f.col,dark=f.id===2;
   /* backing */
   c.fillStyle='rgba(0,0,0,.62)';c.beginPath();c.moveTo(-148,8);c.lineTo(166,8);c.lineTo(150,92);c.lineTo(-164,92);c.closePath();c.fill();
@@ -8296,6 +8296,256 @@ drawHUD=function(c){const HF=F.filter(f=>f.team!==1),n=HF.length,sp=n>3?312:n>2?
   {const w=222,fx=-64,fy=95,full=f.fsm>=100;c.fillStyle='rgba(0,0,0,.6)';c.fillRect(fx,fy,w,6);c.fillStyle=full?'hsl('+((FR*6)%360)+',100%,62%)':'#ffd400';c.fillRect(fx,fy,w*Math.min(100,f.fsm||0)/100,6);
    if(full&&(FR>>3)%2){c.font='italic 700 18px '+DF;c.textAlign='right';c.lineWidth=4;c.strokeText('FINAL SMASH READY',158,-2);c.fillStyle='#ffffff';c.fillText('FINAL SMASH READY',158,-2);}}
   c.restore();});};
+
+/* campaign.js — AGE OF HEROES. A map of fights in chapters: beat classmates to recruit them, hold the line when the Ascendancy arrives.
+   Everything the campaign adds lives in this one file; removing it from the build removes the mode. */
+(function(){
+const KEY='qc_campaign_v1',ix=id=>CH.findIndex(c=>c.id===id),el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;},esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+/* ---------- people who are not on the roster ---------- */
+function npc(base,o,look){const B=CH[ix(base)];if(!B)return;const C=Object.assign({},B,o,{hidden:1,heroLook:null,alts:null});C.look=Object.assign({},B.look,look,{_r:undefined,R:undefined});C.looks=[C.look];CH.push(C);
+  if(typeof FSD!=='undefined'&&FSD[base])FSD[o.id]=FSD[base];if(typeof FSCALL!=='undefined')FSCALL[o.id]=FSCALL[base]||'';if(typeof FSM!=='undefined'&&FSM[base])FSM[o.id]=FSM[base];}
+npc('kouji',{id:'c_coach',n:'COACH DAIMON',sn:'DAIMON',q:'Homeroom teacher',col:'#c8ccd8'},{hair:'#6a6c76',hairS:'short',hx:['beard'],beardC:'#6a6c76',outfit:'coat',top:'#2c3040',acc:'#c8282e',sleeve:'#2c3040',pants:'#22242e',shoe:'#16161c',stance:'cool',skin:'#d8b494',eye:'#3a3a44',fem:0,skirt:null});
+npc('ninja',{id:'c_grunt',n:'ASCENDANT',sn:'ASCENDANT',q:'The Ascendancy',col:'#b070ff'},{hx:['hoodup','fullmask'],hoodC:'#2a2a38',maskC:'#e8e8f2',ledC:'#b070ff',top:'#2a2a38',sleeve:'#2a2a38',pants:'#1e1e2a',shoe:'#16161c',acc:'#b070ff',glove:'#16161c'});
+npc('shiki',{id:'c_van',n:'THE VANGUARD',sn:'VANGUARD',q:'Ascendancy field captain',col:'#b070ff'},{hx:['fullmask'],maskC:'#f0f0f6',ledC:'#b070ff',outfit:'plate',top:'#e8e8f0',acc:'#b070ff',sleeve:'#3a3a4a',pants:'#2a2a38',shoe:'#16161c',boots:1,glove:'#16161c',skin:'#b8b8c4',hair:'#16161c',size:1.18,bw:1.2});
+npc('shi',{id:'c_arch',n:'THE ARCHITECT',sn:'ARCHITECT',q:'???',col:'#f0f0f6'},{hx:['hoodup','fullmask'],hoodC:'#101018',maskC:'#f6f6fa',ledC:'#ffffff',outfit:'coat',top:'#101018',acc:'#f0f0f6',sleeve:'#101018',pants:'#101018',shoe:'#0a0a10',glove:'#0a0a10',wpn:null,ex:[]});
+/* ---------- how each student talks ---------- */
+const TYPES={bold:'gomi pitto raion daku sota akio shiki kongu zabu ryuko hana torabi ray koki hikari sato tomi',calm:'kimiko rei kal sanshou tenmetsu kurai shi ayame evona sata moya kichi hari taru ivan tatsuya oro ryo',
+ joker:'hippo conor minato riku soran aria takeshi uzi suze kitsu chiyoki yado bisu sai',shy:'bryson suzume tamashi makiko kairi mia',proud:'okane bara aya ginko akemi kora yoko emi',
+ kind:'goiru tai maya chris marina tsuki keanu oliver kouji jack uchuu',grim:'hatsuko sarah kuragari homura shuko bentou yurei',nerd:'ichigo maho dawson ali toguchi tiki'};
+const TYPE={};for(const t in TYPES)for(const id of TYPES[t].split(' '))TYPE[id]=t;const typeOf=ci=>TYPE[CH[ci].id]||'kind';
+const BANK={
+ morning:{bold:["Finally! A whole stadium watching. I'm not holding anything back today.","Festival day. Somebody point me at the strongest person here."],calm:["Big crowd. Same job as any other day: read them, then finish it.","It's only noise. Focus."],
+  joker:["Do we get snacks between rounds? Asking for my quirk.","If I trip on live television, neither of you saw it."],shy:["Th-there are so many people... okay. Okay. I can do this.","I checked my laces four times. Is that normal?"],
+  proud:["At last, an audience that deserves me.","Try not to stand too close. The cameras will want a clear shot."],kind:["Everybody ready? Let's look out for each other out there.","Win or lose, we walk back in together. Deal?"],
+  grim:["A festival. Crowds, noise, cameras. Wonderful.","Let's get this over with."],nerd:["I ran the brackets last night. Our odds are good if nobody does anything stupid.","Forty thousand seats, six exits, one generator room. I like to know these things."]},
+ rival:{bold:["{X}! You and me, right now. Don't you dare go easy."],calm:["{X}. I've watched you train. This will be close."],joker:["{X}, loser buys lunch. I'm very hungry, so no pressure."],shy:["Um, {X}... please don't be mad if I win. Or if I lose. Either way."],
+  proud:["{X}, do try to make it look competitive."],kind:["Good luck, {X}. Give me everything you've got."],grim:["{X}. Nothing personal."],nerd:["{X}, I've modelled this match eleven ways. You win two of them."]},
+ answer:{bold:["Ha! Big talk. Come and back it up!"],calm:["Then let's not waste the crowd's time."],joker:["Oh no, they're serious. I didn't stretch."],shy:["I-I'll do my best! Please don't hold back... actually, maybe hold back a little."],
+  proud:["You're about to be a footnote in my highlight reel."],kind:["Same to you. No hard feelings, whoever's standing."],grim:["Talk less."],nerd:["Noted. My own model disagrees."]},
+ join:{bold:["Ha! That was a real fight. Fine, I'm with you. Next round we win together."],calm:["You earned it. I'll stand with your team."],joker:["Okay, okay, you win! Is there room on the team for someone extremely charming?"],
+  shy:["You were amazing... c-can I come with you? I'll try not to slow you down."],proud:["Hmph. You may have the honour of fighting beside me."],kind:["That was a good match. Count me in, I've got your back."],
+  grim:["...Fine. Better with you than against you."],nerd:["Interesting. My model was wrong about you. I'd like to study that up close."]},
+ blackout:{bold:["Hey! Who killed the lights?! I wasn't done!"],calm:["Lights, screens, the barrier field. All at once. That isn't a fault."],joker:["Please tell me that's part of the show. ...It's not part of the show, is it."],
+  shy:["Wh-what's happening? Why is everyone screaming?"],proud:["If this is someone's idea of upstaging me, it's working, and I resent it."],kind:["Stay calm! Everyone stay where you are and help the person next to you!"],
+  grim:["Here it comes."],nerd:["The backup generators should have kicked in within two seconds. Someone cut them first."]},
+ attack:{bold:["Masks, huh? Cowards. Come on, then!"],calm:["They're not here for the crowd. Watch who they're moving toward."],joker:["I don't suppose you're the half-time entertainment?"],
+  shy:["They're coming this way. I... I'm not running. I'm not."],proud:["You picked the wrong festival to ruin."],kind:["Get the civilians behind us! Nobody gets past this line!"],
+  grim:["Finally. Something honest to hit."],nerd:["Matching gear, matching formation. This was planned for weeks."]},
+ unstable:{bold:["{X}?! Snap out of it! Don't make me knock some sense into you. ...Okay. I'm going to knock some sense into you."],calm:["{X} isn't in control. The quirk is running them. We stop it. Carefully."],
+  joker:["{X}, buddy, your quirk is doing the thing. The bad thing. Hold still?"],shy:["{X}, it's me! Please, you have to fight it!"],proud:["{X}, you look ridiculous. Allow me to help."],
+  kind:["{X}, I'm right here. We're going to get you through this."],grim:["That light in their eyes. That isn't {X}. Not right now."],nerd:["Output is triple {X}'s baseline and climbing. If we exhaust it, it should collapse."]},
+ snap:{bold:["Ugh... my head. Did I lose? Tell me I at least looked cool."],calm:["...Thank you. It was like watching myself from behind glass."],joker:["Did I do anything embarrassing? Don't answer that."],
+  shy:["I'm so sorry! I couldn't stop, I couldn't... thank you for not giving up on me."],proud:["You will never speak of this. ...But thank you."],kind:["Is everyone all right? Did I hurt anybody?"],
+  grim:["Something was in my head. Pushing. I want to find whoever did that."],nerd:["My quirk has never spiked like that. Something outside me triggered it. A signal, maybe."]},
+ boss:{bold:["You're the one in charge? Good. Saves me looking for you."],calm:["He's the one giving orders. Take him down and the rest fold."],joker:["Big man, tiny mask. Somebody's compensating."],
+  shy:["He's huge... but everyone's counting on us. So I'm staying."],proud:["Kneel now and I'll make this brief."],kind:["You hurt my classmates. You don't get to walk out of here."],grim:["You first."],nerd:["Thick armour, slow turns. Hit, move, hit again."]},
+ after:{bold:["They ran. Next time they won't get the chance."],calm:["They got what they came for, or they'd still be here. That worries me."],joker:["So... festival's cancelled, right? Asking for my legs. They've stopped working."],
+  shy:["We did it? We actually did it..."],proud:["They'll remember today. So shall I."],kind:["Everyone's alive. Today, that's enough."],grim:["That wasn't an attack. That was a test."],nerd:["'The Convergence.' He said it like a date on a calendar."]},
+ partner:{bold:["Stay close and try to keep up!"],calm:["I'll cover your blind side. Go."],joker:["I'll distract them. It's my best event."],shy:["I'm right behind you! Um. Not hiding. Supporting."],proud:["Watch closely. You may learn something."],kind:["Together, then. Call if you need me."],grim:["Don't get in my way."],nerd:["I'll take the left one. Statistically, it's the angrier one."]}};
+const line=(k,ci,vars)=>{const t=BANK[k][typeOf(ci)]||BANK[k].kind,s=t[(ci*7+k.length)%t.length];return s.replace(/\{(\w+)\}/g,(m,v)=>(vars&&vars[v])||m);};
+const nm=ci=>{const s=CH[ci].sn||CH[ci].n;return s.charAt(0)+s.slice(1).toLowerCase();};
+/* ---------- chapter 1 ---------- */
+const NODES=[
+ {id:'c1_open',type:'scene',n:'Opening Ceremony',x:9,y:66,scene:'open'},
+ {id:'c1_ex',n:'Exhibition Match',x:21,y:38,req:['c1_open'],stage:'mockcity',rule:'duel',lvl:3,es:2,rec:1,pre:'rival',d:'Training Ground Beta. One on one against a classmate. Win and they join your festival team.'},
+ {id:'c1_tag',n:'Team Survival',x:35,y:62,req:['c1_ex'],stage:'gym',rule:'tag',lvl:4,es:2,rec:2,d:'Two against two. Pick a partner from your team; they fight beside you. Beat both rivals and both join you.'},
+ {id:'c1_clock',n:'Beat the Clock',x:35,y:16,req:['c1_ex'],stage:'dome',rule:'duel',time:90,lvl:4,es:2,rec:1,opt:1,d:'Optional. Knock your rival out twice before the 90-second clock runs out.'},
+ {id:'c1_big',n:'Support Course Mishap',x:45,y:86,req:['c1_tag'],stage:'mockcity',rule:'duel',giant:1,lvl:4,es:1,rec:1,opt:1,d:'Optional. A support-course growth serum has gone wrong, and a classmate is three times their usual size. Cut them down to size.'},
+ {id:'c1_semi',n:'Semi-final',x:50,y:40,req:['c1_tag'],stage:'arena',rule:'duel',lvl:6,es:2,rec:1,pre:'rival',d:'The Grand Stadium, in front of everybody. Your toughest classmate so far.'},
+ {id:'c1_dark',type:'scene',n:'Blackout',x:62,y:18,req:['c1_semi'],scene:'dark'},
+ {id:'c1_wave',n:'Stadium Under Attack',x:66,y:54,req:['c1_dark'],stage:'arena',rule:'waves',count:10,cap:3,lvl:3,partner:1,d:'Masked attackers pour onto the pitch. Pick a partner and knock out ten of them.'},
+ {id:'c1_gate',n:'Hold the East Gate',x:72,y:86,req:['c1_wave'],stage:'mockcity',rule:'hold',time:60,cap:3,lvl:4,opt:1,d:'Optional. The crowd is leaving through the east gate. Stay standing for 60 seconds while they get out.'},
+ {id:'c1_u1',n:'Out of Control',x:78,y:28,req:['c1_wave'],stage:'dome',rule:'duel',unst:1,lvl:6,es:2,rec:1,pre:'unstable',d:'The light in the sky is doing something to a classmate\'s quirk. They cannot stop. Wear them down until it burns out.'},
+ {id:'c1_u2',n:'Out of Control II',x:86,y:68,req:['c1_wave'],stage:'gym',rule:'duel',unst:1,giant:0,lvl:7,es:2,rec:1,opt:1,pre:'unstable',d:'Optional. Another classmate caught in the surge, and this one hits harder.'},
+ {id:'c1_boss',n:'The Vanguard',x:90,y:44,req:['c1_u1'],stage:'arena',rule:'boss',hp:380,lvl:7,partner:1,pre:'bossin',d:'The man giving the orders. He does not take percentage damage: empty his health bar.'},
+ {id:'c1_end',type:'scene',n:'Aftermath',x:90,y:13,req:['c1_boss'],scene:'end'}];
+const NB=id=>NODES.find(n=>n.id===id);
+const SCENES={
+ open:[['bg','arena'],['title','CHAPTER 1','THE FESTIVAL'],['narr','PU Academy. Eighty-nine first-years, four homerooms, one stadium, and forty thousand people who came to watch them hit each other.'],
+  ['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['bank','L1','morning'],['bank','L2','morning'],['bank','L3','morning'],['in','c_coach','r1'],
+  ['say','c_coach','Eyes up, first-years. Today the whole country decides what it thinks of you. Agencies are in the stands. So are your families. So, I am told, is at least one food critic.'],
+  ['say','c_coach','The rules are simple. Win a round, and the classmate you beat joins your festival team. Biggest team at the final bell takes the cup.'],
+  ['say','c_coach','Start small. Training Ground Beta, exhibition round. Go and make a friend the hard way.']],
+ dark:[['bg','arena'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['voice','ANNOUNCER','And THAT is your semi-final! Stay in your seats, folks, because after the break...'],['fx','dark'],['bank','L1','blackout'],['bank','L2','blackout'],
+  ['fx','shake'],['narr','Every light in the stadium dies at once. Then the sky above the pitch tears open: a seam of violet light, humming like a struck bell.'],['in','c_grunt','r1'],['in','c_grunt','r2'],
+  ['say','c_grunt','Targets confirmed. Take the marked students. Everyone else is furniture.'],['bank','L3','attack'],['in','c_coach','l4'],
+  ['say','c_coach','Students! Civilians first, then yourselves! Nobody plays hero alone!'],['bank','L1','attack']],
+ bossin:[['bg','arena'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_van','r1'],['say','c_van','Eleven minutes. That is how long the Architect said you children would last. I had you down for four.'],['bank','L1','boss'],
+  ['say','c_van','Do not flatter yourselves that this is about you. You are a reading on an instrument. The Convergence has begun, and we came to watch the needle move.'],['bank','P2','boss']],
+ end:[['bg','arena'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['in','c_van','r1'],['say','c_van','Enough. We have what we came for.'],['fx','flash'],['out','c_van'],
+  ['narr','The masks pull back as one, into the seam of light, and it closes behind them like an eye.'],['fx','light'],['bank','L1','after'],['bank','L2','after'],['bank','L3','after'],['in','c_coach','r1'],
+  ['say','c_coach','Roll call. I want every one of the eighty-nine accounted for before anybody sleeps.'],['say','c_coach','...And nobody talks to the press. Not until we know why those people were carrying a list of your names.'],
+  ['fx','dark'],['out','L1'],['out','L2'],['out','L3'],['out','c_coach'],['in','c_arch','c'],['say','c_arch','Eighty-nine quirks. Eighty-nine keys. They performed beautifully.'],
+  ['say','c_arch','Let them have their festival. The next time the sky opens, it will not close.'],['title','END OF CHAPTER 1','Chapter 2 is not built yet. Thank you for playing this far.']]};
+/* ---------- save ---------- */
+let SV=null;const CS={on:false,node:null};window.CAMP=CS;
+function load(){try{SV=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){SV=null;}if(SV&&(!SV.team||!SV.team.every(id=>ix(id)>=0)))SV=null;return SV;}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(SV));}catch(e){}}
+function newSave(starters){let s=(Date.now()%2147483647)||7;const rn=()=>(s=(s*16807)%2147483647)/2147483647;const pool=CH.filter(c=>!c.hidden&&!starters.includes(c.id)).map(c=>c.id);for(let i=pool.length-1;i>0;i--){const j=Math.floor(rn()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  const cast={};for(const n of NODES)if(n.rec){cast[n.id]=n.giant?[pool.splice(Math.max(0,pool.findIndex(id=>CH[ix(id)].st.w<1.1)),1)[0]]:pool.splice(0,n.rec);}
+  SV={v:1,team:starters.slice(),leads:starters.slice(),done:{},cast,last:starters[0]};save();}
+const avail=n=>!(n.req||[]).some(r=>!SV.done[r]);
+/* ---------- styles and screens ---------- */
+const css=el('style');css.textContent=`
+#camp{position:fixed;inset:0;z-index:6;display:grid;grid-template-rows:auto minmax(0,1fr);background:radial-gradient(ellipse at 100% 0,rgba(242,52,60,.28) 0,transparent 46%),repeating-linear-gradient(135deg,#101014 0 26px,#0b0b0f 26px 52px);color:#fff;font-family:var(--body)}
+#camp .top{background:#000;border-bottom:4px solid var(--hot);min-height:46px;display:flex;align-items:center;gap:12px;padding-right:14px}#camp .top .sp{flex:1;color:#d0d0dc;font-size:13px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbody{position:relative;min-height:0;padding:12px 16px;display:grid;gap:12px}
+.cpick{grid-template-rows:auto minmax(0,1fr) auto}.cpick h2,.cnode h2{margin:0;font:italic 700 clamp(22px,2.6vw,36px)/1 var(--display);text-transform:uppercase;letter-spacing:1px}.cpick p,.cnode p{margin:4px 0 0;color:#c8c8d4;font-size:13.5px;max-width:80ch}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:4px;overflow:auto;align-content:start;background:#000;padding:4px}
+.cch{position:relative;border:2px solid #000;background:linear-gradient(160deg,color-mix(in srgb,var(--cc) 55%,#2a2a34),#15151b);padding:0;aspect-ratio:1/1.12;display:grid;grid-template-rows:1fr auto;overflow:hidden;color:#fff}
+.cch canvas{width:100%;height:100%;object-fit:contain;image-rendering:pixelated;min-height:0}.cch b{font:italic 700 13px/1 var(--display);text-transform:uppercase;background:#000;padding:3px 2px 1px;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cch.on{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}.cch.on::after{content:attr(data-k);position:absolute;top:2px;left:2px;background:var(--gold);color:#000;font:italic 700 14px/1 var(--display);padding:3px 6px 1px}.cch:hover{border-color:#fff}
+.cfoot{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.cfoot .sp{flex:1;color:#c8c8d4;font-size:13px}
+.cmap{grid-template-columns:minmax(0,1fr) clamp(190px,24vw,300px)}
+.cboard{position:relative;border:3px solid #000;box-shadow:0 0 0 2px var(--hot);background:linear-gradient(180deg,#1b2a44,#0f1626);overflow:hidden;min-height:0}
+.cboard canvas.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5;image-rendering:pixelated}.cboard::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,12,.35),rgba(8,8,12,.05) 40%,rgba(40,12,60,.5));pointer-events:none}
+.cboard svg{position:absolute;inset:0;width:100%;height:100%;z-index:1}.czone{position:absolute;z-index:1;font:italic 700 clamp(12px,1.5vw,20px)/1 var(--display);letter-spacing:2px;color:rgba(255,255,255,.5);text-transform:uppercase}
+.cn{position:absolute;z-index:2;transform:translate(-50%,-50%);border:0;background:none;color:#fff;display:grid;justify-items:center;gap:3px;padding:4px}
+.cn i{display:block;width:clamp(26px,3vw,40px);aspect-ratio:1;transform:rotate(45deg);background:#2a2a34;border:3px solid #000;box-shadow:0 0 0 2px #55556a}
+.cn{width:max-content;max-width:17ch}.cn b{font:italic 700 clamp(11px,1.15vw,16px)/1.05 var(--display);text-transform:uppercase;background:#000;padding:3px 7px 1px;letter-spacing:.4px;text-align:center;margin-top:5px}
+.cn.av i{background:var(--hot);box-shadow:0 0 0 2px #fff,0 0 18px var(--hot);animation:cnp 1s ease-in-out infinite alternate}.cn.av.op i{background:#2e86ff;box-shadow:0 0 0 2px #fff,0 0 18px #2e86ff}
+.cn.dn i{background:var(--gold);box-shadow:0 0 0 2px #000}.cn.lk{opacity:.45}.cn.sc i{border-radius:50%;transform:none}.cn.bs i{width:clamp(34px,4vw,54px)}
+@keyframes cnp{to{transform:rotate(45deg) scale(1.16)}}.cn.sc.av i{animation-name:cnp2}@keyframes cnp2{to{transform:scale(1.16)}}
+.cside{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:8px;min-height:0}.cside h3{margin:0;font:italic 700 22px/1 var(--display);text-transform:uppercase;letter-spacing:1px}.cside h3 small{color:var(--gold);font-size:.8em;margin-left:6px}
+.cteam{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:3px;overflow:auto;align-content:start;background:#000;padding:3px}.cteam .cch b{font-size:10px}
+.cbtns{display:grid;gap:6px}
+#cmodal{position:fixed;inset:0;z-index:8;background:rgba(6,6,8,.82);display:grid;place-items:center;padding:12px}
+.cnode{width:min(980px,100%);max-height:96vh;overflow:auto;background:#121217;border-top:8px solid var(--hot);box-shadow:0 20px 60px rgba(0,0,0,.75);padding:14px 18px;display:grid;gap:10px}
+.cvs{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.cvs .cch{width:86px;flex:0 0 auto}.cvs em{font:italic 700 34px/1 var(--display);color:var(--hot)}.cvs span{color:#c8c8d4;font-size:13px}
+.cnode .cgrid{max-height:34vh}.crule{background:#000;border-left:5px solid var(--gold);padding:6px 12px;font-size:13.5px}
+#cscene{position:fixed;inset:0;z-index:30;background:#000;overflow:hidden;border:0;padding:0;color:#fff;font-family:var(--body);text-align:left;cursor:pointer;display:block;width:100%;height:100%}
+#cscene canvas.bg{position:absolute;inset:-4%;width:108%;height:108%;object-fit:cover;image-rendering:pixelated;animation:cspan 26s ease-in-out infinite alternate;transition:filter .5s}
+@keyframes cspan{from{transform:translateX(-1.5%) scale(1)}to{transform:translateX(1.5%) scale(1.05)}}
+#cscene.dark canvas.bg{filter:brightness(.28) saturate(.7) hue-rotate(40deg)}#cscene.shake{animation:csshake .5s}@keyframes csshake{20%{transform:translate(-10px,6px)}40%{transform:translate(9px,-7px)}60%{transform:translate(-7px,-4px)}80%{transform:translate(6px,5px)}}
+.csbar{position:absolute;left:0;right:0;height:9%;background:#000;z-index:3}.csbar.t{top:0}.csbar.b{bottom:0}
+.csflash{position:absolute;inset:0;background:#fff;opacity:0;z-index:6;pointer-events:none}.csflash.go{animation:csfl .7s}@keyframes csfl{0%{opacity:.95}100%{opacity:0}}
+.csact{position:absolute;bottom:19%;height:min(72vh,600px);aspect-ratio:240/190;transform:translateX(-50%);transition:left .45s cubic-bezier(.2,.8,.2,1),opacity .35s,filter .25s,bottom .25s;z-index:2;filter:brightness(.55)}
+.csact canvas{width:100%;height:100%;image-rendering:pixelated;display:block}.csact.r canvas{transform:scaleX(-1)}.csact.sp{filter:none;z-index:3;bottom:20.5%}.csact.off{opacity:0}
+.csbox{position:absolute;left:5%;right:5%;bottom:11%;z-index:5;background:rgba(8,8,12,.92);border-top:5px solid var(--sc,#fff);padding:14px 20px 16px;min-height:14%;clip-path:polygon(0 0,100% 0,calc(100% - 18px) 100%,0 100%)}
+.csname{position:absolute;left:5%;bottom:calc(11% + var(--bh,90px));z-index:5;background:var(--sc,#fff);color:#000;font:italic 700 clamp(18px,2.2vw,30px)/1 var(--display);text-transform:uppercase;letter-spacing:1px;padding:6px 34px 3px 18px;clip-path:polygon(0 0,100% 0,calc(100% - 16px) 100%,0 100%)}
+.csname small{font:500 .5em var(--body);letter-spacing:.5px;margin-left:10px;opacity:.75;text-transform:none}
+.cstext{font-size:clamp(15px,1.9vw,23px);line-height:1.35;min-height:2.7em}.csnarr .cstext{font-style:italic;color:#e0e0ea;text-align:center}.csnarr .csname{display:none}
+.cshint{position:absolute;right:7%;bottom:12.5%;z-index:6;font:italic 700 15px/1 var(--display);color:var(--gold);letter-spacing:1px;animation:tblink 1.1s steps(2) infinite}
+.cstitle{position:absolute;inset:0;z-index:7;display:grid;place-content:center;justify-items:center;gap:8px;background:rgba(0,0,0,.72);text-align:center;padding:20px}
+.cstitle b{font:italic 700 clamp(44px,9vw,120px)/.9 var(--display);letter-spacing:3px;text-shadow:0 5px 0 var(--hot)}.cstitle i{font:italic 600 clamp(18px,3vw,40px)/1 var(--display);letter-spacing:4px;color:var(--gold);font-style:italic}
+.csskip{position:absolute;top:10.5%;right:14px;z-index:8}
+.mm .mtc{background:linear-gradient(160deg,#ff9a2e,#d05a00)}.mm.hasc .mt1{grid-row:1/2}.mm.hasc .mt1 b{font-size:clamp(34px,5vw,76px)}
+.cres{display:grid;justify-items:center;gap:10px;max-width:900px}.cres .cvs{justify-content:center}.cres p{margin:0;color:#e0e0ea;max-width:60ch;font-size:15px}.cres .q{font-style:italic;color:#fff}
+@media (max-height:520px){.csact{height:70vh}.cnode .cgrid{max-height:28vh}}`;document.head.appendChild(css);
+const root=el('section');root.id='camp';root.hidden=true;document.getElementById('app').appendChild(root);
+const card=(ci,k)=>{const b=el('button','cch');b.style.setProperty('--cc',CH[ci].col);const c=document.createElement('canvas');c.width=c.height=96;try{const g=c.getContext('2d');g.imageSmoothingEnabled=false;g.drawImage(headFor(ci,defSkin(ci)),0,0,96,96);}catch(e){}b.appendChild(c);b.appendChild(el('b','',esc(CH[ci].sn||CH[ci].n)));if(k)b.dataset.k=k;return b;};
+const rib=(t)=>'<div class="rib"><i>Campaign</i><b>'+esc(t)+'</b></div>';
+function hideAll(){for(const id of['title','select','stagesel','game'])document.getElementById(id).hidden=true;document.getElementById('overlay').hidden=true;}
+function show(){hideAll();root.hidden=false;running=false;paused=false;closeModal();}
+function closeModal(){const m=document.getElementById('cmodal');if(m)m.remove();}
+/* starter pick */
+function pickScreen(){show();const pick=[];root.innerHTML='<div class="top">'+rib('Choose three')+'<span class="sp">These three start the story. Everybody else is out there to be recruited.</span><button class="tbtn" id="cBack">&larr; Title</button></div>';
+  const body=el('div','cbody cpick');body.appendChild(el('div','','<h2>Pick your first three students</h2><p>You begin the festival with three. Every classmate you beat joins your team, and every fight lets you choose who steps up.</p>'));
+  const grid=el('div','cgrid');const order=(typeof rosterOrder==='function'?rosterOrder():CH.map((c,i)=>i).filter(i=>!CH[i].hidden));const foot=el('div','cfoot');const go=el('button','fight');go.textContent='BEGIN ▸';go.disabled=true;go.style.opacity=.4;
+  const info=el('span','sp','Pick 3.');for(const ci of order){if(CH[ci].hidden)continue;const b=card(ci);b.onclick=()=>{const id=CH[ci].id,k=pick.indexOf(id);if(k>=0)pick.splice(k,1);else if(pick.length<3)pick.push(id);else{sfx('tick');return;}sfx('pop');
+     grid.querySelectorAll('.cch').forEach(x=>{const p=pick.indexOf(x.dataset.id);x.classList.toggle('on',p>=0);x.dataset.k=p>=0?String(p+1):'';});go.disabled=pick.length!==3;go.style.opacity=pick.length===3?1:.4;info.textContent=pick.length?pick.map(i=>nm(ix(i))).join(', ')+(pick.length<3?' · pick '+(3-pick.length)+' more':''):'Pick 3.';};b.dataset.id=CH[ci].id;grid.appendChild(b);}
+  go.onclick=()=>{if(pick.length!==3)return;sfx('power');newSave(pick);playScene('open',{},()=>{SV.done.c1_open=1;save();mapScreen();});};foot.appendChild(info);foot.appendChild(go);body.appendChild(grid);body.appendChild(foot);root.appendChild(body);root.querySelector('#cBack').onclick=toTitle;}
+/* map */
+function mapScreen(){show();setMode('versus');CS.on=false;const done=NODES.filter(n=>SV.done[n.id]).length;
+  root.innerHTML='<div class="top">'+rib('Chapter 1: The Festival')+'<span class="sp">Red nodes continue the story. Blue nodes are optional and add classmates to your team.</span><button class="tbtn" id="cBack">&larr; Title</button></div>';
+  const body=el('div','cbody cmap'),board=el('div','cboard');const bg=document.createElement('canvas');bg.className='bg';bg.width=640;bg.height=360;board.appendChild(bg);try{renderStageView(STAGES.findIndex(s=>s.id==='arena'),bg,320,150,.6,200);}catch(e){}
+  let sv='<svg viewBox="0 0 100 100" preserveAspectRatio="none">';for(const n of NODES)for(const r of n.req||[]){const a=NB(r),on=SV.done[r];sv+='<line x1="'+a.x+'" y1="'+a.y+'" x2="'+n.x+'" y2="'+n.y+'" stroke="'+(on?'#ffd400':'#55556a')+'" stroke-width="'+(on?.7:.45)+'" stroke-dasharray="'+(on?'':'1.4 1.2')+'" vector-effect="non-scaling-stroke" style="stroke-width:'+(on?4:3)+'px"/>';}board.insertAdjacentHTML('beforeend',sv+'</svg>');
+  for(const[t,x,y]of[['Training Ground Beta',14,12],['Gym C',30,90],['Grand Stadium',52,8],['East Gate',62,92]]){const z=el('div','czone',t);z.style.left=x+'%';z.style.top=y+'%';board.appendChild(z);}
+  for(const n of NODES){const d=SV.done[n.id],a=avail(n),b=el('button','cn '+(d?'dn':a?'av':'lk')+(n.opt?' op':'')+(n.type==='scene'?' sc':'')+(n.rule==='boss'?' bs':''));b.style.left=n.x+'%';b.style.top=n.y+'%';b.innerHTML='<i></i><b>'+esc(n.n)+'</b>';
+   b.onclick=()=>{if(!a&&!d){sfx('tick');toast('Locked: finish '+NB(n.req.find(r=>!SV.done[r])).n+' first');return;}sfx('pop');if(n.type==='scene')playScene(n.scene,{},()=>{SV.done[n.id]=1;save();mapScreen();});else nodePanel(n);};board.appendChild(b);}
+  const side=el('div','cside');side.appendChild(el('h3','','Your team<small>'+SV.team.length+' / 89</small>'));const tg=el('div','cteam');SV.team.forEach(id=>{const c=card(ix(id),SV.leads.includes(id)?'★':'');if(SV.leads.includes(id))c.classList.add('on');c.title='Make '+nm(ix(id))+' a lead';
+    c.onclick=()=>{const k=SV.leads.indexOf(id);if(k>=0){toast(nm(ix(id))+' already speaks for the team');return;}SV.leads.shift();SV.leads.push(id);save();sfx('pop');mapScreen();toast(nm(ix(id))+' now speaks in story scenes');};tg.appendChild(c);});side.appendChild(tg);
+  const bt=el('div','cbtns');const info=el('div','crule',done+' of '+NODES.length+' places cleared. The three starred students speak in story scenes: tap anyone to star them.');bt.appendChild(info);const rs=el('button','btn');rs.textContent='Start over';rs.onclick=()=>{if(rs.dataset.sure){localStorage.removeItem(KEY);SV=null;pickScreen();}else{rs.dataset.sure=1;rs.textContent='Sure? Tap again';}};bt.appendChild(rs);side.appendChild(bt);
+  body.appendChild(board);body.appendChild(side);root.appendChild(body);root.querySelector('#cBack').onclick=toTitle;}
+/* node panel */
+const RULE=n=>n.rule==='tag'?'Two on two. You have 2 stocks; each rival has '+n.es+'.':n.rule==='waves'?'Knock out '+n.count+' Ascendants. You have 3 stocks.':n.rule==='hold'?'Survive for '+n.time+' seconds. You have 2 stocks.':n.rule==='boss'?'Empty his health bar. You have 3 stocks.':'One on one. You have 2 stocks; your rival has '+n.es+'.'+(n.time?' Finish inside '+n.time+' seconds.':'');
+function nodePanel(n){closeModal();const m=el('div');m.id='cmodal';const box=el('div','cnode');let me=SV.team.includes(SV.last)?SV.last:SV.team[0],pal=null;const foes=(SV.cast[n.id]||[]).map(ix),needP=n.rule==='tag'||n.partner;
+  box.appendChild(el('div','','<h2>'+esc(n.n)+'</h2><p>'+esc(n.d)+'</p>'));box.appendChild(el('div','crule','<b>'+esc(STAGES.find(s=>s.id===n.stage).n)+'</b> · '+esc(RULE(n))+(n.giant?' Your rival is giant.':'')+(n.unst?' Their quirk is surging: they hit 20% harder.':'')+(SV.done[n.id]?' <i>Already cleared: replaying will not recruit anyone new.</i>':'')));
+  const vs=el('div','cvs');box.appendChild(vs);const lab=el('p','','');box.appendChild(lab);const grid=el('div','cgrid');box.appendChild(grid);
+  const draw=()=>{vs.innerHTML='';vs.appendChild(card(ix(me),'YOU')).classList.add('on');if(needP&&pal)vs.appendChild(card(ix(pal),'ALLY')).classList.add('on');vs.appendChild(el('em','','VS'));
+    if(foes.length)foes.forEach(ci=>vs.appendChild(card(ci)));else vs.appendChild(card(ix(n.rule==='boss'?'c_van':'c_grunt')));
+    lab.textContent=needP&&!pal?'Now pick a partner.':'Tap a teammate to change who fights'+(needP?' (first tap: you, second tap: partner)':'')+'.';
+    grid.querySelectorAll('.cch').forEach(x=>{x.classList.toggle('on',x.dataset.id===me||x.dataset.id===pal);x.dataset.k=x.dataset.id===me?'YOU':x.dataset.id===pal?'ALLY':'';});go.disabled=needP&&!pal;go.style.opacity=go.disabled?.4:1;};
+  const go=el('button','fight');go.textContent='FIGHT ▸';let turn=0;SV.team.forEach(id=>{const c=card(ix(id));c.dataset.id=id;c.onclick=()=>{sfx('pop');if(!needP){me=id;}else if(turn%2===0){me=id;if(pal===id)pal=null;}else{if(id===me)return;pal=id;}turn++;draw();};grid.appendChild(c);});
+  if(needP&&SV.team.length>1)pal=SV.team.find(i=>i!==me);
+  const foot=el('div','cfoot');const back=el('button','btn');back.textContent='← Map';back.onclick=closeModal;foot.appendChild(back);foot.appendChild(el('span','sp',''));foot.appendChild(go);box.appendChild(foot);
+  go.onclick=()=>{if(go.disabled)return;sfx('power');SV.last=me;save();closeModal();const ctx={P:ix(me),P2:pal?ix(pal):null,X:foes[0]};const start=()=>startFight(n,ix(me),pal?ix(pal):-1,foes);
+    if(SV.done[n.id]||!n.pre)return start();if(n.pre==='bossin')return playScene('bossin',ctx,start);
+    const sc=[['bg',n.stage],['in','P','l1'],['in','X','r1']];if(n.pre==='unstable'){sc.push(['fx','dark'],['bank','P','unstable'],['narr',nm(foes[0])+' does not answer. The air around them is shaking.']);}else sc.push(['bank','P','rival'],['bank','X','answer']);playScene(sc,ctx,start);};
+  m.appendChild(box);document.body.appendChild(m);draw();}
+/* ---------- story scenes ---------- */
+const SLOT={l1:16,l2:30,l3:43,l4:8,r1:84,r2:70,r3:57,c:50};
+function playScene(key,ctx,done){const script=typeof key==='string'?SCENES[key]:key;ctx=ctx||{};const lead=k=>ix(SV.leads[k]||SV.team[k]||SV.team[0]);
+  const who=w=>w==='L1'?lead(0):w==='L2'?lead(1):w==='L3'?lead(2):w==='P'?ctx.P:w==='P2'?(ctx.P2!=null&&ctx.P2>=0?ctx.P2:lead(1)===ctx.P?lead(2):lead(1)):w==='X'?ctx.X:ix(w);
+  const vars={X:ctx.X!=null?nm(ctx.X):'',P:ctx.P!=null?nm(ctx.P):''};
+  const sc=el('button');sc.id='cscene';sc.innerHTML='<canvas class="bg" width="640" height="360"></canvas><div class="csbar t"></div><div class="csbar b"></div><div class="csflash"></div><div class="csname"></div><div class="csbox"><div class="cstext"></div></div><div class="cshint">A / ENTER ▸</div>';
+  const skip=el('span','btn csskip');skip.textContent='Skip scene';sc.appendChild(skip);document.body.appendChild(sc);const acts={};let i=0,typing=null,full='',closed=false;const box=sc.querySelector('.csbox'),name=sc.querySelector('.csname'),text=sc.querySelector('.cstext');
+  box.style.display=name.style.display='none';
+  const actor=(w,slot)=>{const ci=who(w);if(ci==null||ci<0)return;let a=acts[w];if(!a){a=acts[w]=el('div','csact off');const c=document.createElement('canvas');c.width=240;c.height=190;a.appendChild(c);try{portrait(ci,c,'full','idle',CH[ci].hidden?0:defSkin(ci));}catch(e){}sc.appendChild(a);}
+    const x=SLOT[slot]||50;a.classList.toggle('r',x>50);a.style.left=(x>50?118:-18)+'%';a.ci=ci;requestAnimationFrame(()=>requestAnimationFrame(()=>{a.classList.remove('off');a.style.left=x+'%';}));};
+  const speak=(w,label,str,col,narr)=>{for(const k in acts)acts[k].classList.toggle('sp',k===w);sc.classList.toggle('csnarr',!!narr);box.style.display='';name.style.display=narr?'none':'';sc.style.setProperty('--sc',col||'#ffffff');name.innerHTML=label||'';
+    full=str;text.textContent='';let n=0;clearInterval(typing);typing=setInterval(()=>{n+=2;text.textContent=full.slice(0,n);if(n>=full.length){clearInterval(typing);typing=null;}},16);requestAnimationFrame(()=>sc.style.setProperty('--bh',box.offsetHeight+'px'));};
+  const end=()=>{if(closed)return;closed=true;clearInterval(typing);removeEventListener('keydown',key2,true);sc.remove();done&&done();};
+  const step2=()=>{if(closed)return;if(typing){clearInterval(typing);typing=null;text.textContent=full;return;}const t=sc.querySelector('.cstitle');if(t)t.remove();
+    for(;;){const b=script[i++];if(!b)return end();const k=b[0];
+     if(k==='bg'){try{renderStageView(STAGES.findIndex(s=>s.id===b[1]),sc.querySelector('canvas.bg'),320,175,.82,300);}catch(e){}continue;}
+     if(k==='in'){actor(b[1],b[2]);continue;}if(k==='out'){const a=acts[b[1]];if(a){a.classList.add('off');delete acts[b[1]];setTimeout(()=>a.remove(),400);}continue;}
+     if(k==='fx'){if(b[1]==='dark')sc.classList.add('dark');else if(b[1]==='light')sc.classList.remove('dark');else if(b[1]==='shake'){sc.classList.remove('shake');void sc.offsetWidth;sc.classList.add('shake');sfx('boom');}else if(b[1]==='flash'){const f=sc.querySelector('.csflash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');sfx('warp');}continue;}
+     if(k==='title'){box.style.display=name.style.display='none';sc.appendChild(el('div','cstitle','<b>'+esc(b[1])+'</b><i>'+esc(b[2]||'')+'</i>'));sfx('power');return;}
+     if(k==='narr'){speak(null,'',b[1],'#ffffff',1);return;}if(k==='voice'){speak(null,esc(b[1]),b[2],'#ffd400');return;}
+     if(k==='say'||k==='bank'){const ci=who(b[1]);if(ci==null||ci<0)continue;const C=CH[ci];if(!acts[b[1]])actor(b[1],Object.keys(acts).length?'r2':'l1');speak(b[1],esc(C.sn||C.n)+'<small>'+esc(C.q)+'</small>',k==='say'?b[2]:line(b[2],ci,vars),C.col);return;}}};
+  const key2=e=>{if(e.code==='Enter'||e.code==='Space'||e.code==='KeyJ'){e.preventDefault();e.stopPropagation();step2();}else if(e.code==='Escape'){e.preventDefault();e.stopPropagation();end();}};addEventListener('keydown',key2,true);
+  sc.onclick=e=>{if(e.target===skip){end();return;}step2();};step2();}
+/* ---------- fights ---------- */
+function mk2(slot,ci,ctrl,lvl,team,stocks){const f=newFighter(slot,ci,ctrl,lvl);f.team=team;f.stocks=stocks;const C=CH[ci];if(!C.hidden){f.skin=defSkin(ci);f.L=skinLook(C,f.skin);f.hero=f.skin===HERO_I&&!!C.heroLook;}else{f.skin=0;f.L=C.look;}return f;}
+function startFight(n,me,pal,foes){audioInit();MODE='campaign';CS.on=true;CS.node=n;CS.t=0;CS.res=null;CS.args=[n,me,pal,foes];CS.left=n.count||0;CS.nid=20;CS.time=(n.time||0)*60;CS.boss=null;CS.rec=SV.done[n.id]?[]:foes.slice();
+  SEL.mode=['h','off','off','off'];MATCH.stocks=n.rule==='waves'||n.rule==='boss'?3:2;MATCH.timeLeft=0;MATCH.sudden=false;setStage(STAGES.findIndex(s=>s.id===n.stage));SLOW=0;ZF.t=0;if(typeof hazReset==='function')hazReset();
+  const m=STAGE.main,c=m.x+m.w/2;F=[mk2(0,me,'human',1,0,MATCH.stocks)];if(pal>=0&&(n.rule==='tag'||n.partner)){const p=mk2(1,pal,'cpu',6,0,MATCH.stocks);p.col='#2fd060';F.push(p);}
+  if(n.rule==='duel'||n.rule==='tag')foes.forEach((ci,k)=>{const e=mk2(2+k>3?3:2+k,ci,'cpu',n.lvl,1,n.es);e.id=10+k;e.col=k?'#ffc81e':'#2e86ff';e.plate=1;if(n.giant)e.big=1e9;if(n.unst)e.unst=1;F.push(e);});
+  if(n.rule==='boss'){const b=mk2(2,ix('c_van'),'cpu',n.lvl,1,99);b.id=10;b.col='#b070ff';b.big=1e9;b.boss=1;b.hp=b.hpMax=n.hp;b.pd=0;CS.boss=b;F.push(b);}
+  const ps=F.filter(f=>f.team===0),es=F.filter(f=>f.team===1);ps.forEach((f,k)=>{f.x=c-90-k*46;f.face=1;});es.forEach((f,k)=>{f.x=c+90+k*56;f.face=-1;});
+  ENT=[];PS=[];FXL=[];STAGE.temp=[];LEDGES.forEach(l=>l.occ=null);GS='count';gsT=0;winner=null;shakeA=0;flashA=0;CAM.x=WW/2;CAM.y=WH/2;CAM.z=1.2;
+  root.hidden=true;hideAll();document.getElementById('game').hidden=false;const t=document.getElementById('touch');if(t)t.hidden=!(typeof isTouch!=='undefined'&&isTouch);paused=false;running=true;}
+function spawnGrunt(n){const m=STAGE.main,f=newFighter(0,ix('c_grunt'),'cpu',n.lvl);f.id=CS.nid++;f.team=1;f.col='#b070ff';f.stocks=1;f.skin=0;f.L=f.C.look;f.grunt=1;const side=rnd()<.5?-1:1,p=F[0];
+  f.x=clamp((p&&!p.gone?p.x:m.x+m.w/2)+side*(140+rnd()*110),m.x+20,m.x+m.w-20);f.y=m.y-150-rnd()*50;f.ground=null;f.st='air';f.vy=1;f.inv=30;f.face=-side;F.push(f);burst(f.x,f.y-30,20,['#b070ff','#2a2a38','#ffffff'],2.6,24);FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:'#b070ff',r0:6,life:18});sfx('warp');}
+function finish(res){if(GS==='over')return;CS.res=res;GS='over';gsT=0;winner=res==='win'?F[0]:null;if(winner&&winner.gone)winner=F.find(f=>f.team===0&&!f.gone)||null;}
+const mk0=modeKO;modeKO=function(f){if(MODE!=='campaign')return mk0(f);const n=CS.node;
+  if(f.boss){f.hp-=f.hpMax*.12;f.stocks=99;FXL.push({k:'txt2',s:'RING OUT!  -12%',x:CAM.x,y:CAM.y-70,t:0,life:70,col:'#ffd400'});if(f.hp<=0){f.dead=0;f.gone=true;finish('win');return true;}return false;}
+  if(f.stocks>0)return false;f.dead=0;f.gone=true;
+  if(f.team===1){if(f.grunt){CS.left=Math.max(0,CS.left-1);F=F.filter(x=>x!==f);}if(n.rule==='hold')return true;if(!F.some(x=>x.team===1&&!x.gone)&&(n.rule!=='waves'||CS.left<=0))finish('win');return true;}
+  if(f===F[0]||!F.some(x=>x.team===0&&!x.gone))finish('lose');return true;};
+const mt0=modeTick;modeTick=function(){mt0();if(MODE!=='campaign'||typeof GS==='undefined'||GS!=='play')return;const n=CS.node;CS.t++;
+  if(n.time){CS.time--;if(CS.time<=0){finish(n.rule==='hold'?'win':'lose');return;}if(CS.time<=300&&CS.time%60===0)sfx('tick');}
+  if(n.rule==='waves'||n.rule==='hold'){const alive=F.filter(f=>f.team===1&&!f.gone).length,pend=n.rule==='hold'?99:CS.left-alive;if(alive<n.cap&&pend>0&&CS.t%50===10)spawnGrunt(n);}
+  for(const f of F){if(f.unst&&!f.gone&&!f.dead&&FR%4===0)part(f.x+rnd()*26-13,f.y-rnd()*60,(rnd()-.5),-1-rnd(),18,rnd()<.5?'#b070ff':'#ffffff',2,0);}
+  const b=CS.boss;if(b&&!b.gone){if(b.dmg>b.pd)b.hp-=b.dmg-b.pd;b.dmg=Math.min(b.dmg,70*(1-Math.max(0,b.hp)/b.hpMax));b.pd=b.dmg;if(FR%6===0)part(b.x+rnd()*40-20,b.y-rnd()*90,0,-.6,16,'#b070ff',2,0);
+    if(b.hp<=0&&!CS.fin){CS.fin=1;b.stocks=1;b.dmg=260;b.inv=0;try{applyHit(b,{dmg:1,bkb:13,kbg:.2,ang:50,fx:['#b070ff','#ffffff']},b.x<F[0].x?-1:1,F[0],{force:1});}catch(e){}SLOW=24;if(!RM)shakeA=12;sfx('boom');}}else CS.fin=0;};
+const dm0=dmgMod;dmgMod=function(a,t,h,o){let m=dm0(a,t,h,o);if(MODE==='campaign'&&a){if(a.unst)m*=1.2;if(a.grunt)m*=.7;if(a.boss)m*=.85;}return m;};
+const mh0=modeHUD;modeHUD=function(c){mh0(c);if(MODE!=='campaign'||!running)return;const n=CS.node;bigText(c,n.n.toUpperCase(),640,56,40,'#ffffff');
+  if(n.time&&GS==='play'){const s=Math.ceil(CS.time/60);bigText(c,(n.rule==='hold'?'HOLD  ':'')+Math.floor(s/60)+':'+String(s%60).padStart(2,'0'),640,100,s<=10?84:64,s<=10?'#ff4a4a':'#ffd400');}
+  if(n.rule==='waves')bigText(c,CS.left+' LEFT',640,96,52,'#ffd400');
+  const b=CS.boss;if(b){const w=560,x=640-w/2,y=84,k=Math.max(0,b.hp)/b.hpMax;c.save();c.fillStyle='#000';c.beginPath();c.moveTo(x-10,y-4);c.lineTo(x+w+14,y-4);c.lineTo(x+w+6,y+24);c.lineTo(x-18,y+24);c.closePath();c.fill();c.fillStyle='#3a2a50';c.fillRect(x,y,w,16);c.fillStyle=k<.3?'#ff4a4a':'#b070ff';c.fillRect(x,y,w*k,16);c.fillStyle='rgba(255,255,255,.35)';c.fillRect(x,y,w*k,5);
+    c.font='italic 700 22px "Teko","Arial Narrow",sans-serif';c.textAlign='left';c.textBaseline='alphabetic';c.fillStyle='#fff';c.strokeStyle='#000';c.lineWidth=5;c.strokeText('THE VANGUARD',x,y-8);c.fillText('THE VANGUARD',x,y-8);c.restore();}};
+const sr0=showResults;showResults=function(){if(MODE!=='campaign')return sr0();const n=CS.node,ov=document.getElementById('overlay');ov.hidden=false;ov.innerHTML='';const box=el('div','ovc res pod cres');
+  if(CS.res==='win'){const first=!SV.done[n.id];SV.done[n.id]=1;const got=[];if(first)for(const ci of CS.rec){const id=CH[ci].id;if(!SV.team.includes(id)){SV.team.push(id);got.push(ci);}}save();
+    box.appendChild(el('h2','','CLEARED!'));if(got.length){box.appendChild(el('p','',got.length>1?'Two classmates join your team.':nm(got[0])+' joins your team.'));const vs=el('div','cvs');got.forEach(ci=>vs.appendChild(card(ci,'NEW')).classList.add('on'));box.appendChild(vs);
+      got.forEach(ci=>box.appendChild(el('p','q','<b style="color:'+CH[ci].col+'">'+esc(nm(ci))+':</b> “'+esc(line(n.unst?'snap':'join',ci,{}))+'”')));}
+    else box.appendChild(el('p','',n.rule==='hold'?'The east stands are empty. Everyone got out.':n.rule==='waves'?'The pitch is clear. For now.':n.rule==='boss'?'The Vanguard drops to one knee.':'Cleared again.'));
+    const row=el('div','row');const b=el('button','btn pri');b.textContent='CONTINUE';b.onclick=()=>{ov.hidden=true;if(n.rule==='boss'&&first&&!SV.done.c1_end){root.hidden=false;hideAll();running=false;playScene('end',{},()=>{SV.done.c1_end=1;save();mapScreen();});}else mapScreen();};row.appendChild(b);box.appendChild(row);}
+  else{box.appendChild(el('h2','',n.time&&CS.time<=0&&n.rule!=='hold'?'TIME UP':'DEFEATED'));box.appendChild(el('p','','Nobody is recruited and nothing is lost. Try again, or pick a different student for this fight.'));const row=el('div','row');const a=el('button','btn pri');a.textContent='RETRY';a.onclick=()=>{ov.hidden=true;startFight.apply(null,CS.args);};
+    const b=el('button','btn');b.textContent='MAP';b.onclick=()=>{ov.hidden=true;mapScreen();};row.appendChild(a);row.appendChild(b);box.appendChild(row);}
+  ov.appendChild(box);};
+/* leaving, pausing, pointers */
+const ts0=toSelect;toSelect=function(){if(MODE==='campaign'&&SV){document.getElementById('overlay').hidden=true;mapScreen();return;}return ts0.apply(this,arguments);};
+const tt0=toTitle;toTitle=function(){root.hidden=true;closeModal();const s=document.getElementById('cscene');if(s)s.remove();if(MODE==='campaign')setMode('versus');CS.on=false;return tt0.apply(this,arguments);};
+const cs0=curScreen;curScreen=function(){if(document.getElementById('cscene'))return'cscene';if(!root.hidden&&!running)return'camp';return cs0();};
+const pb0=padBack;padBack=function(n,scr){if(scr==='camp'){if(document.getElementById('cmodal')){closeModal();sfx('pop');}else{toTitle();sfx('pop');}return;}if(scr==='cscene')return;return pb0(n,scr);};
+/* title tile */
+(function wait(){const tm=document.querySelector('.tmenu'),f=document.getElementById('tFight');if(!tm||!f||typeof HEADS==='undefined'||!HEADS.length){setTimeout(wait,80);return;}
+  const b=el('button','mt mtc','<b>CAMPAIGN</b><i>Age of Heroes. Recruit your class and hold the line.</i>');b.id='tCamp';tm.classList.add('hasc');f.insertAdjacentElement('afterend',b);
+  b.onclick=()=>{audioInit();sfx('power');if(load())mapScreen();else pickScreen();};})();
+window.CAMPAIGN={pickScreen,mapScreen,startFight,playScene,NODES,get save(){return SV;},newSave,finish,load};
+})();
 
 </script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script></html>
