@@ -8583,13 +8583,13 @@ const OK={
  ryo:(f,k,o,adx)=>k!=='dB'||adx>60,
  kouji:()=>true};
 const ai0=aiInput;aiInput=function(f){const I=ai0(f);try{
-  const ai=f.ai2||(f.ai2={cd:60,kc:{},hold:0,tk:0}),P=f.pi||{},lv=f.lvl||0,R=[.4,.7,1][lv]||.7;
+  const ai=f.ai2||(f.ai2={cd:60,kc:{},hold:0,tk:0}),P=f.pi||{},lv=Math.min(9,Math.max(1,f.lvl||1)),R=.25+.75*(lv-1)/8;
   if(f.dead||f.gone||!f.C)return I;
   if(ai.hold>0){ai.hold--;if(f.st==='move'&&f.mv&&f.mv.k===ai.hk&&f.st!=='hit'){I.B=1;I.A=0;I.J=0;I.S=0;I.G=0;I.x=ai.hx;I.y=ai.hy;return I;}ai.hold=0;}
   if(ai.cd>0)ai.cd--;
   const o=(typeof opp==='function')?opp(f):null,g=STAGE.main;
   if(!f.ground||f.mv||!(f.st==='idle'||f.st==='walk'||f.st==='run'))return I;
-  if(!o||o.dead||o.gone||o.st==='respawn'){if(lv>=1&&ai.tk!==1&&f.kos>(ai.kn||0)){ai.kn=f.kos;if(Math.random()<.45&&!P.T){const r=Math.random();I.T=1;I.x=r<.33?1:0;I.y=0;I.A=I.B=I.J=I.S=0;}}return I;}
+  if(!o||o.dead||o.gone||o.st==='respawn'){if(lv>=3&&ai.tk!==1&&f.kos>(ai.kn||0)){ai.kn=f.kos;if(Math.random()<.45&&!P.T){const r=Math.random();I.T=1;I.x=r<.33?1:0;I.y=0;I.A=I.B=I.J=I.S=0;}}return I;}
   ai.kn=f.kos||0;
   if(ai.cd>0||I.S||I.G)return I;
   const dx=o.x-f.x,dy=o.y-f.y,adx=Math.abs(dx),sd=Math.sign(dx)||1,facing=f.face===sd;if(Math.abs(dy)>60)return I;
@@ -8708,6 +8708,8 @@ npc('kouji',{id:'c_coach',n:'COACH DAIMON',sn:'DAIMON',q:'Homeroom teacher',col:
 npc('ninja',{id:'c_grunt',n:'ASCENDANT',sn:'ASCENDANT',q:'The Ascendancy',col:'#b070ff'},{hx:['hoodup','fullmask'],hoodC:'#2a2a38',maskC:'#e8e8f2',ledC:'#b070ff',top:'#2a2a38',sleeve:'#2a2a38',pants:'#1e1e2a',shoe:'#16161c',acc:'#b070ff',glove:'#16161c'});
 npc('shiki',{id:'c_van',n:'THE VANGUARD',sn:'VANGUARD',q:'Ascendancy field captain',col:'#b070ff'},{hx:['fullmask'],maskC:'#f0f0f6',ledC:'#b070ff',outfit:'plate',top:'#e8e8f0',acc:'#b070ff',sleeve:'#3a3a4a',pants:'#2a2a38',shoe:'#16161c',boots:1,glove:'#16161c',skin:'#b8b8c4',hair:'#16161c',size:1.18,bw:1.2});
 npc('shi',{id:'c_arch',n:'THE ARCHITECT',sn:'ARCHITECT',q:'???',col:'#f0f0f6'},{hx:['hoodup','fullmask'],hoodC:'#101018',maskC:'#f6f6fa',ledC:'#ffffff',outfit:'coat',top:'#101018',acc:'#f0f0f6',sleeve:'#101018',pants:'#101018',shoe:'#0a0a10',glove:'#0a0a10',wpn:null,ex:[]});
+npc('kichi',{id:'c_ward',n:'THE WARDEN',sn:'WARDEN',q:'Ascendancy jailer',col:'#b070ff'},{hx:['fullmask'],maskC:'#f0f0f6',ledC:'#b070ff',outfit:'coat',top:'#3a3a4a',acc:'#b070ff',sleeve:'#3a3a4a',pants:'#2a2a38',shoe:'#16161c',boots:1,glove:'#16161c',hair:'#e8e8f0',size:1.12});
+npc('tamashi',{id:'c_choir',n:'THE CHOIR',sn:'CHOIR',q:'Ascendancy conductor',col:'#ff7ad0'},{hx:['hoodup','fullmask'],hoodC:'#f0f0f6',maskC:'#16161c',ledC:'#ff7ad0',outfit:'coat',top:'#f0f0f6',acc:'#ff7ad0',sleeve:'#f0f0f6',pants:'#e0e0ea',shoe:'#16161c',glove:'#16161c'});
 /* ---------- how each student talks ---------- */
 const TYPES={bold:'gomi pitto raion daku sota akio shiki kongu zabu ryuko hana torabi ray koki hikari sato tomi',calm:'kimiko rei kal sanshou tenmetsu kurai shi ayame evona sata moya kichi hari taru ivan tatsuya oro ryo',
  joker:'hippo conor minato riku soran aria takeshi uzi suze kitsu chiyoki yado bisu sai',shy:'bryson suzume tamashi makiko kairi mia',proud:'okane bara aya ginko akemi kora yoko emi',
@@ -8742,6 +8744,11 @@ const BANK={
  after:{bold:["They ran. Next time they won't get the chance."],calm:["They got what they came for, or they'd still be here. That worries me."],joker:["So... festival's cancelled, right? Asking for my legs. They've stopped working."],
   shy:["We did it? We actually did it..."],proud:["They'll remember today. So shall I."],kind:["Everyone's alive. Today, that's enough."],grim:["That wasn't an attack. That was a test."],nerd:["'The Convergence.' He said it like a date on a calendar."]},
  partner:{bold:["Stay close and try to keep up!"],calm:["I'll cover your blind side. Go."],joker:["I'll distract them. It's my best event."],shy:["I'm right behind you! Um. Not hiding. Supporting."],proud:["Watch closely. You may learn something."],kind:["Together, then. Call if you need me."],grim:["Don't get in my way."],nerd:["I'll take the left one. Statistically, it's the angrier one."]}};
+Object.assign(BANK,{
+ resolve:{bold:["Good. I was getting bored of waiting for them to come to us."],calm:["We know where they are now. That is more than we had yesterday."],joker:["So the plan is 'hit the glowing thing'. I love a plan I can remember."],shy:["I'm scared. I'm going anyway. Both of those are true."],proud:["They put my name on a list. I intend to make them regret the spelling."],kind:["Nobody goes alone. That's the only rule I care about."],grim:["They came into our school. Now we go into theirs."],nerd:["Three anchors, one antenna. Break the anchors and the signal has nowhere to stand."]},
+ grief:{bold:["He didn't even hesitate. ...I'm getting him back. That's not a question."],calm:["He chose it. The least we can do is make it count."],joker:["He still owes me a detention. He doesn't get to skip it."],shy:["He told me I'd be fine. He said it like he knew."],proud:["A teacher should not have to do that for his students. We will not let it stand."],kind:["He's alive in there. I have to believe that. So I do."],grim:["Then we open it again. On our terms."],nerd:["The seam closed from the inside. Which means it can be opened from the inside."]},
+ final:{bold:["Eighty-nine of us. One of him. I like those numbers."],calm:["Everything he built needs us afraid. So breathe. Then begin."],joker:["If we save the world, do we still have homework? Asking for everyone."],shy:["I'm not hiding behind anyone this time."],proud:["He called us keys. Let us show him what we open."],kind:["Look around. Every one of them came. That's already a win."],grim:["No speeches. Finish it."],nerd:["He needs all eighty-nine in resonance. He never asked what happens if we choose the note."]},
+ home:{bold:["Same time next year? I'm kidding. Mostly."],calm:["It's quiet. I had forgotten what quiet sounded like."],joker:["So, about that festival cup. Who actually won?"],shy:["We did it. All of us. I counted twice."],proud:["Let them write it down properly this time."],kind:["Everyone's home. That's the whole story."],grim:["It's over. ...Good."],nerd:["I have so many notes. Nobody is going to believe any of them."]}});
 const line=(k,ci,vars)=>{const t=BANK[k][typeOf(ci)]||BANK[k].kind,s=t[(ci*7+k.length)%t.length];return s.replace(/\{(\w+)\}/g,(m,v)=>(vars&&vars[v])||m);};
 const nm=ci=>{const s=CH[ci].sn||CH[ci].n;return s.charAt(0)+s.slice(1).toLowerCase();};
 /* ---------- chapter 1 ---------- */
@@ -8759,6 +8766,57 @@ const NODES=[
  {id:'c1_u2',n:'Out of Control II',x:86,y:68,req:['c1_wave'],stage:'gym',rule:'duel',unst:1,giant:0,lvl:7,es:2,rec:1,opt:1,pre:'unstable',d:'Optional. Another classmate caught in the surge, and this one hits harder.'},
  {id:'c1_boss',n:'The Vanguard',x:90,y:44,req:['c1_u1'],stage:'arena',rule:'boss',hp:380,lvl:7,partner:1,pre:'bossin',d:'The man giving the orders. He does not take percentage damage: empty his health bar.'},
  {id:'c1_end',type:'scene',n:'Aftermath',x:90,y:13,req:['c1_boss'],scene:'end'}];
+NODES.push(
+ {id:'c2_open',type:'scene',n:'Lockdown',x:8,y:62,req:['c1_end'],scene:'c2open'},
+ {id:'c2_spar',n:'Sparring Rotation',x:20,y:36,req:['c2_open'],stage:'gym',rule:'duel',lvl:5,es:2,rec:1,pre:'rival',d:'Lockdown drills. A classmate from another homeroom wants to see what a festival hero is made of.'},
+ {id:'c2_patrol',n:'Shibuya Patrol',x:33,y:60,req:['c2_spar'],stage:'shibuya',rule:'waves',count:12,cap:3,lvl:4,partner:1,d:'Masks have been seen at the crossing. Pick a partner and clear twelve of them off the street.'},
+ {id:'c2_ramen',n:'Lunch Rush',x:30,y:88,req:['c2_spar'],stage:'ramen',rule:'tag',lvl:5,es:2,rec:2,opt:1,d:'Optional. Two classmates are fighting over the last bowl. Pick a partner and settle it.'},
+ {id:'c2_big',n:'Growth Spurt',x:20,y:12,req:['c2_spar'],stage:'dome',rule:'duel',giant:1,lvl:5,es:1,rec:1,opt:1,d:'Optional. The support course tried to fix the serum. They made it stronger.'},
+ {id:'c2_train',n:'Runaway Train',x:46,y:34,req:['c2_patrol'],stage:'train',rule:'duel',unst:1,time:100,lvl:6,es:2,rec:1,pre:'unstable',d:'A classmate\'s quirk surged on the evening express. Bring them down inside 100 seconds, before the train reaches the city.'},
+ {id:'c2_hold',n:'The Hum Below',x:56,y:66,req:['c2_train'],stage:'sewers',rule:'hold',time:70,cap:3,lvl:5,d:'Something under the city is humming. Hold the tunnel junction for 70 seconds while the scanner finds it.'},
+ {id:'c2_mid',type:'scene',n:'The Tuning Fork',x:66,y:40,req:['c2_hold'],scene:'c2mid'},
+ {id:'c2_clock',n:'Curfew Run',x:60,y:12,req:['c2_train'],stage:'mockcity',rule:'duel',time:80,lvl:6,es:2,rec:1,opt:1,d:'Optional. A classmate is out after curfew. Knock them out twice in 80 seconds and march them home.'},
+ {id:'c2_u',n:'Tuned',x:76,y:70,req:['c2_mid'],stage:'sewers',rule:'duel',unst:1,lvl:7,es:2,rec:1,pre:'unstable',d:'A classmate stood too close to the pylon. Their quirk is ringing like a bell.'},
+ {id:'c2_boss',n:'The Warden',x:88,y:46,req:['c2_u'],stage:'sewers',rule:'boss',boss:'c_ward',hp:440,lvl:7,partner:1,pre:'c2boss',after:'c2_end',win:'The chains go slack. The Warden is gone, and the pylon is dark.',d:'The pylon has a keeper. Empty the health bar.'},
+ {id:'c2_end',type:'scene',n:'One of Many',x:90,y:14,req:['c2_boss'],scene:'c2end'},
+
+ {id:'c3_open',type:'scene',n:'The List',x:8,y:60,req:['c2_end'],scene:'c3open'},
+ {id:'c3_dance',n:'Dance Battle',x:20,y:34,req:['c3_open'],stage:'prom',rule:'duel',lvl:6,es:2,rec:1,pre:'rival',d:'Prom night goes ahead, because the school refuses to be afraid. Tradition says the first dance is a duel.'},
+ {id:'c3_crash',n:'Prom Crashers',x:33,y:62,req:['c3_dance'],stage:'prom',rule:'waves',count:14,cap:4,lvl:4,partner:1,d:'The masks came for the marked students. Pick a partner and throw fourteen of them off the dance floor.'},
+ {id:'c3_tall',n:'Tall Order',x:22,y:88,req:['c3_dance'],stage:'fuji',rule:'duel',giant:1,lvl:6,es:1,rec:1,opt:1,d:'Optional. Someone took the serum on a school trip. The pagoda is in danger.'},
+ {id:'c3_mid',type:'scene',n:'The Song',x:45,y:36,req:['c3_crash'],scene:'c3mid'},
+ {id:'c3_tag',n:'Strings Attached',x:56,y:64,req:['c3_mid'],stage:'inari',rule:'tag',unst:1,lvl:6,es:2,rec:2,d:'Two classmates are walking in step and not answering. Pick a partner and break the Choir\'s hold on both.'},
+ {id:'c3_steps',n:'Shrine Steps',x:46,y:88,req:['c3_mid'],stage:'inari',rule:'hold',time:70,cap:4,lvl:5,opt:1,d:'Optional. The marked students are hiding at the top of the shrine. Hold the steps for 70 seconds.'},
+ {id:'c3_u',n:'Sleepwalker',x:66,y:34,req:['c3_tag'],stage:'miyajima',rule:'duel',unst:1,lvl:7,es:2,rec:1,pre:'unstable',d:'One of the marked walked into the sea at low tide, still humming the tune.'},
+ {id:'c3_keep',n:'Castle Keep',x:62,y:10,req:['c3_tag'],stage:'osaka',rule:'duel',time:90,lvl:7,es:2,rec:1,opt:1,d:'Optional. A classmate has barricaded the castle against everyone, friends included. You have 90 seconds.'},
+ {id:'c3_van',n:'The Vanguard Returns',x:77,y:62,req:['c3_u'],stage:'osaka',rule:'duel',foes:['c_van'],lvl:8,es:2,pre:'c3van',d:'No health bar this time. He has come to fight you the way you fight each other: two stocks, one stage.'},
+ {id:'c3_boss',n:'The Choir',x:89,y:42,req:['c3_van'],stage:'prom',rule:'boss',boss:'c_choir',hp:460,adds:1,cap:2,lvl:8,partner:1,pre:'c3boss',after:'c3_end',win:'The song stops in the middle of a bar.',d:'The conductor, back where the song began. Masks keep coming while the health bar lasts.'},
+ {id:'c3_end',type:'scene',n:'Silence',x:90,y:12,req:['c3_boss'],scene:'c3end'},
+
+ {id:'c4_open',type:'scene',n:'The Sky Opens',x:8,y:60,req:['c3_end'],scene:'c4open'},
+ {id:'c4_p1',n:'Anchor: Shibuya',x:22,y:30,req:['c4_open'],stage:'shibuya',rule:'waves',count:16,cap:4,lvl:5,partner:1,d:'The first anchor stands in the middle of the crossing. Clear sixteen masks away from it.'},
+ {id:'c4_p2',n:'Anchor: The Shrine',x:26,y:70,req:['c4_open'],stage:'miyajima',rule:'hold',time:80,cap:4,lvl:6,d:'The second anchor is under the great gate. Stay standing for 80 seconds while it is pulled out of the tide.'},
+ {id:'c4_p3',n:'Anchor: The Line',x:42,y:50,req:['c4_p1','c4_p2'],stage:'train',rule:'duel',foes:['c_ward'],lvl:8,es:2,pre:'c4ward',d:'The third anchor is moving at three hundred kilometres an hour, and the Warden is riding with it.'},
+ {id:'c4_r1',n:'Surge Ward',x:14,y:10,req:['c4_open'],stage:'dome',rule:'duel',unst:1,lvl:8,es:2,rec:1,opt:1,pre:'unstable',d:'Optional. The rescue dome is full of students whose quirks will not switch off. One of them needs you now.'},
+ {id:'c4_r2',n:'Last Drill',x:12,y:88,req:['c4_open'],stage:'gym',rule:'tag',lvl:7,es:2,rec:2,opt:1,d:'Optional. Two classmates want one more spar before the end of the world. Pick a partner.'},
+ {id:'c4_r3',n:'Skyline',x:42,y:88,req:['c4_p2'],stage:'mockcity',rule:'duel',giant:1,lvl:7,es:1,rec:1,opt:1,d:'Optional. The surge has done what the serum did, only bigger.'},
+ {id:'c4_r4',n:'Before Sunrise',x:42,y:12,req:['c4_p1'],stage:'fuji',rule:'duel',time:80,lvl:8,es:2,rec:1,opt:1,d:'Optional. A classmate went up the mountain to face this alone. You have 80 seconds to change their mind.'},
+ {id:'c4_mid',type:'scene',n:'The Antenna',x:56,y:30,req:['c4_p3'],scene:'c4mid'},
+ {id:'c4_climb',n:'Tower Climb',x:68,y:60,req:['c4_mid'],stage:'tower',rule:'waves',count:18,cap:4,lvl:5,partner:1,d:'Three hundred metres of red steel and every mask in the city between you and the top. Eighteen of them.'},
+ {id:'c4_boss',n:'Vanguard Unbound',x:84,y:40,req:['c4_climb'],stage:'tower',rule:'boss',boss:'c_van',hp:540,lvl:8,partner:1,pre:'c4boss',after:'c4_end',win:'The Vanguard falls from the tower without a sound.',d:'He is standing under the open sky with the light pouring into him. Empty the health bar.'},
+ {id:'c4_end',type:'scene',n:'The Door',x:90,y:12,req:['c4_boss'],scene:'c4end'},
+
+ {id:'c5_open',type:'scene',n:'Eighty-Nine',x:8,y:58,req:['c4_end'],scene:'c5open',grant:'all'},
+ {id:'c5_gate',n:'Through the Seam',x:22,y:34,req:['c5_open'],stage:'orbit',rule:'waves',count:20,cap:5,lvl:5,partner:1,d:'The other side of the sky. Twenty masks stand between you and the way in.'},
+ {id:'c5_echo',n:'Echo',x:36,y:64,req:['c5_gate'],stage:'orbit',rule:'duel',mirror:1,lvl:8,es:2,d:'The seam shows you the one fighter you have never beaten: whoever you bring.'},
+ {id:'c5_duo',n:'Two Lieutenants',x:50,y:34,req:['c5_echo'],stage:'orbit',rule:'tag',foes:['c_ward','c_choir'],lvl:8,es:2,d:'The Warden and the Choir, together. Pick a partner.'},
+ {id:'c5_hold',n:'Hold the Door',x:62,y:68,req:['c5_duo'],stage:'orbit',rule:'hold',time:90,cap:5,lvl:6,d:'Somebody is coming back through. Keep the seam open for 90 seconds.'},
+ {id:'c5_arch',n:'The Architect',x:74,y:36,req:['c5_hold'],stage:'orbit',rule:'boss',boss:'c_arch',hp:560,lvl:9,partner:1,pre:'c5boss',win:'The mask cracks. Behind it there is only light.',d:'The one who wrote the list. Empty the health bar.'},
+ {id:'c5_final',n:'Convergence',x:88,y:56,req:['c5_arch'],stage:'arena',rule:'boss',boss:'c_arch',hp:640,adds:1,cap:2,lvl:9,partner:1,pre:'c5final',after:'c5_end',win:'The sky closes. This time, from our side.',d:'Back where it started: the stadium, the open sky, and everything he has left.'},
+ {id:'c5_end',type:'scene',n:'Age of Heroes',x:90,y:14,req:['c5_final'],scene:'c5end'});
+const chOf=n=>+(n.id.charAt(1));
+const CHAP={1:{t:'The Festival',bg:'arena',z:[['Training Ground Beta',14,12],['Gym C',30,90],['Grand Stadium',52,8],['East Gate',62,92]]},2:{t:'Lockdown',bg:'mockcity',z:[['PU Campus',10,10],['Shibuya',36,48],['Evening Express',48,22],['Under the City',70,90]]},
+ 3:{t:'The Marked',bg:'prom',z:[['Prom Night',12,12],['Fushimi Inari',52,76],['Itsukushima',68,22],['Osaka Castle',78,76]]},4:{t:'Convergence',bg:'tower',z:[['Shibuya',24,18],['Itsukushima',28,58],['Bullet Line',44,38],['Tokyo Tower',72,80]]},5:{t:'Age of Heroes',bg:'orbit',z:[['The Seam',20,20],['The Far Side',52,80],['Grand Stadium',84,74]]}};
 const NB=id=>NODES.find(n=>n.id===id);
 const SCENES={
  open:[['bg','arena'],['title','CHAPTER 1','THE FESTIVAL'],['narr','PU Academy. Eighty-nine first-years, four homerooms, one stadium, and forty thousand people who came to watch them hit each other.'],
@@ -8776,14 +8834,57 @@ const SCENES={
   ['narr','The masks pull back as one, into the seam of light, and it closes behind them like an eye.'],['fx','light'],['bank','L1','after'],['bank','L2','after'],['bank','L3','after'],['in','c_coach','r1'],
   ['say','c_coach','Roll call. I want every one of the eighty-nine accounted for before anybody sleeps.'],['say','c_coach','...And nobody talks to the press. Not until we know why those people were carrying a list of your names.'],
   ['fx','dark'],['out','L1'],['out','L2'],['out','L3'],['out','c_coach'],['in','c_arch','c'],['say','c_arch','Eighty-nine quirks. Eighty-nine keys. They performed beautifully.'],
-  ['say','c_arch','Let them have their festival. The next time the sky opens, it will not close.'],['title','END OF CHAPTER 1','Chapter 2 is not built yet. Thank you for playing this far.']]};
+  ['say','c_arch','Let them have their festival. The next time the sky opens, it will not close.'],['title','END OF CHAPTER 1','Chapter 2: Lockdown is open.']],
+ c2open:[['bg','gym'],['title','CHAPTER 2','LOCKDOWN'],['narr','Three days after the festival. The gates are shut, the press are camped outside them, and nobody has been allowed home.'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['in','c_coach','r1'],
+  ['say','c_coach','Here is what we know. The masks call themselves the Ascendancy. They carried a list. Some of your names were on it, and they marked them.'],['say','c_coach','Here is what we do not know: everything else. So until we do, you train, you patrol in pairs, and you report anything strange.'],
+  ['bank','L1','after'],['say','c_coach','And there has been plenty of strange. Since that light, quirks across the city have been surging. Classmates of yours among them.'],['bank','L2','attack'],['say','c_coach','Sparring rotation first. I want to know who can still fight after a week of bad sleep.']],
+ c2mid:[['bg','sewers'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['narr','Under the junction, bolted into the old brickwork, stands a pylon of white metal as tall as a bus. It is humming a single note.'],['bank','L2','unstable'],
+  ['in','L3','l3'],['bank','L3','resolve'],['narr','Close to it, your own quirk answers. It is not a pleasant feeling. It is the feeling of being tuned.'],['fx','shake'],['bank','L1','attack']],
+ c2boss:[['bg','sewers'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_ward','r1'],['say','c_ward','Hands off the instrument, children. It took four years to put that in the ground without anybody noticing.'],['bank','L1','boss'],
+  ['say','c_ward','You are marked. That is not a threat. It is a compliment. The Architect only writes down the ones that ring true.'],['bank','P2','boss']],
+ c2end:[['bg','sewers'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','The pylon goes dark. The hum stops. For the first time in a week your quirk feels like your own.'],['bank','L1','after'],['in','c_coach','r1'],
+  ['say','c_coach','Good work. Now the bad news. The scanner you were carrying picked up the same note in eleven other places.'],['bank','L3','after'],['say','c_coach','One pylon was an accident we stumbled on. Twelve is a design. Somebody is building something out of this city.'],
+  ['fx','dark'],['out','L1'],['out','L2'],['out','L3'],['out','c_coach'],['in','c_arch','c'],['say','c_arch','One string cut. The instrument still plays.'],['say','c_arch','Send the Choir. If the keys will not sit still, we shall teach them the tune.'],['title','END OF CHAPTER 2','Chapter 3: The Marked is open.']],
+ c3open:[['bg','prom'],['title','CHAPTER 3','THE MARKED'],['narr','The list is pinned to the staff-room wall now. Twenty-two names. Nobody has worked out what they have in common.'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['in','c_coach','r1'],
+  ['say','c_coach','The board wanted prom cancelled. I told the board that if we cancel every time somebody threatens us, we will never hold anything again.'],['bank','L2','morning'],['say','c_coach','So: one night. Lights, music, bad dancing. The marked students stay in pairs. I will be on the door.'],['bank','L1','resolve']],
+ c3mid:[['bg','prom'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['narr','When the last mask goes down, the music does not stop. It is not coming from the speakers.'],['in','c_choir','r1'],['say','c_choir','Lovely. Lovely! A little flat in the second row. You, dear. And you. Step forward.'],
+  ['fx','flash'],['narr','Two classmates turn and walk out of the hall in perfect step. They do not look back.'],['bank','L2','blackout'],['say','c_choir','Do keep up, the rest of you. Rehearsal is at the shrine.'],['out','c_choir'],['bank','L1','attack']],
+ c3van:[['bg','osaka'],['in','P','l1'],['in','c_van','r1'],['say','c_van','No orders tonight. No instrument. I asked for this one myself.'],['say','c_van','At the festival you were a reading on a dial. I should like to know what you are when nobody is measuring.'],['bank','P','boss']],
+ c3boss:[['bg','prom'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_choir','r1'],['say','c_choir','Back for the encore! You have ruined two of my soloists and I am trying very hard not to take it personally.'],['bank','L1','boss'],
+  ['say','c_choir','Every quirk has a note, dear. Twenty-two of you have the right one. Sing it together and the sky opens like a curtain.'],['bank','P2','boss']],
+ c3end:[['bg','prom'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','The hall is quiet. All over the school, students who had been humming stop, and blink, and ask what day it is.'],['bank','L3','after'],['in','c_coach','r1'],
+  ['say','c_coach','Twenty-two marked. Twenty-two accounted for. That is the first time I have been able to say that in a month.'],['bank','L1','after'],['fx','shake'],['fx','dark'],['narr','Then the windows turn violet. Over the centre of the city, the seam is opening again, wider than before, and this time it is not closing.'],
+  ['say','c_coach','...Everybody get some sleep. Tomorrow we find out how you break a hole in the sky.'],['title','END OF CHAPTER 3','Chapter 4: Convergence is open.']],
+ c4open:[['bg','tower'],['title','CHAPTER 4','CONVERGENCE'],['fx','dark'],['narr','The seam hangs over the city like a second moon. Under it, every quirk in ten kilometres runs hot.'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['in','c_coach','r1'],
+  ['say','c_coach','Eleven pylons left. Eight are decoration. Three are anchors: the crossing, the shrine, and one that will not stay in one place.'],['bank','L3','resolve'],['say','c_coach','Pull the anchors and the hole has nothing to hold on to. In theory. I teach homeroom, not physics.'],['bank','L1','resolve'],
+  ['say','c_coach','The heroes are stretched across the whole city. So it is us. I am sorry. You should have had three more years before anybody asked you for this.']],
+ c4ward:[['bg','train'],['in','P','l1'],['in','c_ward','r1'],['say','c_ward','You again. I told them: put the children on the list or put them in a cell, but do not leave them wandering about.'],['bank','P','boss'],['say','c_ward','Last stop is the tower. You will not be on the train when it gets there.']],
+ c4mid:[['bg','tower'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','Three anchors down. The seam shudders, and holds.'],['bank','L2','blackout'],['narr','Then every light on Tokyo Tower comes on at once, violet from foot to tip, and you understand what the pylons were pointing at.'],
+  ['bank','L3','resolve'],['in','c_coach','r1'],['say','c_coach','The anchors were never holding it open. They were aiming it. Up. All of you. Now.']],
+ c4boss:[['bg','tower'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_van','r1'],['say','c_van','You fought well at the castle. I meant to tell you. I find I would rather not do this.'],['bank','L1','boss'],['say','c_van','But the Architect has shown me what is on the other side. And for that, I would do a great deal worse than this.'],['bank','P2','boss']],
+ c4end:[['bg','tower'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','The Vanguard is down. The tower is still lit. The seam is coming lower, pulling at everything that has a quirk.'],['fx','shake'],['bank','L2','blackout'],['in','c_coach','r1'],
+  ['say','c_coach','It needs something on this side to hold on to. A quirk. It has been using the tower. It could use a person.'],['say','c_coach','Mine is not much. It balances things. Thirty years I have been embarrassed by it.'],['bank','L1','attack'],
+  ['say','c_coach','Homework: get everyone home. That is an order, and it is the last one, so do it properly.'],['fx','flash'],['out','c_coach'],['narr','He steps off the platform into the light. The seam snaps shut around him like a fist. The tower goes dark.'],['fx','light'],['bank','L1','grief'],['bank','L2','grief'],['bank','L3','grief'],
+  ['title','END OF CHAPTER 4','Chapter 5: Age of Heroes is open.']],
+ c5open:[['bg','arena'],['title','CHAPTER 5','AGE OF HEROES'],['narr','The Grand Stadium, at dawn. Nobody called an assembly. They came anyway.'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['bank','L3','grief'],
+  ['narr','Four homerooms. The ones you beat, the ones you never fought, the ones who were marked and the ones who were not. All of them, standing on the pitch.'],['bank','L2','final'],
+  ['narr','The plan fits on one line. The seam shut from the inside. So twenty-two marked students are going to sing it open again, and everybody else is going through.'],['bank','L1','final'],['title','EIGHTY-NINE','Every student has joined your team.']],
+ c5boss:[['bg','orbit'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_arch','r1'],['say','c_arch','You opened it yourselves. I wrote four years of plans to make you do that, and in the end you simply decided to.'],['bank','L1','final'],
+  ['say','c_arch','Do you know what a quirk is? It is a note the world hums through a person. Eighty-nine of you, in tune, and the world can be played like an instrument.'],['say','c_arch','I do not want to hurt you. I want to conduct.'],['bank','P2','boss']],
+ c5final:[['bg','arena'],['fx','dark'],['fx','shake'],['in','L1','l1'],['in','P2','l2'],['narr','The far side folds up like paper. You are standing on the stadium pitch again, under an open sky, and he is standing where the announcer stood.'],['in','c_arch','r1'],
+  ['say','c_arch','Then we finish it where the first note was struck. Sing, or do not. The sky is already listening.'],['in','c_coach','l4'],['say','c_coach','Sorry I am late. It is very hard to find the door from that side. ...Is that every one of you? All eighty-nine?'],['bank','L1','final'],['say','c_coach','Then you do not need me to tell you what to do.']],
+ c5end:[['bg','arena'],['fx','flash'],['fx','light'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','The mask falls. There is nobody behind it: only a note, fading. The seam folds shut over the stadium, quietly, like a book.'],['bank','L1','home'],['in','c_coach','r1'],
+  ['say','c_coach','Roll call.'],['narr','It takes eleven minutes. Nobody minds.'],['say','c_coach','Eighty-nine. ...Eighty-nine.'],['bank','L2','home'],['say','c_coach','The festival cup was never awarded. The board has asked me who should get it. I told them to have eighty-nine made.'],['bank','L3','home'],
+  ['title','AGE OF HEROES','THE END. Thank you for playing.']]};
 /* ---------- save ---------- */
 let SV=null;const CS={on:false,node:null};window.CAMP=CS;
-function load(){try{SV=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){SV=null;}if(SV&&(!SV.team||!SV.team.every(id=>ix(id)>=0)))SV=null;return SV;}
+function load(){try{SV=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){SV=null;}if(SV&&(!SV.team||!SV.team.every(id=>ix(id)>=0)))SV=null;if(SV){ensureCast();save();}return SV;}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(SV));}catch(e){}}
 function newSave(starters){let s=(Date.now()%2147483647)||7;const rn=()=>(s=(s*16807)%2147483647)/2147483647;const pool=CH.filter(c=>!c.hidden&&!starters.includes(c.id)).map(c=>c.id);for(let i=pool.length-1;i>0;i--){const j=Math.floor(rn()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
-  const cast={};for(const n of NODES)if(n.rec){cast[n.id]=n.giant?[pool.splice(Math.max(0,pool.findIndex(id=>CH[ix(id)].st.w<1.1)),1)[0]]:pool.splice(0,n.rec);}
-  SV={v:1,team:starters.slice(),leads:starters.slice(),done:{},cast,last:starters[0]};save();}
+  SV={v:1,team:starters.slice(),leads:starters.slice(),done:{},cast:{},last:starters[0]};ensureCast();save();}
+function ensureCast(){if(!SV)return;SV.cast=SV.cast||{};const used=new Set(SV.team);for(const k in SV.cast)for(const id of SV.cast[k])used.add(id);let s=(Date.now()%2147483647)||7;const rn=()=>(s=(s*16807)%2147483647)/2147483647;
+  const pool=CH.filter(c=>!c.hidden&&!used.has(c.id)).map(c=>c.id);for(let i=pool.length-1;i>0;i--){const j=Math.floor(rn()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  for(const n of NODES)if(n.rec&&!SV.cast[n.id]&&pool.length){SV.cast[n.id]=n.giant?[pool.splice(Math.max(0,pool.findIndex(id=>CH[ix(id)].st.w<1.1)),1)[0]]:pool.splice(0,n.rec);}}
 const avail=n=>!(n.req||[]).some(r=>!SV.done[r]);
 /* ---------- styles and screens ---------- */
 const css=el('style');css.textContent=`
@@ -8831,6 +8932,8 @@ const css=el('style');css.textContent=`
 .csskip{position:absolute;top:10.5%;right:14px;z-index:8}
 .mm .mtc{background:linear-gradient(160deg,#ff9a2e,#d05a00)}.mm.hasc .mt1{grid-row:1/2}.mm.hasc .mt1 b{font-size:clamp(34px,5vw,76px)}
 .cres{display:grid;justify-items:center;gap:10px;max-width:900px}.cres .cvs{justify-content:center}.cres p{margin:0;color:#e0e0ea;max-width:60ch;font-size:15px}.cres .q{font-style:italic;color:#fff}
+.cteam .cch{aspect-ratio:auto;height:60px}
+.cchb{min-width:34px;padding:6px 9px!important}.cchb.on{background:var(--gold)!important;color:#000!important}
 @media (max-height:520px){.csact{height:70vh}.cnode .cgrid{max-height:28vh}}`;document.head.appendChild(css);
 const root=el('section');root.id='camp';root.hidden=true;document.getElementById('app').appendChild(root);
 const card=(ci,k)=>{const b=el('button','cch');b.style.setProperty('--cc',CH[ci].col);const c=document.createElement('canvas');c.width=c.height=96;try{const g=c.getContext('2d');g.imageSmoothingEnabled=false;g.drawImage(headFor(ci,defSkin(ci)),0,0,96,96);}catch(e){}b.appendChild(c);b.appendChild(el('b','',esc(CH[ci].sn||CH[ci].n)));if(k)b.dataset.k=k;return b;};
@@ -8844,33 +8947,35 @@ function pickScreen(){show();const pick=[];root.innerHTML='<div class="top">'+ri
   const grid=el('div','cgrid');const order=(typeof rosterOrder==='function'?rosterOrder():CH.map((c,i)=>i).filter(i=>!CH[i].hidden));const foot=el('div','cfoot');const go=el('button','fight');go.textContent='BEGIN ▸';go.disabled=true;go.style.opacity=.4;
   const info=el('span','sp','Pick 3.');for(const ci of order){if(CH[ci].hidden)continue;const b=card(ci);b.onclick=()=>{const id=CH[ci].id,k=pick.indexOf(id);if(k>=0)pick.splice(k,1);else if(pick.length<3)pick.push(id);else{sfx('tick');return;}sfx('pop');
      grid.querySelectorAll('.cch').forEach(x=>{const p=pick.indexOf(x.dataset.id);x.classList.toggle('on',p>=0);x.dataset.k=p>=0?String(p+1):'';});go.disabled=pick.length!==3;go.style.opacity=pick.length===3?1:.4;info.textContent=pick.length?pick.map(i=>nm(ix(i))).join(', ')+(pick.length<3?' · pick '+(3-pick.length)+' more':''):'Pick 3.';};b.dataset.id=CH[ci].id;grid.appendChild(b);}
-  go.onclick=()=>{if(pick.length!==3)return;sfx('power');newSave(pick);playScene('open',{},()=>{SV.done.c1_open=1;save();mapScreen();});};foot.appendChild(info);foot.appendChild(go);body.appendChild(grid);body.appendChild(foot);root.appendChild(body);root.querySelector('#cBack').onclick=toTitle;}
+  go.onclick=()=>{if(pick.length!==3)return;sfx('power');newSave(pick);playScene('open',{},()=>{SV.done.c1_open=1;save();mapScreen(1);});};foot.appendChild(info);foot.appendChild(go);body.appendChild(grid);body.appendChild(foot);root.appendChild(body);root.querySelector('#cBack').onclick=toTitle;}
 /* map */
-function mapScreen(){show();setMode('versus');CS.on=false;const done=NODES.filter(n=>SV.done[n.id]).length;
-  root.innerHTML='<div class="top">'+rib('Chapter 1: The Festival')+'<span class="sp">Red nodes continue the story. Blue nodes are optional and add classmates to your team.</span><button class="tbtn" id="cBack">&larr; Title</button></div>';
-  const body=el('div','cbody cmap'),board=el('div','cboard');const bg=document.createElement('canvas');bg.className='bg';bg.width=640;bg.height=360;board.appendChild(bg);try{renderStageView(STAGES.findIndex(s=>s.id==='arena'),bg,320,150,.6,200);}catch(e){}
-  let sv='<svg viewBox="0 0 100 100" preserveAspectRatio="none">';for(const n of NODES)for(const r of n.req||[]){const a=NB(r),on=SV.done[r];sv+='<line x1="'+a.x+'" y1="'+a.y+'" x2="'+n.x+'" y2="'+n.y+'" stroke="'+(on?'#ffd400':'#55556a')+'" stroke-width="'+(on?.7:.45)+'" stroke-dasharray="'+(on?'':'1.4 1.2')+'" vector-effect="non-scaling-stroke" style="stroke-width:'+(on?4:3)+'px"/>';}board.insertAdjacentHTML('beforeend',sv+'</svg>');
-  for(const[t,x,y]of[['Training Ground Beta',14,12],['Gym C',30,90],['Grand Stadium',52,8],['East Gate',62,92]]){const z=el('div','czone',t);z.style.left=x+'%';z.style.top=y+'%';board.appendChild(z);}
-  for(const n of NODES){const d=SV.done[n.id],a=avail(n),b=el('button','cn '+(d?'dn':a?'av':'lk')+(n.opt?' op':'')+(n.type==='scene'?' sc':'')+(n.rule==='boss'?' bs':''));b.style.left=n.x+'%';b.style.top=n.y+'%';b.innerHTML='<i></i><b>'+esc(n.n)+'</b>';
-   b.onclick=()=>{if(!a&&!d){sfx('tick');toast('Locked: finish '+NB(n.req.find(r=>!SV.done[r])).n+' first');return;}sfx('pop');if(n.type==='scene')playScene(n.scene,{},()=>{SV.done[n.id]=1;save();mapScreen();});else nodePanel(n);};board.appendChild(b);}
+const chOpen=c=>c===1||!!SV.done['c'+(c-1)+'_end'];
+function mapScreen(ch){show();setMode('versus');CS.on=false;const auto=!ch;if(!ch)ch=SV.ch||1;if(!chOpen(ch))ch=1;SV.seen=SV.seen||{};if(auto&&ch<5&&chOpen(ch+1)&&!SV.seen[ch+1])ch++;SV.seen[ch]=1;SV.ch=ch;save();const ALLN=NODES,NODESc=ALLN.filter(n=>chOf(n)===ch),done=NODESc.filter(n=>SV.done[n.id]).length;
+  root.innerHTML='<div class="top">'+rib('Chapter '+ch+': '+CHAP[ch].t)+'<span class="sp">Red nodes continue the story. Blue nodes are optional and add classmates to your team.</span>'+[1,2,3,4,5].map(c=>'<button class="tbtn cchb'+(c===ch?' on':'')+'" data-c="'+c+'"'+(chOpen(c)?'':' disabled style="opacity:.35"')+'>'+c+'</button>').join('')+'<button class="tbtn" id="cBack">&larr; Title</button></div>';
+  const body=el('div','cbody cmap'),board=el('div','cboard');const bg=document.createElement('canvas');bg.className='bg';bg.width=640;bg.height=360;board.appendChild(bg);try{renderStageView(STAGES.findIndex(s=>s.id===CHAP[ch].bg),bg,320,150,.6,200);}catch(e){}
+  let sv='<svg viewBox="0 0 100 100" preserveAspectRatio="none">';for(const n of NODESc)for(const r of n.req||[]){const a=NB(r),on=SV.done[r];if(chOf(a)!==ch)continue;sv+='<line x1="'+a.x+'" y1="'+a.y+'" x2="'+n.x+'" y2="'+n.y+'" stroke="'+(on?'#ffd400':'#55556a')+'" stroke-width="'+(on?.7:.45)+'" stroke-dasharray="'+(on?'':'1.4 1.2')+'" vector-effect="non-scaling-stroke" style="stroke-width:'+(on?4:3)+'px"/>';}board.insertAdjacentHTML('beforeend',sv+'</svg>');
+  for(const[t,x,y]of CHAP[ch].z){const z=el('div','czone',t);z.style.left=x+'%';z.style.top=y+'%';board.appendChild(z);}
+  for(const n of NODESc){const d=SV.done[n.id],a=avail(n),b=el('button','cn '+(d?'dn':a?'av':'lk')+(n.opt?' op':'')+(n.type==='scene'?' sc':'')+(n.rule==='boss'?' bs':''));b.style.left=n.x+'%';b.style.top=n.y+'%';b.innerHTML='<i></i><b>'+esc(n.n)+'</b>';
+   b.onclick=()=>{if(!a&&!d){sfx('tick');toast('Locked: finish '+NB(n.req.find(r=>!SV.done[r])).n+' first');return;}sfx('pop');if(n.type==='scene')playScene(n.scene,{},()=>{SV.done[n.id]=1;grant(n);save();mapScreen();});else nodePanel(n);};board.appendChild(b);}
   const side=el('div','cside');side.appendChild(el('h3','','Your team<small>'+SV.team.length+' / 89</small>'));const tg=el('div','cteam');SV.team.forEach(id=>{const c=card(ix(id),SV.leads.includes(id)?'★':'');if(SV.leads.includes(id))c.classList.add('on');c.title='Make '+nm(ix(id))+' a lead';
     c.onclick=()=>{const k=SV.leads.indexOf(id);if(k>=0){toast(nm(ix(id))+' already speaks for the team');return;}SV.leads.shift();SV.leads.push(id);save();sfx('pop');mapScreen();toast(nm(ix(id))+' now speaks in story scenes');};tg.appendChild(c);});side.appendChild(tg);
-  const bt=el('div','cbtns');const info=el('div','crule',done+' of '+NODES.length+' places cleared. The three starred students speak in story scenes: tap anyone to star them.');bt.appendChild(info);const rs=el('button','btn');rs.textContent='Start over';rs.onclick=()=>{if(rs.dataset.sure){localStorage.removeItem(KEY);SV=null;pickScreen();}else{rs.dataset.sure=1;rs.textContent='Sure? Tap again';}};bt.appendChild(rs);side.appendChild(bt);
-  body.appendChild(board);body.appendChild(side);root.appendChild(body);root.querySelector('#cBack').onclick=toTitle;}
+  const bt=el('div','cbtns');const info=el('div','crule',done+' of '+NODESc.length+' places cleared in this chapter. The three starred students speak in story scenes: tap anyone to star them.');bt.appendChild(info);const rs=el('button','btn');rs.textContent='Start over';rs.onclick=()=>{if(rs.dataset.sure){localStorage.removeItem(KEY);SV=null;pickScreen();}else{rs.dataset.sure=1;rs.textContent='Sure? Tap again';}};bt.appendChild(rs);side.appendChild(bt);
+  body.appendChild(board);body.appendChild(side);root.appendChild(body);root.querySelector('#cBack').onclick=toTitle;root.querySelectorAll('.cchb').forEach(b=>b.onclick=()=>{if(b.disabled)return;sfx('pop');mapScreen(+b.dataset.c);});}
+function grant(n){if(n.grant==='all'&&SV){for(const C of CH)if(!C.hidden&&!SV.team.includes(C.id))SV.team.push(C.id);}}
 /* node panel */
-const RULE=n=>n.rule==='tag'?'Two on two. You have 2 stocks; each rival has '+n.es+'.':n.rule==='waves'?'Knock out '+n.count+' Ascendants. You have 3 stocks.':n.rule==='hold'?'Survive for '+n.time+' seconds. You have 2 stocks.':n.rule==='boss'?'Empty his health bar. You have 3 stocks.':'One on one. You have 2 stocks; your rival has '+n.es+'.'+(n.time?' Finish inside '+n.time+' seconds.':'');
-function nodePanel(n){closeModal();const m=el('div');m.id='cmodal';const box=el('div','cnode');let me=SV.team.includes(SV.last)?SV.last:SV.team[0],pal=null;const foes=(SV.cast[n.id]||[]).map(ix),needP=n.rule==='tag'||n.partner;
+const RULE=n=>n.rule==='tag'?'Two on two. You have 2 stocks; each rival has '+n.es+'.':n.rule==='waves'?'Knock out '+n.count+' Ascendants. You have 3 stocks.':n.rule==='hold'?'Survive for '+n.time+' seconds. You have 2 stocks.':n.rule==='boss'?'Empty the health bar. You have 3 stocks.'+(n.adds?' Masks keep arriving.':''):'One on one. You have 2 stocks; your rival has '+n.es+'.'+(n.time?' Finish inside '+n.time+' seconds.':'');
+function nodePanel(n){closeModal();const m=el('div');m.id='cmodal';const box=el('div','cnode');let me=SV.team.includes(SV.last)?SV.last:SV.team[0],pal=null;let foes=(n.foes||SV.cast[n.id]||[]).map(ix);const needP=n.rule==='tag'||n.partner;
   box.appendChild(el('div','','<h2>'+esc(n.n)+'</h2><p>'+esc(n.d)+'</p>'));box.appendChild(el('div','crule','<b>'+esc(STAGES.find(s=>s.id===n.stage).n)+'</b> · '+esc(RULE(n))+(n.giant?' Your rival is giant.':'')+(n.unst?' Their quirk is surging: they hit 20% harder.':'')+(SV.done[n.id]?' <i>Already cleared: replaying will not recruit anyone new.</i>':'')));
   const vs=el('div','cvs');box.appendChild(vs);const lab=el('p','','');box.appendChild(lab);const grid=el('div','cgrid');box.appendChild(grid);
   const draw=()=>{vs.innerHTML='';vs.appendChild(card(ix(me),'YOU')).classList.add('on');if(needP&&pal)vs.appendChild(card(ix(pal),'ALLY')).classList.add('on');vs.appendChild(el('em','','VS'));
-    if(foes.length)foes.forEach(ci=>vs.appendChild(card(ci)));else vs.appendChild(card(ix(n.rule==='boss'?'c_van':'c_grunt')));
+    if(n.mirror)vs.appendChild(card(ix(me)));else if(foes.length)foes.forEach(ci=>vs.appendChild(card(ci)));else vs.appendChild(card(ix(n.rule==='boss'?(n.boss||'c_van'):'c_grunt')));
     lab.textContent=needP&&!pal?'Now pick a partner.':'Tap a teammate to change who fights'+(needP?' (first tap: you, second tap: partner)':'')+'.';
     grid.querySelectorAll('.cch').forEach(x=>{x.classList.toggle('on',x.dataset.id===me||x.dataset.id===pal);x.dataset.k=x.dataset.id===me?'YOU':x.dataset.id===pal?'ALLY':'';});go.disabled=needP&&!pal;go.style.opacity=go.disabled?.4:1;};
   const go=el('button','fight');go.textContent='FIGHT ▸';let turn=0;SV.team.forEach(id=>{const c=card(ix(id));c.dataset.id=id;c.onclick=()=>{sfx('pop');if(!needP){me=id;}else if(turn%2===0){me=id;if(pal===id)pal=null;}else{if(id===me)return;pal=id;}turn++;draw();};grid.appendChild(c);});
   if(needP&&SV.team.length>1)pal=SV.team.find(i=>i!==me);
   const foot=el('div','cfoot');const back=el('button','btn');back.textContent='← Map';back.onclick=closeModal;foot.appendChild(back);foot.appendChild(el('span','sp',''));foot.appendChild(go);box.appendChild(foot);
-  go.onclick=()=>{if(go.disabled)return;sfx('power');SV.last=me;save();closeModal();const ctx={P:ix(me),P2:pal?ix(pal):null,X:foes[0]};const start=()=>startFight(n,ix(me),pal?ix(pal):-1,foes);
-    if(SV.done[n.id]||!n.pre)return start();if(n.pre==='bossin')return playScene('bossin',ctx,start);
+  go.onclick=()=>{if(go.disabled)return;sfx('power');SV.last=me;save();closeModal();if(n.mirror)foes=[ix(me)];const ctx={P:ix(me),P2:pal?ix(pal):null,X:foes[0]};const start=()=>startFight(n,ix(me),pal?ix(pal):-1,foes);
+    if(SV.done[n.id]||!n.pre)return start();if(SCENES[n.pre])return playScene(n.pre,ctx,start);
     const sc=[['bg',n.stage],['in','P','l1'],['in','X','r1']];if(n.pre==='unstable'){sc.push(['fx','dark'],['bank','P','unstable'],['narr',nm(foes[0])+' does not answer. The air around them is shaking.']);}else sc.push(['bank','P','rival'],['bank','X','answer']);playScene(sc,ctx,start);};
   m.appendChild(box);document.body.appendChild(m);draw();}
 /* ---------- story scenes ---------- */
@@ -8898,11 +9003,11 @@ function playScene(key,ctx,done){const script=typeof key==='string'?SCENES[key]:
   sc.onclick=e=>{if(e.target===skip){end();return;}step2();};step2();}
 /* ---------- fights ---------- */
 function mk2(slot,ci,ctrl,lvl,team,stocks){const f=newFighter(slot,ci,ctrl,lvl);f.team=team;f.stocks=stocks;const C=CH[ci];if(!C.hidden){f.skin=defSkin(ci);f.L=skinLook(C,f.skin);f.hero=f.skin===HERO_I&&!!C.heroLook;}else{f.skin=0;f.L=C.look;}return f;}
-function startFight(n,me,pal,foes){audioInit();MODE='campaign';CS.on=true;CS.node=n;CS.t=0;CS.res=null;CS.args=[n,me,pal,foes];CS.left=n.count||0;CS.nid=20;CS.time=(n.time||0)*60;CS.boss=null;CS.rec=SV.done[n.id]?[]:foes.slice();
+function startFight(n,me,pal,foes){audioInit();MODE='campaign';CS.on=true;CS.node=n;CS.t=0;CS.res=null;CS.args=[n,me,pal,foes];CS.left=n.count||0;CS.nid=20;CS.time=(n.time||0)*60;CS.boss=null;CS.rec=SV.done[n.id]||n.foes||n.mirror?[]:foes.slice();
   SEL.mode=['h','off','off','off'];MATCH.stocks=n.rule==='waves'||n.rule==='boss'?3:2;MATCH.timeLeft=0;MATCH.sudden=false;setStage(STAGES.findIndex(s=>s.id===n.stage));SLOW=0;ZF.t=0;if(typeof hazReset==='function')hazReset();
   const m=STAGE.main,c=m.x+m.w/2;F=[mk2(0,me,'human',1,0,MATCH.stocks)];if(pal>=0&&(n.rule==='tag'||n.partner)){const p=mk2(1,pal,'cpu',6,0,MATCH.stocks);p.col='#2fd060';F.push(p);}
   if(n.rule==='duel'||n.rule==='tag')foes.forEach((ci,k)=>{const e=mk2(2+k>3?3:2+k,ci,'cpu',n.lvl,1,n.es);e.id=10+k;e.col=k?'#ffc81e':'#2e86ff';e.plate=1;if(n.giant)e.big=1e9;if(n.unst)e.unst=1;F.push(e);});
-  if(n.rule==='boss'){const b=mk2(2,ix('c_van'),'cpu',n.lvl,1,99);b.id=10;b.col='#b070ff';b.big=1e9;b.boss=1;b.hp=b.hpMax=n.hp;b.pd=0;CS.boss=b;F.push(b);}
+  if(n.rule==='boss'){const b=mk2(2,ix(n.boss||'c_van'),'cpu',n.lvl,1,99);b.id=10;b.col='#b070ff';b.big=1e9;b.boss=1;b.hp=b.hpMax=n.hp;b.pd=0;CS.boss=b;F.push(b);}
   const ps=F.filter(f=>f.team===0),es=F.filter(f=>f.team===1);ps.forEach((f,k)=>{f.x=c-90-k*46;f.face=1;});es.forEach((f,k)=>{f.x=c+90+k*56;f.face=-1;});
   ENT=[];PS=[];FXL=[];STAGE.temp=[];LEDGES.forEach(l=>l.occ=null);GS='count';gsT=0;winner=null;shakeA=0;flashA=0;CAM.x=WW/2;CAM.y=WH/2;CAM.z=1.2;
   root.hidden=true;hideAll();document.getElementById('game').hidden=false;const t=document.getElementById('touch');if(t)t.hidden=!(typeof isTouch!=='undefined'&&isTouch);paused=false;running=true;}
@@ -8912,11 +9017,11 @@ function finish(res){if(GS==='over')return;CS.res=res;GS='over';gsT=0;winner=res
 const mk0=modeKO;modeKO=function(f){if(MODE!=='campaign')return mk0(f);const n=CS.node;
   if(f.boss){f.hp-=f.hpMax*.12;f.stocks=99;FXL.push({k:'txt2',s:'RING OUT!  -12%',x:CAM.x,y:CAM.y-70,t:0,life:70,col:'#ffd400'});if(f.hp<=0){f.dead=0;f.gone=true;finish('win');return true;}return false;}
   if(f.stocks>0)return false;f.dead=0;f.gone=true;
-  if(f.team===1){if(f.grunt){CS.left=Math.max(0,CS.left-1);F=F.filter(x=>x!==f);}if(n.rule==='hold')return true;if(!F.some(x=>x.team===1&&!x.gone)&&(n.rule!=='waves'||CS.left<=0))finish('win');return true;}
+  if(f.team===1){if(f.grunt){CS.left=Math.max(0,CS.left-1);F=F.filter(x=>x!==f);}if(n.rule==='hold'||n.adds)return true;if(!F.some(x=>x.team===1&&!x.gone)&&(n.rule!=='waves'||CS.left<=0))finish('win');return true;}
   if(f===F[0]||!F.some(x=>x.team===0&&!x.gone))finish('lose');return true;};
 const mt0=modeTick;modeTick=function(){mt0();if(MODE!=='campaign'||typeof GS==='undefined'||GS!=='play')return;const n=CS.node;CS.t++;
   if(n.time){CS.time--;if(CS.time<=0){finish(n.rule==='hold'?'win':'lose');return;}if(CS.time<=300&&CS.time%60===0)sfx('tick');}
-  if(n.rule==='waves'||n.rule==='hold'){const alive=F.filter(f=>f.team===1&&!f.gone).length,pend=n.rule==='hold'?99:CS.left-alive;if(alive<n.cap&&pend>0&&CS.t%50===10)spawnGrunt(n);}
+  if(n.rule==='waves'||n.rule==='hold'||n.adds){const alive=F.filter(f=>f.team===1&&!f.gone&&!f.boss).length,pend=n.rule==='waves'?CS.left-alive:99;if(alive<n.cap&&pend>0&&CS.t%50===10)spawnGrunt(n);}
   for(const f of F){if(f.unst&&!f.gone&&!f.dead&&FR%4===0)part(f.x+rnd()*26-13,f.y-rnd()*60,(rnd()-.5),-1-rnd(),18,rnd()<.5?'#b070ff':'#ffffff',2,0);}
   const b=CS.boss;if(b&&!b.gone){if(b.dmg>b.pd)b.hp-=b.dmg-b.pd;b.dmg=Math.min(b.dmg,70*(1-Math.max(0,b.hp)/b.hpMax));b.pd=b.dmg;if(FR%6===0)part(b.x+rnd()*40-20,b.y-rnd()*90,0,-.6,16,'#b070ff',2,0);
     if(b.hp<=0&&!CS.fin){CS.fin=1;b.stocks=1;b.dmg=260;b.inv=0;try{applyHit(b,{dmg:1,bkb:13,kbg:.2,ang:50,fx:['#b070ff','#ffffff']},b.x<F[0].x?-1:1,F[0],{force:1});}catch(e){}SLOW=24;if(!RM)shakeA=12;sfx('boom');}}else CS.fin=0;};
@@ -8925,13 +9030,13 @@ const mh0=modeHUD;modeHUD=function(c){mh0(c);if(MODE!=='campaign'||!running)retu
   if(n.time&&GS==='play'){const s=Math.ceil(CS.time/60);bigText(c,(n.rule==='hold'?'HOLD  ':'')+Math.floor(s/60)+':'+String(s%60).padStart(2,'0'),640,100,s<=10?84:64,s<=10?'#ff4a4a':'#ffd400');}
   if(n.rule==='waves')bigText(c,CS.left+' LEFT',640,96,52,'#ffd400');
   const b=CS.boss;if(b){const w=560,x=640-w/2,y=84,k=Math.max(0,b.hp)/b.hpMax;c.save();c.fillStyle='#000';c.beginPath();c.moveTo(x-10,y-4);c.lineTo(x+w+14,y-4);c.lineTo(x+w+6,y+24);c.lineTo(x-18,y+24);c.closePath();c.fill();c.fillStyle='#3a2a50';c.fillRect(x,y,w,16);c.fillStyle=k<.3?'#ff4a4a':'#b070ff';c.fillRect(x,y,w*k,16);c.fillStyle='rgba(255,255,255,.35)';c.fillRect(x,y,w*k,5);
-    c.font='italic 700 22px "Teko","Arial Narrow",sans-serif';c.textAlign='left';c.textBaseline='alphabetic';c.fillStyle='#fff';c.strokeStyle='#000';c.lineWidth=5;c.strokeText('THE VANGUARD',x,y-8);c.fillText('THE VANGUARD',x,y-8);c.restore();}};
+    c.font='italic 700 22px "Teko","Arial Narrow",sans-serif';c.textAlign='left';c.textBaseline='alphabetic';c.fillStyle='#fff';c.strokeStyle='#000';c.lineWidth=5;c.strokeText(b.C.n,x,y-8);c.fillText(b.C.n,x,y-8);c.restore();}};
 const sr0=showResults;showResults=function(){if(MODE!=='campaign')return sr0();const n=CS.node,ov=document.getElementById('overlay');ov.hidden=false;ov.innerHTML='';const box=el('div','ovc res pod cres');
   if(CS.res==='win'){const first=!SV.done[n.id];SV.done[n.id]=1;const got=[];if(first)for(const ci of CS.rec){const id=CH[ci].id;if(!SV.team.includes(id)){SV.team.push(id);got.push(ci);}}save();
     box.appendChild(el('h2','','CLEARED!'));if(got.length){box.appendChild(el('p','',got.length>1?'Two classmates join your team.':nm(got[0])+' joins your team.'));const vs=el('div','cvs');got.forEach(ci=>vs.appendChild(card(ci,'NEW')).classList.add('on'));box.appendChild(vs);
       got.forEach(ci=>box.appendChild(el('p','q','<b style="color:'+CH[ci].col+'">'+esc(nm(ci))+':</b> “'+esc(line(n.unst?'snap':'join',ci,{}))+'”')));}
-    else box.appendChild(el('p','',n.rule==='hold'?'The east stands are empty. Everyone got out.':n.rule==='waves'?'The pitch is clear. For now.':n.rule==='boss'?'The Vanguard drops to one knee.':'Cleared again.'));
-    const row=el('div','row');const b=el('button','btn pri');b.textContent='CONTINUE';b.onclick=()=>{ov.hidden=true;if(n.rule==='boss'&&first&&!SV.done.c1_end){root.hidden=false;hideAll();running=false;playScene('end',{},()=>{SV.done.c1_end=1;save();mapScreen();});}else mapScreen();};row.appendChild(b);box.appendChild(row);}
+    else box.appendChild(el('p','',n.win?n.win:n.id==='c1_gate'?'The east stands are empty. Everyone got out.':n.rule==='hold'?'You held the line.':n.rule==='waves'?(n.id==='c1_wave'?'The pitch is clear. For now.':'Clear. For now.'):n.mirror?'You know yourself a little better.':n.foes?'They will be back.':n.rule==='boss'?'The Vanguard drops to one knee.':'Cleared again.'));
+    const row=el('div','row');const b=el('button','btn pri');b.textContent='CONTINUE';b.onclick=()=>{ov.hidden=true;const aid=n.after||(n.id==='c1_boss'?'c1_end':null),an=aid&&NB(aid);if(an&&first&&!SV.done[aid]){root.hidden=false;hideAll();running=false;playScene(an.scene,{},()=>{SV.done[aid]=1;grant(an);save();mapScreen();});}else mapScreen();};row.appendChild(b);box.appendChild(row);}
   else{box.appendChild(el('h2','',n.time&&CS.time<=0&&n.rule!=='hold'?'TIME UP':'DEFEATED'));box.appendChild(el('p','','Nobody is recruited and nothing is lost. Try again, or pick a different student for this fight.'));const row=el('div','row');const a=el('button','btn pri');a.textContent='RETRY';a.onclick=()=>{ov.hidden=true;startFight.apply(null,CS.args);};
     const b=el('button','btn');b.textContent='MAP';b.onclick=()=>{ov.hidden=true;mapScreen();};row.appendChild(a);row.appendChild(b);box.appendChild(row);}
   ov.appendChild(box);};
