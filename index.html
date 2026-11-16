@@ -2551,7 +2551,9 @@ function applyHit(t,h,dirX,a,o){o=o||{};
   if(eff==='relay'){const away=t.x<WW/2?-1:1;burst(t.x,t.y-30,18,['#9a70ff','#fff'],2,20);t.x+=away*34;t.y-=56;t.ground=null;burst(t.x,t.y-30,18,['#9a70ff','#fff'],2,20);dx=away;sfx('warp');}
   if(eff==='yank'&&a){t.x=a.x+a.face*22;t.y=a.y;kb=0;}
   if(h.ang<0&&t.ground){ang=-ang*.35;}
-  t.lx=Math.cos(ang)*kb*dx;t.ly=-Math.sin(ang)*kb;diApply(t,kb,eff);t.vx=0;t.vy=0;if(t.ly<-.5||kb>5)t.ground=null;
+  /* weak hits on a grounded fighter keep them on their feet and slide them, as in Smash; only stronger or steeply upward hits lift */
+  if(typeof SLIDEKB!=='undefined'&&SLIDEKB&&t.ground&&kb<SLIDEKB&&h.ang!==undefined&&h.ang>=0&&(h.ang<=62||h.ang>=118||(kb<3.2&&h.ang<=82))&&!o.force&&eff!=='yank'&&eff!=='relay'){ang=h.ang>=118?PI:0;t._slid=FR;}
+  t.lx=Math.cos(ang)*kb*dx;t.ly=-Math.sin(ang)*kb;diApply(t,kb,eff);t.vx=0;t.vy=0;if(t.ly<-.5||kb>(typeof SLIDEKB!=='undefined'&&SLIDEKB?Math.max(5,SLIDEKB):5))t.ground=null;
   t.hitstun=fl(kb*3.1)+(eff==='yank'?22:5);t.st='hit';t.meteor=0;if(h.ang<-20&&!t.ground&&kb>1.8&&a&&a!==t){t.meteor=FR;FXL.push({k:'txt2',s:'METEOR SMASH!',x:t.x,y:t.y-84,t:0,life:44,col:'#ff8a3a'});FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#ff8a3a',r0:10,life:18});sfx('meteor');}t.tumble=kb>9;t.mv=null;t.ff=false;t.glide=false;t.invis=false;
   if(eff==='freeze'){t.frozen=34+fl(h.dmg*2.2);t.hitstun=Math.max(t.hitstun,t.frozen);}
   if(eff==='stick')t.stickT=150;if(eff==='root'){t.rootT=h.rootT||80;t.hitstun=Math.max(t.hitstun,40);}
@@ -9455,7 +9457,7 @@ const card=(ci,k)=>{const b=el('button','m2c');b.style.setProperty('--cc',CH[ci]
 const seg=(list,get,set)=>{const s=el('div','m2seg');for(const[v,t]of list){const b=el('button','',t);if(get()===v)b.className='on';b.onclick=()=>{set(v);sfx('pop');s.querySelectorAll('button').forEach((x,i)=>x.classList.toggle('on',list[i][0]===get()));};s.appendChild(b);}return s;};
 
 /* ================= 1. custom rules ================= */
-const RD={dmg:1,launch:1,haz:1,stam:0,fs:1,px:1,replay:(typeof isTouch!=='undefined'&&isTouch)?0:1,hc:[0,0,0,0]},RULES=Object.assign({},RD,LS('qc_rules',{}));if(!Array.isArray(RULES.hc))RULES.hc=[0,0,0,0];
+const RD={dmg:1,launch:1,haz:1,stam:0,fs:1,px:1,pace:1,replay:(typeof isTouch!=='undefined'&&isTouch)?0:1,hc:[0,0,0,0]},RULES=Object.assign({},RD,LS('qc_rules',{}));if(!Array.isArray(RULES.hc))RULES.hc=[0,0,0,0];
 const RON=()=>MODE==='versus'&&!ARC.on;
 {const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(RON()&&RULES.dmg!==1)m*=RULES.dmg;return m;};
  const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);if(RON()&&RULES.launch!==1)m*=RULES.launch;return m;};
@@ -9465,8 +9467,8 @@ function rulesTick(){if(!RON()||GS!=='play')return;const HP=RULES.stam;for(const
   if(HP){if(f.dmg<HP)f._stK=0;else if(!f._stK&&!f.dead&&f.st!=='respawn'){f._stK=1;f.dmg=Math.max(f.dmg,260);try{applyHit(f,{dmg:0,bkb:17,kbg:.1,ang:55,fx:[f.C.col,'#ffffff']},f.x<WW/2?-1:1,f.lastBy||F.find(x=>x!==f)||f,{force:1});}catch(e){}SLOW=Math.max(SLOW,14);sfx('smash');}}}}
 function rulesPop(){const old=document.getElementById('rpop');if(old)old.remove();const m=el('div');m.id='rpop';const b=el('div','rb');b.appendChild(el('h3','','More rules'));b.appendChild(el('p','','These apply to Fight and Tournament matches. Arcade, Campaign, Survival and Training ignore them.'));
   const row=(lab,list,key,idx)=>{const r=el('div','rr');r.appendChild(el('b','',lab));r.appendChild(seg(list,()=>idx===undefined?RULES[key]:RULES[key][idx],v=>{if(idx===undefined)RULES[key]=v;else RULES[key][idx]=v;SS('qc_rules',RULES);}));b.appendChild(r);};
-  row('Damage',[[.5,'HALF'],[1,'NORMAL'],[1.5,'1.5×'],[2,'DOUBLE']],'dmg');row('Launch strength',[[.8,'LOW'],[1,'NORMAL'],[1.2,'HIGH'],[1.5,'VERY HIGH']],'launch');row('Stage hazards',[[1,'ON'],[0,'OFF']],'haz');
-  row('Stamina',[[0,'OFF'],[100,'KO AT 100%'],[150,'150%'],[250,'250%']],'stam');row('Final Smash meter',[[1,'ON'],[0,'OFF']],'fs');row('KO replay',[[1,'ON'],[0,'OFF']],'replay');row('Pixel-edge effects',[[1,'ON'],[0,'OFF (smooth)']],'px');
+  row('Damage',[[.5,'HALF'],[.8,'0.8×'],[1,'NORMAL'],[1.5,'1.5×'],[2,'DOUBLE']],'dmg');row('Launch strength',[[.8,'LOW'],[1,'NORMAL'],[1.2,'HIGH'],[1.5,'VERY HIGH']],'launch');row('Stage hazards',[[1,'ON'],[0,'OFF']],'haz');
+  row('Stamina',[[0,'OFF'],[100,'KO AT 100%'],[150,'150%'],[250,'250%']],'stam');row('Final Smash meter',[[1,'ON'],[0,'OFF']],'fs');row('KO replay',[[1,'ON'],[0,'OFF']],'replay');row('Pixel-edge effects',[[1,'ON'],[0,'OFF (smooth)']],'px');row('Smash-style pacing',[[1,'ON'],[0,'OFF (old)']],'pace');
   for(let i=0;i<4;i++)row('P'+(i+1)+' handicap',[[0,'NONE'],[30,'START AT 30%'],[60,'60%'],[100,'100%']],'hc',i);
   const f=el('div','rr');const rs=el('button','btn','RESET');rs.onclick=()=>{Object.assign(RULES,RD,{hc:[0,0,0,0]});SS('qc_rules',RULES);rulesPop();};const x=el('button','btn pri','DONE');x.onclick=()=>{m.remove();mark();};f.append(rs,x);b.appendChild(f);m.appendChild(b);m.onclick=e=>{if(e.target===m){m.remove();mark();}};document.body.appendChild(m);}
 const custom=()=>RULES.dmg!==1||RULES.launch!==1||!RULES.haz||RULES.stam||!RULES.fs||RULES.hc.some(v=>v);
@@ -9564,7 +9566,7 @@ const sr=showResults;showResults=function(){const fin=()=>{if(ARC.on&&ARC.live)r
 const toSel0=toSelect;toSelect=function(){if(ARC.on){running=false;paused=false;ARC.live=false;if(ARC._t!==undefined)SEL.teams=ARC._t;document.getElementById('overlay').hidden=true;arcLadder();return;}return toSel0.apply(this,arguments);};
 const tt=toTitle;toTitle=function(){root.hidden=true;const p=document.getElementById('rpop');if(p)p.remove();ARC.on=false;ARC.live=false;if(TRN.live){try{NICK[0]=TRN.live.nick[0];NICK[1]=TRN.live.nick[1];}catch(e){}TRN.live=null;}return tt.apply(this,arguments);};
 const cs=curScreen;curScreen=function(){if(document.getElementById('replay'))return'cscene';if(!root.hidden&&!running)return'camp';return cs();};
-{const st=step;step=function(){st();try{if(typeof PIXELFX!=='undefined')PIXELFX=RULES.px!==0;rulesTick();}catch(e){}};}
+{const st=step;step=function(){st();try{if(typeof PIXELFX!=='undefined')PIXELFX=RULES.px!==0;if(typeof PACE!=='undefined'){const on=RULES.pace!==0;PACE.on=on;SLIDEKB=on?8.5:0;}rulesTick();}catch(e){}};}
 (function wait(){const tm=document.querySelector('.tmenu'),f=document.getElementById('tFight');if(!tm||!f||typeof HEADS==='undefined'||!HEADS.length){setTimeout(wait,90);return;}if(document.getElementById('tArc'))return;
   const a=el('button','mt mta','<b>ARCADE</b><i>Seven fights to the top.</i>');a.id='tArc';const t=el('button','mt mtt','<b>TOURNAMENT</b><i>A bracket for 4, 8 or 16.</i>');t.id='tTrn';tm.classList.add('has8');(document.getElementById('tTrain')||f).insertAdjacentElement('afterend',a);a.insertAdjacentElement('afterend',t);
   a.onclick=()=>{try{audioInit();}catch(e){}sfx('power');arcPick();};t.onclick=()=>{try{audioInit();}catch(e){}sfx('power');if(TRN.d)trnView();else trnSetup();};})();
@@ -9580,6 +9582,21 @@ const ov=overlay2D;overlay2D=function(){try{if(typeof STAGE!=='undefined'&&STAGE
      wr(DKc,s<0?x-5:x-3,y-2.5,8,13);wr('#f4f0e0',s<0?x-4:x-2,y-1.5,6,11);wr(c,s<0?x-4:x-2,y-1.5,6,3);wr('#b8b0a0',s<0?x-4:x+2,y+2,2,7.5);wr(DKc,s<0?x-6:x+3,y+9,3,2);}
    for(const p of STAGE.plats){X.save();X.globalAlpha=.9;wr('#ffffff',p.x,p.y-.5,p.w,1);X.globalAlpha=.6;wr(DKc,p.x,p.y+.5,p.w,1.5);wr(DKc,p.x-1,p.y-.5,1,3.5);wr(DKc,p.x+p.w,p.y-.5,1,3.5);X.restore();}}}catch(e){try{X.restore();}catch(e2){}}
   return ov.apply(this,arguments);};
+})();
+
+/* pace.js — Smash-like pacing. Weak hits leave a grounded fighter standing (SLIDEKB, used by the engine), and smash attacks, tilts and dash attacks take a little longer,
+   so fewer hits land per minute. Extra frames are added by holding the move's clock, which leaves every hitbox, projectile and armour window where it was authored.
+   Set PACE.on=false for the old pacing. */
+var SLIDEKB=8.5;
+var PACE={on:true,smashS:4,smashR:8,tiltR:4,dashR:5,airR:3,specR:5,fast:new Set(['rapid','flurry','blitz'])};
+(function(){const kind=k=>/smash/.test(k)?'smash':/^(ftilt|utilt|dtilt)/.test(k)?'tilt':k==='dash'?'dash':/^(nair|fair|bair|uair|dair)/.test(k)?'air':/^(nB|sB|dB)/.test(k)?'spec':null;
+ const trig=(d)=>{const s=new Set([0,1]);for(const h of d.hits||[]){if(h.f0!==undefined)s.add(h.f0);}for(const x of d.spawn||[])s.add(x[0]);for(const x of d.imp||[])s.add(x[0]);if(d.bp){if(d.bp.f0!==undefined)s.add(d.bp.f0);if(d.bp.f1!==undefined)s.add(d.bp.f1);}return s;};
+ const plan=(f,m)=>{const d=m.d,k=kind(m.k);if(!k||d.beh||d.nopace)return null;const quick=f.form==='cheetah'||PACE.fast.has(f.C.style);let ps=0,pr=0;if(k==='smash'){ps=PACE.smashS-(quick?1:0);pr=PACE.smashR-(quick?2:0);}else if(k==='tilt')pr=PACE.tiltR-(quick?1:0);else if(k==='air')pr=PACE.airR-(quick?1:0);else if(k==='spec')pr=d.cd>=200?0:PACE.specR-(quick?1:0);else pr=PACE.dashR-(quick?1:0);
+   let ts=-1;if(ps>0&&d.s>=5){const T=trig(d);for(let t=Math.floor(d.s/2);t>=2;t--)if(!T.has(t)&&t<d.s-1){ts=t;break;}}return{ps:ts>0?ps:0,ts,pr,tr:d.s+d.a+Math.max(1,Math.min(3,d.r-2))};};
+ const st0=step;step=function(){if(!PACE.on)return st0();const pre=[];for(const f of F){const m=f.mv;pre.push(m?m.t:-1);if(m&&m._pc===undefined)m._pc=plan(f,m)||0;}
+  st0();
+  for(let i=0;i<F.length;i++){const f=F[i],m=f&&f.mv;if(!m||!m._pc||pre[i]<0||m.t!==pre[i]+1||m.charging)continue;const p=m._pc;
+    if(p.ps>0&&m.t===p.ts+1){p.ps--;m.t--;}else if(p.pr>0&&m.t===p.tr+1&&m.t<m.d.s+m.d.a+m.d.r){p.pr--;m.t--;}}};
 })();
 
 /* pixel.js — one pixel grid. Everything drawn as a shape on the play-field canvas (props, projectiles, hit effects, meters, trees, feathers) is rasterised on the
