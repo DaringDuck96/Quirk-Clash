@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-1617';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-1640';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10756,7 +10756,7 @@ tori:{n:'PHASE THROUGH',d:'A fifth of the damage of an attack of hers that is sh
 tsuki:{n:'WATERLOGGED',d:'Each hit soaks the rival: they drift 7% slower in the air per hit, up to three hits (20%), for three seconds.',post:(a,t)=>{const n=stack(P(a,t),180,3);t._airslow={m:1-.0667*n,T:FR+180};}},
 uchuu:{each:1,n:'GRAVITY WELL',d:'Half a second after his hit, the rival is tugged back toward him.',post:(a,t)=>{t._well={a,T:FR+30};}},
 uzi:{each:1,n:'STICKY LANDING',d:'Rivals he launches stick to the floor for a moment where they land.',post:(a,t)=>{if(!t.ground)t._land={k:'glue',T:FR+100};}},
-yado:{n:'CONTACT POISON',d:'A rival who hits him with a melee attack is poisoned by his skin. Once every five seconds per rival.',hurt:(me,a,o)=>{if(o&&o.proj)return;if(FR-(me._cpT||-999)>300&&!a.C.noPoison){me._cpT=FR;a.dot={n:5,t:0,c:'#a0ff40'};txt(a,'POISONED','#a0ff40');}}},
+yado:{n:'CONTACT POISON',d:'A rival who hits him with a melee attack is poisoned by his skin. Once every five seconds per rival; venom stacks twice at most and wears off.',hurt:(me,a,o)=>{if(o&&o.proj)return;if(FR-(me._cpT||-999)>300&&!a.C.noPoison){me._cpT=FR;a.dot={n:Math.min(6,((a.dot&&a.dot.c==='#a0ff40')?a.dot.n:0)+3),t:0,c:'#a0ff40'};txt(a,'POISONED','#a0ff40');}}},
 yoko:{each:1,n:'HEAVY',d:'Rivals she hits weigh more for two seconds: they fall faster and their jumps feel short.',post:(a,t)=>{t._grav={g:.2,T:FR+120};}},
 yurei:{n:'PHANTOM PAIN',d:'Her hits make the rival\'s damage read 30% higher than it is. The extra is not real: it never affects how far they fly, and it fades four seconds after her last hit.',post:(a,t,x)=>{const cur=(t._ph&&t._ph.amt)||0,e=Math.min(x.dealt*.3,25-cur);t._ph={amt:cur+Math.max(0,e),T:FR+240};}},
 zabu:{n:'SWIPE',d:'Each hit swipes 3 points of the rival\'s shield and adds them to his own.',post:(a,t)=>{const s=Math.min(3,Math.max(0,t.shp-1));t.shp-=s;a.shp=Math.min(a.C.shMax||50,a.shp+s);}}
@@ -11231,6 +11231,75 @@ try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
   if(typeof GTXT!=='undefined'&&GTXT.evona&&GTXT.evona[3])GTXT.evona[3]=GTXT.evona[3].replace(/\s*No cooldown[^]*$/,'')+' It spends stored ice: with one of her structures standing it shatters the newest and hits at full strength; with none it is 40% weaker and cannot freeze.';
 }catch(e){}
 window.SHEET5={WS,setState};
+})();
+
+/* sheet6.js — roster balance sheet v1, sixth pass: the remaining open items. */
+(function(){
+const C=id=>CH.find(c=>c.id===id);
+const ok=f=>f&&f.C&&!f.form&&!(f.copyT>0);
+const txt=(f,s,col)=>{if(FR-(f._s6Tx||-99)<30)return;f._s6Tx=FR;FXL.push({k:'txt',s,x:f.x,y:f.y-100,t:0,life:40,col:col||'#b8b8c8'});};
+const mk=a=>a.mv?a.mv.k||'':'';
+const foeOf=(f,o)=>o!==f&&!o.dead&&!o.gone&&!(typeof sameTeam==='function'&&sameTeam(f,o));
+const isSummon=e=>e&&e.spec&&(e.spec.life||0)>=100;
+/* Uzi: Body Integrity */
+const UZ={sB:20,dB:30,qa:25};
+/* more punishable misses */
+try{if(window.SHEET2&&SHEET2.WHIFF){SHEET2.WHIFF.ryo={dB:12,sB:8};SHEET2.WHIFF.ayame={dB:10};SHEET2.WHIFF.sato={dB:10};SHEET2.WHIFF.shi={dB:12};}if(window.SHEET2&&SHEET2.LIMIT){delete SHEET2.LIMIT.marina;delete SHEET2.LIMIT.tiki;}}catch(e){}
+{const sm=startMove;startMove=function(f,key){try{if(ok(f)){const id=f.C.id;
+    if(id==='uzi'&&UZ[key]){if(f._bi===undefined)f._bi=100;if(f._bi<UZ[key]){txt(f,'NOT ENOUGH BODY');return false;}}}}catch(e){}
+  const r=sm.apply(this,arguments);
+  try{if(r!==false&&ok(f)&&f.mv){const id=f.C.id;
+    if(id==='uzi'&&UZ[key]&&f.mv.k===key)f._bi=Math.max(0,(f._bi===undefined?100:f._bi)-UZ[key]);
+    if(id==='marina'&&key==='uB'&&f.mv.k==='uB'){let n=0;for(const e of ENT)if(e.alive&&e.owner===f&&isSummon(e)){e.alive=false;n++;}if(n)txt(f,'KOI RECALLED','#ffd84a');}}}catch(e){}
+  return r;};}
+{const se=spawnEnt;spawnEnt=function(f,s){const e=se.apply(this,arguments);try{if(e&&f&&f.C&&ok(f)&&isSummon(e)){const id=f.C.id,k=mk(f);
+    /* Marina: one attacking koi and one guardian.  Tiki: one small spirit and one big one. */
+    if(id==='marina'||id==='tiki'){const role=(id==='marina')?(k==='dB'?'U':'O'):(k==='nB'?'m':'M');e._role=role;for(const x of ENT)if(x!==e&&x.alive&&x.owner===f&&x._role===role&&x._bornMv!==f.mv)x.alive=false;e._bornMv=f.mv;}}}catch(x){}return e;};}
+if(typeof dmgMod==='function'){const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(a&&ok(a)&&t){const id=a.C.id;
+    if(id==='sarah'&&(mk(a)==='nB'||mk(a)==='dB'||(o&&o.proj))){const n=t._shm&&t._shm.a===a&&FR<t._shm.T?t._shm.n:0;if(n>0){m*=1+.08*n;a._shUse=FR;}}
+    if(id==='keanu'){const k=mk(a),lava=k==='nB',water=k==='sB'||k==='uB'||k==='qa';if(lava&&a._tide==='L')m*=1.12;if(water&&a._tide==='W')m*=1.12;}}}catch(e){}return m;};}
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t?t.dmg:0;const res=ah.apply(this,arguments);
+  try{if(a&&t&&a!==t&&res==='hit'){const d=Math.max(0,t.dmg-hp);
+    if(ok(a)){const id=a.C.id,k=mk(a);
+      if(id==='sarah'){if(a._shUse===FR&&t._shm){txt(t,'MARKS SPENT','#8a70c8');t._shm=null;}else if(!(o&&o.proj)&&k!=='nB'&&k!=='dB'&&a.mv&&a.mv._shmk!==t){a.mv._shmk=t;const n=t._shm&&t._shm.a===a&&FR<t._shm.T?t._shm.n:0;t._shm={a,n:Math.min(3,n+1),T:FR+420};}}
+      if(id==='keanu'&&a.mv&&a.mv._tdk!==t){a.mv._tdk=t;const lava=k==='nB',water=k==='sB'||k==='uB'||k==='qa';if(lava)a._tide='W';else if(water)a._tide='L';}
+      if(id==='uzi')a._bi=Math.min(100,(a._bi===undefined?100:a._bi)+d*.6);
+      if(id==='yado'&&h&&h.eff==='poison'&&t.dot){t.dot.n=Math.min(6,t.dot.n);}}
+    /* Ali: a solid hit knocks one of her rocks away */
+    if(t.C.id==='ali'&&ok(t)&&t.rocks>0&&d>=8&&!(o&&o.proj)){t.rocks--;burst(t.x,t.y-40,10,['#8a8478','#5a544a'],2,16);txt(t,'ROCK KNOCKED AWAY','#b0a8a0');}}}catch(e){}
+  return res;};}
+{const st0=step;step=function(){const r=st0.apply(this,arguments);try{if(typeof F==='undefined')return r;
+  for(const f of F){if(!f.C||f.gone)continue;const id=f.C.id;if(f.dead||f.st==='respawn'){f._bi=100;f._tide=null;f._shm=null;continue;}
+    if(f._shm&&FR%48===24&&FR<f._shm.T)FXL.push({k:'txt',s:'◆'.repeat(f._shm.n),x:f.x,y:f.y-72,t:0,life:44,col:'#8a70c8'});
+    if(!ok(f))continue;const m=f.mv;
+    if(id==='uzi'){if(f._bi===undefined)f._bi=100;if(!m)f._bi=Math.min(100,f._bi+.07);}
+    if(id==='ryo'&&m&&m.d&&m.d.beh==='sink'&&m.t>=m.d.s&&m.t<m.d.s+m.d.a&&FR%2===0){const gy=f.ground?f.ground.y:f.y;part(f.x+(Math.random()*16-8),gy-1,(Math.random()-.5)*1.4,-1.2-Math.random(),14,Math.random()<.5?'#8a6a4a':'#c8a878',2,0);if(FR%8===0)FXL.push({k:'ring',x:f.x,y:gy-2,t:0,col:'#c8a878',r0:5,life:10});}
+    if(id==='hatsuko'&&m&&m.k==='sB'&&f.pi&&f.pi.B&&m.t>m.d.s){f.shp=Math.max(1,f.shp-.14);}
+    if(id==='shuko'&&m&&m.k==='dB'&&m.t<m.d.s&&m.d.spawn&&m.d.spawn[0]&&FR%4===0){const s=m.d.spawn[0][1],dx=s.dist!==undefined?s.dist:(s.dx!==undefined?s.dx:18);FXL.push({k:'ring',x:f.x+f.face*dx,y:f.y-2,t:0,col:'#c8c8d0',r0:10,life:8});}
+    if(id==='yado'&&f._cpN===undefined)f._cpN=0;}
+  /* Ash: trees show their health once damaged, and do not stand for ever */
+  const T=window.ASHTREES;if(T)for(const t of T){if(t._born===undefined){t._born=FR;t._hp0=t.hp;}const age=FR-t._born;if(age>1500)t.hp=0;
+    else if(age>1440&&FR%10===0)FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#ffffff',r0:10,life:8});
+    if(t._hp0&&t.hp<t._hp0&&FR%16===0)FXL.push({k:'txt',s:'▮'.repeat(Math.max(1,Math.ceil(t.hp/t._hp0*4))),x:t.x,y:t.y-70,t:0,life:16,col:'#9ad86a'});}
+  }catch(e){}return r;};}
+if(typeof hudMeterOf==='function'){const h0=hudMeterOf;hudMeterOf=function(f){const r=h0.apply(this,arguments);try{if(f&&f.C&&ok(f)&&!r){const id=f.C.id;
+    if(id==='uzi'){const v=f._bi===undefined?100:f._bi;return{l:'BODY',t:'bar',v,max:100,col:v<30?'#ff6a6a':'#7ae04a',full:v>=100};}
+    if(id==='torabi'&&f.ing!==undefined)return{l:'STOCK',t:'pips',v:f.ing,n:f.ing,max:6,col:'#ffb060',full:f.ing>=6};
+    if(id==='keanu'&&f._tide)return{l:f._tide==='L'?'LAVA':'WATER',t:'pips',v:1,n:1,max:1,col:f._tide==='L'?'#ff7a3a':'#5fd0ff',full:true};}}catch(e){}return r;};}
+try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
+  add('uzi','BODY INTEGRITY: Engulf, Melt and Re-Form spend her body (shown on her plate). It comes back slowly, and faster as she lands hits. Her up special is always free.');
+  add('sarah','SHADOW MARKS: each of her basic attacks that lands leaves a mark on the rival (up to three, shown as diamonds). Shadow Hand and Shadow Bind spend them for 8% more damage per mark.');
+  add('keanu','TIDE: landing a water move (Riptide Wave, Waterspout, Riptide) empowers his next lava move by 12%, and landing Lava Geyser empowers his next water move. Never both at once.');
+  add('marina','One attacking koi and one guardian at a time. Koi Rider calls every other koi back.');
+  add('tiki','One small spirit (Tantou) and one big spirit (Kofun or Osore) at a time.');
+  add('ash','His trees show their health once damaged and wither after twenty-five seconds.');
+  add('ali','A solid melee hit of 8% or more knocks one of her rocks away.');
+  add('ryo','A trail of dust on the surface shows where he is while burrowed, and coming up without hitting anyone leaves him open.');
+  add('hatsuko','Steering the Grudge Skull drains her shield for as long as she holds it.');
+  add('shuko','Smoke Hand marks the ground where it will rise.');
+  if(typeof GTXT!=='undefined'&&GTXT.sota&&GTXT.sota[0])GTXT.sota[0]=GTXT.sota[0].replace('23% punch','18% punch');
+}catch(e){}
+window.SHEET6={UZ};
 })();
 
 /* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
