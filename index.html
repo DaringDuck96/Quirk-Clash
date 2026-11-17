@@ -295,7 +295,11 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
  .top{flex-wrap:nowrap;gap:6px;overflow:hidden}.logo{font-size:19px}.top .sub{display:none}.top .tbtn,.tbtn{font-size:13px;padding:6px 10px 5px}
  .selmain4{grid-template-rows:auto auto;gap:5px;min-height:auto}.roster{min-height:124px}#select{align-content:start}
  .roster{grid-template-columns:none!important;grid-auto-flow:column;grid-template-rows:repeat(2,58px);grid-auto-columns:128px;gap:4px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;padding-bottom:3px}
- .card{scroll-snap-align:start;border-radius:9px}.card span:not(.bd){font-size:11px;padding:6px 2px 2px}.card .cimg{height:calc(100% - 13px);inset:1px 0 12px 0}
+ .roster{gap:5px 9px!important;grid-auto-columns:132px!important}
+ .card{scroll-snap-align:start;border-radius:9px;overflow:hidden!important;contain:paint;background:linear-gradient(90deg,color-mix(in srgb,var(--cc) 62%,#2a2a34) 0 56px,#17171d 56px 100%)!important;border-color:#55556a!important}
+ .card .cimg{flex:0 0 54px!important;width:54px!important;height:54px!important;max-width:none!important;aspect-ratio:auto!important;margin:0!important}
+ .card span:not(.bd){border-left:2px solid #000;align-self:stretch;display:flex!important;align-items:center;padding-left:6px!important}
+ .card{scroll-snap-align:start}.card span:not(.bd){font-size:11px;padding:6px 2px 2px}.card .cimg{height:calc(100% - 13px);inset:1px 0 12px 0}
  .pprow{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.pprow .pp{border-radius:10px}.pprow .pp canvas{height:50px;min-height:50px}.pp .tag{font-size:15px;padding:5px 8px 2px}
  .pprow .info{padding:2px 8px 4px}.pprow .info h2{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pprow .info .q,.pprow .info p{display:none}
  .lvchip{top:2px;right:3px}.lvchip button{min-width:24px;height:22px;font-size:13px}.lvchip b{font-size:12px;min-width:30px}
@@ -10449,7 +10453,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1116-2345';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-0032';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
