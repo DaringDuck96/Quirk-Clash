@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-1319';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-1343';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10836,6 +10836,61 @@ try{if(typeof GTXT!=='undefined'&&GTXT.sai){
  GTXT.sai[1]='HERO UNIFORM: one arrow becomes a spread of three, using the loaded arrowhead. OTHER COSTUMES: throws a knife and its copy side by side.';
  GTXT.sai[3]='HERO UNIFORM: one arrow becomes five in a wide fan, using the loaded arrowhead. Slow to start. OTHER COSTUMES: one knife becomes five in a wide fan.';}}catch(e){}
 window.IMPACT={I,ERR};
+})();
+
+/* nocd.js — no down special has a cooldown any more. In their place, the way Smash does it:
+   EARNED  : the strongest ones (armour, forms, heals, vanishing) are charged by dealing and taking damage, like a Limit gauge.
+   LIMITS  : traps and summons are capped by how many can be out at once.
+   STALE   : every other down special weakens if it is repeated, and freshens when other attacks land.
+   Two that make him untouchable (Burrow, Melt) cannot be used again until he has hit someone or been hit. */
+(function(){
+const EARN={hippo:30,gomi:25,homura:30,mia:30,ray:30,rei:35,riku:25,shiki:40,tai:25,tomi:45,torabi:35,yurei:25,moya:25,tenmetsu:22};
+const HITRESET={ryo:1,uzi:1};
+const ALIVE={conor:1,hana:1,kuragari:1,oliver:1,tiki:1,sata:2,dawson:3};
+const LAG={aria:5,ayame:4,kitsu:5,kora:5,yoko:5,makiko:4,takeshi:5,sai:6,conor:4,hana:4,sarah:6,evona:8,hikari:8,kairi:8,suzume:8,yado:0};
+const DECAY={akemi:.6};
+const txt=(f,s,col)=>{if(FR-(f._ncTx||-99)<40)return;f._ncTx=FR;FXL.push({k:'txt',s,x:f.x,y:f.y-92,t:0,life:38,col:col||'#ffd84a'});};
+const strip=s=>String(s||'').replace(/;?\s*(a |an )?(\d+|ten|five|six|long|short)?[- ]?(second )?cooldown/ig,'').replace(/\s*(Long |Short )?Cooldown\./g,'').replace(/\(\s*;\s*/g,'(').replace(/\s+\)/g,')').replace(/\s{2,}/g,' ').trim();
+for(const C of CH){let had=0;for(const T of ['mv','hmv']){const m=C[T]&&C[T].dB;if(m&&m.cd){had=1;m.cd=0;if(LAG[C.id]&&!m._lag){m._lag=1;m.r+=LAG[C.id];}}}
+  if(C.sp&&C.sp[3])C.sp[3]=strip(C.sp[3]);
+  if(typeof GTXT!=='undefined'&&GTXT[C.id]&&GTXT[C.id][3]){let g=strip(GTXT[C.id][3]);const id=C.id;
+    if(EARN[id])g+=' No cooldown: it is EARNED. It charges as he or she deals damage (and half as fast from damage taken), needs '+EARN[id]+'% to be ready, starts every match ready and comes back half-charged after a KO.';
+    else if(HITRESET[id])g+=' No cooldown, but it cannot be used again until he or she has landed a hit or been hit.';
+    else if(ALIVE[id])g+=' No cooldown: the limit is how many can be out at once ('+(id==='oliver'?'one set':ALIVE[id])+').';
+    else if(had)g+=' No cooldown, but it goes stale: repeating it weakens it (down to 40%, and below 60% it loses any stun, root or slow), and landing other attacks freshens it again.';
+    GTXT[C.id][3]=g;}
+  C._nocd=had||!!EARN[C.id];}
+const isDB=f=>f&&f.mv&&f.mv.k==='dB';
+{const sm=startMove;startMove=function(f,key){if(key==='dB'&&f&&f.C&&!f.form&&!(f.copyT>0)){const id=f.C.id;try{
+    if(EARN[id]){const need=EARN[id];if(f._earn===undefined)f._earn=need;if(f._earn<need){txt(f,'NOT READY '+Math.floor(f._earn/need*100)+'%','#b8b8c8');return false;}}
+    if(HITRESET[id]&&f._hr){txt(f,'LAND A HIT FIRST','#b8b8c8');return false;}
+    if(ALIVE[id]){let n=0;for(const e of ENT)if(e.alive&&e.owner===f&&e._db)n++;if(n>=ALIVE[id]){txt(f,'ALREADY OUT','#b8b8c8');return false;}}
+  }catch(e){}
+  const r=sm.apply(this,arguments);
+  try{if(r!==false&&f.mv&&f.mv.k==='dB'){if(EARN[id]){f._earn=0;f._dbUse=1;f._earnSaid=0;}else{if(f._dbF===undefined)f._dbF=1;f._dbUse=f._dbF;f._dbHp=f.dmg;f._dbT=FR;if(f.C._nocd&&!ALIVE[id])f._dbF=Math.max(.4,f._dbF*(DECAY[id]||.78));if(f._dbUse<.75)txt(f,'STALE '+Math.round(f._dbUse*100)+'%','#b8b8c8');}
+      if(HITRESET[id])f._hr=1;}}catch(e){}
+  return r;}
+  return sm.apply(this,arguments);};}
+{const se=spawnEnt;spawnEnt=function(f,s){const e=se.apply(this,arguments);try{if(e&&isDB(f)){e._db=1;const u=f._dbUse===undefined?1:f._dbUse;if(u<1&&e.dmg)e.dmg*=u;if(u<.6&&e.eff)e.eff=null;}}catch(x){}return e;};}
+if(typeof dmgMod==='function'){const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(isDB(a)&&!(o&&o.proj)&&a._dbUse<1)m*=a._dbUse;}catch(e){}return m;};}
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){let h2=h;const hp=t?t.dmg:0;
+  try{if(isDB(a)&&!(o&&o.proj)&&a._dbUse<.6&&h&&h.eff){h2=Object.assign({},h);h2.eff=null;}}catch(e){}
+  const res=ah.call(this,t,h2,dirX,a,o);
+  try{if(a&&t&&a!==t&&(res==='hit'||res==='armor')){const d=Math.max(0,t.dmg-hp);
+      if(EARN[a.C.id]&&a._earn!==undefined)a._earn=Math.min(EARN[a.C.id],a._earn+d);
+      if(EARN[t.C.id]&&t._earn!==undefined)t._earn=Math.min(EARN[t.C.id],t._earn+d*.5);
+      a._hr=0;t._hr=0;
+      if(res==='hit'&&!isDB(a)&&!(o&&o.proj)&&a._dbF<1)a._dbF=Math.min(1,a._dbF+.12);}}catch(e){}
+  return res;};}
+{const st0=step;step=function(){const r=st0.apply(this,arguments);try{for(const f of F){if(!f.C)continue;const id=f.C.id;
+    if(f.dead||f.st==='respawn'){if(!f._ncDead){f._ncDead=1;f._dbF=1;f._hr=0;if(EARN[id])f._earn=EARN[id]*.5;}continue;}f._ncDead=0;
+    if(EARN[id]&&f._earn>=EARN[id]&&!f._earnSaid&&f._earn!==undefined){f._earnSaid=1;if(FR>200)txt(f,'▼B READY','#ffd84a');}
+    /* a stale healing move gives back less */
+    if(f._dbUse<1&&f._dbT&&FR-f._dbT<120&&f._dbHp!==undefined){if(f.dmg<f._dbHp-.01&&!f._dbHealed){const heal=f._dbHp-f.dmg;f.dmg+=heal*(1-f._dbUse);f._dbHealed=1;}}else f._dbHealed=0;
+    if(!(f._dbT&&FR-f._dbT<120))f._dbHp=f.dmg;else if(f.dmg>f._dbHp)f._dbHp=f.dmg;}}catch(e){}return r;};}
+/* HUD: fighters with no meter of their own show the earned gauge */
+if(typeof hudMeterOf==='function'){const h0=hudMeterOf;hudMeterOf=function(f){const r=h0.apply(this,arguments);try{if(!r&&f&&f.C&&EARN[f.C.id]&&!f.form&&!(f.copyT>0)){const need=EARN[f.C.id],v=f._earn===undefined?need:f._earn;return{l:v>=need?'READY':'EARN',t:'bar',v,max:need,col:v>=need?'#ffd84a':'#8a8aa0',full:v>=need};}}catch(e){}return r;};}
+window.NOCD={EARN,ALIVE,HITRESET};
 })();
 
 /* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
