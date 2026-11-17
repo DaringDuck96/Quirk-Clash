@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-1530';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-1553';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11106,6 +11106,78 @@ try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
   if(typeof GTXT!=='undefined'){if(GTXT.bentou&&GTXT.bentou[0])GTXT.bentou[0]=GTXT.bentou[0].replace(/JINXES them for seven seconds: [^.]*\./,'JINXES them for four seconds: their attacks do 12% less.');if(GTXT.bentou&&GTXT.bentou[3])GTXT.bentou[3]=GTXT.bentou[3].replace('for five seconds','for four seconds');}
 }catch(e){}
 window.SHEET3={SHOW};
+})();
+
+/* sheet4.js — roster balance sheet v1, fourth pass: Bara's anchors, Sata's configurations, Suzuni's bee commands,
+   Kimiko's Black Ice as a patch of floor, Toguchi's closable doorway, Ichigo's two-gadget limit. */
+(function(){
+const C=id=>CH.find(c=>c.id===id);
+const ok=f=>f&&f.C&&!f.form&&!(f.copyT>0);
+const CPU=f=>f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl));
+const txt=(f,s,col)=>{if(FR-(f._s4Tx||-99)<30)return;f._s4Tx=FR;FXL.push({k:'txt',s,x:f.x,y:f.y-100,t:0,life:40,col:col||'#b8b8c8'});};
+const mk=a=>a.mv?a.mv.k||'':'';
+const foeOf=(f,o)=>o!==f&&!o.dead&&!o.gone&&!(typeof sameTeam==='function'&&sameTeam(f,o));
+/* ---------- Sata: three configurations ---------- */
+const CFG={C:{n:'CANNON',col:'#5ab8ff'},O:{n:'ORDNANCE',col:'#ff8a3a'},R:{n:'REPULSOR',col:'#c8f0ff'}};
+const cfgOf=k=>k==='nB'?'C':(k==='sB'||k==='dB')?'O':k==='uB'?'R':null;
+try{const s=C('sata');if(s)for(const T of ['mv','hmv']){const m=s[T]&&s[T].sB;if(m&&m.spawn)for(const e of m.spawn)if(e[1])e[1].max=1;}}catch(e){}
+/* ---------- Kimiko: Black Ice patches ---------- */
+const ICE=[];
+function addIce(owner,x,g){if(!g)return;const w=92;ICE.push({o:owner,x:Math.max(g.x,x-w/2),y:g.y,w:Math.min(w,g.x+g.w-Math.max(g.x,x-w/2)),T:FR+270,g});const mine=ICE.filter(p=>p.o===owner);if(mine.length>2)ICE.splice(ICE.indexOf(mine[0]),1);}
+/* ---------- hooks ---------- */
+{const sm=startMove;startMove=function(f,key){let cmd=null;try{if(ok(f)){const id=f.C.id;
+    if(id==='sata'){const g=cfgOf(key);if(f._cfg===undefined)f._cfg='C';if(g&&g!==f._cfg){f._cfg=g;f._cfgT=FR;txt(f,CFG[g].n+' MODE',CFG[g].col);sfx('pop');
+        if(g!=='R'&&f.ground&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='dash'||f.st==='crouch')){f.st='land';f.stT=0;f.landLen=9;f.vx*=.4;return false;}}}
+    if(id==='ichigo'&&key==='sB'&&f.gren&&f.c4){txt(f,'TWO GADGETS OUT');return false;}
+    if(id==='suze'&&key==='sB'){const p=f.pi||{};cmd=(p.y||0)<-.5?'G':(p.y||0)>.5?'S':'H';if(CPU(f))cmd=F.some(o=>foeOf(f,o)&&o._bees&&o._bees.a===f&&o._bees.n>=3)?'S':'H';
+      const cost={G:20,H:12,S:25}[cmd];if(f._wing!==undefined&&f._wing<cost){txt(f,'NOT ENOUGH BUZZ');return false;}}}}catch(e){}
+  const r=sm.apply(this,arguments);
+  try{if(r!==false&&ok(f)&&f.mv){const id=f.C.id;
+    if(id==='bara'&&key==='sB'&&f.mv.k==='sB'){const Q=window.BARAQ;const anchor=(Q&&Q.STUCK.some(s=>s.owner===f))||F.some(o=>foeOf(f,o)&&(o._emb||[]).some(e=>e.by===f&&e.until>FR));if(!anchor){f.mv._st=1;if(f.ground)f.vx=f.face*4.5;txt(f,'NO FEATHER TO STEP TO');}}
+    if(id==='suze'&&key==='sB'&&cmd&&f.mv.k==='sB'){f.mv._cmd=cmd;if(f._wing!==undefined)f._wing=Math.max(0,f._wing-{G:20,H:12,S:25}[cmd]);
+      if(cmd==='G'){f._guardT=FR+240;txt(f,'GUARD','#ffd84a');}
+      else if(cmd==='S'){let n=0;for(const o of F){if(!foeOf(f,o)||!(o._bees&&o._bees.a===f))continue;const k=o._bees.n;n+=k;o.dmg=Math.min(999,o.dmg+k*1.2);o._slow={m:.8,T:FR+120};o._bees=null;burst(o.x,o.y-34,10,['#ffd84a','#3a2a10'],2,16);}txt(f,n?'SCATTER! '+n+' STINGS':'SCATTER','#ffd84a');}
+      else txt(f,'HUNT','#ffd84a');}}}catch(e){}
+  return r;};}
+{const se=spawnEnt;spawnEnt=function(f,s){const e=se.apply(this,arguments);try{if(e&&f&&f.C&&f.C.id==='suze'&&ok(f)&&f.mv&&f.mv.k==='sB'&&f.mv._cmd&&f.mv._cmd!=='H'&&s.k==='bees')e.alive=false;}catch(x){}return e;};}
+if(typeof dmgMod==='function'){const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(a&&a.C.id==='sata'&&ok(a)){const c=a._cfg||'C',k=mk(a);
+    if(o&&o.proj){if(c==='C'&&a._lastProj==='nB')m*=1.1;if(c==='O'&&a._lastProj!=='nB')m*=1.1;}}}catch(e){}return m;};}
+if(typeof kbMod==='function'){const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);try{if(t&&t._guardT>FR&&t.C.id==='suze')m*=.8;}catch(e){}return m;};}
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){const res=ah.apply(this,arguments);
+  try{if(a&&t&&a!==t&&(res==='hit'||res==='armor')){
+    if(t.C.id==='suze'&&t._guardT>FR&&!(o&&o.proj)){const b=a._bees&&FR<a._bees.T?a._bees:{n:0};a._bees={n:Math.min(4,b.n+1),a:t,T:FR+300};t._guardT=0;txt(t,'GUARD BEES STING','#ffd84a');}
+    if(a.C.id==='kimiko'&&ok(a)&&res==='hit'&&t.ground&&FR-(a._iceT||-999)>60){a._iceT=FR;addIce(a,t.x,t.ground);}}}catch(e){}
+  return res;};}
+{const st0=step;step=function(){const r=st0.apply(this,arguments);try{if(typeof F==='undefined')return r;
+  if(typeof GS!=='undefined'&&GS==='count')ICE.length=0;
+  for(let i=ICE.length-1;i>=0;i--)if(FR>ICE[i].T||ICE[i].o.gone)ICE.splice(i,1);
+  for(const f of F){if(!f.C||f.dead||f.gone)continue;const id=f.C.id;
+    if(id==='sata'&&ok(f)){if(f._cfg===undefined)f._cfg='C';const m=f.mv;if(m&&(m.k==='nB'||m.k==='sB'||m.k==='dB'))f._lastProj=m.k;}
+    /* Black Ice: anyone but Kimiko slides on it */
+    if(f.ground&&!(f.hitstun>0)&&f.st!=='hit'){for(const p of ICE){if(p.o===f||p.g!==f.ground||f.x<p.x||f.x>p.x+p.w)continue;if(typeof sameTeam==='function'&&sameTeam(p.o,f))continue;
+        const v=f.vx||0;if(Math.abs(v)>.4)f._icev=v*.55;if(f._icev){const g=f.ground;f.x=Math.max(g.x+4,Math.min(g.x+g.w-4,f.x+f._icev));f._icev*=.955;if(Math.abs(f._icev)<.2)f._icev=0;}break;}}
+    else f._icev=0;}
+  /* Toguchi: her doorway can be closed by attacking it, and what it sends back is weaker */
+  for(const e of ENT){if(!e.alive)continue;if(e._o0===undefined)e._o0=e.owner;else if(e.owner!==e._o0&&e.owner&&e.owner.C&&e.owner.C.id==='toguchi'&&!e._tgW){e._tgW=1;if(e.dmg)e.dmg*=.7;}}
+  for(const f of F){if(!f.C||f.C.id!=='toguchi'||f.dead||f.gone)continue;const mkr=f.marker;if(!(mkr&&mkr.alive))continue;if(mkr._hp===undefined)mkr._hp=14;
+    if(mkr.life&&mkr.life-mkr.t<60&&FR%10===0)FXL.push({k:'ring',x:mkr.x,y:mkr.y-20,t:0,col:'#ffffff',r0:8,life:8});
+    for(const a of F){if(!foeOf(f,a)||!a.mv||a.hl>0)continue;let hbs;try{hbs=hitboxes(a);}catch(x){continue;}const seen=a.mv._oh||(a.mv._oh=new Set());if(seen.has(mkr))continue;
+      for(const[h]of hbs){let hit=false;for(const b of h.b){if(Math.abs(a.x+a.face*b[0]-mkr.x)<b[2]+12&&Math.abs(a.y+b[1]-(mkr.y-20))<b[2]+30){hit=true;break;}}
+        if(hit){seen.add(mkr);mkr._hp-=(h.dmg||4);sfx('hit');FXL.push({k:'spark',x:mkr.x,y:mkr.y-20,t:0,col:'#9a70ff'});if(mkr._hp<=0){mkr.alive=false;f.marker=null;f._mk=null;burst(mkr.x,mkr.y-20,14,['#9a70ff','#ffffff'],2,18);FXL.push({k:'txt',s:'DOOR CLOSED',x:mkr.x,y:mkr.y-50,t:0,life:36,col:'#c8b0ff'});}break;}}}}
+  }catch(e){}return r;};}
+if(typeof overlay2D==='function'){const ov=overlay2D;overlay2D=function(){try{for(const p of ICE){const left=p.T-FR;if(left<60&&((FR>>2)&1))continue;X.save();X.globalAlpha=.55;wr('#bfeaff',p.x,p.y-2,p.w,4);X.globalAlpha=.9;wr('#ffffff',p.x,p.y-2,p.w,1);wr('#5aa8d8',p.x,p.y-3,2,6);wr('#5aa8d8',p.x+p.w-2,p.y-3,2,6);X.restore();}}catch(e){}return ov.apply(this,arguments);};}
+if(typeof hudMeterOf==='function'){const h0=hudMeterOf;hudMeterOf=function(f){const r=h0.apply(this,arguments);try{if(f&&f.C&&f.C.id==='sata'&&ok(f)&&!r){const c=f._cfg||'C';return{l:CFG[c].n,t:'pips',v:1,n:c==='C'?1:c==='O'?2:3,max:3,col:CFG[c].col,full:false};}}catch(e){}return r;};}
+/* Kimiko's Impact is now the patch itself */
+try{const I=window.IMPACT&&IMPACT.I;if(I&&I.kimiko){I.kimiko.n='BLACK ICE';I.kimiko.d='Hitting a grounded rival leaves a patch of black ice under them for four and a half seconds. Anyone but her slides on it. Two patches at most; the edges are marked and it flashes before it melts.';I.kimiko.post=null;I.kimiko.each=1;const c=C('kimiko');if(c)c.trait=String(c.trait||'').replace(/^IMPACT — BLACK ICE: [^.]*\./,'IMPACT — BLACK ICE: '+I.kimiko.d);}}catch(e){}
+try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
+  add('sata','CONFIGURATIONS: Cannon (Charge Shot), Ordnance (Missile, Bomb) and Repulsor (Screw Attack). Using a special from another configuration takes a moment to switch on the ground; the active one is shown on her plate and its projectiles do 10% more. One missile at a time.');
+  add('suze','BEE COMMANDS on Bee Swarm: hold nothing to HUNT (the swarm chases), UP to GUARD (the next hit launches her 20% less and stings the attacker), DOWN to SCATTER (every bee on a rival stings at once and slows them). Each costs BUZZ.');
+  add('bara','Shadow Step needs a feather to step to: one stuck in the stage or in a rival. Without one it is only a short lunge.');
+  add('toguchi','Rivals can close her Doorway by attacking it, and projectiles it sends back do 30% less.');
+  add('ichigo','Two gadgets at a time: with a grenade live and a charge planted she cannot launch the drone.');
+  if(typeof GTXT!=='undefined'&&GTXT.bara&&GTXT.bara[1])GTXT.bara[1]+=' Needs one of his feathers stuck in the stage or in a rival; without one it is only a short lunge.';
+}catch(e){}
+window.SHEET4={ICE,CFG};
 })();
 
 /* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
