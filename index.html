@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-1504';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-1530';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11030,6 +11030,82 @@ try{for(const id in WING){const c=C(id);if(!c)continue;const W=WING[id];c.trait=
   const ak=C('akemi');if(ak)ak.na=String(ak.na||'').replace(/Impact:/,'Tempo has three stages, improves her movement and how fast she recovers from attacks (never damage or startup), and being hit knocks her down one stage. Impact:');
 }catch(e){}
 window.SHEET2={WING,LIMIT,WHIFF,CD};
+})();
+
+/* sheet3.js — roster balance sheet v1, third pass: fighter-specific rules that needed their own code. */
+(function(){
+const C=id=>CH.find(c=>c.id===id);
+const ok=f=>f&&f.C&&!f.form&&!(f.copyT>0);
+const txt=(f,s,col)=>{if(FR-(f._s3Tx||-99)<36)return;f._s3Tx=FR;FXL.push({k:'txt',s,x:f.x,y:f.y-100,t:0,life:38,col:col||'#b8b8c8'});};
+const mk=a=>a.mv?a.mv.k||'':'';
+const WING=(window.SHEET2&&SHEET2.WING)||{};
+/* Bentou: a jinx weakens one thing (the rival's attacks, by 12%), for at most 4 seconds; repeats refresh it */
+if(typeof hurtR==='function'){const h0=hurtR;hurtR=function(f){const j=f.jinxT;if(j)f.jinxT=0;try{return h0(f);}finally{if(j)f.jinxT=j;}};}
+if(typeof dmgMod==='function'){const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(a){
+    if(a.C.id==='jack'&&ok(a)&&!(o&&o.proj)&&((a.cycN||0)%4)===2)m*=.85;
+    if(a.C.id==='gomi'&&a._coolT>FR)m*=.85;
+    if(a.C.id==='toguchi'&&ok(a)&&mk(a)==='nB'&&t&&Math.abs(t.x-a.x)<40)m*=.8;
+    if(a.C.id==='ivan'&&ok(a)&&/^(nB|sB|dB)/.test(mk(a))&&t&&Math.abs(t.x-a.x)<36&&!(o&&o.proj))m*=.85;
+    if(a.C.id==='taru'&&a._cyc>FR)m*=1.15;}}catch(e){}return m;};}
+if(typeof kbMod==='function'){const k0=kbMod;kbMod=function(a,t,h,o){let m=k0(a,t,h,o);try{if(a&&ok(a)){const id=a.C.id;
+    if(id==='ryuko'&&a._rlT>FR)m*=1.15;
+    if(id==='hana'&&/smash/.test(mk(a))&&a.gm&&a.gm.rev>=40&&!(a.gm.heat>FR)){m*=1+a.gm.rev*.002;a._spin=FR;}}}catch(e){}return m;};}
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){let h2=h;const hp=t?t.dmg:0;
+  try{if(a&&t&&a!==t&&h&&ok(a)){const id=a.C.id;
+    if(id==='takeshi'&&mk(a)==='dB'&&h.eff&&!(t._sigil&&FR<t._sigil)){h2=Object.assign({},h);h2.eff=null;}
+    if(id==='tsuki'&&h.eff==='freeze'){const p=t._im&&t._im[F.indexOf(a)];if(!(p&&p.n>=2&&FR-p.T<180)){h2=Object.assign({},h);h2.eff=null;}else p.n=0;}}}catch(e){}
+  const jT=t&&t.jinxT>FR?t.jinxT:0;if(jT)t.jinxT=0;
+  const res=ah.call(this,t,h2,dirX,a,o);
+  if(jT)t.jinxT=Math.max(t.jinxT||0,jT);
+  try{if(a&&t&&a!==t&&res==='hit'&&ok(a)){const id=a.C.id,d=Math.max(0,t.dmg-hp);
+    if(id==='ryuko'){if(!(a._rlT>FR)){a._rl=(a._rl||0)+d;if(a._rl>=40){a._rl=0;a._rlT=FR+300;txt(a,'REDLINE!','#ff5030');sfx('power');}}}
+    if(id==='hana'&&a._spin===FR&&a.gm){a.gm.rev=0;txt(a,'SPIN SPENT','#ffb040');}
+    if(id==='taru'&&/^(nB|sB|uB|dB)$/.test(mk(a))&&!(o&&o.proj&&false)){const s=a._els||(a._els=[]);const k=mk(a);if(a._cyc>FR){a._cyc=0;a._els=[];}else if(s.indexOf(k)<0){s.push(k);if(s.length>=4){a._els=[];a._cyc=FR+240;txt(a,'FULL CYCLE: NEXT HIT +15%','#ffd84a');sfx('power');}}}
+    else if(id==='taru'&&a._cyc>FR&&!/^(nB|sB|uB|dB)$/.test(mk(a)))a._cyc=0;}}catch(e){}
+  return res;};}
+{const sm=startMove;startMove=function(f,key){try{if(ok(f)){const id=f.C.id;
+    if(id==='hippo'&&/smash/.test(key)&&f._pbT>FR)return false;
+    if(id==='shi'&&key==='sB'&&!f.ground&&f._gs){txt(f,'ONE GRAVE STEP PER JUMP');return false;}}}catch(e){}
+  const r=sm.apply(this,arguments);
+  try{if(r!==false&&ok(f)&&f.mv){const id=f.C.id,d=f.mv.d;
+    if(id==='hippo'&&key==='uB'&&f.mv.k==='uB')f._pbT=FR+d.s+d.a+d.r+70;
+    if(id==='shi'&&key==='sB'&&!f.ground)f._gs=1;}}catch(e){}
+  return r;};}
+{const st0=step;step=function(){const r=st0.apply(this,arguments);try{if(typeof F==='undefined')return r;
+  for(const f of F){if(!f.C)continue;const id=f.C.id;if(f.dead||f.st==='respawn'){f._rl=0;f._rlT=0;f._cyc=0;f._els=null;f._coolT=0;f._gs=0;continue;}
+    if(f.jinxT>FR+240)f.jinxT=FR+240;
+    if(id==='shi'&&f.ground)f._gs=0;
+    if(id==='gomi'){const oh=!!(f.buff&&f.buff.k==='overheat');if(f._ohWas&&!oh){f._coolT=FR+180;txt(f,'COOLING DOWN','#9ad8ff');}f._ohWas=oh;if(oh&&f.buff.until){const left=f.buff.until-FR;if(FR%40===0&&left<165)f.dmg=Math.min(999,f.dmg+.6);}}
+    if(id==='ryuko'&&f._rlT>FR&&FR%5===0)part(f.x+(Math.random()*30-15),f.y-Math.random()*70,0,-.8,12,'#ff5030',2,0);
+    /* hovering spends the flight meter */
+    const W=WING[id];if(W&&ok(f)&&!f.ground&&!f.mv&&f.pi&&f.pi.J&&Math.abs(f.vy||0)<1.6&&!(f.hitstun>0)&&f._wing!==undefined){f._wing=Math.max(0,f._wing-.55);if(f._wing<=0)f.vy+=.45;}
+    /* show what is stacked on a rival: marks, layers, seasoning */
+    if(FR%48===0&&f._im){for(const k in f._im){const p=f._im[k],a=F[k];if(!a||!a.C||!p||!(p.n>0))continue;const sh=SHOW[a.C.id];if(!sh)continue;if(FR-p.T>(sh[2]||300))continue;FXL.push({k:'txt',s:sh[0].repeat(Math.min(p.n,sh[1])),x:f.x,y:f.y-80,t:0,life:46,col:a.C.col||'#ffffff'});break;}}}
+  }catch(e){}return r;};}
+const SHOW={kora:['✦',5,480],homura:['▲',3,300],makiko:['z',4,300],torabi:['●',3,9999],bentou:['☓',3,9999],kuragari:['◍',2,240],takeshi:['■',3,9999],tsuki:['💧'.length>2?'~':'~',3,180],evona:['❄',3,240],chris:['•',2,9999],rei:['›',4,60]};
+/* Emi's Stoop and Ginko's Zenith spend flight */
+try{const I=window.IMPACT&&IMPACT.I;if(I){
+  I.emi.d='Aerial hits landed while diving onto a rival from above do 25% more, and spend some of her WINGS. With too little left it is an ordinary hit.';
+  I.emi.pre=(a,t,x)=>!x.ag&&a.y<t.y-22&&a.vy>1&&(a._wing===undefined||a._wing>=12)?{dm:1.25,st:1}:null;I.emi.post=(a,t,x)=>{if(x.m&&x.m.st&&a._wing!==undefined)a._wing=Math.max(0,a._wing-12);};I.emi.each=0;
+  I.ginko.d='Her upward launches spend ENERGY to hit 12% harder. With too little left they are ordinary; everything else is a touch weaker.';
+  I.ginko.pre=(a,t,x,h)=>h.ang>=60&&h.ang<=120?((a._wing===undefined||a._wing>=10)?{km:1.12,zn:1}:null):{km:.96};I.ginko.post=(a,t,x)=>{if(x.m&&x.m.zn&&a._wing!==undefined)a._wing=Math.max(0,a._wing-10);};I.ginko.each=0;
+  I.ryuko.n='REDLINE';I.ryuko.d='Every 40% of damage she deals trips REDLINE for five seconds: her hits launch 15% harder. It is earned by hitting, not by being hit.';I.ryuko.pre=null;
+  for(const id of ['emi','ginko','ryuko']){const c=C(id);if(c){const r=I[id];c.trait=String(c.trait||'').replace(/^IMPACT — [^:]*: .*?(?= WINGS:| ENERGY:| [A-Z][a-z]|$)/,'IMPACT — '+r.n+': '+r.d);}}}}catch(e){}
+try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
+  add('bentou','JINX now weakens one thing only: the rival\'s attacks do 12% less, for at most four seconds. Jinxing again refreshes it.');
+  add('jack','Each flame has a price: red hits 8% harder, blue 8% softer but fast and far, green heals him but his hits do 15% less, violet slows briefly.');
+  add('gomi','After Overheat ends he is COOLING DOWN for three seconds: his hits do 15% less. The self-burn gets worse in the second half.');
+  add('hana','A smash attack landed with REV at 40% or more spends all of it for extra launch.');
+  add('taru','FULL CYCLE: land all four limbs\' specials and his next hit does 15% more.');
+  add('takeshi','Lightning Tattoo only paralyses a rival who is stamped with his Sigil.');
+  add('tsuki','Her freezing hits only freeze a rival who is soaked twice or more, and use the water up.');
+  add('toguchi','Portal Strike is weak at point-blank range.');
+  add('ivan','His energy-hand specials are weaker against a rival standing inside his reach.');
+  add('shi','Grave Step can be used once per trip into the air.');
+  add('hippo','He cannot smash attack during Pause Buffer or for a moment after it.');
+  if(typeof GTXT!=='undefined'){if(GTXT.bentou&&GTXT.bentou[0])GTXT.bentou[0]=GTXT.bentou[0].replace(/JINXES them for seven seconds: [^.]*\./,'JINXES them for four seconds: their attacks do 12% less.');if(GTXT.bentou&&GTXT.bentou[3])GTXT.bentou[3]=GTXT.bentou[3].replace('for five seconds','for four seconds');}
+}catch(e){}
+window.SHEET3={SHOW};
 })();
 
 /* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
