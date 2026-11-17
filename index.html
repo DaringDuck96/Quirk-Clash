@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-0235';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-1319';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10635,6 +10635,26 @@ const ex0=exaggerate;exaggerate=function(p,f){const o=ex0(p,f);try{if(!POSTURE.o
  }catch(e){}return o;};
 })();
 
+/* range.js — longer reach. Melee hitboxes grow about the fighter (20–32% depending on how long-limbed they already were),
+   projectiles travel further (zoners most). Hit effects are drawn from the hitbox, so they grow with it. */
+(function(){
+const seenB=new WeakSet(),seenS=new WeakSet(),seenM=new WeakSet();
+const reach=m=>{let r=0;if(m&&m.hits)for(const h of m.hits)for(const b of (h.b||[]))if(b&&b.length>=3)r=Math.max(r,b[0]+b[2]);return r;};
+const ZONE=/zoner|archer|gunner|summoner|multi-shot|spellcaster|mage|trapper|beam|binder/i;
+const MOVING=/^(gp|fireball|homing|shard|feather|kunai|laser|missile|wave|koi|shark|venom|glob|honey|boba|dumpling|spikewave|rbow|ray)$/;
+function boxes(arr,s){if(!arr||seenB.has(arr))return;seenB.add(arr);for(const b of arr){if(!b||b.length<3||typeof b[0]!=='number')continue;b[0]*=s;b[2]*=s;const dy=b[1]+30;if(Math.abs(dy)>26)b[1]=-30+dy*(1+(s-1)*.5);}}
+function move(m,s,k){if(!m||typeof m!=='object'||seenM.has(m))return;seenM.add(m);
+  if(m.hits)for(const h of m.hits)boxes(h.b,h.grab?Math.min(s,1.12):s);
+  if(m.finisher&&m.finisher.b)boxes(m.finisher.b,s);
+  if(m.spawn)for(const e of m.spawn){const sp=e&&e[1];if(!sp||seenS.has(sp)||!MOVING.test(sp.k||''))continue;seenS.add(sp);const vx=Math.abs(sp.vx||0);if(vx<1||!sp.life)continue;
+    if(sp.g){if(!sp.ex)sp.vx*=1+(k-1)*.7;}
+    else{const cur=vx*sp.life,want=Math.min(Math.max(cur,620),Math.max(cur*k,290));sp.life=Math.round(sp.life*want/cur);}}}
+const R={};
+for(const C of CH){const base=reach(C.mv&&C.mv.ftilt)||36;const s=base>=48?1.32:base<=32?1.12:1.22;const k=ZONE.test(C.role||'')?1.5:1.2;R[C.id]={s,k};C._rs=s;
+  for(const T of ['mv','hmv']){const mv=C[T];if(!mv)continue;for(const key in mv){if(C.id==='ichigo'&&/^(nB|sB|dB|usmash|det)$/.test(key)){const m=mv[key];if(m&&m.hits&&!seenM.has(m)){for(const h of m.hits)boxes(h.b,s);seenM.add(m);}continue;}move(mv[key],s,k);}}}
+window.RANGE=R;
+})();
+
 /* impact.js — every fighter gets ONE rule of their own for what their hits do to a rival.
    No move names or ideas change; this replaces the shared "family" signatures (27 traits spread over 89 fighters)
    with 89 different ones, so no two fighters affect a rival the same way. */
@@ -10674,7 +10694,7 @@ ginko:{n:'ZENITH',d:'Her upward launches are 12% stronger. Everything else is a 
 goiru:{n:'RUBBLE',d:'Rivals he sends tumbling take 4% more when they crash into the ground.',post:(a,t)=>{if(t.tumble)t._land={k:'slam',T:FR+100};}},
 gomi:{n:'FLASHPOINT',d:'Hitting a rival who is already burning sets the burn off at once: 4% more and a harder launch.',pre:(a,t)=>t.dot&&t.dot.c==='#ff8020'?{km:1.12,fp:1}:null,post:(a,t,x)=>{if(x.m&&x.m.fp){add(t,4);t.dot=null;txt(t,'FLASHPOINT','#ff8a3a');ring(t,'#ff8a3a');}}},
 hana:{n:'DRAG IN',d:'Her small saw hits do not push rivals away: they are dragged toward her instead.',post:(a,t,x,h)=>{if(h.dmg<5){t.lx*=.25;if(Math.abs(t.x-a.x)>26)t.x-=x.dir*5;}}},
-hari:{n:'SKEWER',d:'Hits at the tip of the stinger hold the rival longer and send them straight back. Up close they do a little less.',pre:(a,t,x,h)=>x.proj?null:x.dist>62?{hs:9,ang:Math.min(h.ang===undefined?40:h.ang,30)}:{dm:.92}},
+hari:{n:'SKEWER',d:'Hits at the tip of the stinger hold the rival longer and send them straight back. Up close they do a little less.',pre:(a,t,x,h)=>x.proj?null:x.dist>78?{hs:9,ang:Math.min(h.ang===undefined?40:h.ang,30)}:{dm:.92}},
 hatsuko:{n:'WITHER',d:'Each hit withers the rival: their attacks do 5% less per hit, up to 20%, for four seconds.',post:(a,t)=>{const n=stack(P(a,t),240,4);t._atkDm={m:1-.05*n,T:FR+240};}},
 hikari:{n:'TWIN STRIKE',d:'A hit landed within a fifth of a second of her last one does 2% extra.',post:(a,t)=>{if(FR-(a._twT||-99)<=12&&FR!==a._twT)add(t,2);a._twT=FR;}},
 homura:{n:'MELT',d:'Each hit softens the rival: they are launched 3% further per hit, up to 15%, for five seconds.',post:(a,t)=>{const n=stack(P(a,t),300,5);t._vuln={m:1+.03*n,T:FR+300};}},
@@ -10695,10 +10715,10 @@ kuragari:{n:'COCOON',d:'Each hit wraps a layer of web that slows the rival by a 
 kurai:{n:'AMBUSH',d:'Her first hit on a rival she has not touched for five seconds does 40% more.',pre:(a,t)=>FR-P(a,t).T>300?{dm:1.4,am:1}:null,post:(a,t,x)=>{P(a,t).T=FR;if(x.m&&x.m.am)txt(t,'AMBUSH','#c8b890');}},
 maho:{n:'SEAL',d:'Her spells seal the last special the rival used (never their up special) for three seconds. Once every eight seconds per rival.',post:(a,t,x)=>{const p=P(a,t);if(/B/.test(x.k)&&t._lastSp&&FR-p.T>480){p.T=FR;t._seal={k:t._lastSp,T:FR+180};txt(t,'SEALED','#c890ff');}}},
 makiko:{n:'DROWSY',d:'Each hit makes the rival drowsier. The fifth in a row puts them to sleep.',pre:(a,t)=>{const p=P(a,t);return p.n>=4&&FR-p.T<300?{eff:'sleep',sl:1}:null;},post:(a,t,x)=>{const p=P(a,t);if(x.m&&x.m.sl)p.n=0;else stack(p,300,4);}},
-marina:{n:'REEL IN',d:'Hits from long range hook the rival and drag them toward her instead of away.',pre:(a,t,x)=>x.dist>150?{flip:1,km:.6}:null},
+marina:{n:'REEL IN',d:'Hits from long range hook the rival and drag them toward her instead of away.',pre:(a,t,x)=>x.dist>190?{flip:1,km:.6}:null},
 maya:{n:'TRANSFUSION',d:'Each hit moves 1% of her own damage onto the rival.',post:(a,t)=>{if(a.dmg>=1){a.dmg-=1;add(t,1);}}},
 mia:{n:'PINBALL',d:'Rivals she knocks away with lighter hits bounce off an unseen wall and come back toward her.',post:(a,t)=>{if(Math.abs(t.lx)<8&&Math.abs(t.lx)>1.5)t._pin=FR+13;}},
-minato:{n:'SNAPBACK',d:'Landing a hit at the end of his reach slings him toward the rival.',post:(a,t,x)=>{if(x.dist>70&&!x.proj)a._sling={d:x.dir,n:7};}},
+minato:{n:'SNAPBACK',d:'Landing a hit at the end of his reach slings him toward the rival.',post:(a,t,x)=>{if(x.dist>88&&!x.proj)a._sling={d:x.dir,n:7};}},
 moya:{n:'SLIP AWAY',d:'Landing a hit turns him to mist for a moment: nothing can touch him for a sixth of a second.',post:(a)=>{a.inv=Math.max(a.inv||0,10);}},
 okane:{n:'MIDAS TOUCH',d:'Her hits gild the rival for three seconds: heavy gold slows them by a tenth, but they are launched 6% less.',post:(a,t)=>{t._slow={m:.9,T:FR+180};t._vuln={m:.94,T:FR+180};}},
 oliver:{n:'STREAK',d:'Each arrow that lands within three seconds of the last does 12% more, up to 48%. Landing a melee hit resets it.',pre:(a,t,x)=>{const p=P(a,t);if(!x.proj)return null;return{dm:1+.12*(FR-p.T<180?Math.min(4,p.n):0)};},post:(a,t,x)=>{const p=P(a,t);if(x.proj)stack(p,180,4);else p.n=0;}},
@@ -10713,7 +10733,7 @@ ryuko:{n:'REDLINE',d:'The more damage she has taken, the harder she launches: up
 sai:{n:'ECHO',d:'Every hit he lands repeats a moment later for 20% of its damage.',post:(a,t,x)=>{(t._echo||(t._echo=[])).push({T:FR+24,d:x.dealt*.2});}},
 sanshou:{n:'STAGGER',d:'His hits on a shield take 5 more off it and shove the shielding rival much further back.',shield:(a,t,x)=>{t.shp=Math.max(1,t.shp-5);t.vx+=x.dir*4;}},
 sarah:{n:'SHADOW PIN',d:'Rivals she hits cannot turn around for a second after the hit.',post:(a,t)=>{t._flock={f:t.face,T:FR+t.hitstun+60};}},
-sata:{n:'REPULSOR',d:'Her point-blank melee hits launch 25% harder.',pre:(a,t,x)=>!x.proj&&x.dist<42?{km:1.25}:null},
+sata:{n:'REPULSOR',d:'Her point-blank melee hits launch 25% harder.',pre:(a,t,x)=>!x.proj&&x.dist<50?{km:1.25}:null},
 sato:{n:'BOUNCE HOUSE',d:'Rivals he sends tumbling bounce off the floor instead of landing.',post:(a,t)=>{if(t.tumble)t._land={k:'bounce',T:FR+100};}},
 shi:{n:'REAPER\'S DUE',d:'Rivals at 120% or more are launched 12% harder by his hits.',pre:(a,t)=>t.dmg>=120?{km:1.12}:null},
 shiki:{n:'BONEBREAKER',d:'Any single hit of his that does 12% or more cripples the rival: they move a quarter slower for three seconds.',post:(a,t,x)=>{if(x.dealt>=12){t._slow={m:.75,T:FR+180};txt(t,'CRIPPLED','#ff6a6a');}}},
