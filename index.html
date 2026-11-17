@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-1702';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-1830';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11357,6 +11357,104 @@ try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
   add('hari','A hit at the tip of the lance flashes TIP!');
 }catch(e){}
 window.SHEET7=1;
+})();
+
+/* anims.js — more attack animations, matched to how each fighter actually attacks.
+   Looks only: no hitbox, damage, timing or effect is touched. The most-shared slots (back air, jabs, smashes, up/down/neutral/forward air,
+   up and down tilt) each get several new motions, handed out by the kind of fighter: brawlers, casters, emitters, claws and blades,
+   whips, biters and weapon users. */
+(function(){
+const T2=Math.PI*2;
+Object.assign(ANIM,{
+ /* back airs */
+ bairE:{W:{aB:[4,-44],tl:.1},H:{aB:[-22,-38],aF:[6,-38],tl:-.3,px:-2},lim:'hB'},
+ bairP:{W:{aF:[10,-46],tl:.15},H:{aF:[-25,-34],aB:[-6,-40],tl:-.38,hd:-.3},lim:'hF'},
+ bairC:{W:{aF:[2,-40],aB:[0,-42],tl:.1},H:{aF:[-21,-38],aB:[-24,-32],tl:-.25,px:-1},lim:'hB'},
+ bairD:{W:{lB:[2,-16],lF:[4,-14],tl:.3},H:{lB:[-27,-28],lF:[-22,-22],tl:.7,aF:[12,-36],aB:[10,-40]},lim:'fB'},
+ bairS:{W:{aF:[12,-44],wa:-.4,tl:.15},H:{aF:[-20,-36],wa:3.0,tl:-.3},E:{aF:[-14,-26],wa:2.4},lim:'w'},
+ /* jabs */
+ jabC1:{W:{aF:[6,-54],tl:-.05},H:{aF:[21,-34],aB:[0,-38],tl:.22},E:{aF:[14,-26]},lim:'hF'},
+ jabC2:{W:{aB:[4,-54]},H:{aB:[21,-33],aF:[2,-40],tl:.28},E:{aB:[13,-25]},lim:'hB'},
+ jabP1:{W:{aF:[6,-40],tl:0},H:{aF:[22,-44],aB:[-4,-36],tl:.1},lim:'hF'},
+ jabP2:{W:{aB:[4,-38]},H:{aB:[22,-36],aF:[6,-46],tl:.16},lim:'hB'},
+ jabK1:{W:{lF:[4,-8],tl:-.05},H:{lF:[22,-9],tl:-.14,aF:[2,-42],aB:[-6,-40]},lim:'fF'},
+ jabK2:{W:{lF:[5,-14]},H:{lF:[23,-22],tl:-.22,aF:[0,-44],aB:[-8,-40]},lim:'fF'},
+ jabB1:{W:{aF:[-4,-38],tl:-.1},H:{aF:[20,-34],aB:[2,-42],tl:.26,px:2},lim:'hF'},
+ jabB2:{W:{aB:[-2,-30],py:2},H:{aB:[21,-28],aF:[6,-42],tl:.3,py:2},lim:'hB'},
+ jabS1:{W:{aF:[2,-46],wa:-1.3},H:{aF:[20,-40],wa:.1,tl:.2},lim:'w'},
+ jabS2:{W:{aF:[4,-32],wa:1.2},H:{aF:[21,-38],wa:-.2,tl:.24},lim:'w'},
+ jabH1:{W:{tl:.1,hd:-.2},H:{tl:.45,px:4,hd:.2,jaw:1,aF:[2,-34],aB:[-6,-34]},lim:'none'},
+ /* third jab: the finisher */
+ j3P:{W:{aF:[-8,-40],tl:-.1},H:{aF:[26,-40],aB:[-8,-38],tl:.4,px:4,lF:[12,-1.5]},lim:'hF'},
+ j3U:{W:{py:4,aF:[8,-26],tl:.25},H:{py:-1,aF:[14,-58],aB:[-6,-36],tl:-.05},lim:'hF'},
+ j3C:{W:{aF:[2,-58],aB:[-2,-56],tl:-.1},H:{aF:[24,-32],aB:[20,-36],tl:.35,px:3},E:{aF:[14,-20],aB:[10,-22]},lim:'hF'},
+ j3H:{W:{aF:[0,-40],aB:[-2,-38],tl:-.08},H:{aF:[25,-42],aB:[23,-36],tl:.3,px:3},lim:'hF'},
+ j3S:{W:{aF:[-8,-50],wa:-2.4,tl:-.12},H:{aF:[22,-34],wa:.3,tl:.38,px:4},E:{aF:[12,-24],wa:1.1},lim:'w'},
+ /* forward smashes */
+ smashH:{W:{aF:[-6,-40],aB:[-8,-36],tl:-.15,py:2},H:{aF:[27,-41],aB:[25,-34],tl:.4,px:5,lF:[14,-1.5],lB:[-10,-1.5]},lim:'hF'},
+ smashK:{W:{lF:[2,-18],tl:.1,aF:[8,-44]},H:{lF:[28,-30],tl:-.42,px:2,aF:[-6,-46],aB:[-12,-40],lB:[-4,-1.5]},lim:'fF'},
+ smashO:{W:{aF:[0,-68],aB:[-4,-66],tl:-.2,py:-1},H:{aF:[25,-30],aB:[21,-32],tl:.5,px:4,py:2},lim:'hF'},
+ smashB:{W:{tl:-.2,px:-3,aF:[-8,-36],aB:[-10,-34]},H:{tl:.8,px:9,aF:[-10,-34],aB:[-12,-36],hd:.25,lF:[14,-1.5],lB:[-12,-3]},lim:'none'},
+ smashC:{W:{aF:[-8,-60],tl:-.2},H:{aF:[25,-36],aB:[-8,-38],tl:.4,px:4},E:{aF:[14,-18],tl:.45},lim:'hF'},
+ smashE:{W:{aF:[-6,-40],aB:[-10,-40],tl:-.2,px:-1},H:{aF:[27,-40],aB:[12,-38],tl:.12,px:-2,lF:[10,-1.5],lB:[-12,-1.5]},lim:'hF'},
+ smashT:{W:{aF:[-10,-38],wa:0,tl:-.1},H:{aF:[27,-38],wa:0,tl:.45,px:6,lF:[16,-1.5]},lim:'w'},
+ /* up smashes */
+ usO:{W:{aF:[-16,-34],tl:.1,py:3},H:{aF:[3,-76],aB:[-6,-38],tl:-.1},E:{aF:[17,-52],tl:.1},lim:'hF'},
+ usHead:{W:{py:6,tl:.2,aF:[2,-28],aB:[-2,-28]},H:{py:-5,hd:-.35,tl:-.1,aF:[-8,-28],aB:[-10,-26],lF:[5,-4],lB:[-5,-4]},lim:'none'},
+ usT:{W:{aF:[6,-28],wa:-1.57,py:4},H:{aF:[5,-70],wa:-1.57,py:-3,tl:-.05},lim:'w'},
+ /* down smashes */
+ dsP:{W:{py:6,aF:[2,-36],aB:[-2,-36],tl:.1},H:{py:9,aF:[24,-10],aB:[-24,-10],tl:.05,lF:[8,-1.5],lB:[-8,-1.5]},lim:'hF',lim2:'hB'},
+ dsG:{W:{aF:[4,-66],aB:[0,-64],py:-2},H:{py:10,aF:[14,-3],aB:[-12,-3],tl:.3},lim:'hF',lim2:'hB'},
+ dsK:{W:{py:8,tl:.1},H:{py:11,lF:[25,-5],lB:[-25,-5],aF:[6,-20],aB:[-6,-20]},spin:T2,lim:'fF',lim2:'fB'},
+ dsS:{W:{py:6,aF:[-6,-30],wa:2.8},H:{py:8,aF:[21,-14],wa:.08,tl:.2},spin:T2,lim:'w'},
+ /* aerials */
+ uairH:{W:{py:2,hd:.2},H:{py:-4,hd:-.4,tl:-.15,aF:[-8,-30],aB:[-10,-28],lF:[4,-8],lB:[-4,-6]},lim:'none'},
+ uairC:{W:{aF:[10,-38],aB:[-10,-38]},H:{aF:[3,-75],aB:[-3,-75],tl:-.1},lim:'hF'},
+ dairSt:{W:{lF:[5,-22],lB:[-5,-22],aF:[10,-50],aB:[-10,-50]},H:{lF:[4,7],lB:[-3,7],aF:[14,-54],aB:[-14,-54],tl:0},lim:'fF'},
+ dairD:{W:{aF:[6,-58],tl:.2},H:{aF:[9,-6],aB:[-8,-44],tl:.9,lF:[-10,-30],lB:[-14,-26]},lim:'hF'},
+ dairC:{W:{aF:[8,-50],aB:[-8,-50]},H:{aF:[7,-6],aB:[-3,-6],tl:.2,lF:[8,-22],lB:[-8,-22]},lim:'hF'},
+ nairX:{W:{aF:[4,-40],aB:[-4,-40],lF:[3,-10],lB:[-3,-10]},H:{aF:[21,-50],aB:[-21,-50],lF:[17,-8],lB:[-17,-8]},lim:'hF'},
+ nairT:{W:{aF:[6,-36],aB:[4,-34],lF:[6,-14],lB:[2,-12]},H:{aF:[10,-30],aB:[6,-28],lF:[10,-18],lB:[4,-16],tl:.5},spin:T2*2,lim:'hF'},
+ nairK:{W:{lF:[2,-16]},H:{lF:[22,-20],lB:[-8,-10],aF:[4,-46],aB:[-10,-42],tl:-.15},lim:'fF'},
+ nairC:{W:{aF:[4,-36],aB:[-4,-36]},H:{aF:[18,-40],aB:[-18,-40],lF:[8,-6],lB:[-8,-6],py:-1},lim:'hF'},
+ fairH:{W:{aF:[2,-68],aB:[-2,-66],tl:-.2},H:{aF:[22,-28],aB:[18,-30],tl:.45},lim:'hF'},
+ fairD:{W:{lF:[4,-20],tl:-.1},H:{lF:[21,-8],lB:[-8,-22],tl:-.3,aF:[-4,-46],aB:[-12,-42]},lim:'fF'},
+ fairC:{W:{aF:[4,-42],aB:[2,-40],tl:-.1},H:{aF:[23,-40],aB:[21,-36],tl:.22},lim:'hF'},
+ fairR:{W:{aF:[4,-62],tl:-.15},H:{aF:[22,-34],aB:[-6,-40],tl:.3},E:{aF:[14,-18]},lim:'hF'},
+ /* tilts */
+ utE:{W:{aF:[6,-34],py:3},H:{aF:[9,-60],aB:[-4,-34],tl:-.12,py:-1},lim:'hF'},
+ utO:{W:{aF:[-14,-36],py:2},H:{aF:[2,-72],tl:-.08},E:{aF:[17,-50]},lim:'hF'},
+ dtP:{W:{py:7,aF:[4,-22],tl:.25},H:{py:8,aF:[25,-9],aB:[2,-22],tl:.4},lim:'hF'},
+ dtR:{W:{py:6,aF:[2,-30],tl:.2},H:{py:8,aF:[24,-6],tl:.35},E:{aF:[10,-4]},lim:'hF'}});
+const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;};
+const FSET={fist:'striker',arm:'striker',pillow:'striker',mace:'striker',pan:'striker',hand:'caster',portal:'caster',orb:'caster',shadow:'caster',talisman:'caster',dice:'caster',flask:'caster',swarm:'caster',ink:'caster',blast:'emitter',laser:'emitter',bolt:'emitter',rainbow:'emitter',wave:'emitter',blade:'cutter',dagger:'cutter',saw:'cutter',spike:'cutter',claw:'cutter',whip:'lasher',chain:'lasher',jaws:'biter',wing:'flier'};
+const K={
+ striker:{jab3:['jab3','j3P','j3U'],bair:['bairK','bairE','bairP','bairD'],jab:['jab','jabB','jabK'],fsmash:['punch','smashO','smashK','smashB'],usmash:['uppercut','kickUp','usO','usHead'],dsmash:['sweep','dsP','dsG','dsK'],uair:['uairK','uairP','uairH'],dair:['dairK','dairP','dairSt','dairD'],nair:['spin','nairK','nairX','nairT'],fair:['fairK','fairP','fairH','fairD'],utilt:['uppercut','kickUp','utE'],dtilt:['kickLow','dtP','sweep']},
+ caster:{jab3:['j3H','j3P','jab3'],bair:['bairC','bairP','bairE'],jab:['jabP','jabB','jab'],fsmash:['smashH','smashE','smashO'],usmash:['castUp','usO','uppercut'],dsmash:['dsG','dsP','sweep'],uair:['uairC','uairP','uairK'],dair:['dairC','dairP','dairSt'],nair:['nairC','nairX','spin'],fair:['fairC','fairP','fairH'],utilt:['castUp','utO','utE'],dtilt:['dtP','kickLow','sweep']},
+ emitter:{jab3:['j3H','j3P'],bair:['bairC','bairE','bairK'],jab:['jabP','jab'],fsmash:['smashE','smashH','punch'],usmash:['castUp','usO'],dsmash:['dsG','dsP'],uair:['uairC','uairP'],dair:['dairC','dairP'],nair:['nairC','nairX'],fair:['fairC','fairP'],utilt:['castUp','utE'],dtilt:['dtP','kickLow']},
+ cutter:{jab3:['j3C'],bair:['bairP','bairE'],jab:['jabC'],fsmash:['smashC','smashO'],usmash:['usO','uppercut'],dsmash:['dsP','dsG'],uair:['uairP','uairC'],dair:['dairP','dairD'],nair:['spin','nairT'],fair:['fairR','fairP'],utilt:['utO','utE'],dtilt:['dtR','dtP']},
+ lasher:{jab3:['j3C','j3P'],bair:['bairP','bairC'],jab:['jabC','jabP'],fsmash:['smashO','smashC'],usmash:['usO'],dsmash:['dsP','dsK'],uair:['uairP'],dair:['dairP','dairSt'],nair:['nairX','spin'],fair:['fairR','fairH'],utilt:['utO'],dtilt:['dtR']},
+ biter:{jab3:['j3C'],bair:['bairK','bairD'],jab:['jabH'],fsmash:['smashB','smashC'],usmash:['usHead'],dsmash:['sweep','dsK'],uair:['uairH'],dair:['dairSt'],nair:['nairT'],fair:['fairR'],utilt:['utE'],dtilt:['dtR']},
+ weapon:{jab3:['j3S'],bair:['bairS'],jab:['jabS'],fsmash:['slashF','slashDown','smashT'],usmash:['slashUp','usT'],dsmash:['dsS','slashLow']}};
+/* only the stock, most-shared motion in each slot is replaced; anything already special to a fighter stays */
+const STOCK={bair:['bairK'],jab1:['jab1'],jab2:['jab2'],jab3:['jab3'],fsmash:['punch','slashF'],usmash:['uppercut','slashUp','castUp'],dsmash:['sweep','slashLow'],uair:['uairK','uairP'],dair:['dairK','dairP'],nair:['spinW','spin'],fair:['fairK','fairP'],utilt:['castUp'],dtilt:['sweep']};
+const JAB={jab:['jab1','jab2'],jabB:['jabB1','jabB2'],jabK:['jabK1','jabK2'],jabP:['jabP1','jabP2'],jabC:['jabC1','jabC2'],jabS:['jabS1','jabS2'],jabH:['jabH1','jabC2']};
+const KEEP=/^(talon|tail|tusk|hoof|stomp|kick|wing|horn|bite)$/;
+const LK={hF:'aF',hB:'aB',fF:'lF',fB:'lB',w:'aF'};
+let changed=0;const tally={};
+function setAn(d,an,weapon){if(!d||!ANIM[an]||d.an===an)return;d.an=an;const lm=ANIM[an].lim;if(weapon&&lm==='w')d.lim='w';else if(d.lim!=='w'||lm!=='w')d.lim=lm==='w'?'hF':lm;
+  /* the per-move pose tuning was made for the old striking limb: keep the new one on target */
+  if(d.mo){const k=LK[lm];if(k&&Array.isArray(d.mo[k]))d.mo=Object.assign({},d.mo,{[k]:[d.mo[k][0]*.3,d.mo[k][1]*.3]});}
+  if(d.airAlt&&d.airAlt.an)d.airAlt.an=an;changed++;tally[an]=(tally[an]||0)+1;}
+for(const C of CH){if(C.hidden||!C.mv||!C.look||C.look.body)continue;const fam=(typeof PROPS!=='undefined'&&PROPS.T[C.id])?PROPS.T[C.id][0]:null;const weapon=!!C.look.wpn;const kind=weapon?'weapon':(FSET[fam]||'striker');if(kind==='flier')continue;const tbl=K[kind];
+  for(const T of [C.mv,C.hmv]){if(!T)continue;
+    for(const slot in tbl){const list=tbl[slot];const pick=list[hsh(C.id+':'+slot)%list.length];
+      if(slot==='jab'){const pr=JAB[pick];if(!pr)continue;for(let i=0;i<2;i++){const k='jab'+(i+1),d=T[k];if(!d||d.beh||d.ph||d.pw||d.pe||STOCK[k].indexOf(d.an)<0||(d.sub&&KEEP.test(d.sub)))continue;setAn(d,pr[i],weapon);}continue;}
+      const d=T[slot];if(!d||d.beh||d.ph||d.pw||d.pe||STOCK[slot].indexOf(d.an)<0||(d.sub&&KEEP.test(d.sub)))continue;
+      if(!weapon&&(d.an==='slashF'||d.an==='slashUp'||d.an==='slashLow'))continue;
+      if(weapon&&slot==='fsmash'&&d.an==='punch')continue;if(weapon&&slot==='usmash'&&d.an==='uppercut')continue;if(weapon&&slot==='dsmash'&&d.an==='sweep')continue;
+      setAn(d,pick,weapon);}}}
+window.ANIMS2={changed,tally};
 })();
 
 /* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
