@@ -9974,7 +9974,7 @@ function startFight(n,me,pal,foes){audioInit();const foes0=foes,n0=n,D=SV&&SV.di
   SEL.mode=['h','off','off','off'];CO.forEach((c,k)=>{SEL.mode[k+1]='h';});MATCH.stocks=(n.rule==='waves'||n.rule==='boss'?3:2)+(D===0?1:0);MATCH.timeLeft=0;MATCH.sudden=false;setStage(STAGES.findIndex(s=>s.id===n.stage));SLOW=0;ZF.t=0;if(typeof hazReset==='function')hazReset();
   const m=STAGE.main,c=m.x+m.w/2;F=[mk2(0,me,'human',1,0,MATCH.stocks)];CO.forEach((ci,k)=>{const p=mk2(k+1,ci,'human',1,0,MATCH.stocks);p.col=PCOL[k+1];F.push(p);});if(!CO.length&&pal>=0&&(n.rule==='tag'||n.partner)){const p=mk2(1,pal,'cpu',6,0,MATCH.stocks);p.col='#2fd060';F.push(p);}
   if(n.rule==='duel'||n.rule==='tag')foes.forEach((ci,k)=>{const e=mk2(2+k>3?3:2+k,ci,'cpu',n.lvl,1,n.es);e.id=10+k;e.col=['#2e86ff','#ffc81e','#ff7ad0','#7ae04a'][k]||'#b070ff';e.plate=NP+k<4?1:0;if(CH[ci].id==='c_grunt'){e.grunt=0;e.stocks=Math.max(1,(n.es||2)-1);}if(n.giant)e.big=1e9;if(n.unst)e.unst=1;F.push(e);});
-  if(n.rule==='boss'){const b=mk2(2,ix(n.boss||'c_van'),'cpu',n.lvl,1,99);b.id=10;b.col='#b070ff';b.big=1e9;b.boss=1;b.hp=b.hpMax=n.hp;b.pd=0;CS.boss=b;F.push(b);}
+  if(n.rule==='boss'){const b=mk2(2,ix(n.boss||'c_van'),'cpu',n.lvl,1,99);b.id=10;b.col='#b070ff';b.big=1e9;b.boss=1;b.hp=b.hpMax=n.hp;b.pd=0;CS.boss=b;CS.fin=0;CS.finT=0;F.push(b);}
   const ps=F.filter(f=>f.team===0),es=F.filter(f=>f.team===1);ps.forEach((f,k)=>{f.x=c-90-k*46;f.face=1;});es.forEach((f,k)=>{f.x=c+90+k*56;f.face=-1;});
   ENT=[];PS=[];FXL=[];STAGE.temp=[];LEDGES.forEach(l=>l.occ=null);GS='count';gsT=0;winner=null;shakeA=0;flashA=0;CAM.x=WW/2;CAM.y=WH/2;CAM.z=1.2;
   root.hidden=true;hideAll();document.getElementById('game').hidden=false;const t=document.getElementById('touch');if(t)t.hidden=!(typeof isTouch!=='undefined'&&isTouch);paused=false;running=true;}
@@ -9991,7 +9991,11 @@ const mt0=modeTick;modeTick=function(){mt0();if(MODE!=='campaign'||typeof GS==='
   if(n.rule==='waves'||n.rule==='hold'||n.adds){const alive=F.filter(f=>f.team===1&&!f.gone&&!f.boss).length,pend=n.rule==='waves'?CS.left-alive:99;if(alive<n.cap&&pend>0&&CS.t%50===10)spawnGrunt(n);}
   for(const f of F){if(f.unst&&!f.gone&&!f.dead&&FR%4===0)part(f.x+rnd()*26-13,f.y-rnd()*60,(rnd()-.5),-1-rnd(),18,rnd()<.5?'#b070ff':'#ffffff',2,0);}
   const b=CS.boss;if(b&&!b.gone){if(b.dmg>b.pd)b.hp-=b.dmg-b.pd;b.dmg=Math.min(b.dmg,70*(1-Math.max(0,b.hp)/b.hpMax));b.pd=b.dmg;if(FR%6===0)part(b.x+rnd()*40-20,b.y-rnd()*90,0,-.6,16,'#b070ff',2,0);
-    if(b.hp<=0&&!CS.fin){CS.fin=1;b.stocks=1;b.dmg=260;b.inv=0;try{applyHit(b,{dmg:1,bkb:13,kbg:.2,ang:50,fx:['#b070ff','#ffffff']},b.x<F[0].x?-1:1,F.find(x=>x.team===0&&!x.gone)||F[0],{force:1});}catch(e){}SLOW=24;if(!RM)shakeA=12;sfx('boom');}}else CS.fin=0;};
+    if(b.hp<=0&&!CS.fin){CS.fin=1;b.stocks=1;b.dmg=260;b.inv=0;try{applyHit(b,{dmg:1,bkb:13,kbg:.2,ang:50,fx:['#b070ff','#ffffff']},b.x<F[0].x?-1:1,F.find(x=>x.team===0&&!x.gone)||F[0],{force:1});}catch(e){}SLOW=24;if(!RM)shakeA=12;sfx('boom');
+      /* the finishing blow must always land: launch him by hand as well, and end the fight on a timer in case he is not carried off the screen */
+      const dir=b.x<F[0].x?-1:1;b.mv=null;b.st='hit';b.ground=null;b.tumble=true;b.hitstun=200;b.lx=dir*13;b.ly=-15;b.vx=b.vy=0;b.frozen=0;b.rootT=0;b.dz=0;CS.finT=FR;}
+    if(CS.fin&&!b.gone&&GS==='play'){b.inv=0;if(b.st!=='hit'||b.hitstun<20){b.mv=null;b.st='hit';b.hitstun=60;b.tumble=true;}
+      if(FR-(CS.finT||FR)>110){b.gone=true;finish('win');}}}else CS.fin=0;};
 const dm0=dmgMod;dmgMod=function(a,t,h,o){let m=dm0(a,t,h,o);if(MODE==='campaign'&&a){if(a.unst)m*=1.2;if(a.grunt)m*=.7;if(a.boss)m*=.85;if(a.team===1)m*=[.8,1,1.15][CS.diff==null?1:CS.diff];}return m;};
 const mh0=modeHUD;modeHUD=function(c){mh0(c);if(MODE!=='campaign'||!running)return;const n=CS.node;bigText(c,n.n.toUpperCase(),640,56,40,'#ffffff');
   if(n.time&&GS==='play'){const s=Math.ceil(CS.time/60);bigText(c,(n.rule==='hold'?'HOLD  ':'')+Math.floor(s/60)+':'+String(s%60).padStart(2,'0'),640,100,s<=10?84:64,s<=10?'#ff4a4a':'#ffd400');}
@@ -10453,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-0218';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-0235';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
