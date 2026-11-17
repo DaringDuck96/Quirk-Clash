@@ -8249,7 +8249,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
     for(const a of F){if(a===t.owner||a.dead||a.gone||!a.mv||(typeof sameTeam==='function'&&sameTeam(a,t.owner))||t.hitBy===a.mv)continue;for(const[hb]of hitboxes(a)){let hit=false;for(const q of hb.b){const x=a.x+a.face*q[0],y=a.y+q[1];if(Math.abs(x-t.x)<6+q[2]&&y>t.y-h-q[2]&&y<t.y+q[2]){hit=true;break;}}if(hit){t.hitBy=a.mv;t.hp-=hb.dmg;t.shk=FR;burst(t.x,t.y-h*.5,6,[BR,'#d8b890'],1.6,12);sfx('hit');break;}}}
     if(t.hp<=0){fell(t);continue;}}
   for(const f of F){if(f.C!==C||f.gone)continue;if(f.dead||f.st==='respawn'){f._crU=false;continue;}if(f.ground||f.st==='ledge')f._crU=false;if(f.form||f.copyT>0)continue;
-    if(f.ground&&f.dmg>0&&FR%3===0){for(const t of TREES)if(t.owner===f&&t.plat&&Math.abs(t.x-f.x)<44&&Math.abs(t.y-f.y)<70){f.dmg=Math.max(0,f.dmg-.06);if(FR%30===0)part(f.x+rnd()*14-7,f.y-20-rnd()*20,0,-.5,16,GR2,2,0);break;}}
+    if(f.ground&&f.dmg>0&&FR%3===0){for(const t of TREES)if(t.owner===f&&t.plat&&Math.abs(t.x-f.x)<44&&Math.abs(t.y-f.y)<70){if(!(f.hitstun>0)&&FR-(f.lastHurt||-999)>90)f.dmg=Math.max(0,f.dmg-.04);if(FR%30===0)part(f.x+rnd()*14-7,f.y-20-rnd()*20,0,-.5,16,GR2,2,0);break;}}
     const m=f.mv;if(!m||f.hl>0)continue;const d=m.d;
     if(m.k==='dB'&&m.t===d.s&&!m._pl&&f.ground){m._pl=1;const g=f.ground,x=clamp(f.x+f.face*20,g.x+10,g.x+g.w-10);const mine=TREES.filter(t=>t.owner===f);if(mine.length>=2)fell(mine[0],1);TREES.push({x,y:g.y,g,owner:f,born:FR,hp:28,plat:null});burst(x,g.y-2,10,[BR,GR2,'#5a3a20'],2,16);sfx('thud');say(f,'PLANTED');}
     if(m.k==='uB'&&m._tg){const T=m._tg,t=m.t-d.s;if(T.kind==='tree'&&TREES.indexOf(T.ref)<0){m._tg=null;continue;}if(T.kind==='plat'&&STAGE.temp.indexOf(T.ref)<0&&STAGE.plats.indexOf(T.ref)<0){m._tg=null;continue;}
@@ -8636,7 +8636,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
    if(f.pch<2&&GS==='play'&&FR-f.pchT>=900){f.pch++;f.pchT=FR;say(f,'FOUND SOMETHING','#c8d0e0');}
    /* Pouch Surprise: keep flinging while B is held */
    if(m&&m.k==='nB'){if(m.t===m.d.s){m._n=(m._n||0)+1;const d=f.face;if(rnd()<.5){const e=spawnEnt(f,{k:'dish',vx:2.2+rnd()*2.8,vy:-(2.8+rnd()*3),g:.22,life:81,r:6,dmg:6,bkb:3.2,kbg:.045,ang:55});}
-       else{const it=ITEMS[fl(rnd()*ITEMS.length)];spawnEnt(f,{k:'gp',sh:'pitem',sub:it.s,vx:2.4+rnd()*3,vy:-(2.6+rnd()*3.2),g:.24,life:84,r:it.r,dmg:it.dmg,bkb:it.bkb,kbg:it.kbg,ang:50,eff:it.eff});}sfx('pop');}
+       else{if(f._nextIt===undefined)f._nextIt=fl(rnd()*ITEMS.length);const it=ITEMS[f._nextIt];f._nextIt=fl(rnd()*ITEMS.length);f._nextName=String(ITEMS[f._nextIt].s||'').toUpperCase();spawnEnt(f,{k:'gp',sh:'pitem',sub:it.s,vx:2.4+rnd()*3,vy:-(2.6+rnd()*3.2),g:.24,life:84,r:it.r,dmg:it.dmg,bkb:it.bkb,kbg:it.kbg,ang:50,eff:it.eff});}sfx('pop');}
      if(m.t===m.d.s+8&&(m._n||0)<5&&(I.B||(cpu&&rnd()<.6)))m.t=m.d.s-5;}
    /* Big Hop: float down on the tail */
    if(m&&m.k==='uB')f._hop=1;if(f.ground)f._hop=0;if(f._hop&&!m&&!f.ground&&f.st!=='hit'&&(I.y<-.4||I.J)&&f.vy>1.5){f.vy=Math.min(f.vy,1.5);if(FR%6===0)part(f.x-f.face*10,f.y-8,0,.4,12,'#e8d8b0',2,0);}
@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-1640';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-1702';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11300,6 +11300,63 @@ try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
   if(typeof GTXT!=='undefined'&&GTXT.sota&&GTXT.sota[0])GTXT.sota[0]=GTXT.sota[0].replace('23% punch','18% punch');
 }catch(e){}
 window.SHEET6={UZ};
+})();
+
+/* sheet7.js — roster balance sheet v1, seventh pass: the last open items. */
+(function(){
+const C=id=>CH.find(c=>c.id===id);
+const ok=f=>f&&f.C&&!f.form&&!(f.copyT>0);
+const txt=(f,s,col)=>{if(FR-(f._s7Tx||-99)<30)return;f._s7Tx=FR;FXL.push({k:'txt',s,x:f.x,y:f.y-100,t:0,life:40,col:col||'#b8b8c8'});};
+const mk=a=>a.mv?a.mv.k||'':'';
+const foeOf=(f,o)=>o!==f&&!o.dead&&!o.gone&&!(typeof sameTeam==='function'&&sameTeam(f,o));
+const each=(id,fn)=>{const c=C(id);if(!c)return;for(const T of ['mv','hmv'])if(c[T])fn(c[T]);};
+/* Akio: Spin Charge has no armour, so it is not a safe way out */
+each('akio',mv=>{if(mv.dB&&mv.dB.bp)mv.dB.bp=Object.assign({},mv.dB.bp,{armor:0});});
+/* Emi: Feather Scouts harass, they do not finish */
+each('emi',mv=>{if(mv.nB&&mv.nB.spawn)for(const e of mv.nB.spawn){const s=e[1];if(s&&s.k==='homing'){s.kbg=Math.min(s.kbg||.03,.01);s.bkb=Math.min(s.bkb||2.5,2);}}});
+/* Ryuko: each mech weapon has its own cooldown */
+each('ryuko',mv=>{const cd={nB:90,sB:110,dB:150};for(const k in cd)if(mv[k])mv[k].cd=cd[k];});
+try{const r=C('ryuko');if(r){r._nocd=false;if(typeof GTXT!=='undefined'&&GTXT.ryuko){const cd={0:'1.5',1:'1.8',3:'2.5'};for(const i in cd)if(GTXT.ryuko[i])GTXT.ryuko[i]=GTXT.ryuko[i].replace(/\s*No cooldown[^]*$/,'').replace(/\.+$/,'')+'. Cooldown: '+cd[i]+' seconds.';}}}catch(e){}
+const PARTNER={nB:1,sB:1};
+{const sm=startMove;startMove=function(f,key){try{if(ok(f)){const id=f.C.id;
+    if(id==='soran'&&PARTNER[key]&&f._ptT>FR&&f._ptK!==key){txt(f,'PARTNER BUSY');return false;}}}catch(e){}
+  const r=sm.apply(this,arguments);
+  try{if(r!==false&&ok(f)&&f.mv&&f.C.id==='soran'&&PARTNER[key]&&f.mv.k===key){f._ptT=FR+f.mv.d.s+f.mv.d.a+f.mv.d.r+30;f._ptK=key;}}catch(e){}
+  return r;};}
+if(typeof dmgMod==='function'){const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(a&&ok(a)&&a.C.id==='shi'&&o&&o.proj&&a._lastSp==='nB')m*=.9;}catch(e){}return m;};}
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){const res=ah.apply(this,arguments);
+  try{if(a&&t&&a!==t&&res==='hit'&&ok(a)){const id=a.C.id;
+    if(id==='hari'&&!(o&&o.proj)&&Math.abs(t.x-a.x)>78&&a.mv&&a.mv._tipFx!==t){a.mv._tipFx=t;FXL.push({k:'txt2',s:'TIP!',x:t.x,y:t.y-84,t:0,life:34,col:'#ffe060'});FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#ffe060',r0:6,life:16});FXL.push({k:'ring',x:t.x,y:t.y-30,t:-4,col:'#ffffff',r0:12,life:16});sfx('hitH');}
+    /* Ash: a rival he hits beside one of his grown trees is caught in its roots for a moment */
+    if(id==='ash'&&t.ground&&window.ASHTREES&&FR-(t._rootLk||-999)>300&&!(t.ccT&&FR-t.ccT<240)){for(const tr of ASHTREES){if(tr.owner===a&&tr.plat&&Math.abs(tr.x-t.x)<64&&Math.abs(tr.y-t.y)<40){t._rootLk=FR;t.ccT=FR;t.rootT=24;FXL.push({k:'txt',s:'ROOTS',x:t.x,y:t.y-78,t:0,life:34,col:'#9ad86a'});for(let i=0;i<6;i++)part(t.x+(Math.random()*20-10),t.y-2,0,-1,14,'#6a4a2a',2,0);break;}}}}}catch(e){}
+  return res;};}
+{const st0=step;step=function(){const r=st0.apply(this,arguments);try{if(typeof F==='undefined')return r;
+  for(const f of F){if(!f.C||f.gone)continue;const id=f.C.id;if(f.dead||f.st==='respawn'){f._reapT=0;f._ptT=0;continue;}if(!ok(f))continue;const m=f.mv;
+    /* Shi: borrowed strength is held two at a time and each lasts twenty seconds */
+    if(id==='shi'){if(f.reap>2)f.reap=2;if((f.reap||0)>(f._reapN||0))f._reapT=FR+1200;if(f.reap>0&&f._reapT&&FR>=f._reapT){f.reap--;f._reapT=f.reap>0?FR+1200:0;txt(f,'A BORROWED QUIRK FADES','#b8b8c8');}f._reapN=f.reap||0;}
+    /* Sanshou: Iron Verdict shows how far it is wound up */
+    if(id==='sanshou'&&m&&m.d&&m.d.beh==='verdict'&&m.t<m.d.s&&m.t%8===0){const n=Math.max(1,Math.ceil(m.t/m.d.s*5));FXL.push({k:'txt',s:'▮'.repeat(n)+'▯'.repeat(5-n),x:f.x,y:f.y-92,t:0,life:9,col:n>=5?'#ffffff':'#c8ffb0'});}
+    /* Pitto: the next item out of the pouch is shown */
+    if(id==='pitto'&&f._nextName&&f._nextShown!==f._nextName){f._nextShown=f._nextName;FXL.push({k:'txt',s:'NEXT: '+f._nextName,x:f.x,y:f.y-104,t:0,life:60,col:'#e0a050'});}}
+  /* Keanu: Island Bloom's vines can be cut down */
+  for(const e of ENT){if(!e.alive||e.k!=='vines'||!e.owner)continue;if(e._hp===undefined)e._hp=10;
+    for(const a of F){if(!foeOf(e.owner,a)||!a.mv||a.hl>0||a.rootT>0)continue;let hbs;try{hbs=hitboxes(a);}catch(x){continue;}const seen=a.mv._oh||(a.mv._oh=new Set());if(seen.has(e))continue;
+      for(const[h]of hbs){let hit=false;for(const b of h.b){if(Math.abs(a.x+a.face*b[0]-e.x)<b[2]+30&&Math.abs(a.y+b[1]-e.y)<b[2]+40){hit=true;break;}}
+        if(hit){seen.add(e);e._hp-=(h.dmg||4);sfx('hit');if(e._hp<=0){e.alive=false;burst(e.x,e.y-10,12,['#6ad06a','#ffffff'],2,16);FXL.push({k:'txt',s:'VINES CUT',x:e.x,y:e.y-30,t:0,life:30,col:'#9ad86a'});}break;}}}}
+  }catch(e){}return r;};}
+try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
+  add('akio','Spin Charge has no armour: it is an attack, not a way out.');
+  add('emi','Feather Scouts barely launch: they harass and set up, they do not finish.');
+  add('ryuko','Each mech weapon has its own cooldown: laser 1.5 s, Trike Rampage 1.8 s, missiles 2.5 s.');
+  add('soran','The brothers share one partner action at a time: Relay Kunai and Relay Pincer cannot overlap.');
+  add('shi','Strength taken from knockouts is held two at a time and each lasts twenty seconds. Borrowed-quirk shots hit at 90%.');
+  add('ash','ROOT LINK: a grounded rival he hits beside one of his grown trees is held by its roots for a moment (once every five seconds). Standing by a tree heals him slowly, and not for a second and a half after he is hit.');
+  add('keanu','Rivals can cut Island Bloom\'s vines down.');
+  add('pitto','The next item out of his pouch is announced above him.');
+  add('sanshou','Iron Verdict shows how far it is wound up.');
+  add('hari','A hit at the tip of the lance flashes TIP!');
+}catch(e){}
+window.SHEET7=1;
 })();
 
 /* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
