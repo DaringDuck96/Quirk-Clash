@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-1553';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-1617';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11178,6 +11178,59 @@ try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
   if(typeof GTXT!=='undefined'&&GTXT.bara&&GTXT.bara[1])GTXT.bara[1]+=' Needs one of his feathers stuck in the stage or in a rival; without one it is only a short lunge.';
 }catch(e){}
 window.SHEET4={ICE,CFG};
+})();
+
+/* sheet5.js — roster balance sheet v1, fifth pass: Tsuki's three states of water, plus Shi, Uchuujin, Evona, Minato. */
+(function(){
+const C=id=>CH.find(c=>c.id===id);
+const ok=f=>f&&f.C&&!f.form&&!(f.copyT>0);
+const CPU=f=>f.ctrl==='cpu'||/^\d$/.test(String(f.ctrl));
+const txt=(f,s,col)=>{FXL.push({k:'txt',s,x:f.x,y:f.y-100,t:0,life:40,col:col||'#b8b8c8'});};
+const mk=a=>a.mv?a.mv.k||'':'';
+const foeOf=(f,o)=>o!==f&&!o.dead&&!o.gone&&!(typeof sameTeam==='function'&&sameTeam(f,o));
+/* ---------- Tsuki: Liquid / Solid / Mist ---------- */
+const WS={L:{n:'LIQUID',col:'#5fd0ff'},S:{n:'SOLID',col:'#dff6ff'},M:{n:'MIST',col:'#b8c8d8'}};
+function setState(f,s){if(f._ws===s)return false;if(FR-(f._wsT||-999)<60){if(FR-(f._wsTx||-99)>30){f._wsTx=FR;txt(f,'NOT YET');}return false;}f._ws=s;f._wsT=FR;txt(f,WS[s].n,WS[s].col);sfx('power');FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:WS[s].col,r0:8,life:18});if(f.ground&&!f.mv){f.st='land';f.stT=0;f.landLen=8;}return true;}
+try{const I=window.IMPACT&&IMPACT.I;if(I&&I.tsuki){
+  I.tsuki.n='STATES OF WATER';
+  I.tsuki.d='LIQUID: each hit soaks the rival (they drift 7% slower in the air per soak, up to three, for three seconds). SOLID: she launches 10% harder and a hit on a rival soaked twice or more freezes them briefly and uses the water up, but she moves 12% slower and cannot soak. MIST: she moves faster in the air, falls slowly and each hit soaks twice, but she launches 15% less. Switch with Shield + B while holding a direction: side for Liquid, down for Solid, up for Mist. One second between switches.';
+  I.tsuki.each=0;
+  I.tsuki.pre=(a,t,x)=>{const s=a._ws||'L',p=(t._im&&t._im[F.indexOf(a)])||null;if(s==='S'){if(p&&p.n>=2&&FR-p.T<180)return{km:1.1,eff:'freeze',fz:1};return{km:1.1};}if(s==='M')return{km:.85};return null;};
+  I.tsuki.post=(a,t,x)=>{const s=a._ws||'L',m=t._im||(t._im={}),k=F.indexOf(a),p=m[k]||(m[k]={n:0,T:-9999});if(s==='S'){if(x.m&&x.m.fz){p.n=0;t._airslow=null;}return;}
+    if(FR-p.T>180)p.n=0;p.n=Math.min(3,p.n+(s==='M'?2:1));p.T=FR;t._airslow={m:1-.0667*p.n,T:FR+180};};
+  const c=C('tsuki');if(c){c.trait=String(c.trait||'').replace(/^IMPACT — WATERLOGGED: .*?\(20%\), for three seconds\./,'IMPACT — '+I.tsuki.n+': '+I.tsuki.d).replace(/ Her freezing hits only freeze a rival who is soaked twice or more, and use the water up\./,'');
+    if(c.mv.qa&&c.mv.qa.qn)for(const T of ['mv','hmv'])if(c[T]&&c[T].qa)c[T].qa.qn=String(c[T].qa.qn)+' Hold a direction instead to change the state of her water.';}}}catch(e){}
+/* ---------- Shi: two borrowed quirks ---------- */
+try{const s=C('shi');if(s){for(const T of ['mv','hmv']){const m=s[T]&&s[T].nB;if(m&&m.cyc&&m.cyc.length>2)m.cyc.length=2;}if(s.sp&&s.sp[0])s.sp[0]=s.sp[0];if(typeof GTXT!=='undefined'&&GTXT.shi&&GTXT.shi[0])GTXT.shi[0]=GTXT.shi[0].replace(/fire, then ice, then light, a different one each time/,'fire, then ice. He holds two at a time');}}catch(e){}
+/* ---------- Uchuujin: Event Horizon absorbs two projectiles per use ---------- */
+try{if(typeof BEH!=='undefined'&&BEH.absorb){BEH.absorb.tick=function(f,m){const p=m.d.bp;if(m.t>=p.f0&&m.t<=p.f1){if(m.t%3===0)part(f.x+rnd()*40-20,f.y-30+rnd()*40-20,0,0,10,'#b890ff',2,0);for(const e of ENT){if(!e.alive||e.owner===f||!e.proj)continue;if((m._abs||0)>=2)break;if(Math.hypot(e.x-f.x,e.y-(f.y-28))<38){m._abs=(m._abs||0)+1;e.alive=false;f.cosmo=Math.min(90,f.cosmo+35);burst(e.x,e.y,14,['#b890ff','#ffffff'],2,16);FXL.push({k:'txt',s:'ABSORB '+m._abs+'/2',x:f.x,y:f.y-70,t:0,life:40,col:'#c8a8ff'});sfx('warp');}}}};}}catch(e){}
+/* ---------- hooks ---------- */
+{const sm=startMove;startMove=function(f,key){try{if(ok(f)){const id=f.C.id;
+    if(id==='tsuki'&&key==='qa'&&!CPU(f)){const p=f.pi||{},ax=Math.abs(p.x||0),ay=Math.abs(p.y||0);if(ax>.5||ay>.5){setState(f,ay>=ax?((p.y||0)<0?'M':'S'):'L');return false;}}
+    if(id==='evona'&&key==='dB'){let w=null;for(const e of ENT)if(e.alive&&e.owner===f&&e.spec&&(e.spec.life||0)>=120&&(!w||e.t>w.t))w=e;f._flW=w;}}}catch(e){}
+  const r=sm.apply(this,arguments);
+  try{if(r!==false&&ok(f)&&f.mv&&f.C.id==='evona'&&key==='dB'&&f.mv.k==='dB'){const w=f._flW;if(w&&w.alive){w.alive=false;burst(w.x,w.y,14,['#8fe4ff','#ffffff'],2.2,18);f.mv._ice=1;txt(f,'STORED ICE SPENT','#8fe4ff');}else f.mv._ice=0;}}catch(e){}
+  return r;};}
+if(typeof dmgMod==='function'){const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);try{if(a&&ok(a)){const id=a.C.id;
+    if(id==='evona'&&mk(a)==='dB'&&!(o&&o.proj)&&!a.mv._ice)m*=.6;
+    if(id==='minato'&&!(o&&o.proj)&&t&&Math.abs(t.x-a.x)>88)m*=.9;}}catch(e){}return m;};}
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){let h2=h;try{if(a&&ok(a)&&a.C.id==='evona'&&mk(a)==='dB'&&!(o&&o.proj)&&!a.mv._ice&&h&&h.eff){h2=Object.assign({},h);h2.eff=null;}}catch(e){}return ah.call(this,t,h2,dirX,a,o);};}
+{const st0=step;step=function(){const r=st0.apply(this,arguments);try{if(typeof F==='undefined')return r;
+  for(const f of F){if(!f.C||f.C.id!=='tsuki'||f.gone)continue;if(f.dead||f.st==='respawn'){f._ws='L';continue;}if(!ok(f))continue;if(!f._ws)f._ws='L';const s=f._ws,hs=f.hitstun>0||f.st==='hit';
+    if(s==='S'&&!hs)f.x-=(f.vx||0)*.12;
+    if(s==='M'&&!f.ground&&!hs){f.x+=(f.vx||0)*.15;if(f.vy>0)f.vy-=.09;}
+    if(s!=='L'&&FR%9===0)part(f.x+(Math.random()*24-12),f.y-10-Math.random()*50,0,s==='M'?-.5:.2,14,WS[s].col,s==='M'?2:1,0);
+    if(CPU(f)&&FR%50===0&&!f.mv&&f.ground&&!hs){let soaked=false,near=false;for(const o of F){if(!foeOf(f,o))continue;const p=o._im&&o._im[F.indexOf(f)];if(p&&p.n>=2&&FR-p.T<150)soaked=true;if(Math.abs(o.x-f.x)<90)near=true;}
+      setState(f,soaked&&near?'S':(f.dmg>90&&!near?'M':'L'));}}}catch(e){}return r;};}
+if(typeof hudMeterOf==='function'){const h0=hudMeterOf;hudMeterOf=function(f){const r=h0.apply(this,arguments);try{if(f&&f.C&&f.C.id==='tsuki'&&ok(f)&&!r){const s=f._ws||'L';return{l:WS[s].n,t:'pips',v:1,n:s==='L'?1:s==='S'?2:3,max:3,col:WS[s].col,full:false};}}catch(e){}return r;};}
+try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
+  add('shi','He holds two borrowed quirks at a time.');
+  add('uchuu','Event Horizon absorbs at most two projectiles per use.');
+  add('evona','Flurry spends her stored ice: with a wall, slide or pillar standing it shatters the newest one and hits at full strength and freezes; with none it is 40% weaker and cannot freeze.');
+  add('minato','Hits at the very end of his stretch do 10% less: reach is traded for power.');
+  if(typeof GTXT!=='undefined'&&GTXT.evona&&GTXT.evona[3])GTXT.evona[3]=GTXT.evona[3].replace(/\s*No cooldown[^]*$/,'')+' It spends stored ice: with one of her structures standing it shatters the newest and hits at full strength; with none it is 40% weaker and cannot freeze.';
+}catch(e){}
+window.SHEET5={WS,setState};
 })();
 
 /* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
