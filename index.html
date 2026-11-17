@@ -177,7 +177,7 @@ kbd{font-family:var(--body);font-size:11px;font-weight:700;background:var(--pane
 .gmain{display:grid;grid-template-columns:minmax(150px,236px) minmax(0,1fr);gap:14px;min-height:0}
 .gros{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:6px;overflow:auto;align-content:start;padding:2px}
 .gros button{background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:4px 2px 3px;display:grid;justify-items:center;gap:2px;min-width:0}
-.gros button canvas{width:44px;height:44px;image-rendering:pixelated}
+.gros button canvas,.gros button img{width:44px;height:44px;image-rendering:pixelated}
 .gros button span{font-family:var(--display);font-size:14px;line-height:1;letter-spacing:.3px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gros button.on{border-color:var(--gold);background:var(--panel2)}
 .gdet{overflow:auto;padding-right:6px;min-width:0}
@@ -310,7 +310,7 @@ html,body{overscroll-behavior:none}button,.card,.scard,.pp{touch-action:manipula
  #guide{padding:0;place-items:stretch}.gbox{height:100vh;height:100dvh;max-height:100dvh;max-width:none;border-radius:0;padding:5px calc(8px + env(safe-area-inset-right,0px)) 5px calc(8px + env(safe-area-inset-left,0px));gap:5px;grid-template-rows:auto minmax(0,1fr)}
  .gtop h2{font-size:20px}.gtop span{display:none}.gtop{justify-content:space-between}.gtop .btn{font-size:15px;padding:6px 14px 3px}.gfoot{display:none}
  .gmain{grid-template-columns:150px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;gap:8px;min-height:0;overflow:hidden}.gros,.gdet{min-height:0;max-height:100%;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}.gdet{overflow-y:auto!important}.roster{touch-action:pan-x pan-y;overscroll-behavior-x:contain}.ssgrid{touch-action:pan-y;-webkit-overflow-scrolling:touch}.gros{grid-template-columns:repeat(2,1fr)!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;overflow-y:auto!important;overflow-x:hidden!important;gap:4px}
- .gros button canvas{width:34px;height:34px}.gros button span{font-size:11px}
+ .gros button canvas,.gros button img{width:34px;height:34px}.gros button span{font-size:11px}
  .ghead{gap:10px;align-items:flex-start}.gart.live canvas{width:min(250px,34vw)}.gid h3{font-size:22px!important}.gstats{display:none!important}.grole{font-size:11.5px!important}
  #gmvinfo b{font-size:18px}#gmoves button{min-height:34px}
  .jhint{display:none}.gbar button{font-size:12px;padding:5px 9px 4px;opacity:.7}
@@ -10453,7 +10453,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-0032';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1117-0047';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10642,6 +10642,24 @@ function tick(now){requestAnimationFrame(tick);const dt=now-P.last;P.last=now;tr
 requestAnimationFrame(tick);
 /* modes2 re-reads the pixel-edge rule every step, so hold it off here once we have decided */
 const st0=step;step=function(){const r=st0.apply(this,arguments);if(P.lv>=2){try{PIXELFX=false;}catch(e){}}return r;};
+})();
+
+/* Roster cards and guide list use plain <img> tiles instead of live canvases.
+   Some phone browsers mix up the contents of many small canvases inside a scrolling strip,
+   which showed the wrong fighter beside a name. Images cannot be mixed up that way. */
+(function(){
+function swap(cv,cls){try{if(!cv||cv.tagName!=='CANVAS'||!cv.parentNode)return;const im=new Image();im.className=cls||cv.className;im.alt='';im.draggable=false;im.decoding='sync';im.src=cv.toDataURL('image/png');cv.parentNode.replaceChild(im,cv);return im;}catch(e){}}
+function cardsPass(){document.querySelectorAll('#roster .card').forEach(b=>{const cv=b.querySelector('canvas.cimg');if(cv)swap(cv,'cimg');});}
+function refresh(ci){try{const b=document.querySelector('#roster .card[data-ci="'+ci+'"]');const im=b&&b.querySelector('img.cimg');if(im&&CARDS[ci])im.src=CARDS[ci].toDataURL('image/png');}catch(e){}}
+(function wait(){if(document.querySelector('#roster .card')&&typeof CARDS!=='undefined'&&CARDS.length){cardsPass();
+   /* the duo card is composited a moment after start-up: pick that up too */
+   const so=CH.findIndex(c=>c.id==='soran');[300,900,2000].forEach(t=>setTimeout(()=>{cardsPass();if(so>=0)refresh(so);},t));}
+ else setTimeout(wait,60);})();
+/* guide list is built the first time the guide opens */
+const mo=new MutationObserver(()=>{const g=document.getElementById('gros');if(!g)return;g.querySelectorAll('button>canvas').forEach(cv=>{const im=swap(cv,'');if(im){im.width=cv.width;im.height=cv.height;im.style.imageRendering='pixelated';}});});
+(function w2(){const g=document.getElementById('gros');if(g)mo.observe(g,{childList:true,subtree:true});else setTimeout(w2,200);})();
+const st=document.createElement('style');st.textContent='img.cimg{image-rendering:pixelated;-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none;pointer-events:none}';document.head.appendChild(st);
+window.CARDIMG={refresh,cardsPass};
 })();
 
 </script>
