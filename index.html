@@ -10457,7 +10457,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1117-1902';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1118-1924';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11499,6 +11499,51 @@ for(const C of CH){if(C.hidden||!C.mv||!C.look||C.look.body)continue;for(const T
 /* the attacker's own hittable limb still follows the main hitbox, not the arc circle */
 if(typeof limbR==='function'){const l0=limbR;limbR=function(f){const d=f&&f.mv&&f.mv.d;if(!d||!d._arcN)return l0.apply(this,arguments);const keep=[];for(const h of d.hits){keep.push(h.b);h.b=h.b.filter(b=>!b._add);}try{return l0.apply(this,arguments);}finally{d.hits.forEach((h,i)=>{h.b=keep[i];});}};}
 window.HITFIX={inner,arcs,stretch};
+})();
+
+/* motion.js — animation polish. Looks only: nothing here is read by hit detection, timing or damage.
+   1. Attacks wind up (pull back, twist, sink), lunge through the hit, overshoot and settle.
+   2. The striking limb is fully out on the first frame the hit is active, and stretches for that frame (a smear).
+   3. The run uses the whole body; the jump tucks at its peak. */
+(function(){
+const LK={hF:'aF',hB:'aB',fF:'lF',fB:'lB',w:'aF'};
+const cl=(v,a,b)=>v<a?a:v>b?b:v;
+if(typeof animPose==='function'){const ap=animPose;animPose=function(A,m,base){
+  let p;const d=m.d,s=d.s,a=d.a,r=d.r,t=m.t,spin=d.spin!==undefined?d.spin:A.spin;
+  try{
+    if(m.charging||spin||d.beh||s<2)return ap(A,m,base);
+    /* limb timing: halfway out on the last wind-up frame, fully out on the first active one */
+    const full=()=>{const m2=Object.create(m),d2=Object.create(d);d2.a=Math.max(a,3);m2.d=d2;m2.t=s+1;return ap(A,m2,base);};
+    if(t<s-1)p=ap(A,m,base);else if(t===s-1)p=lerpPose(ap(A,m,base),full(),.55);else if(t<s+a)p=full();else p=ap(A,m,base);
+    const lim=d.lim||A.lim,lk=LK[lim],hp=A.H&&lk&&A.H[lk];const hx=hp?hp[0]:16,hy=hp?hp[1]:-36;
+    const dir=hx<-6?-1:1,side=Math.abs(hx)>=9,up=!side&&hy<-56,down=!side&&hy>-14;
+    const w=cl((s-2)/13,.14,1);
+    let fx=0,tw=0,sy=0,sq=1;
+    if(t<s){const u=(t+1)/s,an=u<.75?ease(u/.75):1-(u-.75)/.25*.55;fx=-3.6*w*an;tw=-.17*w*an;sy=1.8*w*an;sq=1-.045*w*an;}
+    else if(t<s+a){fx=3.4*w;tw=.11*w;sq=1+.04*w;
+      if(t===s&&lk){const k=(lk==='aF'||lk==='aB')?'sF':'sL';p[k]=(p[k]||1)*(1+.2*w);}}
+    else{const v=(t-s-a)/Math.max(1,r),hold=v<.28?1:Math.max(0,1-(v-.28)/.42),sway=v>.5?-Math.sin((v-.5)/.5*Math.PI)*.22:0,k=hold+sway;fx=3.4*w*k;tw=.11*w*k;sq=1+.04*w*Math.max(0,hold);}
+    if(side){p.px=(p.px||0)+dir*fx;p.tl=(p.tl||0)+dir*tw;p.py=(p.py||0)+sy;
+      if(t>=s&&t<s+a&&p.lF&&lk!=='lF')p.lF=[p.lF[0]+dir*3.2*w,p.lF[1]];}
+    else if(up){p.py=(p.py||0)+(t<s?sy*1.6:-fx*.7);p.tl=(p.tl||0)+tw*.3;}
+    else if(down){p.py=(p.py||0)+(t<s?-sy*.9:fx*.8);}
+    else{p.px=(p.px||0)+fx*.5;p.py=(p.py||0)+sy;}
+    p.sq=(p.sq===undefined?1:p.sq)*sq;
+    return p;
+  }catch(e){return p||ap(A,m,base);}};}
+if(typeof exaggerate==='function'){const ex=exaggerate;exaggerate=function(p,f){const o=ex(p,f);try{
+  if(!f||!f.C||f.form||f.formL||(f.L&&f.L.body)||o.lie)return o;const st=f.st,t=f.anim||0;
+  if(st==='run'||st==='walk'){const run=st==='run',amp=run?1:.5,ph=t*(run?.3:.2),s=Math.sin(ph),c=Math.cos(ph);
+    o.py=(o.py||0)-Math.abs(s)*1.1*amp;o.tl=(o.tl||0)+.05*amp+s*.025*amp;o.hd=(o.hd||0)-s*.03*amp;
+    const arms=!(f.L&&f.L.wpn);
+    if(arms&&o.aF&&o.aB){o.aF=[o.aF[0]-4*s*amp,o.aF[1]-3*Math.max(0,-s)*amp-1.5*amp];o.aB=[o.aB[0]+4*s*amp,o.aB[1]-3*Math.max(0,s)*amp-1.5*amp];}
+    else if(o.aB){o.aB=[o.aB[0]+3.5*s*amp,o.aB[1]-2*Math.max(0,s)*amp];}
+    if(o.lF&&o.lB){o.lF=[o.lF[0]+2*s*amp,o.lF[1]];o.lB=[o.lB[0]-2*s*amp,o.lB[1]];}}
+  else if((st==='air')&&!f.mv){const vy=(f.vy||0)+(f.ly||0),k=Math.max(0,1-Math.abs(vy)/2.2);
+    if(k>0&&o.lF&&o.lB){o.lF=[o.lF[0]+2.5*k,o.lF[1]-8*k];o.lB=[o.lB[0]+1*k,o.lB[1]-6*k];if(o.aF)o.aF=[o.aF[0]+2*k,o.aF[1]+3*k];if(o.aB)o.aB=[o.aB[0]-2*k,o.aB[1]+3*k];o.tl=(o.tl||0)+.06*k;}
+    if(vy>2.5&&o.lF&&o.lB){const q=Math.min(1,(vy-2.5)/3);o.lF=[o.lF[0]-1.5*q,o.lF[1]+1.5*q];o.lB=[o.lB[0]-2.5*q,o.lB[1]-2*q];}}
+}catch(e){}return o;};}
+window.MOTION=1;
 })();
 
 /* perf.js — keeps the game smooth on slower devices. It watches the real frame rate during a match and, if it stays low, turns the costly extras off one at a time:
