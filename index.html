@@ -10511,7 +10511,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1118-2218';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1118-2253';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11629,6 +11629,19 @@ const mo=new MutationObserver(()=>{const g=document.getElementById('gros');if(!g
 (function w2(){const g=document.getElementById('gros');if(g)mo.observe(g,{childList:true,subtree:true});else setTimeout(w2,200);})();
 const st=document.createElement('style');st.textContent='img.cimg{image-rendering:pixelated;-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none;pointer-events:none}';document.head.appendChild(st);
 window.CARDIMG={refresh,cardsPass};
+})();
+
+/* suzweb.js — Suzume's Web Yank (side special) is a web line shot from her wrist. Her arm only points; it no longer stretches across the stage. */
+(function(){const C=CH.find(c=>c.id==='suzume');if(!C)return;
+for(const set of [C.mv,C.hmv,C.fmv]){const d=set&&set.sB;if(!d||!d.hits)continue;d.ph={aF:[22,-40]};d._web=1;}
+const n0=ninjaFX;ninjaFX=function(f){n0.apply(this,arguments);const m=f.mv;if(!m||f.st!=='move'||f.C.id!=='suzume'||!m.d||!m.d._web)return;
+  const d=m.d,t=m.t,s=d.s,a=d.a;let L=0;for(const h of d.hits)for(const b of h.b)L=Math.max(L,b[0]+b[2]);
+  let k=0;if(t>=s-3&&t<s)k=(t-(s-3)+1)/4;else if(t>=s&&t<s+a+2)k=1;else if(t>=s+a+2&&t<s+a+9)k=1-(t-(s+a+2))/7;if(k<=0)return;
+  const dir=f.face,x0=f.x+dir*17,y0=f.y-39,x1=f.x+dir*Math.max(22,L*k),y1=f.y-38,mx=(x0+x1)/2,sag=3*(1-k)+1.5;
+  wl('#0c0820',x0,y0,mx,y0+sag,3);wl('#0c0820',mx,y0+sag,x1,y1,3);wl('#f4f4fa',x0,y0,mx,y0+sag,1.4);wl('#f4f4fa',mx,y0+sag,x1,y1,1.4);
+  /* the sticky end: a little fan of strands */
+  for(let i=-2;i<=2;i++){const an=i*.42;wl('#f4f4fa',x1,y1,x1+dir*Math.cos(an)*7,y1+Math.sin(an)*7,1);}wl('#d8d8ea',x1+dir*5,y1-5,x1+dir*5,y1+5,1);wdisc(x1,y1,2.2,'#ffffff');
+  if(k===1&&FR%2===0)part(x1+dir*4,y1+(rnd()-.5)*8,dir*.6,(rnd()-.5)*.8,10,'#f0f0f8',1.5,0);};
 })();
 
 </script>
