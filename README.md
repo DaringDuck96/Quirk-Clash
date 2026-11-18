@@ -1,4 +1,4 @@
-# PU Quirk Clash
+# PU Hero Clash
 
 A 2D pixel platform fighter starring 39 ability students, for 1 to 4 players (keyboard or controllers).
 

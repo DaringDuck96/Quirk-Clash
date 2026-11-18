@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#17133f"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><title>PU Quirk Clash</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#17133f"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><title>PU Hero Clash</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Teko:wght@500;600;700&family=Rubik:ital,wght@0,400;0,500;0,700;1,800&display=swap" rel="stylesheet">
@@ -403,7 +403,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
   <section id="title">
     <canvas id="titlebg" width="640" height="360"></canvas><div class="tshade"></div>
     <div class="tin">
-      <h1 class="logo tlogo"><small>PU</small>QUIRK CLASH <span>AGE OF HEROES</span></h1>
+      <h1 class="logo tlogo"><small>PU</small>HERO CLASH <span>AGE OF HEROES</span></h1>
       <p class="ttag">Arcade ability brawler for 1 to 4 players. Launch your rivals off a stage in Japan.</p>
       <div class="tmenu mm"><button class="mt mt1" id="tFight"><b>FIGHT</b><i>1 to 4 players or CPUs. Free-for-all or teams.</i></button><button class="mt mt2" id="tSurv"><b>SURVIVAL</b><i>Hold the fortress against the waves.</i></button><button class="mt mt3" id="tTrain"><b>TRAINING</b><i>Practise on a dummy.</i></button><button class="mt mt4" id="tGuide"><b>ROSTER &amp; MOVES</b><i>Every fighter, every attack.</i></button><button class="mt mt5" id="tHelp"><b>HOW TO PLAY</b><i>Controls and rules.</i></button><button class="mt mt6" id="tFs"><b>FULLSCREEN</b></button></div>
       <p class="tpress">PRESS ANY BUTTON ON A CONTROLLER TO GRAB A POINTER</p>
@@ -413,7 +413,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
   </section>
   <section id="select" hidden>
     <div class="top">
-      <div class="rib"><i>Fight</i><b>Fighter Select</b></div><h1 class="logo"><small>PU</small>QUIRK CLASH <span>AGE OF HEROES</span></h1>
+      <div class="rib"><i>Fight</i><b>Fighter Select</b></div><h1 class="logo"><small>PU</small>HERO CLASH <span>AGE OF HEROES</span></h1>
       <span class="sub" id="modeSub">Arcade ability brawler. Launch your rival off a stage in Japan.</span>
       <button class="tbtn gbtn" id="guideBtn">CHARACTER GUIDE</button>
       <button class="tbtn" id="helpBtn">CONTROLS &amp; MOVE LIST</button>
@@ -431,7 +431,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
 
   <section id="stagesel" hidden>
     <div class="top">
-      <div class="rib"><i>Fight</i><b>Stage Select</b></div><h1 class="logo"><small>PU</small>QUIRK CLASH <span>AGE OF HEROES</span></h1>
+      <div class="rib"><i>Fight</i><b>Stage Select</b></div><h1 class="logo"><small>PU</small>HERO CLASH <span>AGE OF HEROES</span></h1>
       <span class="sub">Choose a battleground: landmarks across Japan, or the PU campus training grounds.</span>
       <button class="tbtn" id="ssfs">FULLSCREEN</button>
     </div>
@@ -491,7 +491,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
         <dt>Zair (grab-air tether)</dt><dd>Grab in the air, or Shield + A. Reaches out with the student's ability and can grab a ledge.</dd></dl></section>
       <section><h4>Special moves</h4><dl>
         <dt>Neutral B / Side B / Up B / Down B</dt><dd>B, ← → + B, ↑ + B, ↓ + B</dd>
-        <dt>Final Smash</dt><dd>Fill the meter under your name by dealing and taking damage. When it glows, press B (neutral) to unleash it.</dd></dl></section>
+        <dt>Heroic Finale</dt><dd>Fill the meter under your name by dealing and taking damage. When it glows, press B (neutral) to unleash it.</dd></dl></section>
       <section><h4>Grabs and throws</h4><dl>
         <dt>Grab</dt><dd>Grab, or Shield + A</dd><dt>Pummel</dt><dd>A while holding</dd><dt>F / B / U / D-throw</dt><dd>Direction while holding</dd></dl></section>
       <section><h4>Defense and ledge</h4><dl>
@@ -509,7 +509,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
     <p><b>Player 2:</b> arrows move, <kbd>,</kbd> attack, <kbd>.</kbd> special, <kbd>/</kbd> jump, <kbd>R-Shift</kbd> shield, <kbd>'</kbd> grab. <b>Phone:</b> drag the left half to move; flick the stick while tapping A for smashes.</p>
     <div class="row" style="margin-top:12px"><button class="btn pri" id="helpClose">GOT IT</button></div>
   </div></div>
-  <div id="rotate"><div><i></i><b>ROTATE YOUR PHONE</b><span>PU Quirk Clash plays in widescreen. Turn your phone sideways to fight.</span></div></div>
+  <div id="rotate"><div><i></i><b>ROTATE YOUR PHONE</b><span>PU Hero Clash plays in widescreen. Turn your phone sideways to fight.</span></div></div>
 </div>
 <script>window.SONGLIST={"theme": "embed"};</script>
 <script>
@@ -3080,7 +3080,7 @@ function drawTether(el,x0,y0,x1,y1,fx,f){const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx
   default:wl(c0,x0,y0,x1,y1,2.4);wl(c1,x0,y0,x1,y1,1);wdisc(x1,y1,3,c0);}}
 
 let FSFIN=[-1,.5];
-/* ===================== FINAL SMASHES ===================== */
+/* ===================== HEROIC FINALES ===================== */
 const FSD={
  kimiko:{name:'ABSOLUTE ZERO',type:'zone',r:150,dur:90,tick:2,ri:10,eff:'freeze',fin:[10,9,.11,60],col:['#8fe4ff','#ffffff'],vis:'blizzard'},
  keanu:{name:'WRATH OF THE ISLANDS',type:'wave',w:90,h:130,spd:4.4,dur:110,tick:2.5,ri:8,fin:[12,9,.11,45],col:['#5fd0ff','#ff6a1a'],vis:'tsunami'},
@@ -3142,7 +3142,7 @@ Object.assign(FSD,{
  daku:{name:'CERBERUS',type:'rush',spd:9,win:24,dur:74,tick:2.4,ri:5,fin:[14,10,.12,50],col:['#ff4a1a','#ffb030'],vis:'gen'},
  kongu:{name:'KING OF THE JUNGLE',type:'rush',spd:6.5,win:28,dur:76,tick:2.6,ri:6,fin:[15,10.5,.125,55],col:['#f0f0f4','#6a8aff'],vis:'gen'},
  hippo:{name:'ROLL CREDITS',type:'zone',r:999,dur:70,tick:1.7,ri:9,fin:[11,9,.1,55],col:['#4a9aff','#ffe060'],vis:'gen'}});
-/* bigger, longer, harder-hitting: a Final Smash should end a stock from mid damage */
+/* bigger, longer, harder-hitting: a Heroic Finale should end a stock from mid damage */
 const FSCALL={kimiko:'SHATTER!',keanu:'ERUPTION!',bara:'FULL DISPLAY!',tori:'PHASED OUT!',minato:'SNAP BACK!',oro:'VENOM STRIKE!',gomi:'BURN IT ALL!',kouji:'ECLIPSE!',emi:'DIVE!',soran:'RELAY FINISH!',ryuko:'OMEGA BLAST!',shiki:'ONI CRUSH!',zabu:'TAIL SLAM!',marina:'DRAGON GATE!',uchuu:'SUPERNOVA!',shuko:'VANISH!',torabi:'ORDER UP!',suze:'LONG LIVE THE QUEEN!',hake:'EXILED!'};
 Object.assign(FSCALL,{dawson:'NIGHTSTRIKE!',maya:'BE AT PEACE.',sarah:'LIGHTS OUT.',aria:'OH! JACKPOT!',bryson:'I CAN\'T HOLD IT!',conor:'DON\'T CALL ME LITTLE!',ray:'LOOK AT ME!',oliver:'BULLSEYE.',chris:'STILL STANDING!',evona:'FOR TRUE LOVE!',jack:'SACRED FLAME!',kal:'I SAW THAT COMING!',kora:'ARCHANGEL!',ash:'TIMBER!'});
 Object.assign(FSCALL,{moya:'GONE.',sato:'BRACE FOR IMPACT!',akio:'TOO SLOW!',sata:'TARGET LOCKED.',kitsu:'SHOWTIME!',uzi:'NOT A MONSTER!',ichigo:'BOOM.',bentou:'KARMA.',okane:'BENEATH ME.',goiru:'PROTECT!',aya:'LOOK AT ME!',hikari:'LIVE WIRE!',ryo:'I FELT THAT.',suzume:'CAUGHT YOU!',ayame:'ENOUGH.',sota:'I AM READY!',tiki:'COME ON THROUGH.'});
@@ -3251,11 +3251,11 @@ function drawFSCut(c){if(!FSCUT)return;const f=FSCUT.f,d=FSCUT.d,t=FSCUT.t,k=Mat
   c.translate(0,0);c.beginPath();c.moveTo(-40+(1-k)*-1400,250);c.lineTo(1320+(1-k)*-1400,190);c.lineTo(1320+(1-k)*-1400,470);c.lineTo(-40+(1-k)*-1400,530);c.closePath();
   const g=c.createLinearGradient(0,0,1280,0);g.addColorStop(0,f.C.col);g.addColorStop(.5,'#ffffff');g.addColorStop(1,f.col);c.fillStyle=g;c.globalAlpha=out*.9;c.fill();c.globalAlpha=out;
   c.save();c.clip();const cv=(f.skin?headFor(f.ci,f.skin):CARDS[f.ci]);c.drawImage(cv,150+(1-k)*-300,140,440,440);c.restore();
-  c.font='20px "Press Start 2P", monospace';c.textAlign='left';c.fillStyle='#0c0820';c.fillText('FINAL SMASH',640+(1-k)*400,286);
+  c.font='20px "Press Start 2P", monospace';c.textAlign='left';c.fillStyle='#0c0820';c.fillText('HEROIC FINALE',640+(1-k)*400,286);
   c.font=(d.name.length>20?34:44)+'px "Press Start 2P", monospace';c.lineJoin='round';c.lineWidth=10;c.strokeStyle='#0c0820';c.strokeText(d.name,600+(1-k)*400,380,640);c.fillStyle='#ffffff';c.fillText(d.name,600+(1-k)*400,380,640);
   c.font='16px "Press Start 2P", monospace';c.fillStyle='#0c0820';c.fillText(f.C.n,640+(1-k)*400,428);c.restore();}
 
-/* the world dims and speed lines converge on whoever is unleashing a Final Smash */
+/* the world dims and speed lines converge on whoever is unleashing a Heroic Finale */
 function fsBackdrop(){for(const e of ENT){if(e.k!=='fs'||!e.alive)continue;const f=e.owner,d=e.d,t=e.t,a=Math.min(1,t/8)*(t>d.dur-10?Math.max(0,(d.dur-t)/10):1),vw=WW/CAM.z+80,vh=WH/CAM.z+80;
     X.globalAlpha=.5*a;wr('#05020e',CAM.x-vw/2,CAM.y-vh/2,vw,vh);X.globalAlpha=.16*a;const cx=f.x,cy=f.y-30,R=Math.max(vw,vh);
     for(let i=0;i<22;i++){const an=i/22*TAU+t*.012,w=.035+srnd(i)*.03;wpoly(i%2?d.col[0]:'#ffffff',[cx+Math.cos(an)*R,cy+Math.sin(an)*R,cx+Math.cos(an+w)*R,cy+Math.sin(an+w)*R,cx+Math.cos(an+w/2)*46,cy+Math.sin(an+w/2)*46]);}
@@ -4048,7 +4048,7 @@ function drawHUD(c){const HF=F.filter(f=>f.team!==1),n=HF.length,sp=n>3?316:n>2?
   const txt=f.gone?'—':(f.noPct>0?'  ?':d+'%');c.strokeText(txt,150+sh,80+sh*.3);c.fillStyle=dmgCol(d);c.fillText(txt,150+sh,80+sh*.3);
   for(let k=0;k<MATCH.stocks;k++){c.globalAlpha=k<f.stocks?1:.22;c.save();c.beginPath();c.arc(-46+k*24,58,10,0,TAU);c.fillStyle=f.col;c.fill();c.beginPath();c.arc(-46+k*24,58,8.5,0,TAU);c.clip();c.drawImage(fHead(f),-56+k*24,48,20,20);c.restore();c.globalAlpha=1;}
   c.font='11px "Press Start 2P", monospace';c.textAlign='left';
-  {const w=150,fx=-56,fy=-18,full=f.fsm>=100;c.fillStyle='rgba(255,255,255,.12)';c.fillRect(fx,fy,w,6);c.fillStyle=full?'hsl('+((FR*6)%360)+',100%,62%)':'#f6c94e';c.fillRect(fx,fy,w*f.fsm/100,6);if(full){c.font='10px "Press Start 2P", monospace';c.textAlign='left';c.fillStyle='#ffffff';c.fillText('FINAL SMASH READY',fx+w+8,fy+7);}}
+  {const w=150,fx=-56,fy=-18,full=f.fsm>=100;c.fillStyle='rgba(255,255,255,.12)';c.fillRect(fx,fy,w,6);c.fillStyle=full?'hsl('+((FR*6)%360)+',100%,62%)':'#f6c94e';c.fillRect(fx,fy,w*f.fsm/100,6);if(full){c.font='10px "Press Start 2P", monospace';c.textAlign='left';c.fillStyle='#ffffff';c.fillText('HEROIC FINALE READY',fx+w+8,fy+7);}}
   if(f.C.id==='uchuu'&&f.cosmo>0){c.fillStyle='#2a2550';c.fillRect(-56,72,100,6);c.fillStyle='#b890ff';c.fillRect(-56,72,100*f.cosmo/90,6);}
   if(f.C.id==='hake'&&f.pocket){c.fillStyle='#9a70ff';c.fillText('POCKET',30,36);}
   if(f.copyT>0){c.fillStyle='#e8c040';c.fillText('MIMIC '+CH[f.copyCi].sn,-56,-26);}
@@ -4685,7 +4685,7 @@ function animRamen(t){if(ST3.chos)ST3.chos.forEach((g,i)=>rotE(g,0,0,Math.sin(t*
   main:{x:50,w:540},plats:[],mech:'gantry',wx:'none',ui:['#2456d0','#f4f6fa'],
   sky:{top:'#1f66d0',mid:'#84bcec',hor:'#eaf0f4',sun:[.72,.82,.04],sunC:'#fff6d8',cld:'#ffffff',cldA:.6,star:0,neb:0,hz:.5},
   lt:{dir:[.5,.75,.45],key:'#fff6ea',amb:'#7a86b0',rim:'#d8e8ff',fogC:'#8fa6c8',fog:[90,640,.5]},build:buildShink,bg:bgShink,anim:animShink},
- {id:'prom',n:'Prom Night Dance Floor',jp:'プロムナイト',loc:'PU campus, Gym A, one night only',d:'The gym, decorated. A lit dance floor between two speaker stacks, with a lighting truss overhead. A spotlight wanders the floor: whoever dances in it charges their Final Smash.',tags:['Spotlight charges Final Smash','3 platforms','Small'],
+ {id:'prom',n:'Prom Night Dance Floor',jp:'プロムナイト',loc:'PU campus, Gym A, one night only',d:'The gym, decorated. A lit dance floor between two speaker stacks, with a lighting truss overhead. A spotlight wanders the floor: whoever dances in it charges their Heroic Finale.',tags:['Spotlight charges Heroic Finale','3 platforms','Small'],
   main:{x:80,w:480},plats:[{x:92,y:186,w:84},{x:464,y:186,w:84},{x:258,y:112,w:124}],mech:'spotlight',wx:'none',ui:['#ff3aa8','#3af0ff'],
   sky:{top:'#0c0818',mid:'#1c1232',hor:'#3a2452',sun:[0,0,0],sunC:'#000000',cld:'#2a1c40',cldA:0,star:0,neb:0,hz:.5},
   lt:{dir:[.3,.85,.45],key:'#f0d8ff',amb:'#5a4a80',rim:'#ff6ad0',fogC:'#241838',fog:[60,300,.6]},build:buildProm,bg:bgProm,anim:animProm},
@@ -4703,7 +4703,7 @@ function animRamen(t){if(ST3.chos)ST3.chos.forEach((g,i)=>rotE(g,0,0,Math.sin(t*
     if(c===430){HZ.warn=0;HZ.obj={x:m.x+m.w+260,vx:-8.5,hit:{}};sfx('beam');}
     const o=HZ.obj;if(o){o.x+=o.vx;const y0=m.y-66,y1=m.y-36;for(const f of F){if(!hazFree(f)||o.hit[f.id]||intangible(f))continue;const R=hurtR(f);if(R[0]<o.x+7&&R[0]+R[2]>o.x-7&&R[1]<y1&&R[1]+R[3]>y0){o.hit[f.id]=1;applyHit(f,{dmg:12,bkb:7,kbg:.085,ang:35,fx:['#ffd23a','#ffffff']},-1,null,{proj:1});}}
       if(o.x<m.x-260)HZ.obj=null;}}
-  else if(k==='spotlight'){if(T===90)hazTxt('STAND IN THE SPOTLIGHT TO CHARGE YOUR FINAL SMASH','#ff9ad8');HZ.sx=m.x+m.w*(.5+.4*Math.sin(T*.0075)+.06*Math.sin(T*.031));
+  else if(k==='spotlight'){if(T===90)hazTxt('STAND IN THE SPOTLIGHT TO CHARGE YOUR HEROIC FINALE','#ff9ad8');HZ.sx=m.x+m.w*(.5+.4*Math.sin(T*.0075)+.06*Math.sin(T*.031));
     for(const f of F){if(!hazFree(f)||f.ground!==m||Math.abs(f.x-HZ.sx)>30||f.st==='fs')continue;if((f.fsm||0)<100){f.fsm=Math.min(100,(f.fsm||0)+.11);if(T%8===0)part(f.x+rnd()*20-10,f.y-rnd()*56,0,-.7,16,PROMC[fl(rnd()*6)],1,0);}}}
   else if(k==='ramen'){if(!HZ.obj&&T%780===390){const s=[m].concat(STAGE.plats),p=s[fl(rnd()*s.length)];HZ.obj={p,ox:.2+rnd()*.6,t:0};hazTxt('ORDER UP!','#ffc860');sfx('pop');}
     const o=HZ.obj;if(o){o.t++;const x=o.p.x+o.p.w*o.ox,y=o.p.y;for(const f of F){if(!hazFree(f))continue;if(Math.abs(f.x-x)<16&&f.y>y-30&&f.y<y+8){f.dmg=Math.max(0,f.dmg-10);FXL.push({k:'ring',x,y:y-12,t:0,col:'#9aff9a',r0:6,life:18});FXL.push({k:'txt',s:'-10%',x:f.x,y:f.y-74,t:0,life:50,col:'#9aff9a'});sfx('power');HZ.obj=null;break;}}
@@ -5014,7 +5014,7 @@ function buildSelect(){const ro=$('#roster');CH.forEach((C,i)=>{if(C.hidden){ro.
   $('#helpBtn').onclick=()=>{$('#help').hidden=!$('#help').hidden;};$('#helpClose').onclick=()=>{$('#help').hidden=true;};
   $('#fsBtn').onclick=()=>{try{if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen();}catch(e){}};}
 function renderInfo(n,ci){const C=CH[ci],el=$('#info'+n);el.innerHTML='';const h=document.createElement('h2');h.textContent=C.n;h.style.color=C.col;const q=document.createElement('div');q.className='q';q.textContent=C.q+' · '+C.ty;
-  const d=document.createElement('p');d.textContent=C.d;const na=document.createElement('p');na.className='na';na.textContent=C.na||'';const ul=document.createElement('ul');['NEUTRAL','SIDE','UP','DOWN','FINAL'].forEach((k,i)=>{const li=document.createElement('li');li.innerHTML='<i></i>';li.querySelector('i').textContent=k;li.append(i<4?C.sp[i]:FSD[C.id].name+(C.id==='tatsuya'?' (copies rival’s Final Smash)':''));ul.appendChild(li);});el.append(h,q,d,ul,na);if(C.feel){const fp=document.createElement('p');fp.className='na';fp.textContent=C.feel.atk[0]+' · '+C.feel.def[0]+(C.feel.pas?' · '+C.feel.pas[0]:'')+'. Best at: '+C.feel.good+'. Worst at: '+C.feel.bad+'.';el.append(fp);}}
+  const d=document.createElement('p');d.textContent=C.d;const na=document.createElement('p');na.className='na';na.textContent=C.na||'';const ul=document.createElement('ul');['NEUTRAL','SIDE','UP','DOWN','FINAL'].forEach((k,i)=>{const li=document.createElement('li');li.innerHTML='<i></i>';li.querySelector('i').textContent=k;li.append(i<4?C.sp[i]:FSD[C.id].name+(C.id==='tatsuya'?' (copies rival’s Heroic Finale)':''));ul.appendChild(li);});el.append(h,q,d,ul,na);if(C.feel){const fp=document.createElement('p');fp.className='na';fp.textContent=C.feel.atk[0]+' · '+C.feel.def[0]+(C.feel.pas?' · '+C.feel.pas[0]:'')+'. Best at: '+C.feel.good+'. Worst at: '+C.feel.bad+'.';el.append(fp);}}
 function refreshSel(){document.querySelectorAll('.card').forEach(b=>{const i=+b.dataset.ci;b.classList.toggle('s1',SEL.p[0]===i);b.classList.toggle('s2',SEL.p[1]===i);b.querySelectorAll('.bd').forEach(x=>x.remove());
     [0,1].forEach(n=>{if(SEL.p[n]===i){const s=document.createElement('span');s.className='bd b'+(n+1);s.textContent=SEL.mode[n]==='h'?'P'+(n+1):'CPU';b.appendChild(s);}});});
   [0,1].forEach(n=>{$('#pp'+n).classList.toggle('active',SEL.active===n);$('#tag'+n).textContent=(SEL.mode[n]==='h'?'P'+(n+1):'CPU')+(SEL.active===n?' · PICKING':'');renderInfo(n,SEL.p[n]);});}
@@ -5167,7 +5167,7 @@ uchuu:['Hold B to charge a cosmic blast and release to fire. Press Shield or Jum
 shuko:['Flicks three fast soot shuriken.','A slow storm cloud (one at a time) that blinds and slows rivals inside it.','Leaps up and leaves a smoke platform behind to stand on for a few seconds.','A giant smoke hand rises from the ground ahead and launches rivals upward.','A whiteout smothers everything around him.'],
 torabi:['Swallows a lump of wasabi and breathes a long cone of green fire. Hits many times and burns.','Lobs two gyoza in an arc. Each one explodes on impact.','Leaps with a rope of ramen noodles that hits above him and can grab a ledge.','Eats his signature dish for a random bonus: heal 12%, hit harder, or move faster. Long cooldown.','Serves a full-course feast that damages everyone nearby and heals him.'],
 suze:['Spits a honey glob. Stuck rivals move slowly and jump lower.','Releases a bee swarm (one at a time) that chases rivals and stings repeatedly.','Buzzes through the air in any direction.','Lays a honey puddle (one at a time) that roots whoever steps in it. It gets stickier the longer it sits.','The Queen calls her whole hive: a swarm engulfs everyone nearby and leaves them coated in honey.'],
-tatsuya:['A golden orb. While he is copying a rival, this becomes their neutral special.','A quick lunge. While copying, their side special.','A rising leap. While copying, their up special.','A palm touch that copies the rival for 10 seconds instead of 7.','Copies the Final Smash of the nearest rival.']};
+tatsuya:['A golden orb. While he is copying a rival, this becomes their neutral special.','A quick lunge. While copying, their side special.','A rising leap. While copying, their up special.','A palm touch that copies the rival for 10 seconds instead of 7.','Copies the Heroic Finale of the nearest rival.']};
 const GD={ci:0,tw:0,on:false};
 function gList(){return rosterOrder();}
 function gEsc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
@@ -5182,7 +5182,7 @@ function gPage(C,ci){const jab=C.mv.jab?gDmg(C,'jab'):['jab1','jab2','jab3'].red
     '<div class="gstats"><span>POWER</span><div class="pips">'+gPips(C.pwr||1,.74,1.34)+'</div><span>SPEED</span><div class="pips">'+gPips(C.spd||C.st.run,2.6,6.2)+'</div><span>WEIGHT</span><div class="pips">'+gPips(C.st.w,.76,1.5)+'</div><span>RANGE</span><div class="pips">'+gPips(C.rng||3,1,5)+'</div><span>FLOAT</span><div class="pips">'+gPips(1/(C.st.fall||5.4),1/7.2,1/3.6)+'</div><span>JUMPS</span><div class="pips">'+gPips(C.st.aj+1,1,5)+'</div></div></div></div>';
   h+='<h4>SPECIAL MOVES</h4><div class="gsp">';
   for(let i=0;i<4;i++)h+='<kbd>'+inp[i]+'</kbd><div><b>'+gEsc(C.sp[i])+'</b><p>'+gEsc(tx[i]||'')+'</p></div>';
-  h+='<kbd class="fs">B at full meter</kbd><div><b class="fsn">FINAL SMASH: '+gEsc(fs.name)+'</b><p>'+gEsc(tx[4]||'')+'</p></div></div>';
+  h+='<kbd class="fs">B at full meter</kbd><div><b class="fsn">HEROIC FINALE: '+gEsc(fs.name)+'</b><p>'+gEsc(tx[4]||'')+'</p></div></div>';
   h+='<h4>NORMAL ATTACKS <small>damage per hit</small></h4><p class="gna">'+gEsc(C.na||'')+'</p>';
   h+=grp('GROUND',[['JAB',jab],['F-TILT',gDmg(C,'ftilt')],['U-TILT',gDmg(C,'utilt')],['D-TILT',gDmg(C,'dtilt')],['DASH',gDmg(C,'dash')]]);
   h+=grp('SMASH',[['FORWARD',gDmg(C,'fsmash')],['UP',gDmg(C,'usmash')],['DOWN',gDmg(C,'dsmash')]]);
@@ -5212,7 +5212,7 @@ addEventListener('keydown',e=>{if(!GD.on)return;const k=e.code;if(k==='Escape'){
 let PVIEW='menu';
 function pauseCtl(){const ov=$('#overlay');ov.innerHTML='';const box=document.createElement('div');box.className='ovc pctl';PVIEW='ctl';
   let h='<h3>CONTROLS</h3><div class="kt">'+$('#help .kt').innerHTML+'</div>';
-  h+='<div class="ptech"><span><b>Smash</b> direction + Attack together (hold to charge)</span><span><b>Tilt</b> hold a direction, then Attack</span><span><b>Specials</b> B, ← → + B, ↑ + B, ↓ + B</span><span><b>Final Smash</b> B when your meter glows</span><span><b>Dodge</b> Shield + direction (↓ = spot dodge)</span><span><b>Parry</b> let go of Shield as a hit lands</span><span><b>Throw</b> grab, then a direction</span><span><b>Fast fall</b> ↓ while falling</span></div>';
+  h+='<div class="ptech"><span><b>Smash</b> direction + Attack together (hold to charge)</span><span><b>Tilt</b> hold a direction, then Attack</span><span><b>Specials</b> B, ← → + B, ↑ + B, ↓ + B</span><span><b>Heroic Finale</b> B when your meter glows</span><span><b>Dodge</b> Shield + direction (↓ = spot dodge)</span><span><b>Parry</b> let go of Shield as a hit lands</span><span><b>Throw</b> grab, then a direction</span><span><b>Fast fall</b> ↓ while falling</span></div>';
   h+='<h3>FIGHTERS IN THIS MATCH</h3><div class="pfs">';
   for(const f of F){if(f.gone)continue;const C=f.C,tw=C.twin?CH.find(c=>c.id===C.twin):null;const row=(K2)=>'<div class="pf" style="border-color:'+f.col+'"><b style="color:'+f.col+'">'+gEsc(ptag(f))+' · '+gEsc(K2.sn)+'</b>'+['B','→B','↑B','↓B'].map((k,i)=>'<span><kbd>'+k+'</kbd>'+gEsc(K2.sp[i])+'</span>').join('')+'<span><kbd class="fs">FS</kbd>'+gEsc(FSD[K2.id].name)+'</span></div>';
     h+=row(C);if(tw)h+=row(tw);}
@@ -5247,7 +5247,7 @@ tiki:['Calls Tantou, a small fierce spirit that chases a rival down.','Calls Kof
 dawson:['Throws a shuriken, fast and flat. No cooldown.','Fires the grapple hook and is dragged across the stage behind it, ending in a rising kick that sets up a combo.','Hooks upward: it catches the ledge from a distance, and holding Jump afterwards opens the glider cape.','Plants a snare trap on the floor. It roots whoever steps on it. He can have two or three out at once.','Appears beside a rival and takes them apart with every tool on the belt.'],
 maya:['A palm touch that draws essence out of a rival and heals her 4%.','Take Speed: a spirit arrow that curves toward a rival. If it lands, they are slowed and she is sped up for four seconds.','A rising leap.','Take Strength: a touch. If it lands, the rival hits 20% softer and she hits 20% harder for five seconds.','A circle of life around her: rivals inside are drained, and she is healed.'],
 sarah:['Builds a fist out of shadow and throws it. Hold B to build a bigger, stronger one.','Steps out of a nearby rival\'s shadow, behind them, and kicks. Hits from behind do 30% more.','Moves through shadow a short way in any direction.','Takes hold of the nearest rival\'s own shadow: blades rise out of it under their feet, and the middle one pins them in place. Works from most of the stage away.','Total darkness around her. Everyone inside is torn at by shadows.'],
-aria:['Flicks a coin. It finds its own way to a rival.','Trips over nothing and falls forward into whoever is there.','A convenient gust carries her up.','Something lucky happens: half the time a snack (heals 8%), sometimes a power-up for her next hit, rarely a chunk of Final Smash meter. Long cooldown.','Everything goes right at once, for her, and wrong for everyone else.'],
+aria:['Flicks a coin. It finds its own way to a rival.','Trips over nothing and falls forward into whoever is there.','A convenient gust carries her up.','Something lucky happens: half the time a snack (heals 8%), sometimes a power-up for her next hit, rarely a chunk of Heroic Finale meter. Long cooldown.','Everything goes right at once, for her, and wrong for everyone else.'],
 bryson:['Lobs a beaker from the lab.','A short shove forward.','A nervous jump.','Stops fighting it. If his Tantrum meter is at least half full he transforms straight away.','Loses it completely.'],
 conor:['Lobs a marshmallow. He makes them. It sticks to whoever it hits and slows them down.','Rides a rainbow across the stage.','Springs off a giant marshmallow for a very high leap. The marshmallow stays a moment and bounces anyone who touches it.','Lobs his pot of gold. Slow and heavy.','Shows everyone exactly where the rainbow ends.'],
 ray:['An instant laser from his eyes with very long reach.','A paralysing stare: an instant line of sight that freezes whoever it lands on. Almost no damage. Long cooldown.','A rising leap; he looks down as he goes and fires a beam at the floor.','Future Sight: he sees a split second ahead, so the next hit aimed at him within two and a half seconds misses. Long cooldown.','Stares down the whole lane until it catches fire.'],
@@ -5614,7 +5614,7 @@ function pauseMenu(){const ov=$('#overlay');ov.hidden=false;ov.innerHTML='';PVIE
     opt('DUMMY DAMAGE',[['keep','KEEP'],['0','0%'],['50','50%'],['100','100%'],['150','150%']],()=>TR.pct,v=>{TR.pct=v;if(v!=='keep'&&F[1]){F[1].dmg=+v;TR.prev=+v;}});
     const r=document.createElement('div');r.className='trow';const s=document.createElement('span');s.textContent='TOOLS';r.appendChild(s);
     const tb=(t,fn)=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>{fn();sfx('pop');togglePause();};r.appendChild(b);};
-    tb('FILL FINAL SMASH',()=>{F[0].fsm=100;});tb('RESET POSITIONS',()=>{const m=STAGE.main;F.forEach((f,i)=>{f.x=WW/2+(i?60:-60);f.y=m.y;f.ground=m;f.vx=f.vy=f.lx=f.ly=0;f.st='idle';f.mv=null;f.hitstun=0;f.dmg=i&&TR.pct!=='keep'?+TR.pct:0;f.face=i?-1:1;});TR.prev=F[1].dmg;TR.combo=0;TR.cdmg=0;});tb('SWAP DUMMY FIGHTER',()=>{const pool=CH.map((c,k)=>k).filter(k=>!CH[k].hidden),d=F[1];const ci=pool[(pool.indexOf(d.ci)+1)%pool.length];d.ci=ci;d.C=CH[ci];d.L=d.C.look;d.mv=null;d.pt=null;SEL.p[1]=ci;});box.appendChild(r);}
+    tb('FILL HEROIC FINALE',()=>{F[0].fsm=100;});tb('RESET POSITIONS',()=>{const m=STAGE.main;F.forEach((f,i)=>{f.x=WW/2+(i?60:-60);f.y=m.y;f.ground=m;f.vx=f.vy=f.lx=f.ly=0;f.st='idle';f.mv=null;f.hitstun=0;f.dmg=i&&TR.pct!=='keep'?+TR.pct:0;f.face=i?-1:1;});TR.prev=F[1].dmg;TR.combo=0;TR.cdmg=0;});tb('SWAP DUMMY FIGHTER',()=>{const pool=CH.map((c,k)=>k).filter(k=>!CH[k].hidden),d=F[1];const ci=pool[(pool.indexOf(d.ci)+1)%pool.length];d.ci=ci;d.C=CH[ci];d.L=d.C.look;d.mv=null;d.pt=null;SEL.p[1]=ci;});box.appendChild(r);}
   const hint=document.createElement('div');hint.className='phint';hint.textContent='Controller: point and press A · B resumes';box.appendChild(hint);ov.appendChild(box);}
 (function wait(){const cs=document.querySelectorAll('.scard');if(cs.length<STAGES.length){setTimeout(wait,60);return;}STAGES.forEach((s,i)=>{if(s.hidden)cs[i].classList.add('hid');});})();
 
@@ -5828,7 +5828,7 @@ BEH.siphon={start(f,m){m.v.d0=f.dealt;},tick(f,m){if(f.ground)f.vx*=.9;if(m.t===
     if(f.mv&&f.mv.k!=='dB'&&f.mv.k!=='regrow'){f.mini=0;f.mv=null;f.st=f.ground?'idle':'air';if(f.C.mv.regrow)startMove(f,'regrow');FXL.push({k:'ring',x:f.x,y:f.y-20,t:0,col:'#b8b4d8',r0:8,life:16});sfx('power');continue;}
     if(f.st==='grab'||f.st==='shield'){pop();continue;}
     if(f.ground&&(f.st==='run'||f.st==='walk'))f.x+=f.vx*.2;if(f.mini<50&&f.mini%8===0)FXL.push({k:'ring',x:f.x,y:f.y-6,t:0,col:'#ffffff',r0:3,life:8});}};}
-/* ---- generic Final Smash visuals in each student's colours ---- */
+/* ---- generic Heroic Finale visuals in each student's colours ---- */
 function genFS(e,f,d,t,a){const c0=d.col[0],c1=d.col[1],F2=e.face,cx=e.x,cy=e.y;
   const sym=(x,y,i)=>{const el=f.C.kit.el;try{if(NEWFX[el])NEWFX[el](null,x,y,i%2?1:-1,((t*2+i*7)%30)/30,d.col,{x:x-(i%2?1:-1)*18,y:y+38,C:f.C,dmg:f.dmg,mv:null},10,FR);else wdisc(x,y,4,c0);}catch(err){wdisc(x,y,4,c0);}};
   if(d.type==='zone'){const R=d.r>=999?260:d.r;glow(cx,cy,R,c0,.35*a);for(let i=0;i<4;i++)wring(cx,cy,(t*4+i*R/4)%R,i%2?c1:c0,3);X.globalCompositeOperation='source-over';for(let i=0;i<14;i++){const an=srnd(i)*TAU+t*.05*(i%2?1:-1),r=R*(.25+.7*srnd(i+5));sym(cx+Math.cos(an)*r,cy+Math.sin(an)*r*.6,i);}X.globalCompositeOperation='lighter';}
@@ -6863,7 +6863,7 @@ const BEAST=(function(){
    if(f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&(f.st==='idle'||f.st==='walk'||f.st==='run')){const o=opp(f),far=o?Math.abs(o.x-f.x):0;if((!f.hound&&far<90&&rnd()<.02)||(f.hound&&far>200&&rnd()<.006))startMove(f,'dB');}}};
 })();
 
-/* fsart.js — every Final Smash is drawn out of the fighter's own ability: its own symbols, its own motion, its own backdrop */
+/* fsart.js — every Heroic Finale is drawn out of the fighter's own ability: its own symbols, its own motion, its own backdrop */
 const FSG={
  shard(x,y,s,c,c1,k){X.save();X.translate(x,y);X.rotate(k);wpoly(c,[0,-s*1.6,s*.5,0,0,s*1.6,-s*.5,0]);wpoly('#ffffff',[0,-s*1.2,s*.2,0,0,s*.4,-s*.15,0]);X.restore();},
  flame(x,y,s,c,c1,k){const w=Math.sin(k*3)*s*.3;wpoly(c,[x-s,y+s,x-s*.6+w,y-s*.4,x+w,y-s*1.8,x+s*.6+w,y-s*.3,x+s,y+s]);wpoly(c1,[x-s*.5,y+s,x+w*.5,y-s*.8,x+s*.5,y+s]);},
@@ -9575,7 +9575,7 @@ function build(){pop=document.createElement('div');pop.id='fpop';const roles=BUC
 window.EXTRAS={FS,FAV,apply,STEPS};
 })();
 
-/* ssbuui.js — damage plates in the Smash style: a slanted name plate in the player's colour, a big italic percentage with a small decimal, stock icons, and the Final Smash meter along the bottom */
+/* ssbuui.js — damage plates in the Smash style: a slanted name plate in the player's colour, a big italic percentage with a small decimal, stock icons, and the Heroic Finale meter along the bottom */
 drawHUD=function(c){const HF=(typeof MODE!=='undefined'&&MODE==='campaign')?F.filter(f=>!f.gone&&(f.team!==1||f.plate)).slice(0,4):F.filter(f=>f.team!==1),n=HF.length,sp=n>3?312:n>2?396:430,hs=n>3?.82:n>2?.92:1,DF='"Teko","Arial Narrow",sans-serif';
  HF.forEach((f,i)=>{const cx=640+(i-(n-1)/2)*sp,y=606+(1-hs)*90;c.save();c.translate(cx,y);c.scale(hs,hs);const col=f.col,dark=f.id===2;
   /* backing */
@@ -9595,9 +9595,9 @@ drawHUD=function(c){const HF=(typeof MODE!=='undefined'&&MODE==='campaign')?F.fi
   if(f.gone||f.noPct>0){c.font='italic 700 60px '+DF;c.textAlign='right';c.lineWidth=7;const t=f.gone?'—':'?';c.strokeText(t,150+sh,62);c.fillStyle='#fff';c.fillText(t,150+sh,62);}
   else{c.font='italic 700 28px '+DF;c.textAlign='left';const tail='.'+dec+'%',tw=c.measureText(tail).width;c.lineWidth=6;c.strokeText(tail,154-tw+sh,60+sh*.3);c.fillStyle=dc;c.fillText(tail,154-tw+sh,60+sh*.3);
    c.font='italic 700 '+(d>=100?62:70)+'px '+DF;c.textAlign='right';c.lineWidth=8;c.strokeText(String(d),152-tw+sh,62+sh*.3);c.fillStyle=dc;c.fillText(String(d),152-tw+sh,62+sh*.3);}
-  /* final smash meter */
+  /* heroic finale meter */
   {const w=222,fx=-64,fy=95,full=f.fsm>=100;c.fillStyle='rgba(0,0,0,.6)';c.fillRect(fx,fy,w,6);c.fillStyle=full?'hsl('+((FR*6)%360)+',100%,62%)':'#ffd400';c.fillRect(fx,fy,w*Math.min(100,f.fsm||0)/100,6);
-   if(full&&(FR>>3)%2){c.font='italic 700 18px '+DF;c.textAlign='right';c.lineWidth=4;c.strokeText('FINAL SMASH READY',158,-2);c.fillStyle='#ffffff';c.fillText('FINAL SMASH READY',158,-2);}}
+   if(full&&(FR>>3)%2){c.font='italic 700 18px '+DF;c.textAlign='right';c.lineWidth=4;c.strokeText('HEROIC FINALE READY',158,-2);c.fillStyle='#ffffff';c.fillText('HEROIC FINALE READY',158,-2);}}
   try{hudMeter(c,f,DF);}catch(e){}
   c.restore();});};
 
@@ -10125,7 +10125,7 @@ function rulesTick(){if(!RON()||GS!=='play')return;const HP=RULES.stam;for(const
 function rulesPop(){const old=document.getElementById('rpop');if(old)old.remove();const m=el('div');m.id='rpop';const b=el('div','rb');b.appendChild(el('h3','','More rules'));b.appendChild(el('p','','These apply to Fight and Tournament matches. Arcade, Campaign, Survival and Training ignore them.'));
   const row=(lab,list,key,idx)=>{const r=el('div','rr');r.appendChild(el('b','',lab));r.appendChild(seg(list,()=>idx===undefined?RULES[key]:RULES[key][idx],v=>{if(idx===undefined)RULES[key]=v;else RULES[key][idx]=v;SS('qc_rules',RULES);}));b.appendChild(r);};
   row('Launch strength',[[.8,'LOW'],[1,'NORMAL'],[1.2,'HIGH'],[1.5,'VERY HIGH']],'launch');row('Stage hazards',[[1,'ON'],[0,'OFF']],'haz');
-  row('Stamina',[[0,'OFF'],[100,'KO AT 100%'],[150,'150%'],[250,'250%']],'stam');row('Final Smash meter',[[1,'ON'],[0,'OFF']],'fs');row('KO replay',[[1,'ON'],[0,'OFF']],'replay');row('Pixel-edge effects',[[1,'ON'],[0,'OFF (smooth)']],'px');
+  row('Stamina',[[0,'OFF'],[100,'KO AT 100%'],[150,'150%'],[250,'250%']],'stam');row('Heroic Finale meter',[[1,'ON'],[0,'OFF']],'fs');row('KO replay',[[1,'ON'],[0,'OFF']],'replay');row('Pixel-edge effects',[[1,'ON'],[0,'OFF (smooth)']],'px');
   for(let i=0;i<4;i++)row('P'+(i+1)+' handicap',[[0,'NONE'],[30,'START AT 30%'],[60,'60%'],[100,'100%']],'hc',i);
   const f=el('div','rr');const rs=el('button','btn','RESET');rs.onclick=()=>{Object.assign(RULES,RD,{hc:[0,0,0,0]});SS('qc_rules',RULES);rulesPop();};const x=el('button','btn pri','DONE');x.onclick=()=>{m.remove();mark();};f.append(rs,x);b.appendChild(f);m.appendChild(b);m.onclick=e=>{if(e.target===m){m.remove();mark();}};document.body.appendChild(m);}
 const custom=()=>RULES.dmg!==1||RULES.launch!==1||!RULES.haz||RULES.stam||!RULES.fs||RULES.hc.some(v=>v);
@@ -10214,7 +10214,7 @@ function trnPlay(nx){const D=TRN.d,a=D.ents[nx.x.a],b=D.ents[nx.x.b];TRN.live={r
 function trnResults(){const L=TRN.live,D=TRN.d;if(!L||!D||!winner)return;const w=winner.id===0?L.a:winner.id===1?L.b:null;if(w==null)return;trnSet(L.r,L.m,w);try{NICK[0]=L.nick[0];NICK[1]=L.nick[1];}catch(e){}TRN.live=null;const box=document.querySelector('#overlay .ovc');if(!box)return;box.querySelectorAll('.row').forEach(r=>r.remove());
   const p=el('p','rname',esc(D.ents[w].name)+' ADVANCES!');p.style.color='#ffd400';const h=box.querySelector('h2');if(h)h.insertAdjacentElement('afterend',p);else box.appendChild(p);const row=el('div','row'),go=el('button','btn pri','BRACKET ▸');go.onclick=()=>{document.getElementById('overlay').hidden=true;running=false;trnView();};row.appendChild(go);box.appendChild(row);}
 
-/* Final Smash cut-in: speed lines and an opening flash over the existing portrait band */
+/* Heroic Finale cut-in: speed lines and an opening flash over the existing portrait band */
 if(typeof drawFSCut==='function'){const d0=drawFSCut;drawFSCut=function(c){d0(c);try{if(!FSCUT)return;const t=FSCUT.t,out=t>FSCUT_LEN-10?(FSCUT_LEN-t)/10:1;c.save();c.globalAlpha=.55*out;c.fillStyle='#ffffff';for(let i=0;i<16;i++){const y=205+((i*53)%300),w=120+((i*97)%260),x=((i*211+t*(38+i%5*9))%1700)-300;c.fillRect(x,y-(x/1280)*60,w,2+(i%3));}
   if(t<5){c.globalAlpha=(5-t)/5*.8;c.fillRect(0,0,1280,720);}c.restore();}catch(e){try{c.restore();}catch(e2){}}};}
 /* ================= wiring ================= */
@@ -10511,7 +10511,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1118-2206';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1118-2218';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10646,7 +10646,7 @@ function openPanel(room,auto){closeGate();if(panel)panel.remove();panel=E('div')
 NET.open=openPanel;
 /* the front door: two choices */
 let gate=null;function closeGate(){if(gate){gate.remove();gate=null;}}
-function openGate(){if(gate||NET.on)return;gate=E('div');gate.id='netgate';const hr=hashRoom();gate.innerHTML='<div class="netbox"><h1>PU QUIRK CLASH</h1><p>'+(hr?'You were invited to room <b>'+hr+'</b>.':'How do you want to play?')+'</p><div class="netrow"><button class="netbtn" id="ngAlone">PLAY ALONE<small>Or with friends on this screen. Works offline.</small></button><button class="netbtn b2" id="ngFriends">PLAY WITH FRIENDS<small>Online, up to four. Everyone opens this link.</small></button></div></div>';
+function openGate(){if(gate||NET.on)return;gate=E('div');gate.id='netgate';const hr=hashRoom();gate.innerHTML='<div class="netbox"><h1>PU HERO CLASH</h1><p>'+(hr?'You were invited to room <b>'+hr+'</b>.':'How do you want to play?')+'</p><div class="netrow"><button class="netbtn" id="ngAlone">PLAY ALONE<small>Or with friends on this screen. Works offline.</small></button><button class="netbtn b2" id="ngFriends">PLAY WITH FRIENDS<small>Online, up to four. Everyone opens this link.</small></button></div></div>';
  document.body.appendChild(gate);gate.querySelector('#ngAlone').onclick=()=>{try{audioInit();sfx('pop');}catch(e){}closeGate();};gate.querySelector('#ngFriends').onclick=()=>{try{audioInit();sfx('power');}catch(e){}openPanel(hr,!!hr);};}
 NET.gate=openGate;
 (function wait(){const tm=document.querySelector('.tmenu'),f=document.getElementById('tFight');if(!tm||!f){setTimeout(wait,120);return;}

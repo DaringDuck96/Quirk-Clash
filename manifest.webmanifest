@@ -1,6 +1,6 @@
 {
- "name": "PU Quirk Clash",
- "short_name": "Quirk Clash",
+ "name": "PU Hero Clash",
+ "short_name": "Hero Clash",
  "start_url": "./",
  "scope": "./",
  "display": "fullscreen",
