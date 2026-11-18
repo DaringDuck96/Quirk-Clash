@@ -1,4 +1,4 @@
-# PU Quirk Clash Bros Ultimate
+# PU Quirk Clash
 
 A 2D pixel platform fighter starring 39 quirk students, for 1 to 4 players (keyboard or controllers).
 
@@ -15,4 +15,4 @@ Open the GitHub Pages site in Chrome or Edge, click the install icon at the righ
 ## Controllers
 Press any button on a controller to get a pointer. Move it with the left stick, press **A** to select and **B** to go back. **X** adds a CPU, **Y** changes CPU level, **+ / Start** moves on.
 
-In battle (Smash Ultimate defaults): A attack, B special, X/Y or stick-up jump, ZL/ZR shield, L/R grab, right stick smash attacks, D-pad taunt, + pause.
+In battle: A attack, B special, X/Y or stick-up jump, ZL/ZR shield, L/R grab, right stick smash attacks, D-pad taunt, + pause.
