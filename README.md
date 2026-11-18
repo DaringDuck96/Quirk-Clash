@@ -1,6 +1,6 @@
 # PU Quirk Clash
 
-A 2D pixel platform fighter starring 39 quirk students, for 1 to 4 players (keyboard or controllers).
+A 2D pixel platform fighter starring 39 ability students, for 1 to 4 players (keyboard or controllers).
 
 Play it: open `index.html` in Chrome or Edge, or visit this repo's GitHub Pages site.
 

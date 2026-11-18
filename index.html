@@ -404,7 +404,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
     <canvas id="titlebg" width="640" height="360"></canvas><div class="tshade"></div>
     <div class="tin">
       <h1 class="logo tlogo"><small>PU</small>QUIRK CLASH <span>AGE OF HEROES</span></h1>
-      <p class="ttag">Arcade quirk brawler for 1 to 4 players. Launch your rivals off a stage in Japan.</p>
+      <p class="ttag">Arcade ability brawler for 1 to 4 players. Launch your rivals off a stage in Japan.</p>
       <div class="tmenu mm"><button class="mt mt1" id="tFight"><b>FIGHT</b><i>1 to 4 players or CPUs. Free-for-all or teams.</i></button><button class="mt mt2" id="tSurv"><b>SURVIVAL</b><i>Hold the fortress against the waves.</i></button><button class="mt mt3" id="tTrain"><b>TRAINING</b><i>Practise on a dummy.</i></button><button class="mt mt4" id="tGuide"><b>ROSTER &amp; MOVES</b><i>Every fighter, every attack.</i></button><button class="mt mt5" id="tHelp"><b>HOW TO PLAY</b><i>Controls and rules.</i></button><button class="mt mt6" id="tFs"><b>FULLSCREEN</b></button></div>
       <p class="tpress">PRESS ANY BUTTON ON A CONTROLLER TO GRAB A POINTER</p>
       <p class="tpads"><b class="padcount"></b> · or use the mouse · Enter to start</p>
@@ -414,7 +414,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
   <section id="select" hidden>
     <div class="top">
       <div class="rib"><i>Fight</i><b>Fighter Select</b></div><h1 class="logo"><small>PU</small>QUIRK CLASH <span>AGE OF HEROES</span></h1>
-      <span class="sub" id="modeSub">Arcade quirk brawler. Launch your rival off a stage in Japan.</span>
+      <span class="sub" id="modeSub">Arcade ability brawler. Launch your rival off a stage in Japan.</span>
       <button class="tbtn gbtn" id="guideBtn">CHARACTER GUIDE</button>
       <button class="tbtn" id="helpBtn">CONTROLS &amp; MOVE LIST</button>
       <button class="tbtn" id="fsBtn">FULLSCREEN</button>
@@ -476,7 +476,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
       <span>Attack</span><span><kbd>J</kbd></span><span><kbd>,</kbd> or <kbd>Num1</kbd></span><span>A</span>
       <span>Special</span><span><kbd>K</kbd></span><span><kbd>.</kbd> or <kbd>Num2</kbd></span><span>B</span>
       <span>Shield / dodge</span><span><kbd>L</kbd></span><span><kbd>R-Shift</kbd> or <kbd>Num3</kbd></span><span>ZL / ZR</span>
-      <span>Quirk action</span><span><kbd>L</kbd> + <kbd>K</kbd></span><span>Shield + Special</span><span>ZL / ZR + B</span>
+      <span>Ability action</span><span><kbd>L</kbd> + <kbd>K</kbd></span><span>Shield + Special</span><span>ZL / ZR + B</span>
       <span>Grab</span><span><kbd>U</kbd></span><span><kbd>'</kbd> or <kbd>Num6</kbd></span><span>L / R, or shield + A</span>
       <span>Single Joy-Con</span><span></span><span></span><span>SL / SR shield · shield + A grab · stick click grab · + or − pause</span>
       <span>Taunt (3 kinds)</span><span><kbd>T</kbd>, or hold left/right + <kbd>T</kbd></span><span></span><span>D-pad up, side or down</span>
@@ -488,7 +488,7 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
         <dt>F-tilt / U-tilt / D-tilt</dt><dd>Hold ← → / ↑ / ↓ then A</dd><dt>F-smash / U-smash / D-smash</dt><dd>Direction + A together, hold A to charge</dd></dl></section>
       <section><h4>Aerial attacks</h4><dl>
         <dt>Nair</dt><dd>A in the air</dd><dt>Fair / Bair</dt><dd>Toward / away + A</dd><dt>Uair / Dair</dt><dd>↑ / ↓ + A</dd>
-        <dt>Zair (grab-air tether)</dt><dd>Grab in the air, or Shield + A. Reaches out with the student's quirk and can grab a ledge.</dd></dl></section>
+        <dt>Zair (grab-air tether)</dt><dd>Grab in the air, or Shield + A. Reaches out with the student's ability and can grab a ledge.</dd></dl></section>
       <section><h4>Special moves</h4><dl>
         <dt>Neutral B / Side B / Up B / Down B</dt><dd>B, ← → + B, ↑ + B, ↓ + B</dd>
         <dt>Final Smash</dt><dd>Fill the meter under your name by dealing and taking damage. When it glows, press B (neutral) to unleash it.</dd></dl></section>
@@ -1498,7 +1498,7 @@ add({id:'hake',n:'HAKEGATSU CHIYOKA',sn:'HAKE',q:'Relay',ty:'Emitter',col:'#9a70
  sp:['Relay Pocket (store a projectile)','Relay Toss (command grab)','Relay Jump','Relay Swap']});
 
 add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:'#e8c040',
- d:'Copies the form and quirk of anyone he touches. Land a hit, then steal their specials.',
+ d:'Copies the form and ability of anyone he touches. Land a hit, then steal their specials.',
  look:Object.assign({head:'faceless',skin:'#e8c040',pants:'#24262e',shoe:'#1a1a1e',stance:'cool',ex:[]},BLZ),
  st:ST({w:1}),kit:{st:'brawler',fx:['#e8c040','#fff4c0'],el:'mimic'},
  mv:{fsmash:SMASH('f',{el:'mimic',fx:['#e8c040','#ffffff'],an:'punch',dmg:16}),usmash:SMASH('u',{el:'mimic',fx:['#e8c040','#ffffff'],an:'uppercut',dmg:14}),dsmash:SMASH('d',{el:'mimic',fx:['#e8c040','#ffffff'],an:'sweep',dmg:13}),
@@ -1508,7 +1508,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   dB:M('palm',8,4,18,hit([18,-38,11],5,3,.04,45,{eff:'copy'}),{fx:['#e8c040','#fff'],mimic:'dB'})},
  sp:['Mimic (copies after contact)','Mimic / Lunge','Mimic / Borrowed Leap','Copy Touch (grants copy)']});
 
-/* ===================== QUIRK-ACCURATE MOVE OVERRIDES ===================== */
+/* ===================== ABILITY-ACCURATE MOVE OVERRIDES ===================== */
 
 /* ===================== CLASS 1-B: twenty more students (all in the PU uniform) ===================== */
 {const GP=o=>Object.assign({k:'gp'},o),U=(o,girl)=>Object.assign(girl?{skirt:'#1e2430',socks:'#1e2430',shoe:'#3a2418',fem:1}:{pants:'#2c4040',shoe:'#2a2420'},o,BLZ);
@@ -1802,7 +1802,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    uB:M('uppercut',5,10,14,hit([[4,-56,14]],6,4.5,.05,85),{beh:'leapUp',bp:{vy:-9.8,vx:1.6},fx,sub:'step'}),
    dB:M('counter',5,70,18,hit([[0,-30,32]],1,5.5,0,45,{ri:14}),{beh:'reflect',bp:{f0:5,f1:75,armor:1},fx,sub:'dome',cd:480,onStart(f){f.inv=Math.max(f.inv,76);}})}),
   sp:['Force Push (shoves far, reflects projectiles)','Barrier (a wall that blocks shots and shoves rivals)','Force Step (jumps off solid air; she can still act)','Bubble (untouchable for a moment; long cooldown)']});
- fx=['#8a2a3a','#d8d0c0'];add({id:'shi',n:'SHI SUZUKI',sn:'SHI',q:'Death Touch',ty:'Emitter',col:'#8a2a3a',d:'Can use the quirk of any body he has touched. He carries three, and collects more as rivals fall.',
+ fx=['#8a2a3a','#d8d0c0'];add({id:'shi',n:'SHI SUZUKI',sn:'SHI',q:'Death Touch',ty:'Emitter',col:'#8a2a3a',d:'Can use the ability of any body he has touched. He carries three, and collects more as rivals fall.',
   na:'Normals: wide scythe cuts with a bone-handled scythe. Every rival he knocks out makes him 8% stronger for the rest of the match (up to three times).',
   look:K({skin:'#f0e0d8',eye:'#b8b8c0',hairS:'messy',hair:'#1c1418',outfit:'coat',top:'#16141a',acc:'#16141a',sleeve:'#16141a',glove:'#16141a',pants:'#16141a',shoe:'#16141a',wpn:'katana',wlen:28,stance:'weapon',ex:['coattails']}),st:ST({w:1,run:3.2,air:2.7}),kit:{st:'blade',fx,el:'reaper',reach:1.2},
   mv:Object.assign(SM('reaper',fx,{f:{an:'slashF',far:36,dmg:16},u:{an:'slashUp'},d:{an:'slashLow'}}),{nB:M('cast',12,1,18,null,{fx,cyc:[
@@ -1812,7 +1812,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    sB:M('slashF',8,6,18,hit([[20,-32,16]],9,4.5,.065,42),{beh:'teleDir',bp:{dist:72},fx}),
    uB:M('float',4,38,12,null,{beh:'fly',bp:{dur:38,spd:3.6},helpless:1,fx}),
    dB:M('slashF',18,5,26,hit([[30,-36,20]],9,3.5,.05,45,{exec:1}),{fx,sub:'exec',lim:'hF'})}),
-  sp:['Borrowed Quirk (fire, then ice, then light, in turn)','Grave Step (short teleport into a cut)','Borrowed Wings','Last Rites (weak below 100%; a finishing blow above it)']});
+  sp:['Borrowed Ability (fire, then ice, then light, in turn)','Grave Step (short teleport into a cut)','Borrowed Wings','Last Rites (weak below 100%; a finishing blow above it)']});
  fx=['#2a2a34','#e8e8f0'];add({id:'takeshi',n:'TAKESHI PUKUMARA',sn:'TAKESHI',q:'Tattoo',ty:'Emitter',col:'#8a8a9a',d:'Anything inked into his skin can be pulled into the real world and used. He is covered in ink.',
   na:'Normals: relaxed, heavy-handed brawling. His specials peel tattoos off his skin: a pistol, a wolf, a pair of wings, a bolt of lightning.',
   look:K({skin:'#e8d0c0',eye:'#e8e8f0',hairS:'spiky',hair:'#e8e8ec',tattoo:1,outfit:'sweater',top:'#3a3a44',acc:'#2a2a32',sleeve:'#3a3a44',sl:'short',pants:'#4a4a52',shoe:'#e8e8ee',stance:'shoulder',ex:[]}),st:ST({w:1.05,run:3,air:2.6}),kit:{st:'brawler',fx,el:'ink'},
@@ -1856,8 +1856,8 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
   sp:['Throw the Damage Counter (hits harder the more damage he has)','Jump Cut (appears behind a rival anywhere on screen)','Pause Buffer (freezes everyone else for a moment as he jumps)','Plot Armor (2.5 seconds: hits still hurt but cannot move him)']});
  /* ===================== NHA transfer class: fifteen more students ===================== */
  {const heal=(f,a)=>{f.dmg=Math.max(0,f.dmg-a);for(let i=0;i<8;i++)part(f.x+rnd()*20-10,f.y-20-rnd()*40,0,-.7,22,'#7af0a0',2,0);sfx('power');};
- fx=['#3a5a9a','#c8d8f0'];add({id:'dawson',n:'DAWSON GREY',sn:'DAWSON',q:'Quirkless',ty:'None',col:'#3a5a9a',d:'No quirk at all. Eight years of gymnastics, self-defence and stubbornness, plus a belt full of tools and a talent for scaring people.',
-  na:'Normals: the cleanest, fastest punches and kicks in the school. No quirk, so he brings tools: shuriken, a grapple hook, snare traps and a glider cape (hold Jump while falling to glide).',
+ fx=['#3a5a9a','#c8d8f0'];add({id:'dawson',n:'DAWSON GREY',sn:'DAWSON',q:'No Ability',ty:'None',col:'#3a5a9a',d:'No ability at all. Eight years of gymnastics, self-defence and stubbornness, plus a belt full of tools and a talent for scaring people.',
+  na:'Normals: the cleanest, fastest punches and kicks in the school. No ability, so he brings tools: shuriken, a grapple hook, snare traps and a glider cape (hold Jump while falling to glide).',
   look:K({skin:'#f0d2b8',eye:'#4a8ae0',hairS:'messy',hair:'#1c1c26',outfit:'sweater',top:'#22222a',acc:'#34343e',sleeve:'#22222a',pants:'#1c1c24',shoe:'#2a2a32',stance:'guard',ex:[]}),st:ST({w:.94,run:3.5,air:2.9,jump:-9}),kit:{st:'brawler',fx,el:'night',pow:.98},
   mv:Object.assign(SM('night',fx),{nB:M('throwF',6,1,11,null,{spawn:[[6,GP({sh:'shuriken',c:'#c8d8f0',vx:8.8,life:36,r:4,dmg:4,bkb:2.2,kbg:.025,ang:28})]],fx}),
    sB:M('dashF',8,12,13,hit([[0,-30,14]],8,4.5,.06,38),{beh:'dash',bp:{spd:8.4,f0:8,f1:20,air:'float'},fx}),
@@ -1954,7 +1954,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('roar',5,2,9,null,{fx,lim:'none',onStart(f){f.cycN=((f.cycN||0)+1)%4;const N=[['RED FLAME','#ff5a30'],['BLUE FLAME','#5ab8ff'],['GREEN FLAME','#6adf6a'],['VIOLET FLAME','#b070ff']][f.cycN];say(f,N[0],N[1]);sfx('pop');}})}),
   sp:['Sacred Flame (red bursts and burns / blue is fast and far / green heals him / violet slows)','Flame Dash','Phoenix Rise','Change Flame (red, blue, green, violet)']});
  fx=['#a0ff40','#ffffff'];add({id:'kal',n:'KAL WILSON',sn:'KAL',q:'Danger Sense',ty:'Emitter',col:'#a0ff40',d:'A precognitive gut feeling that warns him just before something bad happens. Loud about it, and carries a glowing katana.',
-  na:'Normals: loud, committed cuts with a glowing katana. His quirk is purely defensive: every eight seconds his DANGER SENSE makes the next hit aimed at him miss completely.',
+  na:'Normals: loud, committed cuts with a glowing katana. His ability is purely defensive: every eight seconds his DANGER SENSE makes the next hit aimed at him miss completely.',
   look:K({skin:'#f2d6bc',eye:'#c83a3a',hairS:'spiky',hair:'#f0f0f4',outfit:'jacketS',top:'#f0f0f4',acc:'#c8282e',sleeve:'#1c1c22',pants:'#1c1c22',shoe:'#c8282e',wpn:'katana',wlen:26,bladeC:'#a0ff40',stance:'weapon',smile:1,ex:[]}),st:ST({w:1,run:3.3,air:2.8}),kit:{st:'blade',fx,el:'sense',pow:1.02},
   mv:Object.assign(SM('sense',fx,{f:{an:'slashF'},u:{an:'slashUp'},d:{an:'slashLow'}}),{nB:M('counter',3,26,16,hit([[24,-34,19]],11,5,.075,40),{beh:'counter',bp:{f0:3,f1:27,mode:'dodge',mult:1.3},fx,lim:'w'}),
    sB:M('slashF',7,13,14,hit([[0,-30,17]],9,4.5,.065,40),{beh:'dash',bp:{spd:6.6,f0:7,f1:20,air:'float'},fx,lim:'w'}),
@@ -2118,7 +2118,7 @@ add({id:'tatsuya',n:'TATSUYA KOREGANE',sn:'TATSUYA',q:'Mimic',ty:'Mutation',col:
    dB:M('dive',7,16,16,hit([[14,-14,16]],11,5,.075,45,{eff:'burn'}),{beh:'dash',bp:{spd:7.4,f0:7,f1:23,air:'grav'},fx,onStart(f){if(!f.ground)f.vy=5.5;}})}),
   sp:['Rocket Punch (a long wind-up, then the hardest single punch in his class; 30 fuel)','Booster Rush (a rocket dash that knocks rivals straight up for a follow-up; 25 fuel)','Blast Off (one of the highest jumps in the school; the exhaust spikes anyone below; 30 fuel)','Rocket Kick (a flaming slide along the floor, or a diagonal dive from the air; 20 fuel)']});
 
- fx=['#b04aff','#6aff8a'];add({id:'tiki',n:'TIKI SEKAI',sn:'TIKI',q:'Shaman',ty:'Emitter',col:'#b04aff',d:'The bridge between this world and the Chaos Realm of the spirits that runs alongside it. Loves his quirk.',
+ fx=['#b04aff','#6aff8a'];add({id:'tiki',n:'TIKI SEKAI',sn:'TIKI',q:'Shaman',ty:'Emitter',col:'#b04aff',d:'The bridge between this world and the Chaos Realm of the spirits that runs alongside it. Loves his ability.',
   na:'Normals: he points, and a spirit does the hitting, so his attacks reach further than his arms and never expose them. Every special calls a different spirit to fight for him.',
   look:K({skin:'#f2d8c0',eye:'#5a7a9a',hairS:'spiky',hair:'#6a2ab0',outfit:'jacketS',top:'#1c3a2a',acc:'#b04aff',sleeve:'#2a8a4a',pants:'#2a2a34',shoe:'#3a3a44',stance:'cast',ex:[]}),st:ST({w:.96,run:3.1,air:2.8}),kit:{st:'brawler',fx,el:'spirit',pow:1,reach:1.14},
   mv:Object.assign(SM('spirit',fx,{f:{far:40}}),{nB:M('cast',10,1,17,null,{spawn:[[10,GP({sh:'spirit',mk:0,c:'#ff5a8a',vx:4.4,life:100,r:8,dmg:7,bkb:3.5,kbg:.05,ang:45,hm:1})]],cd:45,fx}),
@@ -2372,7 +2372,7 @@ Object.assign(TUNE,{
  tai:{role:'Support',tip:'Regenerates, drains health and heals teammates.',sp:1,pw:.96},
  hatsuko:{role:'Necro mage',tip:'Steer the skull, send the reaper, and step away when they get close.',sp:.96,pw:.92},
  ginko:{role:'Flying powerhouse',tip:'A heavyweight with three jumps and the longest flight.',sp:1.14,pw:1.06,kb:1.08,def:.92}});
-Object.assign(TUNE,{dawson:{role:'Quirkless tactician',tip:'Trap the floor, shuriken the air, then grapple in and box.',sp:1.12,pw:1,kb:1},
+Object.assign(TUNE,{dawson:{role:'No-ability tactician',tip:'Trap the floor, shuriken the air, then grapple in and box.',sp:1.12,pw:1,kb:1},
  maya:{role:'Drain support',tip:'Her touch heals her. Give Essence heals teammates more.',sp:.98,pw:1,kb:1},sarah:{role:'Shadow assassin',tip:'Get behind them. Shadow Step and Lights Out both put you there.',sp:1.04,pw:1,kb:1},
  aria:{role:'Lucky wildcard',tip:'Up smash drops a light on whoever is nearest, wherever they are standing.',sp:.98,pw:1,kb:1},bryson:{role:'Reluctant berserker',tip:'Weak as himself. Fill the meter and everything changes.',sp:1,pw:1,kb:1},
  conor:{role:'Tiny trickster',tip:'The smallest target. Coins bounce; the pot of gold hurts.',sp:1.1,pw:1,kb:1},ray:{role:'Beam zoner',tip:'Stare to freeze them, X-Ray (Shield + B), then laser or smash.',sp:1,pw:1,kb:1},
@@ -2400,7 +2400,7 @@ Object.assign(TUNE,{makiko:{role:'Sleep trickster',tip:'Put them to sleep, then 
  homura:{role:'Lava zoner',tip:'Cover the floor in burning pools and whip from behind them.',sp:1.04,pw:.98,kb:1},
  kuragari:{role:'Web acrobat',tip:'The most mobile fighter here. Slow them with webs, then zip in.',sp:.92,pw:.92,kb:.96},
  mia:{role:'Force-field defender',tip:'Push, wall and bubble. Very hard to reach.',sp:.96,pw:1.04,kb:1.02},
- shi:{role:'Scythe collector',tip:'Three borrowed quirks in rotation; stronger with every knockout.',sp:1.04,pw:1,kb:1.02},
+ shi:{role:'Scythe collector',tip:'Three borrowed abilities in rotation; stronger with every knockout.',sp:1.04,pw:1,kb:1.02},
  takeshi:{role:'Ink summoner',tip:'Pistol, wolf, wings and lightning, all from his tattoos.',sp:1.02,pw:.98,kb:1},
  ali:{role:'Mind controller',tip:'Swap their left and right, then throw them with a thought.',sp:1,pw:.92,kb:.96},
  daku:{role:'Feral rushdown',tip:'Hellhound form is fast and burns everything, at a price.',sp:.92,pw:.96,kb:.98},
@@ -2421,10 +2421,10 @@ Object.assign(RANGE,{riku:[1,1],sanshou:[1,1],kairi:[3,1],kichi:[3,1],tamashi:[5
   C.pwr=(C.kit.pow||1)*t.pw*(C.atkM||1);C.spd=s.run/t.sp;
   C.mv.taunt=M('roar',6,24,10,null,{fx:C.kit.fx,lim:'none',onStart(f){burst(f.x,f.y-34,16,[f.C.col,'#ffffff'],2.4,22);FXL.push({k:'txt2',s:f.C.sn+'!',x:f.x,y:f.y-84,t:0,life:40,col:f.C.col});sfx('power');}});});}
 
-/* melee specials show the same quirk effect as the student's normals */
+/* melee specials show the same ability effect as the student's normals */
 CH.forEach(C=>{for(const k of['nB','sB','uB','dB']){const d=C.mv[k];if(!d||d.vfx||d.spawn||!d.hits||!d.hits.length||C.kit.el==='food'||C.kit.el==='fish')continue;const b=d.hits[0].b[0];d.vfx={k:'H',el:d.el||C.kit.el,sub:d.sub,x:b[0],y:b[1],r:b[2]};if(!d.fx)d.fx=C.kit.fx;}});
 
-/* smash attacks of the students whose old smash flash was generic now use their quirk effect, scaled up */
+/* smash attacks of the students whose old smash flash was generic now use their ability effect, scaled up */
 CH.forEach(C=>{if(!['mech','oni','cosmic','tail','mimic','phase','gale'].includes(C.kit.el))return;for(const k of['fsmash','usmash']){const d=C.mv[k];if(!d||!d.hits||!d.hits.length||(d.vfx&&d.vfx.k==='H'))continue;const b=d.hits[0].b[0];d.vfx={k:'H',el:C.kit.el,x:b[0],y:b[1],r:b[2]+6};}});
 
 /* ===================== ENGINE: stage, fighters, combat ===================== */
@@ -2937,7 +2937,7 @@ function drawElem(el,kind,x,y,d,pr,fx){const c=fx[0],c2=fx[1],a=1-pr;
   case 'darkF':case 'darkU':for(let i=0;i<3;i++)wl('#9a60e0',x-8+i*6,y-10,x-2+i*6,y+10,2);break;
   default:burstStar(8+pr*8);}}
 
-/* ===================== QUIRK HIT EFFECTS for normal attacks ===================== */
+/* ===================== ABILITY HIT EFFECTS for normal attacks ===================== */
 function fishShape(x,y,d,L,c1,c2,ink,tail){const h=L*.36;
   wpoly(ink,[x-L*.5*d,y,x-L*.1*d,y-h-1,x+L*.38*d,y-h*.7-1,x+(L*.58+1)*d,y,x+L*.38*d,y+h*.7+1,x-L*.1*d,y+h+1]);
   wpoly(c1,[x-L*.45*d,y,x-L*.1*d,y-h,x+L*.36*d,y-h*.65,x+L*.55*d,y,x+L*.36*d,y+h*.65,x-L*.1*d,y+h]);
@@ -3055,7 +3055,7 @@ function drawHitFX(el,sub,x,y,d,pr,fx,f,r){if(typeof NEWFX!=='undefined'&&NEWFX[
     for(let i=0;i<6;i++){const xx=x-10+i*4;wr('#a86a00',xx,y-2,3,4+((i*3)%4));wr('#ffc020',xx,y-2,2,3+((i*3)%4));}break;}
   case 'mimic':{const R=Math.max(10,r||10);star(8+pr*8,'#e8c040');for(const s2 of[-1,1]){const mx=x+s2*(4+pr*R*.9),my=y-s2*3;wpoly('#8a6a10',[mx,my-R*.6,mx+R*.3,my,mx,my+R*.6,mx-R*.3,my]);wpoly(s2>0?'#fff4c0':'#e8c040',[mx,my-R*.5,mx+R*.22,my,mx,my+R*.5,mx-R*.22,my]);}break;}
   default:star(6+pr*8,c0);}}
-/* ===================== ZAIR TETHERS (quirk-themed grab-air) ===================== */
+/* ===================== ZAIR TETHERS (ability-themed grab-air) ===================== */
 function drawTether(el,x0,y0,x1,y1,fx,f){const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,c0=(fx&&fx[0])||'#fff',c1=(fx&&fx[1])||'#fff',T=FR;
   const links=(cA,cB,w,step)=>{for(let s=0;s<=L;s+=step){const x=x0+ux*s,y=y0+uy*s;wdisc(x,y,w,(s/step)%2<1?cA:cB);}};
   switch(el){
@@ -4489,7 +4489,7 @@ function bgDome(){SR=92;const r=nd(null);bx(r,'#3e3a38',0,-12,-120,500,.4,360,{m
   for(let k=0;k<5;k++)bx(r,'#8a94a8',0,-6+k*17,-152,320-k*k*10,2,2,{ol:0});
   ST3.lit=[];for(let k=0;k<5;k++){const L=sph3(r,'#fff0c0',-80+k*40,58-Math.abs(k-2)*7,-140,3,2,3,{mode:3,ol:0});ST3.lit.push(L);}return r;}
 function animDome(t){if(ST3.fire)ST3.fire.forEach((n,i)=>{n.s[1]=(i%2?3:5)*(1+.2*Math.sin(t*.35+i*1.3)+.1*Math.sin(t*.8+i));});}
-/* ---- 11. QUIRK GYM: concrete pillars rise and sink ---- */
+/* ---- 11. ABILITY GYM: concrete pillars rise and sink ---- */
 function buildGym(){SR=101;const r=nd(null),m=STAGE.main,d=deckSlab(r,m,'#b0aca4',8);
   bx(r,'#c8c4bc',d.cx,-.05,0,d.w+.1,.12,6.85,{ol:0});for(let i=0;i<=10;i++)bx(r,'#9a968e',d.L+i*d.w/10,.02,0,.06,.02,6.6,{ol:0});
   bx(r,'#e84a2a',d.cx,.02,2.9,d.w-1,.02,.14,{ol:0});bx(r,'#9a968e',d.cx,-6.6,-4.4,d.w,11.4,8,{mode:8});
@@ -4517,7 +4517,7 @@ STAGES.push(
   main:{x:70,w:500},plats:[{x:104,y:180,w:124},{x:412,y:150,w:124}],mech:'disaster',wx:'none',ui:['#ff8a3a','#8a94a8'],
   sky:{top:'#1a1c26',mid:'#3a3c4c',hor:'#6a5a52',sun:[0,0,0],sunC:'#000000',cld:'#4a4850',cldA:.5,star:0,neb:0,hz:.5},
   lt:{dir:[.3,.8,.5],key:'#ffe8d0',amb:'#5a5468',rim:'#ff9a5a',fogC:'#4a4448',fog:[50,300,.7]},build:buildDome,bg:bgDome,anim:animDome},
- {id:'gym',n:'Quirk Gym',jp:'体育館',loc:'PU campus, Gym C',d:'The indoor training hall. Three concrete pillars rise out of the floor and sink back in, each on its own timing.',tags:['Rising pillars','Indoor','Small'],
+ {id:'gym',n:'Ability Gym',jp:'体育館',loc:'PU campus, Gym C',d:'The indoor training hall. Three concrete pillars rise out of the floor and sink back in, each on its own timing.',tags:['Rising pillars','Indoor','Small'],
   main:{x:80,w:480},plats:[{x:108,y:186,w:92,mv:{ay:46,per:420,ph:0}},{x:274,y:150,w:92,mv:{ay:58,per:420,ph:2.1}},{x:440,y:186,w:92,mv:{ay:46,per:420,ph:4.2}}],wx:'none',ui:['#f6c94e','#e84a2a'],
   sky:{top:'#8a867e',mid:'#a8a49c',hor:'#c2beb6',sun:[0,0,0],sunC:'#000000',cld:'#b0aca4',cldA:0,star:0,neb:0,hz:.5},
   lt:{dir:[.3,.85,.45],key:'#efe6d6',amb:'#5e5c6a',rim:'#ffffff',fogC:'#6c6a72',fog:[90,420,.45]},build:buildGym,bg:bgGym,anim:animGym});
@@ -5178,7 +5178,7 @@ function gPage(C,ci){const jab=C.mv.jab?gDmg(C,'jab'):['jab1','jab2','jab3'].red
   const chip=(n,v)=>v==null?'':'<span class="gchip"><b>'+n+'</b>'+(Math.round(v*10)/10)+'%</span>';
   const grp=(t,a)=>'<div class="ggrp"><h5>'+t+'</h5>'+a.map(x=>chip(x[0],x[1])).join('')+'</div>';
   const fs=FSD[C.id],tx=GTXT[C.id]||[];const inp=['B','← → + B','↑ + B','↓ + B'];
-  let h='<div class="ghead"><div class="gart"></div><div class="gid"><h3 style="color:'+C.col+'">'+gEsc(C.n.split(' & ')[0])+'</h3><div class="q">'+gEsc(C.q)+' · '+gEsc(C.ty)+'</div><div class="grole"><b>'+gEsc(C.role||'')+'</b> '+gEsc(C.tip||'')+(C.weak?'<br><i>Weakness:</i> '+gEsc(C.weak):'')+(C.trait?'<br><i>Quirk trait:</i> '+gEsc(C.trait):'')+(C.feel?'<br><i>Best at:</i> '+gEsc(C.feel.good)+'<br><i>Worst at:</i> '+gEsc(C.feel.bad)+'<br><i>Game plan:</i> '+gEsc(C.feel.plan)+'<br><i>How to beat:</i> '+gEsc(C.feel.beat)+'<br><i>Movement:</i> '+gEsc(C.feel.mv)+'.<br><i>Attacks:</i> '+gEsc(C.feel.atk[0]+' — '+C.feel.atk[1])+'<br><i>Defence:</i> '+gEsc(C.feel.def[0]+' — '+C.feel.def[1])+(C.feel.pas?'<br><i>Passive:</i> '+gEsc(C.feel.pas[0]+' — '+C.feel.pas[1]):''):'')+'</div>'+
+  let h='<div class="ghead"><div class="gart"></div><div class="gid"><h3 style="color:'+C.col+'">'+gEsc(C.n.split(' & ')[0])+'</h3><div class="q">'+gEsc(C.q)+' · '+gEsc(C.ty)+'</div><div class="grole"><b>'+gEsc(C.role||'')+'</b> '+gEsc(C.tip||'')+(C.weak?'<br><i>Weakness:</i> '+gEsc(C.weak):'')+(C.trait?'<br><i>Ability trait:</i> '+gEsc(C.trait):'')+(C.feel?'<br><i>Best at:</i> '+gEsc(C.feel.good)+'<br><i>Worst at:</i> '+gEsc(C.feel.bad)+'<br><i>Game plan:</i> '+gEsc(C.feel.plan)+'<br><i>How to beat:</i> '+gEsc(C.feel.beat)+'<br><i>Movement:</i> '+gEsc(C.feel.mv)+'.<br><i>Attacks:</i> '+gEsc(C.feel.atk[0]+' — '+C.feel.atk[1])+'<br><i>Defence:</i> '+gEsc(C.feel.def[0]+' — '+C.feel.def[1])+(C.feel.pas?'<br><i>Passive:</i> '+gEsc(C.feel.pas[0]+' — '+C.feel.pas[1]):''):'')+'</div>'+
     '<div class="gstats"><span>POWER</span><div class="pips">'+gPips(C.pwr||1,.74,1.34)+'</div><span>SPEED</span><div class="pips">'+gPips(C.spd||C.st.run,2.6,6.2)+'</div><span>WEIGHT</span><div class="pips">'+gPips(C.st.w,.76,1.5)+'</div><span>RANGE</span><div class="pips">'+gPips(C.rng||3,1,5)+'</div><span>FLOAT</span><div class="pips">'+gPips(1/(C.st.fall||5.4),1/7.2,1/3.6)+'</div><span>JUMPS</span><div class="pips">'+gPips(C.st.aj+1,1,5)+'</div></div></div></div>';
   h+='<h4>SPECIAL MOVES</h4><div class="gsp">';
   for(let i=0;i<4;i++)h+='<kbd>'+inp[i]+'</kbd><div><b>'+gEsc(C.sp[i])+'</b><p>'+gEsc(tx[i]||'')+'</p></div>';
@@ -5294,7 +5294,7 @@ kurai:['Sweeps his glaive in a full circle, hitting on both sides.','A silent sw
 homura:['Lobs a glob of magma that leaves a burning pool where it lands (two pools at most).','A long whip of lava that hits several times and burns. Strongest at the tip.','Erupts upward, leaving a geyser of fire behind.','Coats himself in molten rock for 5 seconds: anyone who strikes him by hand is burned. Cooldown.','The floor around him becomes a caldera, erupting to the beat.'],
 kuragari:['Shoots a web. Whoever it hits is stuck: slower, with lower jumps.','Zips forward along a web line at great speed. Press jump to cancel out of it.','Swings a long way sideways and up on a web. He can still act afterwards.','Lays a web snare on the floor that roots whoever steps in it (one at a time).','Strings a web across the whole area and reels everyone in.'],
 mia:['Shoves a force field forward: low damage, big push, and it reflects projectiles.','Raises a barrier ahead of her that blocks projectiles and shoves rivals who touch it (one at a time).','Jumps off a pane of solid air. She can still act afterwards.','Seals herself in a bubble: untouchable for a moment, pushing rivals away. Long cooldown.','Closes a force field around everyone nearby and squeezes.'],
-shi:['Uses a quirk he has collected: fire, then ice, then light, a different one each time.','Steps through the grave: a short teleport in any direction that ends in a cut.','Borrowed wings carry him a short way in any direction.','A slow executioner cut. Weak below 100%, but above it launches almost twice as hard.','A wide scything beam that reaps everything in its path.'],
+shi:['Uses an ability he has collected: fire, then ice, then light, a different one each time.','Steps through the grave: a short teleport in any direction that ends in a cut.','Borrowed wings carry him a short way in any direction.','A slow executioner cut. Weak below 100%, but above it launches almost twice as hard.','A wide scything beam that reaps everything in its path.'],
 takeshi:['Pulls a pistol off his arm and fires three quick shots of ink.','An ink wolf leaps off his skin and runs along the ground, biting several times.','Wings unfold from the tattoo on his back for a short flight.','The lightning tattoo strikes a tall column in front of him and paralyzes.','Every tattoo comes off at once in a torrent of ink.'],
 ali:['A slow orb of thought. A rival it hits has left and right swapped for 3 seconds. Cooldown.','Seizes a rival at a distance with her mind and throws them back over her head.','Levitates slowly and precisely. She can still act afterwards.','Looks a moment ahead: the next hit within 5 seconds misses her completely. Cooldown.','Reaches into every mind on screen at once.'],
 daku:['All three heads bite in turn as he steps forward. Burns.','A burning dash low to the ground.','Rises inside a pillar of fire that hits several times.','Hellhound form for 7 seconds: faster, stronger, every hit burns. He takes more damage and burns himself. Long cooldown.','Three heads, three sets of jaws, one unlucky rival.'],
@@ -5419,7 +5419,7 @@ function foodFX(f){if(f.C.id!=='torabi'||f.st!=='grab'||f.stT>16)return;const ex
   for(let k=0;k<3;k++)for(let s=0;s<=L;s+=2.5){const w=Math.sin(s*.45+k*2.1-FR*.4)*2.4;wdisc(x0+f.face*s,y0+w+(k-1)*2,1.3,k===1?'#fff0b0':'#e8c458');}
   wring(x0+f.face*L,y0,5,'#e8c458',2);}
 
-/* stance auras: counters and buffs read as the student's quirk */
+/* stance auras: counters and buffs read as the student's ability */
 function quirkFX(f){const m=f.mv;if(!m||f.st!=='move')return;const d=m.d,x=f.x,y=f.y-30,T=FR;
   if(d.beh==='counter'&&m.t>=d.bp.f0&&m.t<=d.bp.f1){if(f.C.id==='kouji'){for(let i=0;i<20;i++){const an=i/20*TAU+T*.12,rr=22;wdisc(x+Math.cos(an)*rr,y+Math.sin(an)*rr,2,i<10?'#ffffff':'#1a0e2a');}wdisc(x+Math.cos(T*.12)*10,y+Math.sin(T*.12)*10,3,'#1a0e2a');wdisc(x-Math.cos(T*.12)*10,y-Math.sin(T*.12)*10,3,'#ffffff');}
     else{for(let i=0;i<3;i++){const rr=14+((T*1.4+i*8)%24);X.globalAlpha=1-(rr-14)/24;wring(x,y-16,rr,'#ffffff');}X.globalAlpha=1;wr('#ffe060',x-1,y-52,3,9);wr('#ffe060',x-1,y-41,3,3);wr('#ffe060',x+6,y-50,3,7);wr('#ffe060',x+6,y-41,3,3);}}
@@ -5487,7 +5487,7 @@ function musToggle(){MUS.on=!MUS.on;document.querySelectorAll('.musbtn').forEach
 /* ===================== GAME MODES: Versus, Survival (endless ninja hordes), Training ===================== */
 let MODE='versus';
 const SV={wave:0,kills:0,t:0,queue:0,rest:0,nid:10,best:null},TR={beh:'stand',pct:'keep',combo:0,cdmg:0,last:0,ct:-999,prev:0};
-function setMode(m){MODE=m;const s=$('#modeSub');if(s)s.textContent=m==='survival'?'SURVIVAL: pick your team (CPU slots fight on your side), then hold out against endless ninja waves.':m==='training'?'TRAINING: P1 picks a fighter; the second box is the training dummy.':'Arcade quirk brawler. Launch your rival off a stage in Japan.';
+function setMode(m){MODE=m;const s=$('#modeSub');if(s)s.textContent=m==='survival'?'SURVIVAL: pick your team (CPU slots fight on your side), then hold out against endless ninja waves.':m==='training'?'TRAINING: P1 picks a fighter; the second box is the training dummy.':'Arcade super-power brawler. Launch your rival off a stage in Japan.';
   if(m==='training'){SEL.mode[0]='h';if(SEL.mode[1]==='off'||SEL.mode[1]==='h')SEL.mode[1]='1';SEL.mode[2]=SEL.mode[3]='off';}if(typeof refreshSel==='function'&&document.querySelector('.card'))refreshSel();}
 /* ---- ninja horde fighters (hidden from the roster) ---- */
 {const mk=(id,sn,top,acc,scarf,o)=>{add({id,n:sn,sn,q:'Shadow Clan',ty:'Horde',col:scarf,d:'',hidden:1,
@@ -5504,7 +5504,7 @@ function setMode(m){MODE=m;const s=$('#modeSub');if(s)s.textContent=m==='surviva
   mk('ninja2','RED NINJA','#3a1418','#5a1c22','#ff4a4a',{w:.8,run:4.8,pow:.9,atk:.7,def:1.35});
   mk('ninja3','SHADOW ELITE','#1c1430','#2c2050','#b06aff',{w:.9,run:5,pow:1,atk:.9,def:1.1,kbm:.9});
   mk('ninjaB','NINJA MASTER','#101014','#2a2a30','#f6c94e',{w:1.5,run:4,pow:1.15,atk:1.15,def:.55,kbm:1,look:{size:1.3}});
-  /* ---- ninjas with quirk-like powers ---- */
+  /* ---- ninjas with ability-like powers ---- */
   const pw=(id,el,eff,aura,fn)=>{const C=CH.find(c=>c.id===id);C.kit.el=el;C.aura=aura;for(const k of['ftilt','utilt','dtilt','dash','fair','bair','uair','dair','fsmash','usmash','dsmash']){const d=C.mv[k];if(!d)continue;if(d.vfx)d.vfx.el=el;if(eff&&(eff==='burn'||eff==='poison'||/smash/.test(k)))d.hits.forEach(h=>{h.eff=h.eff||eff;});}if(fn)fn(C);};
   const fxOf=C=>C.kit.fx;
   mk('ninjaF','EMBER NINJA','#3a1408','#6a2410','#ff7a20',{w:.8,run:4.5,pow:.95,atk:.75,def:1.35});
@@ -5775,7 +5775,7 @@ EK.gp={init(e,f,s){if(s.hm)e.target=opp(f);if(s.ex)e.explode=1;if(s.multi)e.mult
     case 'arrow':{const an=Math.atan2(e.vy,e.vx),cx=Math.cos(an),sy=Math.sin(an),hc=['#e8ecf4','#ff7a20','#6adf6a'][e.spec.head||0];wl('#0c0820',x-cx*11,y-sy*11,x+cx*8,y+sy*8,3);wl('#c8a878',x-cx*10,y-sy*10,x+cx*7,y+sy*7,1);wpoly(hc,[x+cx*12,y+sy*12,x+cx*6-sy*3,y+sy*6+cx*3,x+cx*6+sy*3,y+sy*6-cx*3]);wl('#e83a3a',x-cx*10-sy*2,y-sy*10+cx*2,x-cx*7,y-sy*7,1);wl('#e83a3a',x-cx*10+sy*2,y-sy*10-cx*2,x-cx*7,y-sy*7,1);if(e.spec.head===1&&t%2===0)part(x-cx*8,y-sy*8,0,0,10,'#ff7a20',2,0);break;}
     default:wdisc(x,y,e.r+1,'#0c0820');wdisc(x,y,e.r,c);wdisc(x-1,y-1,Math.max(1,e.r-3),'#ffffff');if(t%2===0)part(x-d*e.r,y,0,0,12,c,2,0);}}};
 EK.kchain=Object.assign({},EK.chain,{draw(e){const o=e.owner,sx=o.x+o.face*10;for(let i=0;i<=e.cur;i+=4){const x=sx+o.face*i;wdisc(x,e.y+((i>>2)%2?1:-1),2.4,'#3a3a44');wdisc(x,e.y+((i>>2)%2?1:-1),1.4,(i>>2)%2?'#e8e8f0':'#9a9aa8');}wpoly('#e8e8f0',[e.x-o.face*2,e.y-5,e.x+o.face*7,e.y,e.x-o.face*2,e.y+5]);}});
-/* ---- quirk-themed hit effects ---- */
+/* ---- ability-themed hit effects ---- */
 const NEWFX=(()=>{const arm=(f,d,x,y,c0,c1,w)=>{const x0=f.x+d*8,y0=f.y-38;wl(c0,x0,y0,x,y,w+2);wl(c1,x0,y0,x,y,w);};
   return{
   mini(sub,x,y,d,pr,fx,f,R){const g=Math.min(1,pr*3);wring(x,y,3+g*R,'#b8b4d8',2);wring(x,y,1+g*R*.6,'#ffffff');for(let i=0;i<3;i++){const s=2+i*3*g;wr('#b8b4d8',x-d*(12-i*5)-s/2,y-s/2,s,s);}},
@@ -5838,7 +5838,7 @@ function genFS(e,f,d,t,a){const c0=d.col[0],c1=d.col[1],F2=e.face,cx=e.x,cy=e.y;
 /* ---- sweet spots ---- */
 {const S=(id,keys,kind)=>{const C=CH.find(c=>c.id===id);if(C)for(const k of keys){const d=C.mv[k];if(d&&d.hits&&d.hits.length)d.sweet=kind;}};
   S('hari',['jab1','jab2','jab3','ftilt','fsmash','fair','utilt','nB'],'tip');S('kichi',['ftilt','fsmash'],'tip');S('kairi',['ftilt','nB'],'tip');S('tsuki',['nB'],'tip');S('sanshou',['fsmash','nB'],'close');S('raion',['fsmash','ftilt'],'close');S('pitto',['fsmash'],'close');S('ginko',['fsmash'],'close');}
-/* smashes of the new students use their quirk effect */
+/* smashes of the new students use their ability effect */
 {const ids=['riku','sanshou','kairi','kichi','tamashi','akemi','sai','tenmetsu','hari','pitto','maho','raion','rei','tai','hatsuko','ginko'];CH.forEach(C=>{if(!ids.includes(C.id))return;for(const k of['fsmash','usmash','dsmash']){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)continue;const b=d.hits[0].b[0];d.vfx={k:'H',el:d.el||C.kit.el,sub:d.sub||(k==='dsmash'&&C.id==='hari'?'twin':undefined),x:b[0],y:b[1],r:b[2]+5};}});}
 /* ===================== every stage gets its own theme ===================== */
 {const mk=(seed,o)=>{let s=seed;const r=()=>(s=(s*16807)%2147483647)/2147483647,n=o.sc.length,ri=k=>Math.floor(r()*k);
@@ -5861,7 +5861,7 @@ function genFS(e,f,d,t,a){const c0=d.col[0],c1=d.col[1],F2=e.face,cx=e.x,cy=e.y;
  add('survival',127,{bpm:184,root:52,sc:NM.pentm,prog:[0,0,3,5,0,0,8,7],min:[1,1,0,1,1,1,0,1],lw:'sawtooth',bw:'sawtooth',bass:B2,k:'x..x..x.x..x..x.',s:'....x.......x.x.',h:'xxxxxxxxxxxxxxxx',arp:1,koto:1});
  add('training',131,{bpm:108,root:60,sc:NM.pentM,prog:[0,9,5,7],min:[0,1,0,0],lw:'triangle',bw:'triangle',bass:B4,k:'x.......x.......',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.',arp:.8,seq:'ABAD'});}
 
-/* ===================== FINAL PASS: every student's quirk shows in how they move, and every one has a clear weakness ===================== */
+/* ===================== FINAL PASS: every student's ability shows in how they move, and every one has a clear weakness ===================== */
 {const W={kimiko:['Light, and helpless once rivals get past her ice.','Frost trails behind her when she runs.'],keanu:['Slow swings and a short recovery.','Flowers bloom where he runs.'],bara:['Light. Weak when rivals get inside his blade.','Hold Jump in the air to glide down on his tail fan.'],
  tori:['The lightest hits in the school; needs many to finish.','Dodges stay intangible longer.'],minato:['Stretched limbs leave him open if he misses.','The longest normal grab.'],oro:['Falls fast, and everything he has is close range.','Slowly regenerates when left alone.'],
  gomi:['Takes extra damage, and Overheat burns him too.','Embers trail from him as he runs.'],kouji:['No standout strength; relies on reading rivals.',''],emi:['Very light and weak on the ground.','Hold Jump in the air to hover on her wings.'],
@@ -5902,7 +5902,7 @@ function rollRandom(){const pool=CH.map((c,i)=>i).filter(i=>!CH[i].hidden);for(l
   $('#roster').appendChild(b);
   setInterval(()=>{try{if($('#select').hidden)return;for(let n=0;n<4;n++){const p=$('#pp'+n);if(!p)continue;let c=p.querySelector('.rndchip');const on=SEL.rnd[n]&&SEL.mode[n]!=='off';if(on&&!c){c=document.createElement('div');c.className='rndchip';c.innerHTML='<em>?</em><b>RANDOM</b><span>picked when the match starts</span>';p.appendChild(c);}if(c)c.hidden=!on;}}catch(e){}},150);})();
 
-/* ===================== THE OUTSIDERS: effects, entities and quirk rules for the nineteen newer fighters ===================== */
+/* ===================== THE OUTSIDERS: effects, entities and ability rules for the nineteen newer fighters ===================== */
 ['glob','pct'].forEach(k=>PROJ.add(k));
 EK.glob={draw(e){const t=e.t;wdisc(e.x,e.y,e.r+1,'#5a1408');wdisc(e.x,e.y,e.r,'#ff5a1a');wdisc(e.x-1,e.y-2,e.r*.5,'#ffd040');if(t%2===0)part(e.x,e.y,0,.4,12,t%4?'#ff5a1a':'#ffd040',2,.05);},
   upd(e){const y=surfY(e.x,e.y-6);if(y!==null&&e.y>=y-3){e.alive=false;burst(e.x,y,12,['#ff5a1a','#ffd040'],2,16);sfx('boom');const mine=ENT.filter(q=>q.alive&&q.k==='lava'&&q.owner===e.owner);if(mine.length>=2)mine[0].alive=false;
@@ -5916,7 +5916,7 @@ EK.fwall={init(e,f){e.x=f.x+f.face*44;e.y=f.y-30;e.vx=e.vy=0;e.multi=1;e.ri=22;}
     for(let i=0;i<4;i++)wr('#ffffff',e.x-4,e.y-28+((e.t*.8+i*16)%60),8,1);X.globalAlpha=1;}};
 EK.pct={init(e,f){e.dmg=4+Math.min(13,f.dmg*.09);e.label=Math.round(f.dmg)+'%';e.r=9+Math.min(5,f.dmg*.03);},draw(e){X.save();X.translate(e.x,e.y);X.rotate(Math.sin(e.t*.3)*.25);X.font=(e.r>11?'12px':'10px')+' "Press Start 2P", monospace';X.textAlign='center';X.fillStyle='#0c0820';X.fillText(e.label,1,5);X.fillStyle=e.dmg>12?'#ff5a3a':e.dmg>8?'#ffb030':'#ffffff';X.fillText(e.label,0,4);X.restore();if(e.t%3===0)part(e.x-e.face*10,e.y,0,0,10,'#4a9aff',2,0);}};
 
-/* ---- quirk rules that reach into the hit code ---- */
+/* ---- ability rules that reach into the hit code ---- */
 function preHit(t,h,a,o){if(t.foreT>0){t.foreT=0;t.inv=Math.max(t.inv,24);FXL.push({k:'txt',s:'FORESEEN',x:t.x,y:t.y-78,t:0,life:40,col:'#4a8aff'});FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#4a8aff',r0:8,life:16});sfx('counter');return true;}
   if(t.C.id==='hippo'&&!h.grab){t.hitN=(t.hitN||0)+1;if(t.hitN%6===0){t.inv=Math.max(t.inv,5);FXL.push({k:'txt2',s:'RETCON!',x:t.x,y:t.y-84,t:0,life:44,col:'#ffe060'});burst(t.x,t.y-30,12,['#4a9aff','#ffe060'],2,16);sfx('counter');return true;}}
   return false;}
@@ -5946,10 +5946,10 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
    if(f.plotT>0){f.plotT--;if(FR%4===0)part(f.x+rnd()*22-11,f.y-rnd()*58,0,-.4,12,rnd()<.5?'#ffe060':'#4a9aff',2,0);}
    if(f.sleepT>0){f.sleepT--;if(f.st!=='dizzy')f.sleepT=0;else if(FR%26===0)FXL.push({k:'txt',s:'z',x:f.x+8,y:f.y-66,t:0,life:30,col:'#ffb8e0'});}
    if(f.drum>0&&FR%12===0)part(f.x+rnd()*20-10,f.y-40-rnd()*20,0,-.4,12,'#6a8aff',2,0);
-   if(C.id==='shi'&&f.kos>(f._k||0)){f._k=f.kos;if((f.reap||0)<3){f.reap=(f.reap||0)+1;FXL.push({k:'txt2',s:'QUIRK TAKEN',x:f.x,y:f.y-84,t:0,life:50,col:'#d8d0c0'});sfx('power');}}
+   if(C.id==='shi'&&f.kos>(f._k||0)){f._k=f.kos;if((f.reap||0)<3){f.reap=(f.reap||0)+1;FXL.push({k:'txt2',s:'ABILITY TAKEN',x:f.x,y:f.y-84,t:0,life:50,col:'#d8d0c0'});sfx('power');}}
 }};}
 
-/* ---- hit effects, one look per quirk ---- */
+/* ---- hit effects, one look per ability ---- */
 (function(){const A=(a,f)=>{X.globalAlpha=a;f();X.globalAlpha=1;};
  const arc=(x,y,d,R,pr,c0,c1,w)=>{const a0=-1.25+pr*.5,n=9;for(let i=0;i<n;i++){const a=a0+i/n*2.3,b=a+2.3/n,rr=R*(1+.25*pr);wl(i<n-3?c0:c1,x-d*R*.4+Math.cos(a)*rr*d,y+Math.sin(a)*rr,x-d*R*.4+Math.cos(b)*rr*d,y+Math.sin(b)*rr,w||3);}};
  const jaws=(x,y,d,R,pr,c0,c1)=>{const gap=R*(1-Math.min(1,pr*2.2))+2,n=5;for(const s of[-1,1]){wpoly(c0,[x-R,y+s*(gap+R*.5),x+R,y+s*(gap+R*.5),x+R*.8,y+s*gap,x-R*.8,y+s*gap]);for(let i=0;i<n;i++){const tx=x-R*.8+i*(R*1.6/n);wpoly(c1,[tx,y+s*gap,tx+R*.32,y+s*gap,tx+R*.16,y+s*(gap-R*.38)]);}}};
@@ -6008,7 +6008,7 @@ const HIPPO_LINES=['HEY, YOU WITH THE CONTROLLER','IS THIS RANKED?','I READ THE 
   goiru:['A huge target, and the slowest starts in the game.','Five jumps and a glide. Hits under 5% do not make him flinch, and his biggest moves are armoured.'],aya:['Light, and every crystal costs her something. No projectile.','CRYSTAL ARTS: five boosts to pick between, and crystal blades that out-reach most rivals.'],hikari:['Short reach for a blade fighter and light.','SHOCK: every fourth hit she lands holds the rival a moment longer.'],
   ryo:['No projectile, a low jump, and nothing to do in the air.','BURROW: Down-B takes him under the stage where nothing can touch him. Cannot be confused, and sees cloaked rivals.'],suzume:['Light; her best hits need the web to land first.','Three jumps, five wall jumps, and webs that stick and slow.'],ayame:['Very low damage: she wins by ring-out.','Her hits push 10% further.'],
   sota:['Every special burns fuel, and fuel barely refills in the air: empty, he has no rockets at all.','FUEL: a 100-point tank. Specials cost 20 to 30; it refills in about three seconds on the ground. The most explosive first step and one of the highest jumps in the school.'],tiki:['Slow projectiles and no fast escape.','His spirits do the fighting: his attacks never expose his arms, and three of his specials keep working after he has moved on.'],
-  dawson:['No quirk: nothing he has is a trump card, and he is a little light.','GLIDER CAPE: hold Jump while falling to glide forward. His shuriken and grapple have no cooldown.'],
+  dawson:['No ability: nothing he has is a trump card, and he is a little light.','GLIDER CAPE: hold Jump while falling to glide forward. His shuriken and grapple have no cooldown.'],
   maya:['Low damage; she wins slowly.','Her tilts and Draw Essence heal her.'],sarah:['Light, and her best moves leave her exposed if they miss.','BACKSTAB: 30% more damage from behind. Her attacks are shadow constructs, so they never expose her arms.'],
   aria:['Nothing about her is reliable, including the luck.','LUCKY: one hit in six does 50% more. One hit in six aimed at her misses.'],bryson:['As himself he is the weakest hitter in the school.','TANTRUM: a full meter turns him into the beast for twelve seconds: huge, armoured against small hits, 35% stronger, and he cannot shield.'],
   conor:['The shortest reach in the school and very light.','The smallest target in the school.'],ray:['His beams leave him standing still; get inside and he struggles.','Every eye at once: laser, thermal, paralysing stare, flash, X-ray and Future Sight are all available at any time.'],
@@ -6211,7 +6211,7 @@ function clankCheck(){for(let i=0;i<F.length;i++){const a=F[i];if(a.dead||a.gone
     if(diff<9)reb(a);if(diff>-9)reb(b);
     FXL.push({k:'ring',x:meet[0],y:meet[1],t:0,col:'#ffffff',r0:6,life:16});FXL.push({k:'txt',s:'CLANK!',x:meet[0],y:meet[1]-26,t:0,life:30,col:'#e8f4ff'});burst(meet[0],meet[1],10,['#ffffff','#ffe27a'],2.4,14);sfx('block');
     if(!a.mv)break;}}}
-/* ---- three students whose normals were plain now carry their quirk ---- */
+/* ---- three students whose normals were plain now carry their ability ---- */
 (function(){const c=id=>CH.find(x=>x.id===id);
  /* Sai (Duplicate): his finishing blows land twice, the copy a beat behind */
  {const C=c('sai');for(const k of['jab3','ftilt','fair','bair','dash','fsmash']){const d=C.mv[k];if(!d||!d.hits.length)continue;const h=d.hits[0];d.hits.push(Object.assign({},h,{b:h.b.map(q=>q.slice()),dmg:h.dmg*.4,bkb:h.bkb*.8,kbg:h.kbg*.8,f0:d.s+d.a+1,f1:d.s+d.a+3}));h.dmg*=.8;d.r+=2;}}
@@ -6863,7 +6863,7 @@ const BEAST=(function(){
    if(f.ctrl==='cpu'&&GS==='play'&&!f.mv&&f.ground&&(f.st==='idle'||f.st==='walk'||f.st==='run')){const o=opp(f),far=o?Math.abs(o.x-f.x):0;if((!f.hound&&far<90&&rnd()<.02)||(f.hound&&far>200&&rnd()<.006))startMove(f,'dB');}}};
 })();
 
-/* fsart.js — every Final Smash is drawn out of the fighter's own quirk: its own symbols, its own motion, its own backdrop */
+/* fsart.js — every Final Smash is drawn out of the fighter's own ability: its own symbols, its own motion, its own backdrop */
 const FSG={
  shard(x,y,s,c,c1,k){X.save();X.translate(x,y);X.rotate(k);wpoly(c,[0,-s*1.6,s*.5,0,0,s*1.6,-s*.5,0]);wpoly('#ffffff',[0,-s*1.2,s*.2,0,0,s*.4,-s*.15,0]);X.restore();},
  flame(x,y,s,c,c1,k){const w=Math.sin(k*3)*s*.3;wpoly(c,[x-s,y+s,x-s*.6+w,y-s*.4,x+w,y-s*1.8,x+s*.6+w,y-s*.3,x+s,y+s]);wpoly(c1,[x-s*.5,y+s,x+w*.5,y-s*.8,x+s*.5,y+s]);},
@@ -7081,7 +7081,7 @@ const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.
   else if(id==='ray'&&f.xrayT>FR){const yy=Math.round(f.y)-88;wring(x,yy,4,'#ff4a4a',1);wl('#ff4a4a',x-6,yy,x+6,yy);wl('#ff4a4a',x,yy-6,x,yy+6);}}}catch(e){}};
 })();
 
-/* flavor.js — no two recoveries and no two rushes alike: every plain up-special and side-dash gets a twist from its owner's quirk,
+/* flavor.js — no two recoveries and no two rushes alike: every plain up-special and side-dash gets a twist from its owner's ability,
    and every fighter is given a fighting style (combo, poke, bruiser, finisher) that changes how their basic attacks link and launch */
 (function(){const c=id=>CH.find(x=>x.id===id);const note=(id,k,t)=>{try{const si=['nB','sB','uB','dB'].indexOf(k);if(typeof GTXT!=='undefined'&&GTXT[id]&&GTXT[id][si]!==undefined)GTXT[id][si]+=' '+t;}catch(e){}};
 const GPs=o=>Object.assign({k:'gp'},o);
@@ -7442,7 +7442,7 @@ const ex0=exaggerate;exaggerate=function(p,f){const o=ex0(p,f),st=f.st,M=f.C&&f.
     case'slouch':o.tl=(o.tl||0)+.14;o.hd=(o.hd||0)+.12;o.aF=[5,-24+b*.5];o.aB=[-4,-24];o.py=(o.py||0)+1.5;break;
     case'proud':o.tl=(o.tl||0)-.1;o.hd=(o.hd||0)-.08;o.aF=[7,-27];o.aB=[-9,-30];break;}}
   return o;};
-/* a trail of the quirk when running */
+/* a trail of the ability when running */
 const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F){if(f.dead||f.gone||f.invis||!f.ground||f.st!=='run'||(FR+f.id*2)%5)continue;const th=f.C.qth;if(!th)continue;const cs=th[0],cl=cs[fl(rnd()*cs.length)],s=th[1];
   part(f.x-f.face*(6+rnd()*6),f.y-2-rnd()*(s==='rise'||s==='float'?18:6),-f.face*(.3+rnd()*.5),s==='rise'?-.5:s==='fall'?.1:-.15,12,cl,rnd()<.4?2:1,s==='drip'?.08:0);}};
 /* uniforms: every student wears theirs a little differently */
@@ -7547,7 +7547,7 @@ const ov=overlay2D;overlay2D=function(){ov();try{for(const f of F){if(f.dead||f.
 }}catch(e){}};
 })();
 
-/* quirkn.js — basic attacks carry the fighter's quirk: a themed spray on every normal, and a light quirk effect on tilts, smashes and aerials. */
+/* quirkn.js — basic attacks carry the fighter's ability: a themed spray on every normal, and a light ability effect on tilts, smashes and aerials. */
 (function(){
 /* particle themes: [colours, style]  style: rise | fall | drip | scatter | float */
 const TH={snow:[['#ffffff','#bfe8ff'],'fall'],ember:[['#ff7a30','#ffd060','#ff4020'],'rise'],drop:[['#5ab8ff','#bfe8ff'],'drip'],feather:[['#3ad0b0','#2a70d0','#f0f0ff'],'fall'],phase:[['#b890ff','#f0e6ff'],'rise'],
@@ -7611,7 +7611,7 @@ const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for
       else part(px,py,f.face*(.2+rnd()*.5),(rnd()-.5)*.4,16,c,rnd()<.3?2:1,0);}}}}};
 })();
 
-/* ---- quirk-shaped basic attacks: reach, flurries, lunges, armour, bolts, traps and blink dashes ---- */
+/* ---- ability-shaped basic attacks: reach, flurries, lunges, armour, bolts, traps and blink dashes ---- */
 (function(){
 const c=id=>CH.find(x=>x.id===id),each=(id,keys,fn,nt)=>{const C=c(id);if(!C)return;for(const T of[C.mv,C.hmv]){if(!T)continue;for(const k of keys){const d=T[k];if(!d||!d.hits||!d.hits.length||d.beh||d.cyc)continue;try{fn(d,k,C);if(nt)d.qn=(d.qn?d.qn+' ':'')+nt;}catch(e){}}}};
 const T=['ftilt','utilt','dtilt'],S=['fsmash','usmash','dsmash'];
@@ -7619,7 +7619,7 @@ const reach=(id,keys,k)=>each(id,keys,d=>{d.hits.forEach(h=>h.b.forEach(q=>{q[0]
 const multi=(id,keys,n)=>each(id,keys,d=>{if(d.hits.some(h=>h.f0!==undefined||h.ri))return;d.a=Math.max(d.a,n*3+1);d.hits.forEach(h=>{h.ri=3;h.dmg=Math.round(h.dmg*(n===2?.6:.44)*10)/10;h.bkb=Math.round(h.bkb*.8*100)/100;});},'Hits '+n+' times in a flurry.');
 const lunge=(id,keys,v)=>each(id,keys,d=>{if(d.imp)return;d.imp=[[Math.max(1,d.s-2),v]];},'Lunges forward as it comes out.');
 const armor=(id,keys)=>each(id,keys,d=>{d.bp=Object.assign({},d.bp,{armor:1,f0:Math.max(1,d.s-6),f1:d.s+d.a});},'Does not flinch just before it lands.');
-const shot=(id,keys,col,sh)=>each(id,keys,d=>{if(d.spawn)return;const h=d.hits[0];d.spawn=[[d.s,{k:'gp',sh:sh||'star',c:col,vx:5.6,life:20,r:5,dmg:Math.round(h.dmg*.35*10)/10,bkb:2,kbg:.02,ang:40,dy:h.b[0][1]}]];},'Also throws a short bolt of the quirk.');
+const shot=(id,keys,col,sh)=>each(id,keys,d=>{if(d.spawn)return;const h=d.hits[0];d.spawn=[[d.s,{k:'gp',sh:sh||'star',c:col,vx:5.6,life:20,r:5,dmg:Math.round(h.dmg*.35*10)/10,bkb:2,kbg:.02,ang:40,dy:h.b[0][1]}]];},'Also throws a short bolt of the ability.');
 const trap=(id,spec,nt)=>each(id,['dsmash'],d=>{if(d.spawn)return;d.spawn=[[d.s+1,spec]];},nt);
 const blink=(id)=>each(id,['dash'],d=>{if(d.imp)return;d.imp=[[Math.max(1,d.s-2),15],[d.s+1,1.5]];d.vanish=1;},'Blinks through the gap instead of running it.');
 reach('minato',T.concat(S),1.14);reach('ivan',T.concat(S),1.16);reach('hari',T,1.12);reach('kichi',T,1.16);reach('tomi',S,1.14);
@@ -7645,7 +7645,7 @@ const se=spawnEnt;spawnEnt=function(f,s){const n=f&&f.mv&&f.mv._sp;if(n>1&&s&&(s
 const mt=modeTick;modeTick=function(){mt();if(typeof GS==='undefined')return;for(const f of F)if(f.dead||f.st==='respawn'){f.spK=null;f.spN=0;}};
 })();
 
-/* qact.js — QUIRK ACTIONS (Shield + B): one flavour move per fighter that is about the quirk, not about damage.
+/* qact.js — ABILITY ACTIONS (Shield + B): one flavour move per fighter that is about the ability, not about damage.
    Also: projectile flight patterns (lob, bounce, homing, wave, split, charge, steer...) so no two shots travel alike. */
 (function(){
 const c=id=>CH.find(x=>x.id===id),say=(f,s,col)=>FXL.push({k:'txt',s,x:f.x,y:f.y-86,t:0,life:42,col:col||'#ffffff'});
@@ -7750,9 +7750,9 @@ const A={
  hippo:['SPOILERS','fear',{r:140,conf:55},11,'Tells everyone nearby how the fight ends. They get left and right mixed up.']};
 const FORMA={elephant:['STAND FIRM','brace',{dur:100},11,'Plants all four feet: nothing makes the elephant flinch for a moment.'],cheetah:['SPRINT','haste',{dur:170},8,'Runs even faster for a few seconds.'],snake:['HYPNOSIS','fear',{r:150,front:1,slow:130},9,'Rivals in front of him are slowed to a crawl.'],hound:['TRIPLE HOWL','roar',{r:130,f:5,sd:16},9,'Three heads howl: rivals are shoved back and shields crack.']};
 for(const id in A){const C=c(id);if(!C)continue;const a=A[id];C.qa=a;C.mv.qa=M(a[1]==='updraft'||a[1]==='blink'?'float':a[1]==='roar'||a[1]==='fear'||a[1]==='hype'?'roar':'cast',5,a[1]==='push'||a[1]==='pull'?16:6,a[1]==='brace'||a[1]==='guard'||a[1]==='hype'?8:13,null,{fx:C.kit&&C.kit.fx,lim:'none'});
-  C.mv.qa.qn=a[0]+' — '+a[4]+' ('+a[3]+'s cooldown)';C.trait=(C.trait?C.trait+' ':'')+'QUIRK ACTION (Shield + B): '+a[0]+' — '+a[4];}
+  C.mv.qa.qn=a[0]+' — '+a[4]+' ('+a[3]+'s cooldown)';C.trait=(C.trait?C.trait+' ':'')+'ABILITY ACTION (Shield + B): '+a[0]+' — '+a[4];}
 {const B=c('bisu');if(B)B.trait+=' As an elephant it becomes STAND FIRM (nothing makes it flinch), as a cheetah SPRINT, as an anaconda HYPNOSIS.';const D=c('daku');if(D)D.trait+=' As the hound it becomes TRIPLE HOWL.';}
-if(typeof RVM!=='undefined'){const i=RVM.findIndex(r=>r[0]==='taunt');RVM.splice(i<0?RVM.length:i,0,['qa','Quirk action','Shield + B','SPECIAL']);}
+if(typeof RVM!=='undefined'){const i=RVM.findIndex(r=>r[0]==='taunt');RVM.splice(i<0?RVM.length:i,0,['qa','Ability action','Shield + B','SPECIAL']);}
 const actOf=f=>(f.form&&FORMA[f.form])||f.C.qa;
 function fire(f){const a=actOf(f);if(!a)return;f.qaCD=FR+a[3]*60;say(f,a[0],cols(f)[0]);try{P[a[1]](f,a[2]);}catch(e){}}
 
@@ -7798,7 +7798,7 @@ const FPN={charge:'Hold B to charge it: bigger, faster and stronger.',stall:'Fli
  homing:'Curves toward the nearest rival.',curve:'Flies in a rising arc and dips back down.',grow:'Grows as it travels.',lob:'Lobbed in an arc.',bounce:'Bounces along the ground.',steer:'Steer it up and down with the stick while it flies.',zig:'Zigzags.',skip:'Bounces along the platform several times before it rolls off the edge.'};
 for(const key in FP){const[id,k]=key.split('.'),C=c(id);if(!C)continue;for(const T of[C.mv,C.hmv]){if(!T||!T[k])continue;const d=T[k],fp=FP[key];const ds=d.cyc?d.cyc:[d];let ok=false;
   for(const dd of ds){if(!dd.spawn)continue;dd.spawn.forEach(s=>{if(s[1]&&s[1].vx&&!s[1].hm&&!s[1].bm){s[1].fp=fp==='charge'?'':fp;ok=true;}});if(fp==='charge'&&ok)dd.chg=1;}
-  if(fp==='charge'&&ok)d.chg=1;if(ok&&!T[k].qn)T[k].qn=FPN[fp];else if(ok&&/^[a-z]+(tilt|smash|air)$/.test(k))T[k].qn=(T[k].qn||'').replace('Also throws a short bolt of the quirk.','Also throws a short bolt of the quirk. '+FPN[fp]);
+  if(fp==='charge'&&ok)d.chg=1;if(ok&&!T[k].qn)T[k].qn=FPN[fp];else if(ok&&/^[a-z]+(tilt|smash|air)$/.test(k))T[k].qn=(T[k].qn||'').replace('Also throws a short bolt of the ability.','Also throws a short bolt of the ability. '+FPN[fp]);
   if(ok&&typeof GTXT!=='undefined'&&GTXT[id]){const si=['nB','sB','uB','dB'].indexOf(k);if(si>=0&&T===C.mv&&GTXT[id][si]&&!GTXT[id][si].includes(FPN[fp]))GTXT[id][si]+=' '+FPN[fp];}}}
 const se=spawnEnt;spawnEnt=function(f,s){const ch=f&&f.mv&&f.mv._ch;if(ch>4&&s&&s.vx){const k=Math.min(f.mv.d.chgMax||40,ch)/40;s=Object.assign({},s,{dmg:(s.dmg||0)*(1+.6*k),r:(s.r||8)*(1+.5*k),vx:s.vx*(1+.25*k),bkb:(s.bkb||3)*(1+.2*k)});}return se(f,s);};
 function flightTick(){
@@ -8842,7 +8842,7 @@ const df=drawFighter;drawFighter=function(f){try{if(f&&f.C)flair(f,false);}catch
 window.FLAIR={R,D,RISE,DASH,OPT};
 })();
 
-/* props.js — every fighter's smash attacks and throws are drawn with their own quirk: an ice spike, a shark's jaws, a chain, a giant hand.
+/* props.js — every fighter's smash attacks and throws are drawn with their own ability: an ice spike, a shark's jaws, a chain, a giant hand.
    One row per fighter: [prop, colour, second colour]. The prop is drawn from the fighter's body out to where the attack lands. */
 (function(){
 const T={kimiko:['spike','#8fe4ff'],keanu:['wave','#5fd0ff'],bara:['dagger','#d8e0ee','#b8202c'],tori:['hand','#b890ff'],minato:['fist','#f3d4ba'],oro:['jaws','#e8f0f4','#a0ff40'],gomi:['blast','#ff6a1a','#ffe060'],kouji:['orb','#ffffff','#2a2450'],
@@ -8893,7 +8893,7 @@ function drawProp(f){const m=f.mv;if(!m||f.dead||f.gone||f.invis||f.form||f.copy
   const k=t<0?.5:t<2?.75+t*.12:t<=d.a?1:Math.max(.2,1-(t-d.a)/5);
   for(const h of d.hits){let b=h.b[0];for(const q of h.b)if(Math.abs(q[0])+Math.abs(q[1]+34)>Math.abs(b[0])+Math.abs(b[1]+34))b=q;const sx=x+f.face*Math.sign(b[0]||0)*6,sy=y-(b[1]>-20?16:36),hx=sx+(x+f.face*b[0]-sx)*k,hy=sy+(y+b[1]-sy)*k;fn(sx,sy,hx,hy,Math.max(big?9:6,b[2]*ns)*Math.min(1,k+.15),m.t,row[1],row[2],f.face*(Math.sign(b[0])||1),row[3]);}X.globalAlpha=1;}
 const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&f.C)drawProp(f);}catch(e){X.globalAlpha=1;try{X.restore();}catch(e2){}}return r;};
-/* the prop replaces the shared smash flash, and gives each family of quirks its own kind of throw */
+/* the prop replaces the shared smash flash, and gives each family of abilities its own kind of throw */
 const TW={whip:['f',{kbg:1.2,dmg:.85},'slings rivals a long way'],chain:['f',{kbg:1.2,dmg:.85},'slings rivals a long way'],wave:['f',{kbg:1.18,dmg:.9},'washes rivals a long way'],jaws:['d',{dmg:1.45,kbg:.85},'chews before letting go'],fist:['b',{kbg:1.18},'is a heavy suplex'],hand:['d',{kbg:.75,dmg:1.1},'sets rivals down close, ready for a follow-up'],shadow:['d',{kbg:.75,dmg:1.1},'drops rivals close, ready for a follow-up'],
  blast:['u',{dmg:1.25},'ends in a burst'],bolt:['u',{dmg:1.25},'ends in a jolt'],orb:['u',{kbg:1.15},'floats rivals higher'],spike:['u',{kbg:1.18},'launches rivals higher'],wing:['u',{kbg:1.18},'carries rivals higher'],saw:['f',{dmg:1.3},'grinds for extra damage'],blade:['f',{dmg:1.25},'cuts for extra damage'],claw:['f',{dmg:1.25},'rakes for extra damage'],
  pan:['b',{kbg:1.15,dmg:1.1},'is a full swing of the pan'],swarm:['d',{dmg:1.3,kbg:.85},'lets the swarm have them first'],portal:['b',{kbg:1.2},'drops rivals out of a portal behind'],ink:['f',{dmg:1.2},'paints them across the stage'],rainbow:['u',{kbg:1.15},'lifts rivals on a beam of colour'],
@@ -9184,7 +9184,7 @@ const LINE={kimiko:'COLD ENOUGH FOR YOU?',keanu:'THE TIDE ALWAYS WINS.',bara:'EN
  maho:'ABRACADABRA.',raion:'HEAR ME ROAR!',tsuki:'GO WITH THE FLOW.',rei:'I\'M THREE MOVES AHEAD.',tai:'NEED A BANDAGE AFTER THIS?',hatsuko:'THE ANGRIER, THE BETTER.',ginko:'IT\'S WRITTEN IN THE STARS.',makiko:'SWEET DREAMS.',
  koki:'I SMELL BLOOD.',hana:'LET\'S CUT TO IT.',tomi:'I\'M NOT EVEN BIG YET.',yoko:'FEELING HEAVY?',chiyoki:'FEELING A LITTLE MOODY?',yurei:'BOO.',ivan:'TALK TO THE HAND.',bisu:'GRRRRAH!',
  kurai:'WHO? ME.',homura:'THE FLOOR IS LAVA.',kuragari:'STEP INTO MY WEB.',mia:'STAY BEHIND THE LINE.',shi:'DON\'T MAKE ME TOUCH YOU.',takeshi:'FRESH INK.',ali:'MIND OVER MATTER.',daku:'BAD DOG? THE WORST.',
- kongu:'KING OF THE SCHOOL!',dawson:'NO QUIRK. NO PROBLEM.',maya:'MIND IF I BORROW THAT?',sarah:'WATCH YOUR SHADOW.',aria:'FEELING LUCKY?',bryson:'PLEASE DON\'T MAKE ME ANGRY.',conor:'MARSHMALLOW?',ray:'I\'VE GOT MY EYE ON YOU.',
+ kongu:'KING OF THE SCHOOL!',dawson:'NO ABILITY. NO PROBLEM.',maya:'MIND IF I BORROW THAT?',sarah:'WATCH YOUR SHADOW.',aria:'FEELING LUCKY?',bryson:'PLEASE DON\'T MAKE ME ANGRY.',conor:'MARSHMALLOW?',ray:'I\'VE GOT MY EYE ON YOU.',
  oliver:'BULLSEYE. EVERY TIME.',chris:'THAT ALL YOU GOT? I\'M FINE.',evona:'CHILL OUT.',jack:'LET THERE BE LIGHT.',kal:'SAW THAT COMING.',kora:'HEAVEN CAN WAIT.',ash:'KNOCK ON WOOD.',moya:'CATCH ME IF YOU CAN SEE ME.',
  sato:'BUCKLE UP.',akio:'KEEP UP IF YOU CAN.',sata:'SYSTEMS AT 100 PERCENT.',kitsu:'EVERY COLOUR. ALL AT ONCE.',uzi:'STICK AROUND.',ichigo:'I BUILT THIS ON MY LUNCH BREAK.',bentou:'I SAW HOW THIS ENDS.',okane:'WORTH MY WEIGHT IN GOLD.',
  goiru:'STONE COLD.',aya:'FLAWLESS. LIKE A DIAMOND.',hikari:'FEEL THE CHARGE.',ryo:'DIG IN.',suzume:'ALONG CAME A SPIDER.',ayame:'LIGHT AS AIR.',sota:'FULL TANK. LET\'S GO.',tiki:'THE SPIRITS SAY YOU LOSE.'};
@@ -9198,7 +9198,7 @@ const WINF={kimiko:'THAT\'S WHAT I CALL ON ICE.',keanu:'THE ISLANDS SEND THEIR R
  maho:'AND FOR MY NEXT TRICK...',raion:'THE PRIDE STANDS TALL!',tsuki:'STILL WATERS. DEEP WIN.',rei:'CHECKMATE.',tai:'HOLD STILL. I\'LL PATCH YOU UP.',hatsuko:'I\'M STILL ANGRY.',ginko:'THE STARS CALLED IT.',makiko:'NOW WAKE UP.',
  koki:'CHUM.',hana:'A CLEAN CUT.',tomi:'AND THAT WAS ME BEING SMALL.',yoko:'DOWN YOU GO. AND STAY.',chiyoki:'MOOD: VICTORIOUS.',yurei:'YOU LOOK LIKE YOU\'VE SEEN A GHOST.',ivan:'GIVE ME A HAND, EVERYBODY!',bisu:'RRRAAAH!',
  kurai:'SILENT. THEN OVER.',homura:'COOL OFF. YOU\'RE DONE.',kuragari:'CAUGHT IN THE WEB.',mia:'NOTHING GETS THROUGH.',shi:'I BARELY TOUCHED YOU.',takeshi:'THAT ONE\'S GOING ON MY ARM.',ali:'ALL IN THE MIND.',daku:'GOOD BOY? NO. WINNER.',
- kongu:'TOP OF THE TOWER!',dawson:'NO QUIRK NEEDED.',maya:'THANKS FOR THE LOAN.',sarah:'LIGHTS OUT.',aria:'LUCKY ME. AGAIN.',bryson:'I... STAYED CALM. MOSTLY.',conor:'POT OF GOLD\'S MINE!',ray:'DIDN\'T EVEN BLINK.',
+ kongu:'TOP OF THE TOWER!',dawson:'NO ABILITY NEEDED.',maya:'THANKS FOR THE LOAN.',sarah:'LIGHTS OUT.',aria:'LUCKY ME. AGAIN.',bryson:'I... STAYED CALM. MOSTLY.',conor:'POT OF GOLD\'S MINE!',ray:'DIDN\'T EVEN BLINK.',
  oliver:'DEAD CENTRE.',chris:'I\'VE HAD WORSE.',evona:'ON ICE.',jack:'THE FLAME HOLDS.',kal:'I KNEW BEFORE YOU DID.',kora:'A LITTLE HELP FROM ABOVE.',ash:'SOLID AS OAK.',moya:'GONE LIKE THE MORNING FOG.',
  sato:'SAFETY FIRST. VICTORY SECOND.',akio:'WAS THAT A RACE? I WON THAT TOO.',sata:'VICTORY LOGGED.',kitsu:'AND THERE\'S THE POT OF GOLD.',uzi:'THAT GOT MESSY.',ichigo:'PROTOTYPE WORKS.',bentou:'AS FORETOLD.',okane:'ANOTHER GOLD.',
  goiru:'BACK TO MY PERCH.',aya:'CUT AND POLISHED.',hikari:'FULLY CHARGED.',ryo:'SIX FEET UNDER.',suzume:'WEB SPUN. FIGHT DONE.',ayame:'A GENTLE BREEZE.',sota:'STILL GOT FUEL TO BURN.',tiki:'THE SPIRITS ARE PLEASED.'};
@@ -9261,12 +9261,12 @@ const sr=showResults;showResults=function(){const r=sr.apply(this,arguments);try
 window.PERSONA={TYPE,LINE,WINL,typeOf,winLine};
 })();
 
-/* normals.js — the A button. Fighters who shared the stock punch-and-kick set now attack the way their quirk does: their own body animations,
-   their quirk drawn on tilts and aerials, and one signature trait on a few of their normals. */
+/* normals.js — the A button. Fighters who shared the stock punch-and-kick set now attack the way their ability does: their own body animations,
+   their ability drawn on tilts and aerials, and one signature trait on a few of their normals. */
 (function(){
 const NK=['ftilt','utilt','dtilt','dash','nair','fair','bair','uair','dair'];
 const DEF={ftilt:'kickF',utilt:'uppercut',dtilt:'kickLow',dash:'lunge',nair:'spin',fair:'fairK',bair:'bairK',uair:'uairK',dair:'dairK'};
-/* how each kind of quirk moves the body */
+/* how each kind of ability moves the body */
 const SET={
  striker:{ftilt:'punch',utilt:'uppercut',dtilt:'sweep',dash:'shoulder',nair:'spin',fair:'fairP',uair:'uairP',dair:'dairP'},
  caster:{ftilt:'palm',utilt:'castUp',dtilt:'castDown',dash:'dashF',nair:'fan',fair:'cast',uair:'castUp',dair:'castDown'},
@@ -9277,18 +9277,18 @@ const SET={
  flier:{ftilt:'wingF',utilt:'wingUp',dtilt:'sweep',dash:'dashF',nair:'wingBoth',fair:'fairK',uair:'wingUp',dair:'dairK'}};
 const FSET={fist:'striker',arm:'striker',pillow:'striker',mace:'striker',pan:'striker',hand:'caster',portal:'caster',orb:'caster',shadow:'caster',talisman:'caster',dice:'caster',flask:'caster',swarm:'caster',ink:'caster',
  blast:'emitter',laser:'emitter',bolt:'emitter',rainbow:'emitter',wave:'emitter',blade:'cutter',dagger:'cutter',saw:'cutter',spike:'cutter',claw:'cutter',whip:'lasher',chain:'lasher',jaws:'biter',wing:'flier'};
-/* personality changes a few of them again, so two fighters with the same kind of quirk still move differently */
+/* personality changes a few of them again, so two fighters with the same kind of ability still move differently */
 const PV={bold:{dash:'shoulder'},calm:{dash:'lunge',dtilt:'sweep'},joker:{dash:'spin',nair:'fan'},shy:{dash:'dashF',ftilt:'palm'},proud:{utilt:'kickUp',nair:'spinW'},kind:{dtilt:'sweep'},grim:{dash:'dive',utilt:'kickUp'},nerd:{ftilt:'palm',dtilt:'castDown'}};
 const fam=C=>(typeof PROPS!=='undefined'&&PROPS.T[C.id])?PROPS.T[C.id][0]:null,ptype=C=>(typeof PERSONA!=='undefined')?PERSONA.typeOf(C):'kind';
 let changed=0;const COMMON=new Set(['kickF','uppercut','kickLow','lunge','spin','fairK','uairK','dairK','shoulder','cast','castUp','castDown','punch','fairP','uairP','dairP']);
 for(const C of CH){if(C.hidden||!C.mv)continue;const f=fam(C);if(!f)continue;const row=PROPS.T[C.id],wpn=C.look&&C.look.wpn;
-  C._pn=!wpn&&!row[4]&&!C.look.body; /* quirk drawn on tilts and aerials, unless a weapon or a custom arm already is */
+  C._pn=!wpn&&!row[4]&&!C.look.body; /* ability drawn on tilts and aerials, unless a weapon or a custom arm already is */
   if(wpn||C.look.body)continue;const stock=NK.every(k=>C.mv[k]&&C.mv[k].an===DEF[k]),w=(C.st&&C.st.w)||1,WV=w>1.15?{dtilt:'sweep',fair:'fairP',dair:'dairP'}:w<.92?{fair:'fairK',uair:'uairK',dair:'dairK'}:{};
   let set;if(stock)set=Object.assign({},SET[FSET[f]||'striker'],WV,PV[ptype(C)]||{});else{set={};const v=Object.assign({},WV,PV[ptype(C)]||{});for(const k in v){const d=C.mv[k];if(d&&COMMON.has(d.an))set[k]=v[k];}}
   for(const k of NK){const d=C.mv[k],an=set[k];if(!d||!an||!ANIM[an]||d.beh)continue;d.an=an;if(d.lim&&d.lim!=='w')d.lim=ANIM[an].lim;if(d.airAlt&&d.airAlt.an===DEF[k])d.airAlt.an=an;}
   if(C._pn)for(const k of NK){const d=C.mv[k];if(d&&d.vfx&&!d.beh)d.vfx=null;}
   changed++;}
-/* one signature trait per kind of quirk */
+/* one signature trait per kind of ability */
 const far=(a,t,h)=>{const b=h.b&&h.b[0];if(!b)return false;return Math.abs(t.x-a.x)>(Math.abs(b[0])+b[2])*.62;};
 const bleed=(t,n,c)=>{if(!t.dot||t.dot.n<n)t.dot={n,t:0,c};};
 const TR={
@@ -9306,7 +9306,7 @@ const TR={
  flask:{k:/^(ftilt|fair|dair)/,n:'SPILL',d:'Forward tilt, forward air and down air splash the rival: 3% more over the next two seconds.',p:(a,t)=>bleed(t,2,'#7ae04a')},
  swarm:{k:/./,n:'STINGS',d:'Every normal attack leaves a sting that keeps hurting: 1.5% more a moment later.',p:(a,t,h,C)=>bleed(t,1,C.col)},
  ink:{k:/^(ftilt|dtilt|fair)/,n:'SMEAR',d:'Forward tilt, down tilt and forward air cover the rival in ink and slow them (once every four seconds per rival).',h:()=>({eff:'stick'})},
- blast:{k:/^(ftilt|fair|nair)/,n:'SHOCKWAVE',d:'Forward tilt, forward air and neutral air push rivals further back, and fire quirks set them alight.',h:(h,a)=>({bkb:h.bkb+.9,eff:h.eff||(a.C.kit&&/fire|magma|flame/.test(a.C.kit.el||'')?'burn':h.eff)})},
+ blast:{k:/^(ftilt|fair|nair)/,n:'SHOCKWAVE',d:'Forward tilt, forward air and neutral air push rivals further back, and fire abilities set them alight.',h:(h,a)=>({bkb:h.bkb+.9,eff:h.eff||(a.C.kit&&/fire|magma|flame/.test(a.C.kit.el||'')?'burn':h.eff)})},
  laser:{k:/^(ftilt|fair)/,n:'SCORCH',d:'Forward tilt and forward air burn.',h:h=>({eff:h.eff||'burn'})},
  bolt:{k:/^(nair|dash|fair)/,n:'JOLT',d:'Neutral air, dash attack and forward air jolt the rival: they stay stunned a little longer.',p:(a,t)=>{t.hitstun+=7;}},
  rainbow:{k:/./,n:'SPECTRUM',d:'Each normal attack rolls a colour. Red burns, blue stuns a little longer, yellow launches harder.',h:h=>{const r=Math.random()*3|0;return r===0?{eff:h.eff||'burn'}:r===2?{bkb:h.bkb+1.2}:{_blue:1};},p:(a,t,h)=>{if(h._blue)t.hitstun+=7;}},
@@ -9392,7 +9392,7 @@ window.NORMALS={SET,FSET,TR,changed};
   }}catch(e){}};
 }}
 
-/* sound2.js — hits sound like the quirk that landed them, and every fighter has a voice: a short blip when they taunt, win, or get launched. */
+/* sound2.js — hits sound like the ability that landed them, and every fighter has a voice: a short blip when they taunt, win, or get launched. */
 (function(){
 const FAM={blade:'sharp',claw:'sharp',dagger:'sharp',saw:'sharp',spike:'sharp',fist:'heavy',mace:'heavy',pan:'clang',jaws:'heavy',hand:'heavy',blast:'energy',laser:'energy',orb:'energy',bolt:'zap',rainbow:'energy',portal:'warp',
  wave:'liquid',ink:'liquid',flask:'liquid',swarm:'chime',whip:'snap',chain:'clang',shadow:'dark',talisman:'dark',wing:'whoosh',dice:'chime',pillow:'puff',arm:'clang'};
@@ -9561,7 +9561,7 @@ function apply(){let n=0;cards().forEach(b=>{const C=CH[+b.dataset.ci];if(!C)ret
   const on=!!(FS.q||FS.role||FS.fav),btn=document.getElementById('fbtn');if(btn){btn.classList.toggle('on',on);btn.textContent=on?'FILTER: '+n:'FILTER';}return n;}
 function saveFav(){try{localStorage.setItem('qc_favs',JSON.stringify([...FAV]));}catch(e){}}
 function build(){pop=document.createElement('div');pop.id='fpop';const roles=BUCK.map(b=>b[0]).concat(['ALL-ROUNDER']);
-  const inp=document.createElement('input');inp.placeholder='Search by name or quirk';inp.value=FS.q;inp.oninput=()=>{FS.q=inp.value.trim().toLowerCase();apply();};inp.onkeydown=e=>e.stopPropagation();pop.appendChild(inp);
+  const inp=document.createElement('input');inp.placeholder='Search by name or ability';inp.value=FS.q;inp.oninput=()=>{FS.q=inp.value.trim().toLowerCase();apply();};inp.onkeydown=e=>e.stopPropagation();pop.appendChild(inp);
   const mk=(lab,list,get,set)=>{const h=document.createElement('b');h.textContent=lab;pop.appendChild(h);const r=document.createElement('div');r.className='ch';for(const[v,t]of list){const b=document.createElement('button');b.textContent=t;b.dataset.v=v;b.onclick=()=>{set(v);sfx('pop');r.querySelectorAll('button').forEach(x=>x.classList.toggle('on',get()===x.dataset.v));apply();};if(get()===v)b.className='on';r.appendChild(b);}pop.appendChild(r);return r;};
   mk('PLAY STYLE',[['','ALL']].concat(roles.map(r=>[r,r.toUpperCase()])),()=>FS.role,v=>FS.role=v);
   mk('SHOW',[['0','EVERYONE'],['1','★ FAVOURITES']],()=>FS.fav?'1':'0',v=>FS.fav=v==='1');
@@ -9662,7 +9662,7 @@ const TYPES={bold:'gomi pitto raion daku sota akio shiki kongu zabu ryuko hana t
 const TYPE={};for(const t in TYPES)for(const id of TYPES[t].split(' '))TYPE[id]=t;const typeOf=ci=>TYPE[CH[ci].id]||'kind';
 const BANK={
  morning:{bold:["Finally! A whole stadium watching. I'm not holding anything back today.","Festival day. Somebody point me at the strongest person here."],calm:["Big crowd. Same job as any other day: read them, then finish it.","It's only noise. Focus."],
-  joker:["Do we get snacks between rounds? Asking for my quirk.","If I trip on live television, neither of you saw it."],shy:["Th-there are so many people... okay. Okay. I can do this.","I checked my laces four times. Is that normal?"],
+  joker:["Do we get snacks between rounds? Asking for my ability.","If I trip on live television, neither of you saw it."],shy:["Th-there are so many people... okay. Okay. I can do this.","I checked my laces four times. Is that normal?"],
   proud:["At last, an audience that deserves me.","Try not to stand too close. The cameras will want a clear shot."],kind:["Everybody ready? Let's look out for each other out there.","Win or lose, we walk back in together. Deal?"],
   grim:["A festival. Crowds, noise, cameras. Wonderful.","Let's get this over with."],nerd:["I ran the brackets last night. Our odds are good if nobody does anything stupid.","Forty thousand seats, six exits, one generator room. I like to know these things."]},
  rival:{bold:["{X}! You and me, right now. Don't you dare go easy."],calm:["{X}. I've watched you train. This will be close."],joker:["{X}, loser buys lunch. I'm very hungry, so no pressure."],shy:["Um, {X}... please don't be mad if I win. Or if I lose. Either way."],
@@ -9678,12 +9678,12 @@ const BANK={
  attack:{bold:["Masks, huh? Cowards. Come on, then!"],calm:["They're not here for the crowd. Watch who they're moving toward."],joker:["I don't suppose you're the half-time entertainment?"],
   shy:["They're coming this way. I... I'm not running. I'm not."],proud:["You picked the wrong festival to ruin."],kind:["Get the civilians behind us! Nobody gets past this line!"],
   grim:["Finally. Something honest to hit."],nerd:["Matching gear, matching formation. This was planned for weeks."]},
- unstable:{bold:["{X}?! Snap out of it! Don't make me knock some sense into you. ...Okay. I'm going to knock some sense into you."],calm:["{X} isn't in control. The quirk is running them. We stop it. Carefully."],
-  joker:["{X}, buddy, your quirk is doing the thing. The bad thing. Hold still?"],shy:["{X}, it's me! Please, you have to fight it!"],proud:["{X}, you look ridiculous. Allow me to help."],
+ unstable:{bold:["{X}?! Snap out of it! Don't make me knock some sense into you. ...Okay. I'm going to knock some sense into you."],calm:["{X} isn't in control. The ability is running them. We stop it. Carefully."],
+  joker:["{X}, buddy, your ability is doing the thing. The bad thing. Hold still?"],shy:["{X}, it's me! Please, you have to fight it!"],proud:["{X}, you look ridiculous. Allow me to help."],
   kind:["{X}, I'm right here. We're going to get you through this."],grim:["That light in their eyes. That isn't {X}. Not right now."],nerd:["Output is triple {X}'s baseline and climbing. If we exhaust it, it should collapse."]},
  snap:{bold:["Ugh... my head. Did I lose? Tell me I at least looked cool."],calm:["...Thank you. It was like watching myself from behind glass."],joker:["Did I do anything embarrassing? Don't answer that."],
   shy:["I'm so sorry! I couldn't stop, I couldn't... thank you for not giving up on me."],proud:["You will never speak of this. ...But thank you."],kind:["Is everyone all right? Did I hurt anybody?"],
-  grim:["Something was in my head. Pushing. I want to find whoever did that."],nerd:["My quirk has never spiked like that. Something outside me triggered it. A signal, maybe."]},
+  grim:["Something was in my head. Pushing. I want to find whoever did that."],nerd:["My ability has never spiked like that. Something outside me triggered it. A signal, maybe."]},
  boss:{bold:["You're the one in charge? Good. Saves me looking for you."],calm:["He's the one giving orders. Take him down and the rest fold."],joker:["Big man, tiny mask. Somebody's compensating."],
   shy:["He's huge... but everyone's counting on us. So I'm staying."],proud:["Kneel now and I'll make this brief."],kind:["You hurt my classmates. You don't get to walk out of here."],grim:["You first."],nerd:["Thick armour, slow turns. Hit, move, hit again."]},
  after:{bold:["They ran. Next time they won't get the chance."],calm:["They got what they came for, or they'd still be here. That worries me."],joker:["So... festival's cancelled, right? Asking for my legs. They've stopped working."],
@@ -9700,17 +9700,17 @@ B8('lock',["A list? Let them come and read it to my face.","Then we assume they 
 B8('pylon',["It's humming at us. I hate it. Can I hit it?","Don't touch it. Listen. It is waiting for an answer.","Great. The sewer has a ringtone.","It feels like it knows my name...","Whoever built this thinks we are parts. I intend to disappoint them.","Stay close. If it pulls at you, grab my hand.","Somebody buried this under our feet years ago. We have been walking on it.","A resonator. It isn't making the note. It's waiting for one of us to make it."]);
 B8('ward',["Chosen? Nobody chooses for me. Move.","You talk like a man who was told a kind lie. Step aside.","Sir, this is a sewer. Whatever you're selling, it's the wrong venue.","I don't want to be chosen. I just want my friends back safe.","I was on better lists than yours before breakfast.","If someone told you that you mattered, I'm glad. But you're hurting kids. Stop.","Keys open locks. Let's see what opens you.","Four years of work and one weak weld at the base. I checked."]);
 B8('after2',["One down. Tell me where the next one is.","It was tuned to us. Someone has been listening to this school for a long time.","I could sleep for a week. Somebody carry me.","It's quiet. I can hear myself again.","One instrument fewer. They will run short before I do.","Everyone still has all their fingers? Good. That's a win.","That was one. It felt like one of many.","Thirty years of rust on a four-year-old machine. The base is older than the plan."]);
-B8('prom',["A dance? Fine. But I lead.","One ordinary night. I had forgotten we were allowed those.","Two left feet and a quirk. The dance floor is not safe.","I've never been to a dance. Is it true you just... stand near people?","At last, a battlefield with proper lighting.","Everybody dances with everybody. Nobody stands by the wall tonight.","Music. Crowds. One door. I'll be by the door.","Statistically, the punch bowl is the most dangerous thing here. Statistically."]);
+B8('prom',["A dance? Fine. But I lead.","One ordinary night. I had forgotten we were allowed those.","Two left feet and an ability. The dance floor is not safe.","I've never been to a dance. Is it true you just... stand near people?","At last, a battlefield with proper lighting.","Everybody dances with everybody. Nobody stands by the wall tonight.","Music. Crowds. One door. I'll be by the door.","Statistically, the punch bowl is the most dangerous thing here. Statistically."]);
 B8('taken',["Get back here! ...Fine. I'll drag them home myself!","They walked like they were asleep. We wake them. Gently, if we can.","Okay. No jokes. Give them back.","They didn't even look at us. They're our friends, and they didn't look.","Nobody conducts my classmates but my classmates.","I've got you. Don't listen to it. Listen to me.","It felt like coming home. That's the worst part.","It isn't control. It's an invitation. And it's a good one. That's the problem."]);
 B8('duelvan',["Worth more than a promise? Come and weigh me.","You already know the answer. That's why you came alone.","That's the saddest thing I've ever heard. I'm still going to hit you.","I'm not enough either, most days. I show up anyway.","I am worth more than his entire plan. Observe.","I'm sorry about your friend. Truly. This still isn't the way.","Nobody's enough alone. That's what the rest of them are for.","A world where nobody can fail is a world where nobody tried. I've done the maths."]);
 B8('choir',["I LIKE being loud. Try and tune that.","A choir where nobody chose to sing. You call that music.","I'm tone deaf, lady. You never had a chance.","I am the quiet one at the back. And I like it there. It's mine.","I do not do backing vocals.","Let them go. They're not yours. They're ours.","The song ends tonight.","Twenty-two true notes, and you need every one. So we only have to keep one."]);
 B8('quiet',["I hit a friend today to bring them back. I'd do it again. I hated it.","They are themselves again. That is worth the bruises.","Worst prom ever. Ten out of ten. Would not repeat.","I almost walked out with them. ...Thank you for holding on.","They tried to make us a chorus. We remain soloists.","Everyone's back. Tired, sore, and back.","It stopped too easily. Listen.","The song didn't end. It moved. Upward."]);
 B8('anchors',["Three targets. Finally, a plan with the right amount of hitting.","Then we take them one at a time, and we do not hurry.","So the plan is 'hit the glowing thing'. I love a plan I can remember.","I'm scared. I'm going anyway. Both of those are true.","They put my name on a list. I intend to make them regret the spelling.","Don't be sorry, sir. You taught us. This is us showing our work.","They came into our school. Now we go into theirs.","Three anchors, one antenna. Break the anchors and the signal has nowhere to stand."]);
-B8('ward2',["Then I'm getting off at your stop. Through you.","He told you that you mattered so that you would guard a door. Think about that.","The ticket inspector's in a mood today.","A quirk that locks doors is a good quirk! You could keep people safe with it!","A jailer on a train. How efficient. Stand aside.","It was always worth hearing. You didn't need him for that.","Last stop, then.","At this speed we have ninety seconds before the tunnel. Let's be quick."]);
+B8('ward2',["Then I'm getting off at your stop. Through you.","He told you that you mattered so that you would guard a door. Think about that.","The ticket inspector's in a mood today.","An ability that locks doors is a good ability! You could keep people safe with it!","A jailer on a train. How efficient. Stand aside.","It was always worth hearing. You didn't need him for that.","Last stop, then.","At this speed we have ninety seconds before the tunnel. Let's be quick."]);
 B8('tower',["The whole tower?! Fine. Then we climb the whole tower.","We were pulling up weeds while he raised the tree.","Oh, good. I was worried this would be easy.","It's so tall...","He turned a landmark into a tuning fork. I almost respect it.","Everyone drink some water. Then we go up together.","Up.","Three hundred metres of steel, cut to the wavelength. It was never a tower. It was always the antenna."]);
 B8('van2',["Then stop talking and make me earn it.","You don't want to do this. So don't.","You could just... not? No? Okay. Worth a try.","You're crying under that mask. I can hear it.","Then lose with dignity. I will permit it.","Nobody left under a beam. I want that too. Not like this.","Then we both do what we came for.","In tune means identical. He isn't saving anyone. He's deleting the differences."]);
-B8('fall',["It wants one of us? Let it try!","There has to be another anchor. Think. Everybody think.","Sir, whatever you're about to do, I'd like to formally object.","No, no, no. Not him. Please.","A teacher does not get to grade his own sacrifice. Sir. Don't.","Sir, don't. We'll find another way. We always find another way.","...He's already decided. Look at his face.","A balancing quirk could hold it. For a while. He has done the same sum I have."]);
-B8('dawn',["Everybody's here. Even the ones I owe an apology.","Look at them. Nobody asked. They simply came.","Eighty-nine students and nobody brought breakfast. Typical.","I counted. Then I counted again. It's all of us.","A full house. As it should be.","Every one of them came. That's already a win.","No speeches. They know why they're here.","Eighty-nine quirks, and nobody would rank them the same way twice. That's the whole point."]);
+B8('fall',["It wants one of us? Let it try!","There has to be another anchor. Think. Everybody think.","Sir, whatever you're about to do, I'd like to formally object.","No, no, no. Not him. Please.","A teacher does not get to grade his own sacrifice. Sir. Don't.","Sir, don't. We'll find another way. We always find another way.","...He's already decided. Look at his face.","A balancing ability could hold it. For a while. He has done the same sum I have."]);
+B8('dawn',["Everybody's here. Even the ones I owe an apology.","Look at them. Nobody asked. They simply came.","Eighty-nine students and nobody brought breakfast. Typical.","I counted. Then I counted again. It's all of us.","A full house. As it should be.","Every one of them came. That's already a win.","No speeches. They know why they're here.","Eighty-nine abilities, and nobody would rank them the same way twice. That's the whole point."]);
 B8('arch',["You heard everybody and listened to no one. I'm louder than you think.","You were wronged. That is true. This is still wrong.","A world with one note? That's not music. That's a dial tone.","I've been last too. It hurt. I still wouldn't erase everyone to fix it.","Ninetieth, and you built all this? Then they ranked you wrong. That is your whole argument, and it defeats you.","Somebody should have listened to you. I'm listening now. Please stop.","You don't want to conduct. You want to never be ignored again.","One chord carries no information. You would be tuning the world to silence."]);
 B8('last',["You heard him. Everybody: as loud as you've got!","Breathe. Then begin. All of us, each our own note.","If we save the world, do we still have homework? ...Worth it either way.","I'm not hiding behind anyone this time.","He called us keys. Let us show him what we open.","Together. Not the same. Together.","Finish it.","He needs us in unison. So we give him harmony instead."]);
 B8('mirror',["Oh, that is a good-looking opponent.","So that is how I stand. I had wondered.","Finally, someone who appreciates my jokes.","Is that really what I look like? ...I look kind of strong.","Only one of us can be me. It will be me.","Go easy on yourself. No, wait. Don't.","I know everything you're going to do. So do you.","Identical inputs. The only variable left is nerve."]);
@@ -9732,7 +9732,7 @@ const NODES=[
  {id:'c1_dark',type:'scene',n:'Blackout',x:62,y:18,req:['c1_semi'],scene:'dark'},
  {id:'c1_wave',n:'Stadium Under Attack',x:66,y:54,req:['c1_dark'],stage:'arena',rule:'waves',count:10,cap:3,lvl:3,partner:1,d:'Masked attackers pour onto the pitch. Pick a partner and knock out ten of them.'},
  {id:'c1_gate',n:'Hold the East Gate',x:72,y:86,req:['c1_wave'],stage:'mockcity',rule:'hold',time:60,cap:3,lvl:4,opt:1,d:'Optional. The crowd is leaving through the east gate. Stay standing for 60 seconds while they get out.'},
- {id:'c1_u1',n:'Out of Control',x:78,y:28,req:['c1_wave'],stage:'dome',rule:'duel',unst:1,lvl:6,es:2,rec:1,pre:'unstable',d:'The light in the sky is doing something to a classmate\'s quirk. They cannot stop. Wear them down until it burns out.'},
+ {id:'c1_u1',n:'Out of Control',x:78,y:28,req:['c1_wave'],stage:'dome',rule:'duel',unst:1,lvl:6,es:2,rec:1,pre:'unstable',d:'The light in the sky is doing something to a classmate\'s ability. They cannot stop. Wear them down until it burns out.'},
  {id:'c1_u2',n:'Out of Control II',x:86,y:68,req:['c1_wave'],stage:'gym',rule:'duel',unst:1,giant:0,lvl:7,es:2,rec:1,opt:1,pre:'unstable',d:'Optional. Another classmate caught in the surge, and this one hits harder.'},
  {id:'c1_boss',n:'The Vanguard',x:90,y:44,req:['c1_u1'],stage:'arena',rule:'boss',hp:380,lvl:7,partner:1,pre:'bossin',d:'The man giving the orders. He does not take percentage damage: empty his health bar.'},
  {id:'c1_end',type:'scene',n:'Aftermath',x:90,y:13,req:['c1_boss'],scene:'end'}];
@@ -9742,11 +9742,11 @@ NODES.push(
  {id:'c2_patrol',n:'Shibuya Patrol',x:33,y:60,req:['c2_spar'],stage:'shibuya',rule:'waves',count:12,cap:3,lvl:4,partner:1,d:'Masks have been seen at the crossing. Pick a partner and clear twelve of them off the street.'},
  {id:'c2_ramen',n:'Lunch Rush',x:30,y:88,req:['c2_spar'],stage:'ramen',rule:'tag',lvl:5,es:2,rec:2,opt:1,d:'Optional. Two classmates are fighting over the last bowl. Pick a partner and settle it.'},
  {id:'c2_big',n:'Growth Spurt',x:20,y:12,req:['c2_spar'],stage:'dome',rule:'duel',giant:1,lvl:5,es:1,rec:1,opt:1,d:'Optional. The support course tried to fix the serum. They made it stronger.'},
- {id:'c2_train',n:'Runaway Train',x:46,y:34,req:['c2_patrol'],stage:'train',rule:'duel',unst:1,time:100,lvl:6,es:2,rec:1,pre:'unstable',d:'A classmate\'s quirk surged on the evening express. Bring them down inside 100 seconds, before the train reaches the city.'},
+ {id:'c2_train',n:'Runaway Train',x:46,y:34,req:['c2_patrol'],stage:'train',rule:'duel',unst:1,time:100,lvl:6,es:2,rec:1,pre:'unstable',d:'A classmate\'s ability surged on the evening express. Bring them down inside 100 seconds, before the train reaches the city.'},
  {id:'c2_hold',n:'The Hum Below',x:56,y:66,req:['c2_train'],stage:'sewers',rule:'hold',time:70,cap:3,lvl:5,d:'Something under the city is humming. Hold the tunnel junction for 70 seconds while the scanner finds it.'},
  {id:'c2_mid',type:'scene',n:'The Tuning Fork',x:66,y:40,req:['c2_hold'],scene:'c2mid'},
  {id:'c2_clock',n:'Curfew Run',x:60,y:12,req:['c2_train'],stage:'mockcity',rule:'duel',time:80,lvl:6,es:2,rec:1,opt:1,d:'Optional. A classmate is out after curfew. Knock them out twice in 80 seconds and march them home.'},
- {id:'c2_u',n:'Tuned',x:76,y:70,req:['c2_mid'],stage:'sewers',rule:'duel',unst:1,lvl:7,es:2,rec:1,pre:'unstable',d:'A classmate stood too close to the pylon. Their quirk is ringing like a bell.'},
+ {id:'c2_u',n:'Tuned',x:76,y:70,req:['c2_mid'],stage:'sewers',rule:'duel',unst:1,lvl:7,es:2,rec:1,pre:'unstable',d:'A classmate stood too close to the pylon. Their ability is ringing like a bell.'},
  {id:'c2_boss',n:'The Warden',x:88,y:46,req:['c2_u'],stage:'sewers',rule:'boss',boss:'c_ward',hp:440,lvl:7,partner:1,pre:'c2boss',after:'c2_end',win:'The chains go slack. The Warden is gone, and the pylon is dark.',d:'The pylon has a keeper. Empty the health bar.'},
  {id:'c2_end',type:'scene',n:'One of Many',x:90,y:14,req:['c2_boss'],scene:'c2end'},
 
@@ -9767,7 +9767,7 @@ NODES.push(
  {id:'c4_p1',n:'Anchor: Shibuya',x:22,y:30,req:['c4_open'],stage:'shibuya',rule:'waves',count:16,cap:4,lvl:5,partner:1,d:'The first anchor stands in the middle of the crossing. Clear sixteen masks away from it.'},
  {id:'c4_p2',n:'Anchor: The Shrine',x:26,y:70,req:['c4_open'],stage:'miyajima',rule:'hold',time:80,cap:4,lvl:6,d:'The second anchor is under the great gate. Stay standing for 80 seconds while it is pulled out of the tide.'},
  {id:'c4_p3',n:'Anchor: The Line',x:42,y:50,req:['c4_p1','c4_p2'],stage:'train',rule:'duel',foes:['c_ward'],lvl:8,es:2,pre:'c4ward',d:'The third anchor is moving at three hundred kilometres an hour, and the Warden is riding with it.'},
- {id:'c4_r1',n:'Surge Ward',x:14,y:10,req:['c4_open'],stage:'dome',rule:'duel',unst:1,lvl:8,es:2,rec:1,opt:1,pre:'unstable',d:'Optional. The rescue dome is full of students whose quirks will not switch off. One of them needs you now.'},
+ {id:'c4_r1',n:'Surge Ward',x:14,y:10,req:['c4_open'],stage:'dome',rule:'duel',unst:1,lvl:8,es:2,rec:1,opt:1,pre:'unstable',d:'Optional. The rescue dome is full of students whose abilities will not switch off. One of them needs you now.'},
  {id:'c4_r2',n:'Last Drill',x:12,y:88,req:['c4_open'],stage:'gym',rule:'tag',lvl:7,es:2,rec:2,opt:1,d:'Optional. Two classmates want one more spar before the end of the world. Pick a partner.'},
  {id:'c4_r3',n:'Skyline',x:42,y:88,req:['c4_p2'],stage:'mockcity',rule:'duel',giant:1,lvl:7,es:1,rec:1,opt:1,d:'Optional. The surge has done what the serum did, only bigger.'},
  {id:'c4_r4',n:'Before Sunrise',x:42,y:12,req:['c4_p1'],stage:'fuji',rule:'duel',time:80,lvl:8,es:2,rec:1,opt:1,d:'Optional. A classmate went up the mountain to face this alone. You have 80 seconds to change their mind.'},
@@ -9796,27 +9796,27 @@ const SCENES={
   ['say','c_coach','One more thing, and I will only say it once. I have stood on this pitch for thirty festivals. The cup is not the point. The person standing next to you is the point.'],
   ['say','c_coach','Now go and make a friend the hard way. Training Ground Beta.']],
  dark:[['bg','arena'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['voice','ANNOUNCER','And THAT is your semi-final! Stay in your seats, folks, because after the break...'],['fx','dark'],['bank','L1','blackout'],['bank','L2','blackout'],
-  ['fx','shake'],['narr','Every light in the stadium dies at once. Then the sky above the pitch tears open: a seam of violet light, humming one long note. Every quirk in the stadium hums back.'],['in','c_grunt','r1'],['in','c_grunt','r2'],
+  ['fx','shake'],['narr','Every light in the stadium dies at once. Then the sky above the pitch tears open: a seam of violet light, humming one long note. Every ability in the stadium hums back.'],['in','c_grunt','r1'],['in','c_grunt','r2'],
   ['say','c_grunt','Targets confirmed. Twenty-two marked. Take them. Everyone else is furniture.'],['bank','L3','attack'],['in','c_coach','l4'],
   ['say','c_coach','Students! Civilians first, then yourselves! Nobody plays hero alone!'],['narr','One of the masks stops in front of {L1}, tilts its head, and checks a list.'],['say','c_grunt','This one. First name on the page.'],['bank','L1','attack']],
  bossin:[['bg','arena'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_van','r1'],['say','c_van','Eleven minutes. That is how long the Architect said you children would last. I had you down for four.'],['bank','L1','van1'],
   ['say','c_van','I stood where you are standing, once. Same pitch. Same cup. I lifted it over my head and thought it meant something.'],
   ['say','c_van','Do not flatter yourselves that you are the target. You are a reading on an instrument. The Convergence has begun, and we came to watch the needle move.'],['bank','P2','van1']],
  end:[['bg','arena'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['in','c_van','r1'],['say','c_van','Enough. The needle moved. ...Further than he said it would.'],
-  ['say','c_van','You. {L1}. When your own quirk starts humming at night, do not be afraid of it. Be afraid of who is listening.'],['fx','flash'],['out','c_van'],
+  ['say','c_van','You. {L1}. When your own ability starts humming at night, do not be afraid of it. Be afraid of who is listening.'],['fx','flash'],['out','c_van'],
   ['narr','The masks pull back as one, into the seam of light, and it closes behind them like an eye.'],['fx','light'],['bank','L1','after'],['bank','L2','after'],['bank','L3','after'],['in','c_coach','r1'],
   ['say','c_coach','Roll call. I want every one of the eighty-nine accounted for before anybody sleeps.'],['narr','He picks a dropped page off the pitch. Twenty-two names in neat, slanted handwriting. He reads it twice. His hand is not quite steady.'],
   ['say','c_coach','...Nobody talks to the press. Not until I know why somebody with this handwriting is carrying a list of my students.'],
-  ['fx','dark'],['out','L1'],['out','L2'],['out','L3'],['out','c_coach'],['in','c_arch','c'],['say','c_arch','Eighty-nine quirks. Eighty-nine keys. They performed beautifully.'],
+  ['fx','dark'],['out','L1'],['out','L2'],['out','L3'],['out','c_coach'],['in','c_arch','c'],['say','c_arch','Eighty-nine abilities. Eighty-nine keys. They performed beautifully.'],
   ['say','c_arch','And you, old teacher. Still calling the roll. Still pretending every name on it weighs the same.'],
   ['say','c_arch','Let them have their festival. The next time the sky opens, it will not close.'],['title','END OF CHAPTER 1','Chapter 2: Lockdown is open.']],
  c2open:[['bg','gym'],['title','CHAPTER 2','LOCKDOWN'],['narr','Three days after the festival. The gates are shut, the press are camped outside them, and nobody has been allowed home.'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['in','c_coach','r1'],
   ['say','c_coach','Here is what we know. The masks call themselves the Ascendancy. They carried a list of twenty-two students. {L1} is on it. So are twenty-one of your friends.'],['bank','L1','lock'],
   ['say','c_coach','Here is what we do not know: what the list is for. So until we do, you train, you patrol in pairs, and nobody on that list is ever alone. Not at lunch. Not at night.'],['bank','L2','lock'],
-  ['say','c_coach','And since that light, quirks across the city have been surging. Classmates of yours among them. If it happens to a friend, you do not run. You bring them back.'],
+  ['say','c_coach','And since that light, abilities across the city have been surging. Classmates of yours among them. If it happens to a friend, you do not run. You bring them back.'],
   ['say','c_coach','Sparring rotation first. I want to know who can still fight after a week of bad sleep.']],
  c2mid:[['bg','sewers'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['narr','Under the junction, bolted into the old brickwork, stands a pylon of white metal as tall as a bus. It is humming a single note.'],['bank','L2','pylon'],
-  ['in','L3','l3'],['bank','L3','pylon'],['narr','Close to it, {L1}\'s quirk answers without being asked. It is not a pleasant feeling. It is the feeling of being tuned.'],['fx','shake'],['bank','L1','pylon'],
+  ['in','L3','l3'],['bank','L3','pylon'],['narr','Close to it, {L1}\'s ability answers without being asked. It is not a pleasant feeling. It is the feeling of being tuned.'],['fx','shake'],['bank','L1','pylon'],
   ['narr','Scratched into the base, in neat slanted letters: CLASS 1-D. YEAR ONE. Thirty years of rust have not quite covered it.']],
  c2boss:[['bg','sewers'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_ward','r1'],['say','c_ward','Hands off the instrument, children. It took four years to put that in the ground without anybody noticing.'],['bank','L1','ward'],
   ['say','c_ward','You think you are being hunted. You are being chosen. The Architect only writes down the ones that ring true. I would have given a great deal to be on that list.'],['bank','P2','ward']],
@@ -9835,25 +9835,25 @@ const SCENES={
   ['say','c_van','Fifteen years ago I won your festival. Seven years after that I stood in a burning building, and I was not strong enough to lift one beam off one friend.'],
   ['say','c_van','He promised me a world where nobody is ever not enough. I need to know whether you are worth more than that promise.'],['bank','P','duelvan']],
  c3boss:[['bg','prom'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_choir','r1'],['say','c_choir','Back for the encore! You have ruined two of my soloists and I am trying very hard not to take it personally.'],['bank','L1','choir'],
-  ['say','c_choir','Every quirk is a note, dear. Twenty-two of you have the true ones. Sing together and the sky opens like a curtain. And nobody ever has to be the quiet one at the back again.'],['bank','P2','choir']],
+  ['say','c_choir','Every ability is a note, dear. Twenty-two of you have the true ones. Sing together and the sky opens like a curtain. And nobody ever has to be the quiet one at the back again.'],['bank','P2','choir']],
  c3end:[['bg','prom'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','The hall is quiet. All over the school, students who had been humming stop, and blink, and ask what day it is.'],['bank','L3','quiet'],['in','c_coach','r1'],
   ['say','c_coach','Twenty-two marked. Twenty-two accounted for. That is the first time I have been able to say that in a month.'],['bank','L1','quiet'],
-  ['say','c_coach','You should know who you are fighting. His name is Hajime. He sat by the window in my first class. His quirk let him hear other quirks, and nothing else. They ranked him last. Ninetieth of ninety.'],
-  ['say','c_coach','At his festival he heard a classmate\'s quirk about to break, a full minute before it did. He told me. I told him to sit down. ...Eleven students went to hospital.'],
+  ['say','c_coach','You should know who you are fighting. His name is Hajime. He sat by the window in my first class. His ability let him hear other abilities, and nothing else. They ranked him last. Ninetieth of ninety.'],
+  ['say','c_coach','At his festival he heard a classmate\'s ability about to break, a full minute before it did. He told me. I told him to sit down. ...Eleven students went to hospital.'],
   ['fx','shake'],['fx','dark'],['narr','Then the windows turn violet. Over the centre of the city, the seam is opening again, wider than before, and this time it is not closing.'],
   ['say','c_coach','...He has waited thirty years for somebody to listen. Get some sleep. Tomorrow we find out how you close a hole in the sky.'],['title','END OF CHAPTER 3','Chapter 4: Convergence is open.']],
- c4open:[['bg','tower'],['title','CHAPTER 4','CONVERGENCE'],['fx','dark'],['narr','The seam hangs over the city like a second moon. Under it, every quirk in ten kilometres runs hot.'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['in','c_coach','r1'],
+ c4open:[['bg','tower'],['title','CHAPTER 4','CONVERGENCE'],['fx','dark'],['narr','The seam hangs over the city like a second moon. Under it, every ability in ten kilometres runs hot.'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['in','c_coach','r1'],
   ['say','c_coach','Eleven pylons left. Eight are decoration. Three are anchors: the crossing, the shrine, and one that will not stay in one place.'],['bank','L3','anchors'],['say','c_coach','Pull the anchors and the hole has nothing to hold on to. In theory. I teach homeroom, not physics.'],['bank','L1','anchors'],
   ['say','c_coach','The heroes are stretched across the whole city. So it is us. I am sorry. You should have had three more years before anybody asked you for this.']],
  c4ward:[['bg','train'],['in','P','l1'],['in','c_ward','r1'],['say','c_ward','You again. I told them: put the children on the list or put them in a cell, but do not leave them wandering about.'],['bank','P','ward2'],
-  ['say','c_ward','I was born with a quirk that locks doors. That is all it does. He was the first person who ever told me it was a note worth hearing. So, no. You do not pass.']],
+  ['say','c_ward','I was born with an ability that locks doors. That is all it does. He was the first person who ever told me it was a note worth hearing. So, no. You do not pass.']],
  c4mid:[['bg','tower'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','Three anchors down. The seam shudders, and holds.'],['bank','L2','tower'],['narr','Then every light on Tokyo Tower comes on at once, violet from foot to tip, and you understand what the pylons were pointing at.'],
   ['bank','L3','tower'],['in','c_coach','r1'],['say','c_coach','The anchors were never holding it open. They were aiming it. Up. All of you. Now.']],
  c4boss:[['bg','tower'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_van','r1'],['say','c_van','You fought well at the castle. I meant to tell you. I find I would rather not do this.'],['bank','L1','van2'],
   ['say','c_van','But he showed me the other side. Everyone in tune. Nobody first, nobody last, nobody left under a beam. For that, I would do a great deal worse than this.'],['bank','P2','van2']],
- c4end:[['bg','tower'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','The Vanguard is down. The tower is still lit. The seam is coming lower, pulling at everything that has a quirk. Pulling hardest at {L1}.'],['fx','shake'],['in','c_van','r2'],
-  ['say','c_van','It needs an anchor on this side. A living quirk to hold on to. That was to be me. ...It will take one of the marked instead. It will take that one.'],['bank','L2','fall'],['in','c_coach','r1'],
-  ['say','c_coach','No. It will not.'],['say','c_coach','My quirk is not much. It balances things. Thirty years I have been embarrassed by it.'],['bank','L1','fall'],
+ c4end:[['bg','tower'],['fx','dark'],['in','L1','l1'],['in','L2','l2'],['in','L3','l3'],['narr','The Vanguard is down. The tower is still lit. The seam is coming lower, pulling at everything that has an ability. Pulling hardest at {L1}.'],['fx','shake'],['in','c_van','r2'],
+  ['say','c_van','It needs an anchor on this side. A living ability to hold on to. That was to be me. ...It will take one of the marked instead. It will take that one.'],['bank','L2','fall'],['in','c_coach','r1'],
+  ['say','c_coach','No. It will not.'],['say','c_coach','My ability is not much. It balances things. Thirty years I have been embarrassed by it.'],['bank','L1','fall'],
   ['say','c_coach','I told a boy to sit down once, and I have had to live in the world that made. I will not do it twice. Homework, all of you: get everyone home. It is my last order, so do it properly.'],['fx','flash'],['out','c_coach'],
   ['narr','He steps off the platform into the light. The seam snaps shut around him like a fist. The tower goes dark.'],['fx','light'],['bank','L1','grief'],['bank','L2','grief'],['bank','L3','grief'],
   ['say','c_van','Fifteen years, and I followed the wrong teacher. ...Listen to me. The seam can be sung open from this side. Twenty-two true notes. He never imagined you would choose to.'],
@@ -9862,7 +9862,7 @@ const SCENES={
   ['narr','Four homerooms. The ones you beat, the ones you never fought, the ones who were marked and the ones who were not. All of them, standing on the pitch.'],['bank','L2','final'],
   ['narr','The plan fits on one line. Twenty-two marked students sing the seam open. Everybody else goes through it. {L1} sings first.'],['bank','L1','final'],['title','EIGHTY-NINE','Every student has joined your team.']],
  c5boss:[['bg','orbit'],['fx','dark'],['in','L1','l1'],['in','P2','l2'],['in','c_arch','r1'],['say','c_arch','You opened it yourselves. I wrote four years of plans to make you do that, and in the end you simply decided to.'],['bank','L1','arch'],
-  ['say','c_arch','Do you know what a quirk is? A note the world hums through a person. Handed out blind. Fire to one child, nothing to the next, and then we rank them. I was ninetieth of ninety. I heard every one of them, and nobody heard me.'],
+  ['say','c_arch','Do you know what an ability is? A note the world hums through a person. Handed out blind. Fire to one child, nothing to the next, and then we rank them. I was ninetieth of ninety. I heard every one of them, and nobody heard me.'],
   ['say','c_arch','Eighty-nine of you in tune, and I can retune all of it. One chord. Nobody last. I do not want to hurt you. I want to conduct.'],['bank','P2','arch']],
  c5final:[['bg','arena'],['fx','dark'],['fx','shake'],['in','L1','l1'],['in','P2','l2'],['narr','The far side folds up like paper. You are standing on the stadium pitch again, under an open sky, and he is standing where the announcer stood.'],['in','c_arch','r1'],
   ['say','c_arch','One chord means one voice. Yours go quiet. That is the price, and it is fair. You will not even miss them. Sing, or do not. The sky is already listening.'],['in','c_coach','l4'],
@@ -9971,7 +9971,7 @@ function grant(n){if(n.grant==='all'&&SV){for(const C of CH)if(!C.hidden&&!SV.te
 /* node panel */
 const RULE=n=>n.rule==='tag'?'Two on two. You have 2 stocks; each rival has '+n.es+'.':n.rule==='waves'?'Knock out '+n.count+' Ascendants. You have 3 stocks.':n.rule==='hold'?'Survive for '+n.time+' seconds. You have 2 stocks.':n.rule==='boss'?'Empty the health bar. You have 3 stocks.'+(n.adds?' Masks keep arriving.':''):'One on one. You have 2 stocks; your rival has '+n.es+'.'+(n.time?' Finish inside '+n.time+' seconds.':'');
 function nodePanel(n){closeModal();const m=el('div');m.id='cmodal';const box=el('div','cnode');let me=SV.team.includes(SV.last)?SV.last:SV.team[0],pal=null;let foes=(n.foes||SV.cast[n.id]||[]).map(ix);const NPL=clamp(SV.pl||1,1,Math.min(4,SV.team.length)),needP=NPL===1&&(n.rule==='tag'||n.partner);const co=[];if(NPL>1){for(const id of SV.team){if(co.length>=NPL-1)break;if(id!==me)co.push(id);}}
-  box.appendChild(el('div','','<h2>'+esc(n.n)+'</h2><p>'+esc(n.d)+'</p>'));box.appendChild(el('div','crule','<b>'+esc(STAGES.find(s=>s.id===n.stage).n)+'</b> · '+esc(RULE(n))+(n.giant?' Your rival is giant.':'')+(n.unst?' Their quirk is surging: they hit 20% harder.':'')+(SV.done[n.id]?' <i>Already cleared: replaying will not recruit anyone new.</i>':'')));
+  box.appendChild(el('div','','<h2>'+esc(n.n)+'</h2><p>'+esc(n.d)+'</p>'));box.appendChild(el('div','crule','<b>'+esc(STAGES.find(s=>s.id===n.stage).n)+'</b> · '+esc(RULE(n))+(n.giant?' Your rival is giant.':'')+(n.unst?' Their ability is surging: they hit 20% harder.':'')+(SV.done[n.id]?' <i>Already cleared: replaying will not recruit anyone new.</i>':'')));
   const vs=el('div','cvs');box.appendChild(vs);const lab=el('p','','');box.appendChild(lab);const grid=el('div','cgrid');box.appendChild(grid);
   const draw=()=>{vs.innerHTML='';vs.appendChild(card(ix(me),NPL>1?'P1':'YOU')).classList.add('on');co.forEach((id,k)=>vs.appendChild(card(ix(id),'P'+(k+2))).classList.add('on'));if(needP&&pal)vs.appendChild(card(ix(pal),'ALLY')).classList.add('on');vs.appendChild(el('em','','VS'));
     if(n.mirror)vs.appendChild(card(ix(me)));else if(foes.length)foes.forEach(ci=>vs.appendChild(card(ci)));else vs.appendChild(card(ix(n.rule==='boss'?(n.boss||'c_van'):'c_grunt')));
@@ -10511,7 +10511,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1118-2201';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1118-2206';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11254,7 +11254,7 @@ try{const I=window.IMPACT&&IMPACT.I;if(I&&I.tsuki){
     if(FR-p.T>180)p.n=0;p.n=Math.min(3,p.n+(s==='M'?2:1));p.T=FR;t._airslow={m:1-.0667*p.n,T:FR+180};};
   const c=C('tsuki');if(c){c.trait=String(c.trait||'').replace(/^IMPACT — WATERLOGGED: .*?\(20%\), for three seconds\./,'IMPACT — '+I.tsuki.n+': '+I.tsuki.d).replace(/ Her freezing hits only freeze a rival who is soaked twice or more, and use the water up\./,'');
     if(c.mv.qa&&c.mv.qa.qn)for(const T of ['mv','hmv'])if(c[T]&&c[T].qa)c[T].qa.qn=String(c[T].qa.qn)+' Hold a direction instead to change the state of her water.';}}}catch(e){}
-/* ---------- Shi: two borrowed quirks ---------- */
+/* ---------- Shi: two borrowed abilities ---------- */
 try{const s=C('shi');if(s){for(const T of ['mv','hmv']){const m=s[T]&&s[T].nB;if(m&&m.cyc&&m.cyc.length>2)m.cyc.length=2;}if(s.sp&&s.sp[0])s.sp[0]=s.sp[0];if(typeof GTXT!=='undefined'&&GTXT.shi&&GTXT.shi[0])GTXT.shi[0]=GTXT.shi[0].replace(/fire, then ice, then light, a different one each time/,'fire, then ice. He holds two at a time');}}catch(e){}
 /* ---------- Uchuujin: Event Horizon absorbs two projectiles per use ---------- */
 try{if(typeof BEH!=='undefined'&&BEH.absorb){BEH.absorb.tick=function(f,m){const p=m.d.bp;if(m.t>=p.f0&&m.t<=p.f1){if(m.t%3===0)part(f.x+rnd()*40-20,f.y-30+rnd()*40-20,0,0,10,'#b890ff',2,0);for(const e of ENT){if(!e.alive||e.owner===f||!e.proj)continue;if((m._abs||0)>=2)break;if(Math.hypot(e.x-f.x,e.y-(f.y-28))<38){m._abs=(m._abs||0)+1;e.alive=false;f.cosmo=Math.min(90,f.cosmo+35);burst(e.x,e.y,14,['#b890ff','#ffffff'],2,16);FXL.push({k:'txt',s:'ABSORB '+m._abs+'/2',x:f.x,y:f.y-70,t:0,life:40,col:'#c8a8ff'});sfx('warp');}}}};}}catch(e){}
@@ -11278,7 +11278,7 @@ if(typeof dmgMod==='function'){const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0
       setState(f,soaked&&near?'S':(f.dmg>90&&!near?'M':'L'));}}}catch(e){}return r;};}
 if(typeof hudMeterOf==='function'){const h0=hudMeterOf;hudMeterOf=function(f){const r=h0.apply(this,arguments);try{if(f&&f.C&&f.C.id==='tsuki'&&ok(f)&&!r){const s=f._ws||'L';return{l:WS[s].n,t:'pips',v:1,n:s==='L'?1:s==='S'?2:3,max:3,col:WS[s].col,full:false};}}catch(e){}return r;};}
 try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
-  add('shi','He holds two borrowed quirks at a time.');
+  add('shi','He holds two borrowed abilities at a time.');
   add('uchuu','Event Horizon absorbs at most two projectiles per use.');
   add('evona','Flurry spends her stored ice: with a wall, slide or pillar standing it shatters the newest one and hits at full strength and freezes; with none it is 40% weaker and cannot freeze.');
   add('minato','Hits at the very end of his stretch do 10% less: reach is traded for power.');
@@ -11387,7 +11387,7 @@ if(typeof dmgMod==='function'){const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0
 {const st0=step;step=function(){const r=st0.apply(this,arguments);try{if(typeof F==='undefined')return r;
   for(const f of F){if(!f.C||f.gone)continue;const id=f.C.id;if(f.dead||f.st==='respawn'){f._reapT=0;f._ptT=0;continue;}if(!ok(f))continue;const m=f.mv;
     /* Shi: borrowed strength is held two at a time and each lasts twenty seconds */
-    if(id==='shi'){if(f.reap>2)f.reap=2;if((f.reap||0)>(f._reapN||0))f._reapT=FR+1200;if(f.reap>0&&f._reapT&&FR>=f._reapT){f.reap--;f._reapT=f.reap>0?FR+1200:0;txt(f,'A BORROWED QUIRK FADES','#b8b8c8');}f._reapN=f.reap||0;}
+    if(id==='shi'){if(f.reap>2)f.reap=2;if((f.reap||0)>(f._reapN||0))f._reapT=FR+1200;if(f.reap>0&&f._reapT&&FR>=f._reapT){f.reap--;f._reapT=f.reap>0?FR+1200:0;txt(f,'A BORROWED ABILITY FADES','#b8b8c8');}f._reapN=f.reap||0;}
     /* Sanshou: Iron Verdict shows how far it is wound up */
     if(id==='sanshou'&&m&&m.d&&m.d.beh==='verdict'&&m.t<m.d.s&&m.t%8===0){const n=Math.max(1,Math.ceil(m.t/m.d.s*5));FXL.push({k:'txt',s:'▮'.repeat(n)+'▯'.repeat(5-n),x:f.x,y:f.y-92,t:0,life:9,col:n>=5?'#ffffff':'#c8ffb0'});}
     /* Pitto: the next item out of the pouch is shown */
@@ -11403,7 +11403,7 @@ try{const add=(id,s)=>{const c=C(id);if(c)c.trait=(c.trait||'')+' '+s;};
   add('emi','Feather Scouts barely launch: they harass and set up, they do not finish.');
   add('ryuko','Each mech weapon has its own cooldown: laser 1.5 s, Trike Rampage 1.8 s, missiles 2.5 s.');
   add('soran','The brothers share one partner action at a time: Relay Kunai and Relay Pincer cannot overlap.');
-  add('shi','Strength taken from knockouts is held two at a time and each lasts twenty seconds. Borrowed-quirk shots hit at 90%.');
+  add('shi','Strength taken from knockouts is held two at a time and each lasts twenty seconds. Borrowed-ability shots hit at 90%.');
   add('ash','ROOT LINK: a grounded rival he hits beside one of his grown trees is held by its roots for a moment (once every five seconds). Standing by a tree heals him slowly, and not for a second and a half after he is hit.');
   add('keanu','Rivals can cut Island Bloom\'s vines down.');
   add('pitto','The next item out of his pouch is announced above him.');
