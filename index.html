@@ -511,6 +511,88 @@ button:focus-visible,[role=button]:focus-visible{outline:3px solid var(--gold);o
   </div></div>
   <div id="rotate"><div><i></i><b>ROTATE YOUR PHONE</b><span>PU Hero Clash plays in widescreen. Turn your phone sideways to fight.</span></div></div>
 </div>
+<script>
+/* profiles.js — player profiles. Every username on this device has its own save (campaign, Survival best, favourites, nicknames, rules, keys).
+   Runs before the game so every saved value the game reads or writes belongs to the current player. Nothing leaves the device. */
+(function(){
+const LS=window.localStorage,SP=Storage.prototype,g0=SP.getItem,s0=SP.setItem,r0=SP.removeItem;
+const rd=k=>{try{return g0.call(LS,k);}catch(e){return null;}},wr=(k,v)=>{try{s0.call(LS,k,v);return true;}catch(e){return false;}},rm=k=>{try{r0.call(LS,k);}catch(e){}};
+const allKeys=()=>{const o=[];try{for(let i=0;i<LS.length;i++)o.push(LS.key(i));}catch(e){}return o;};
+const newId=()=>'p'+Date.now().toString(36)+Math.floor(Math.random()*1296).toString(36);
+let list=[];try{const v=JSON.parse(rd('qcp_list')||'[]');if(Array.isArray(v))list=v.filter(p=>p&&typeof p.id==='string');}catch(e){}
+let cur=rd('qcp_cur'),fresh=false,hadOld=false;
+if(!list.length){const id=newId();list=[{id,name:''}];cur=id;fresh=true;
+ for(const k of allKeys())if(k&&k.indexOf('qc_')===0){const v=rd(k);if(v!==null){wr('qcp:'+id+':'+k,v);hadOld=true;}rm(k);}
+ const okW=wr('qcp_list',JSON.stringify(list));wr('qcp_cur',cur);if(!okW||rd('qcp_list')===null){list[0].name='Player 1';fresh=false;}}
+if(!list.some(p=>p.id===cur)){cur=list[0].id;wr('qcp_cur',cur);}
+const mine=k=>typeof k==='string'&&k.indexOf('qc_')===0;
+SP.getItem=function(k){return g0.call(this,this===LS&&mine(k)?'qcp:'+cur+':'+k:k);};
+SP.setItem=function(k,v){return s0.call(this,this===LS&&mine(k)?'qcp:'+cur+':'+k:k,v);};
+SP.removeItem=function(k){return r0.call(this,this===LS&&mine(k)?'qcp:'+cur+':'+k:k);};
+const saveList=()=>wr('qcp_list',JSON.stringify(list));
+const clean=n=>String(n||'').replace(/[\u0000-\u001f<>]/g,'').replace(/\s+/g,' ').trim().slice(0,16);
+const taken=(n,except)=>list.some(p=>p.id!==except&&p.name.toLowerCase()===n.toLowerCase());
+const dataOf=id=>{const pre='qcp:'+id+':',o={};for(const k of allKeys())if(k&&k.indexOf(pre)===0){const v=rd(k);if(v!==null)o[k.slice(pre.length)]=v;}return o;};
+const b64e=u8=>{let s='';for(let i=0;i<u8.length;i+=8192)s+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');};
+const b64d=t=>{t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';const b=atob(t),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;};
+async function pipe(u8,T){const st=new Blob([u8]).stream().pipeThrough(T);return new Uint8Array(await new Response(st).arrayBuffer());}
+const P=window.PROFILES={
+ list:()=>list.map(p=>({id:p.id,name:p.name})),current:()=>list.find(p=>p.id===cur),fresh:()=>fresh,hadOld:()=>hadOld,
+ summary(id){const d=dataOf(id);let a='No campaign yet',b='';try{const c=JSON.parse(d.qc_campaign_v1||'null');if(c&&c.team)a='Campaign: '+c.team.length+' on the team';}catch(e){}try{const s=JSON.parse(d.qc_surv_best||'null');if(s&&s.wave!=null)b='Survival best: wave '+s.wave;}catch(e){}return a+(b?' · '+b:'');},
+ rename(id,name){name=clean(name);if(!name)return 'Type a name first.';if(taken(name,id))return 'That name is already on this device.';const p=list.find(x=>x.id===id);if(!p)return 'That player is gone.';p.name=name;if(!saveList())return 'This browser would not save it.';if(id===cur)fresh=false;return '';},
+ create(name){name=clean(name);if(!name)return {err:'Type a name first.'};if(taken(name))return {err:'That name is already on this device.'};if(list.length>=24)return {err:'This device already has 24 players.'};const id=newId();list.push({id,name});if(!saveList()){list.pop();return {err:'This browser would not save it.'};}return {id};},
+ remove(id){if(list.length<2)return 'This is the only player.';const pre='qcp:'+id+':';for(const k of allKeys())if(k&&k.indexOf(pre)===0)rm(k);list=list.filter(p=>p.id!==id);saveList();if(id===cur){cur=list[0].id;wr('qcp_cur',cur);return 'reload';}return '';},
+ switchTo(id){if(id===cur||!list.some(p=>p.id===id))return;wr('qcp_cur',id);location.reload();},
+ async exportCode(id){const p=list.find(x=>x.id===id);const u8=new TextEncoder().encode(JSON.stringify({v:1,n:p?p.name:'',d:dataOf(id)}));
+  try{if(typeof CompressionStream==='function')return 'HC1-'+b64e(await pipe(u8,new CompressionStream('deflate-raw')));}catch(e){}return 'HC0-'+b64e(u8);},
+ async importCode(code){code=String(code||'').replace(/\s+/g,'');const m=/^HC([01])-([A-Za-z0-9_-]+)$/.exec(code);if(!m)return {err:'That is not a Hero Clash save code.'};if(code.length>3e6)return {err:'That code is too large.'};let o;
+  try{let u8=b64d(m[2]);if(m[1]==='1'){if(typeof DecompressionStream!=='function')return {err:'This browser cannot read this kind of code.'};u8=await pipe(u8,new DecompressionStream('deflate-raw'));}o=JSON.parse(new TextDecoder().decode(u8));}catch(e){return {err:'That code is damaged or incomplete.'};}
+  if(!o||o.v!==1||!o.d||typeof o.d!=='object')return {err:'That code is damaged or incomplete.'};
+  let name=clean(o.n)||'Player',n=2;const base=name.slice(0,13);while(taken(name))name=base+' '+(n++);const r=P.create(name);if(r.err)return r;
+  for(const k in o.d){if(!/^qc_[a-z0-9_]{1,40}$/.test(k)||typeof o.d[k]!=='string')continue;try{JSON.parse(o.d[k]);}catch(e){continue;}wr('qcp:'+r.id+':'+k,o.d[k]);}return {id:r.id,name};}};
+/* ---------- the screen ---------- */
+let ov=null,open=false,must=false;
+const stopKeys=e=>{if(!open)return;if(e.type==='keydown'&&e.key==='Escape'&&!must){e.preventDefault();e.stopImmediatePropagation();close();return;}if(!(ov&&e.target&&ov.contains(e.target)))e.stopImmediatePropagation();};
+for(const t of['keydown','keyup','keypress'])window.addEventListener(t,stopKeys,true);
+const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
+function close(){if(ov)ov.hidden=true;open=false;chip();}
+function chip(){const b=document.getElementById('tProf');if(b){const p=P.current();b.textContent='';b.appendChild(el('i',null,'PLAYER'));b.appendChild(el('b',null,p&&p.name?p.name:'—'));b.appendChild(el('u',null,'SWITCH'));}}
+function build(){if(ov)return;const st=el('style');st.textContent=
+ '#tProf{position:absolute;right:max(14px,env(safe-area-inset-right,0px));top:max(12px,env(safe-area-inset-top,0px));z-index:6;display:flex;align-items:center;gap:10px;background:#1e1e26;color:#fff;border:0;border-left:5px solid var(--gold,#ffd400);padding:8px 16px 6px;font-family:var(--display,Teko,sans-serif);font-size:clamp(16px,1.5vw,22px);line-height:1;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;clip-path:polygon(9px 0,100% 0,calc(100% - 9px) 100%,0 100%)}'+
+ '#tProf i{font-style:normal;opacity:.6;font-size:.72em}#tProf b{font-weight:700;max-width:38vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#tProf u{text-decoration:none;font-size:.72em;color:var(--gold,#ffd400)}#tProf:hover{background:var(--gold,#ffd400);color:#000}#tProf:hover u{color:#000}'+
+ '#profov{position:fixed;inset:0;z-index:9000;background:rgba(8,8,14,.9);display:grid;place-items:center;padding:14px;font-family:Rubik,system-ui,sans-serif;color:#fff}#profov[hidden]{display:none}'+
+ '#profov .pbox{width:min(640px,100%);max-height:100%;overflow:auto;background:#17171f;border-top:6px solid var(--gold,#ffd400);padding:18px 20px 20px;box-shadow:0 20px 60px rgba(0,0,0,.6)}'+
+ '#profov h2{font-family:var(--display,Teko,sans-serif);font-size:38px;line-height:1;margin:0 0 4px;letter-spacing:1px;text-transform:uppercase;font-style:italic}#profov p{margin:0 0 12px;color:#b8b8c8;font-size:14px;line-height:1.45}'+
+ '#profov .prow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#20202a;padding:10px 12px;margin-bottom:6px;border-left:4px solid #3a3a48}#profov .prow.on{border-left-color:var(--gold,#ffd400);background:#262633}'+
+ '#profov .pn{flex:1 1 110px;min-width:0}#profov .pn b{display:block;font-family:var(--display,Teko,sans-serif);font-size:26px;line-height:1;letter-spacing:.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#profov .pn span{font-size:12px;color:#9a9aac}'+
+ '#profov button{font-family:var(--display,Teko,sans-serif);font-size:17px;line-height:1;letter-spacing:.5px;text-transform:uppercase;background:#30303e;color:#fff;border:0;padding:9px 10px 7px;cursor:pointer;min-height:36px}#profov button:hover{background:#44445a}#profov button.go{background:var(--gold,#ffd400);color:#000;font-weight:700}#profov button.go:hover{filter:brightness(1.1)}#profov button.warn{background:#7a1f2a}'+
+ '#profov input,#profov textarea{font:16px Rubik,system-ui,sans-serif;background:#0e0e14;color:#fff;border:2px solid #3a3a48;padding:9px 10px;min-width:0;flex:1 1 180px}#profov input:focus,#profov textarea:focus{outline:none;border-color:var(--gold,#ffd400)}#profov textarea{width:100%;height:92px;resize:vertical;font:12px ui-monospace,Menlo,monospace;word-break:break-all;flex:none;box-sizing:border-box}'+
+ '#profov .pline{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}#profov .perr{color:#ff8a8a;font-size:13px;min-height:18px;margin:6px 0 0}#profov .pfoot{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;margin-top:14px;border-top:1px solid #30303e;padding-top:12px}#profov .psub{background:#20202a;padding:12px;margin-top:10px}';
+ document.head.appendChild(st);ov=el('div');ov.id='profov';ov.hidden=true;ov.setAttribute('role','dialog');ov.setAttribute('aria-label','Players');document.body.appendChild(ov);for(const t of['keydown','keyup','keypress'])ov.addEventListener(t,e=>e.stopPropagation());
+ const tin=document.querySelector('#title');if(tin&&!document.getElementById('tProf')){const b=el('button');b.id='tProf';b.type='button';b.onclick=()=>show();tin.appendChild(b);}chip();}
+function nameForm(box,label,value,go,onOk,cancel){const line=el('div','pline'),inp=el('input');inp.maxLength=16;inp.value=value||'';inp.placeholder='Your name';inp.setAttribute('aria-label','Player name');inp.autocomplete='off';const ok=el('button','go',label),err=el('div','perr');
+ const sub=()=>{const m=go(inp.value);if(m){err.textContent=m;inp.focus();}else onOk();};ok.onclick=sub;inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sub();}});line.appendChild(inp);line.appendChild(ok);if(cancel){const c=el('button',null,'Cancel');c.onclick=cancel;line.appendChild(c);}box.appendChild(line);box.appendChild(err);setTimeout(()=>{try{inp.focus();inp.select();}catch(e){}},30);}
+function show(mode,arg){build();open=true;ov.hidden=false;ov.textContent='';const box=el('div','pbox');ov.appendChild(box);const me=P.current();must=!me.name;
+ if(must){box.appendChild(el('h2',null,"Who's playing?"));box.appendChild(el('p',null,(P.hadOld()?'Progress already saved on this device will be kept under this name. ':'')+'Each name on this device keeps its own campaign, Survival best, favourites and settings. No password, and nothing is sent anywhere.'));
+  nameForm(box,'Start',list.length>1?'':'Player 1',v=>P.rename(me.id,v),close);return;}
+ box.appendChild(el('h2',null,'Players'));box.appendChild(el('p',null,'Each name has its own save on this device. Switching reloads the game.'));
+ for(const p of P.list()){const row=el('div','prow'+(p.id===me.id?' on':'')),pn=el('div','pn');pn.appendChild(el('b',null,p.name||'(no name)'));pn.appendChild(el('span',null,(p.id===me.id?'Playing now · ':'')+P.summary(p.id)));row.appendChild(pn);
+  if(mode==='rename'&&arg===p.id){nameForm(row,'Save',p.name,v=>P.rename(p.id,v),()=>show(),()=>show());box.appendChild(row);continue;}
+  if(mode==='code'&&arg===p.id){const sub=el('div','psub');sub.style.flex='1 1 100%';sub.appendChild(el('p',null,'Copy this code and paste it into "Load a save code" on another device to bring '+p.name+' with you. It is long: copy and paste it, do not retype it.'));const ta=el('textarea');ta.readOnly=true;ta.value='Making the code…';ta.setAttribute('aria-label','Save code');sub.appendChild(ta);const l=el('div','pline'),cp=el('button','go','Copy'),dn=el('button',null,'Done');
+   cp.onclick=async()=>{let ok=false;try{await navigator.clipboard.writeText(ta.value);ok=true;}catch(e){try{ta.focus();ta.select();ok=document.execCommand('copy');}catch(e2){}}cp.textContent=ok?'Copied':'Select it and copy';};dn.onclick=()=>show();l.appendChild(cp);l.appendChild(dn);sub.appendChild(l);row.appendChild(sub);P.exportCode(p.id).then(c=>{ta.value=c;});box.appendChild(row);continue;}
+  if(p.id!==me.id){const b=el('button','go','Play');b.onclick=()=>P.switchTo(p.id);row.appendChild(b);}
+  const rn=el('button',null,'Rename');rn.onclick=()=>show('rename',p.id);row.appendChild(rn);const sc=el('button',null,'Save code');sc.onclick=()=>show('code',p.id);row.appendChild(sc);
+  if(list.length>1){const dl=el('button',null,'Delete');dl.onclick=()=>{if(dl.dataset.sure){const r=P.remove(p.id);if(r==='reload')location.reload();else show();}else{dl.dataset.sure=1;dl.className='warn';dl.textContent='Delete '+p.name+' for good?';}};row.appendChild(dl);}
+  box.appendChild(row);}
+ if(mode==='new'){const sub=el('div','psub');sub.appendChild(el('p',null,'New player. They start with a fresh save.'));let made=null;nameForm(sub,'Create and play',"",v=>{const r=P.create(v);if(r.err)return r.err;made=r.id;return '';},()=>P.switchTo(made),()=>show());box.appendChild(sub);}
+ if(mode==='load'){const sub=el('div','psub');sub.appendChild(el('p',null,'Paste a save code from another device. It is added as a new player; nothing here is overwritten.'));const ta=el('textarea');ta.placeholder='HC1-…';ta.setAttribute('aria-label','Save code to load');sub.appendChild(ta);const l=el('div','pline'),go=el('button','go','Load'),c=el('button',null,'Cancel'),err=el('div','perr');
+  go.onclick=async()=>{go.disabled=true;const r=await P.importCode(ta.value);go.disabled=false;if(r.err){err.textContent=r.err;return;}show();};c.onclick=()=>show();l.appendChild(go);l.appendChild(c);sub.appendChild(l);sub.appendChild(err);box.appendChild(sub);setTimeout(()=>{try{ta.focus();}catch(e){}},30);}
+ const foot=el('div','pfoot'),left=el('div','pline');left.style.margin='0';const nw=el('button','go','New player');nw.onclick=()=>show('new');const ld=el('button',null,'Load a save code');ld.onclick=()=>show('load');left.appendChild(nw);left.appendChild(ld);foot.appendChild(left);const bk=el('button',null,'Back');bk.onclick=close;foot.appendChild(bk);box.appendChild(foot);}
+P.show=show;
+const start=()=>{build();if(!P.current().name)show();};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
 <script>window.SONGLIST={"theme": "embed"};</script>
 <script>
 'use strict';
