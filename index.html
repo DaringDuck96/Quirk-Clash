@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1119-1737';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1119-1746';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -12049,10 +12049,10 @@ SKINS2.resolve=resolve;try{fixSkinClash=function(){try{resolve();}catch(e){SKINS
 if(typeof applySkins==='function'){const as=applySkins;applySkins=function(){try{resolve();}catch(e){SKINS2.err=String(e);}
  const r=as.apply(this,arguments);try{for(const f of F)if(f.L&&f.L.heroKit&&f.C.heroLook)f.hero=true;}catch(e){}return r;};}
 {const st=document.createElement('style');st.textContent='.sknext{position:absolute;left:8px;right:8px;bottom:-15px;z-index:3;font:600 10px/1.1 Rubik,system-ui,sans-serif;letter-spacing:.3px;color:#ffe9a8;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-shadow:0 1px 2px #000}';document.head.appendChild(st);}
-/* ---------- count what Player 1 does ---------- */
-let prevGS='';const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(GS==='over'&&prevGS!=='over'){const f=F[0];if(f&&f.ctrl==='human'&&f.C&&!f.C.hidden&&MODE!=='training'){const C=f.C,before=C.looks.filter(L=>!L.hide&&!L.alt&&have(C,L)).length,s=stat(C.id);
+/* ---------- count what every player on this device does, toward the signed-in profile (online guests are left out) ---------- */
+let prevGS='';const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(GS==='over'&&prevGS!=='over'){let tn=0;for(const f of F){if(!(f&&f.ctrl==='human'&&f.C&&!f.C.hidden&&MODE!=='training'))continue;try{if(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100)continue;}catch(e){}{const C=f.C,before=C.looks.filter(L=>!L.hide&&!L.alt&&have(C,L)).length,s=stat(C.id);
    s.d=(s.d||0)+(f.falls||0);if(MODE==='survival'){if(typeof SV!=='undefined')s.sv=Math.max(s.sv||0,SV.wave||0);}else{s.m++;if(MODE==='campaign')s.c++;s.ko+=f.kos||0;s.dmg+=Math.round(f.dealt||0);}saveST();
-   const now=C.looks.filter(L=>!L.hide&&!L.alt&&have(C,L));if(now.length>before){const names=now.slice(-(now.length-before)).map(L=>L.cname).join(', ');setTimeout(()=>{try{toast('NEW COSTUME: '+C.sn+' · '+names);sfx('power');}catch(e){}},1600);}}}prevGS=GS;}catch(e){}return r;};
+   const now=C.looks.filter(L=>!L.hide&&!L.alt&&have(C,L));if(now.length>before){const names=now.slice(-(now.length-before)).map(L=>L.cname).join(', ');setTimeout(()=>{try{toast('NEW COSTUME: '+C.sn+' · '+names);sfx('power');}catch(e){}},1600+1900*tn++);}}}}prevGS=GS;}catch(e){}return r;};
 })();
 
 /* halloween.js — one Halloween costume per fighter, earned by being knocked out 50 times as them. Some are scary, some are silly. */
