@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1119-2141';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1119-2202';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -12607,13 +12607,13 @@ const itemsLive=()=>ITM.on&&typeof MODE!=='undefined'&&MODE==='versus'&&!(typeof
 /* ---------- Sokonashi's pouch: every fling is one of the fifty ---------- */
 {const C=CH.find(q=>q.id==='pitto');if(C){const s0=spawnEnt;
   const next=f=>{if(!f._pNext)f._pNext=pick();return f._pNext;};
-  spawnEnt=function(f,s){try{if(f&&f.C===C&&f.mv&&f.mv.k==='nB'&&s&&(s.k==='dish'||s.sh==='pitem')&&!(f.copyT>0)){ITM.stat.pouch++;const d=next(f);f._pNext=pick();f._nextName=f._pNext.n.toUpperCase();
-      const vx=(2.6+rnd()*2.8)*f.face,vy=-(2.8+rnd()*3),x=f.x+f.face*16,y=f.y-34;let e;
-      if(d.c==='T')e=ent(f,'ithrow',x,y,{it:d,el:d.id==='frost'?'ice':d.id==='flamecap'?'fire':undefined,vx,vy,g:.26,r:7,dmg:d.fuse?4:3,bkb:2.5,kbg:.02,ang:60,life:600});
-      else{e=drop(d,x,y,vx,vy,{fly:1,thrower:f,ttl:600});const L=f._pouch=(f._pouch||[]).filter(q=>q.alive&&q.k==='item');L.push(e);while(L.length>3){L.shift().alive=false;}}
-      FXL.push({k:'txt',s:d.n.toUpperCase(),x:f.x,y:f.y-92,t:0,life:36,col:d.rare?'#ffe060':'#ffffff'});return e;}}catch(e){ITM.err=ITM.err||String(e&&e.stack||e);}return s0.apply(this,arguments);};
-  C.sp[0]='Pouch Surprise (hold B to keep flinging random items out of the pouch, up to five)';
-  try{if(typeof GTXT!=='undefined'&&GTXT.pitto)GTXT.pitto[0]='Flings a random item out of his pouch: any of the fifty items in the game, whether or not items are switched on. Bombs and grenades go off where they land. Everything else lands on the stage for anyone to pick up, and stings if it hits a rival on the way. Only three of his can lie around at once. Hold B and he keeps going, up to five in a row.';}catch(e){}}}
+  const nextH=f=>{let d=f._pNext,n=0;while((!d||!d.held)&&n++<40)d=pick();f._pNext=null;return d;};
+  spawnEnt=function(f,s){try{if(f&&f.C===C&&f.mv&&f.mv.k==='nB'&&s&&(s.k==='dish'||s.sh==='pitem')&&!(f.copyT>0)){const m=f.mv;
+      if(!m.v._pd){m.v._pd=1;if(f.item){FXL.push({k:'txt',s:'HANDS FULL',x:f.x,y:f.y-92,t:0,life:30,col:'#9aa0b0'});}
+       else{ITM.stat.pouch++;const d=nextH(f);if(d&&d.held){f.item={d,n:d.ammo||1};f._iA=true;sfx('pop');burst(f.x+f.face*12,f.y-30,10,[d.ic[1],'#ffffff'],1.8,14);FXL.push({k:'txt',s:d.n.toUpperCase(),x:f.x,y:f.y-92,t:0,life:36,col:d.rare?'#ffe060':'#ffffff'});}}}
+      return{alive:false,k:'none',x:f.x,y:f.y,vx:0,vy:0,hits:{},spec:{},t:0};}}catch(e){ITM.err=ITM.err||String(e&&e.stack||e);}return s0.apply(this,arguments);};
+  C.sp[0]='Pouch Surprise (pulls one random item out of the pouch and into his hands)';
+  try{if(typeof GTXT!=='undefined'&&GTXT.pitto)GTXT.pitto[0]='Pulls one random item out of his pouch and straight into his hands, ready to use, whether or not items are switched on. While he is holding something the pouch stays shut: use it up, throw it or drop it and he can pull another.';}catch(e){}}}
 
 /* ---------- Ichigo: Down-B opens the backpack. Four random items; pick one and it is in her hand ---------- */
 {const C=CH.find(q=>q.id==='ichigo');if(C){const ok=f=>f&&f.C===C&&!f.form&&!(f.copyT>0);ITM.ichigo=ok;
@@ -12659,7 +12659,8 @@ function ui(){const so=document.querySelector('.ssopts');if(!so||document.getEle
   const st=document.createElement('style');st.textContent='#itmov{position:fixed;inset:0;z-index:90;background:rgba(6,4,16,.92);display:flex;align-items:center;justify-content:center;padding:14px}#itmov[hidden]{display:none}#itmbox{background:#14121f;border-top:5px solid var(--gold,#ffd400);max-width:980px;width:100%;max-height:92vh;display:flex;flex-direction:column;color:#fff;font-family:Rubik,system-ui,sans-serif}#itmbox h2{flex:none;margin:0;padding:14px 18px 4px;font:italic 800 30px/1 var(--display,Rubik),sans-serif;text-transform:uppercase}#itmbox .sub{flex:none;white-space:normal;overflow:visible;text-overflow:clip;padding:0 18px 10px;color:#b8b8c8;font-size:13px;line-height:1.4}#itmlist{flex:1;min-height:0;overflow:auto;padding:0 12px 12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:6px}#itmlist .irow{display:flex;flex-wrap:nowrap;gap:10px;align-items:center;background:#1e1b2e;padding:6px 8px}#itmlist .irow>div{flex:1;min-width:0}#itmlist canvas{width:40px;height:40px;image-rendering:pixelated;flex:none}#itmlist b{display:block;font-size:14px}#itmlist i{font-style:normal;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#0c0820;background:#c8d0e0;padding:1px 5px;margin-left:6px;vertical-align:1px}#itmlist i.r{background:var(--gold,#ffd400)}#itmlist span{font-size:12px;color:#b8b8c8;line-height:1.3;display:block}#itmbox .foot{flex:none;padding:10px 18px;display:flex;justify-content:flex-end}#itmbox .foot button,.opt .ilist{font:italic 700 15px/1 var(--display,Rubik),sans-serif;text-transform:uppercase;background:#2a2740;color:#fff;border:0;padding:9px 14px;cursor:pointer}.opt .ilist{margin-left:8px;padding:7px 10px;font-size:13px}';document.head.appendChild(st);
   const o=document.createElement('div');o.className='opt';o.innerHTML='<span class="lab">ITEMS</span><div class="seg" id="itm"><button data-v="off">OFF</button><button data-v="on">ON</button></div><button class="ilist" type="button" aria-label="Show the item list">LIST</button>';so.appendChild(o);
   const seg=o.querySelector('#itm'),ref=()=>seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',(b.dataset.v==='on')===ITM.on));
-  seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{ITM.on=b.dataset.v==='on';try{localStorage.setItem('qc_items',ITM.on?'1':'0');}catch(e){}ref();try{sfx('pop');}catch(e){}});ref();
+  /* a listener, not onclick: the game re-binds onclick on every option row and was wiping this one out */
+  seg.addEventListener('click',ev=>{const b=ev.target&&ev.target.closest&&ev.target.closest('button');if(!b||!seg.contains(b))return;ITM.on=b.dataset.v==='on';try{localStorage.setItem('qc_items',ITM.on?'1':'0');}catch(e){}setTimeout(ref,0);try{sfx('pop');}catch(e){}});ref();
   o.querySelector('.ilist').onclick=showList;return true;}
 function showList(){let ov=document.getElementById('itmov');if(!ov){ov=document.createElement('div');ov.id='itmov';ov.innerHTML='<div id="itmbox" role="dialog" aria-label="Item list"><h2>Items</h2><div class="sub">Press Attack next to an item to pick it up. Weapons and traps stay in your hand: Attack uses them and Grab drops them. Everything else works the moment you pick it up. Items are lost when you are KO\'d. Gold ones are rare.</div><div id="itmlist"></div><div class="foot"><button type="button">Close</button></div></div>';document.body.appendChild(ov);
     const L=ov.querySelector('#itmlist');IT.forEach(d=>{const r=document.createElement('div');r.className='irow';r.appendChild(ITM.iconCanvas(d,40));const t=document.createElement('div');t.innerHTML='<b></b><span></span>';t.querySelector('b').textContent=d.n;const c=document.createElement('i');c.textContent=CLS[d.c];if(d.rare)c.className='r';t.querySelector('b').appendChild(c);t.querySelector('span').textContent=d.d;r.appendChild(t);L.appendChild(r);});

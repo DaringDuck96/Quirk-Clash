@@ -6,7 +6,7 @@ Sprites, throw/taunt lines and the Best at / Worst at notes already in roster.ht
 import json,re,sys,html
 E=lambda t:html.escape(str(t),quote=False).replace("'","&#x27;")
 J=json.load(open(sys.argv[1]));path=sys.argv[2];s=open(path).read()
-WITH={'pitto':'His pouch throws out a random item from the full list in any match, even with items switched off. Pouch Catch decides what comes out next.',
+WITH={'pitto':'His pouch puts a random item from the full list straight into his hands in any match, even with items switched off. He can pull another once his hands are empty. Pouch Catch decides what comes out next.',
 'ichigo':'Her backpack (Down + B) works whether or not items are switched on.',
 'oliver':'Any item he throws locks on and homes in on a rival.',
 'aria':'Any item used against her has a 50% chance of simply not working.',
