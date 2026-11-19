@@ -1272,11 +1272,11 @@ function drawDino(L,J0,S,p){const t=S.t,P=ramp(L.dP||'#6a3ab0'),PB=rampB(L.dP||'
     for(let i=0;i<3;i++)lineP(foot.x+6+i*2,foot.y,foot.x+8+i*2,foot.y+2,SL[3]);ell(kn.x,kn.y,3,3,0,M);}
   let px=B.x-12,py=B.y-2;const tw=k.tail||0;
   for(let i=1;i<=9;i++){const tt=i/9;const x=B.x-12-tt*36+(tw>2.5?Math.cos(t*.6+tt*3)*20*tt:0),y=B.y-2+tt*8+Math.sin(t*.1+tt*3)*2*(tw?0:1)-(tw>.5&&tw<2.5?Math.sin(tt*PI)*14:0);
-    capsule(px,py,7-i*.6,x,y,6.6-i*.6,i%2?P:PB);if(i%2)poly([x-2,y-6+i*.4,x+1,y-11+i*.6,x+3,y-5+i*.4],M,'g');px=x;py=y;}
+    capsule(px,py,7-i*.6,x,y,6.6-i*.6,i%2?P:PB);if(i%2)poly([x-2,y-6+i*.4,x+1,y-6+i*.4-(5-i*.2)*(L.spk||1),x+3,y-5+i*.4],M,'g');px=x;py=y;}
   if(S.ptera){const wf=Math.sin(t*.55)*7,Wm=ramp('#9a62e0');poly([B.x-2,B.y-8,B.x-26,B.y-38+wf,B.x-50,B.y-30+wf,B.x-40,B.y-18+wf*.5,B.x-30,B.y-10,B.x-14,B.y],Wm,'g');
     lineP(B.x-2,B.y-8,B.x-26,B.y-38+wf,M[3]);lineP(B.x-26,B.y-38+wf,B.x-50,B.y-30+wf,M[3]);lineP(B.x-26,B.y-38+wf,B.x-30,B.y-10,Wm[1]);lineP(B.x-26,B.y-38+wf,B.x-40,B.y-18+wf*.5,Wm[1]);}
   ell(B.x,B.y,16,11,lean*.3,P);ell(B.x+2,B.y+4,11,6,lean*.3,ramp('#9a6ae0'),1);
-  for(let i=0;i<5;i++){const x=B.x-10+i*5;poly([x-2,B.y-9,x+.5,B.y-16-(i%2)*2,x+3,B.y-9],M,'g');}
+  for(let i=0;i<5;i++){const x=B.x-10+i*5;poly([x-2,B.y-9,x+.5,B.y-9-(7+(i%2)*2)*(L.spk||1),x+3,B.y-9],M,'g');}
   ell(B.x-6,B.y-11,6,4,0,D);poly([B.x-11,B.y-12,B.x-4,B.y-17,B.x+1,B.y-12],ramp('#8ae0ff'),3);
   const rh={x:B.x-5,y:B.y-15};ell(rh.x,rh.y,2.6,2.8,0,ramp('#c8906a'));poly([rh.x-3,rh.y-1,rh.x-2,rh.y-4,rh.x+2,rh.y-4,rh.x+3,rh.y-1,rh.x+1,rh.y-2],ramp('#e83a7a'),'g');sp(rh.x+1,rh.y,ramp('#1a1018')[2]);
   const nk={x:B.x+12+lean*4,y:B.y-6},hd={x:B.x+22+lean*10+(k.aF[0]-12)*.4,y:B.y-16+(k.aF[1]+40)*.25};
@@ -11959,6 +11959,100 @@ const H4={
 for(const id in H4){const C=CH.find(c=>c.id===id);if(!C)continue;const L={};for(const k in C.look){if(k==='_r'||k==='R')continue;L[k]=C.look[k];}for(const k in H4[id]){if(H4[id][k]===null)delete L[k];else L[k]=H4[id][k];}L.cname='HERO';
  if(!C.looks)C.looks=[C.look];while(C.looks.length<HERO_I)C.looks.push(C.looks[C.looks.length-1]);C.looks[HERO_I]=L;C.heroLook=1;}
 window.HEROES4=Object.keys(H4);
+})();
+
+/* skins.js — costumes are earned. Every fighter starts with their Hero costume. The rest unlock per player profile:
+   Uniform (1 campaign fight), Villain (5 matches), Beach (10), Prom (15), Greyscale (20), the older themed outfits (KOs / damage), Ninja (Survival wave 5). */
+(function(){
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rgb=h=>{h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];};
+const hex=(r,g,b)=>'#'+[r,g,b].map(v=>cl(Math.round(v),0,255).toString(16).padStart(2,'0')).join('');
+const hsl=h=>{let[r,g,b]=rgb(h).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let H=0,S=0;if(mx!==mn){const d=mx-mn;S=l>.5?d/(2-mx-mn):d/(mx+mn);H=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;H/=6;}return[H,S,l];};
+const fromHsl=(H,S,L)=>{H=((H%1)+1)%1;const f=(p,q,t)=>{t=((t%1)+1)%1;return t<1/6?p+(q-p)*6*t:t<.5?q:t<2/3?p+(q-p)*(2/3-t)*6:p;};if(S===0)return hex(L*255,L*255,L*255);const q=L<.5?L*(1+S):L+S-L*S,p=2*L-q;return hex(f(p,q,H+1/3)*255,f(p,q,H)*255,f(p,q,H-1/3)*255);};
+const grey=h=>{const[r,g,b]=rgb(h),y=.299*r+.587*g+.114*b;return hex(y,y,y);};
+const copy=(L,o)=>{const N={};for(const k in L){if(k==='_r'||k==='R'||k==='cname'||k==='req'||k==='alt'||k==='hide'||k==='heroKit')continue;N[k]=L[k];}for(const k in o){if(o[k]===null)delete N[k];else N[k]=o[k];}return N;};
+const FACE_HX=['horns','flower','glasses','ribbon','band','antenna','twigs','beard'],BODY_EX=['tail','wings','beewings','stingers','scorptail','peacock','snake','katana','quiver'];
+const PLAIN={glove:null,boots:null,bootTrim:null,kneepad:null,pauldron:null,armband:null,stripe:null,pantStripe:null,cuff:null,buckles:null,chain:null,fur:null,emblem:null,tieC:null,print:null,headphones:null,handfx:null,top2:null,trim:null};
+/* ---------- new drawing: shorts, long gowns, villain spikes ---------- */
+const dl=drawLeg;drawLeg=function(L,J,front,S){if(!L.shorts||L.skirt)return dl.apply(this,arguments);const R=L.R,k=front?'':'B',keep=R['pants'+k];R['pants'+k]=R['skin'+k];try{dl.apply(this,arguments);}finally{R['pants'+k]=keep;}
+ if(!L._sh)L._sh=[ramp(L.shorts),rampB(L.shorts)];const Hp=front?J.HF:J.HB,K=front?J.KF:J.KB,h=L.h,pw=L.pw,t=.64;capsule(Hp.x,Hp.y,4.5*h*pw,lerp(Hp.x,K.x,t),lerp(Hp.y,K.y,t),4.2*h*pw,L._sh[front?0:1]);};
+const dt=drawTorso;drawTorso=function(L,J,S){const r=dt.apply(this,arguments);if(L.gown&&L.R.skirt){const P=J.P,h=L.h,f=cl(-SWX(S)*.7,-3.6,3.6),R=L.R;
+  poly([P.x-5.2*h,P.y-3.4*h,P.x+5.2*h,P.y-3.4*h,P.x+(8.4+f*.3)*h,P.y+26*h,P.x+(-9+f)*h,P.y+26.6*h],R.skirt,'g');for(let i=-2;i<=2;i++)lineP(P.x+i*2.2*h,P.y,P.x+i*3.6*h+f*.5,P.y+25.4*h,R.skirt[1]);
+  if(L.gownTrim){if(!L._gt)L._gt=ramp(L.gownTrim);poly([P.x+(-8.6+f*.9)*h,P.y+23.4*h,P.x+(8.2+f*.3)*h,P.y+23*h,P.x+(8.4+f*.3)*h,P.y+26*h,P.x+(-9+f)*h,P.y+26.6*h],L._gt,'g');}}return r;};
+const db=drawHumanBody;drawHumanBody=function(L,J,S,p){const r=db.apply(this,arguments);if(L.spikes){if(!L._sp)L._sp=ramp(L.spikes);const h=L.h;for(const Q of[J.SB,J.SF])for(const o of[-2.6,0,2.6])poly([Q.x+o*h-1.4*h,Q.y-1*h,Q.x+o*h+.2*h,Q.y-(6.4-Math.abs(o)*.8)*h,Q.x+o*h+1.6*h,Q.y-.6*h],L._sp,'g');}return r;};
+/* ---------- the five earned costumes ---------- */
+const SUITC=['#16161c','#1c2a4a','#3a1e2a','#2a2a32','#f4f0e8','#5a1a24','#1e3a2e','#3a2a5a','#6a5a48','#22323e','#4a4a54','#101828'];
+const DRESSC=['#c8283e','#1c2a6a','#e8b848','#2a7a5a','#b04ac8','#f0a0c0','#16161c','#3aa0c8','#f4f0e8','#e8642a','#6a2a8a','#8a1a3a','#5ad0b0','#f0d060','#3a3a8a','#d85a8a'];
+const MSTY=[{outfit:'suit',sl:'long',tie:1},{outfit:'vest',sl:'long',shirt:1},{outfit:'blazer',sl:'long',tie:1,cuff:true},{outfit:'coat',sl:'long',tails:1},{outfit:'tee',sl:'long',shirt:1,sus:1},{outfit:'jacketS',sl:'long'},{outfit:'vest',sl:'short',shirt:1},{outfit:'suit',sl:'long',emblem:'sun'}];
+const FSTY=[{outfit:'dress',sl:'none',gown:1},{outfit:'wrap',sl:'short',gown:1},{outfit:'pinafore',sl:'short',gown:0},{outfit:'dress',sl:'long',gown:0},{outfit:'straps',sl:'none',gown:1},{outfit:'sailor',sl:'short',gown:0},{outfit:'tee',sl:'none',gown:1,trim:1},{outfit:'wrap',sl:'long',gown:0}];
+const baseFace=L=>({hx:(L.hx||[]).filter(x=>FACE_HX.includes(x)),ex:(L.ex||[]).filter(x=>BODY_EX.includes(x))});
+function villain(C,H,i){if(H.body==='dino')return copy(H,{dP:'#16161c',dM:'#c8102a',dD:'#0a0a10',spk:1.9});
+ const[h0,s0]=hsl(C.col||'#b070ff'),red=(h0<.06||h0>.94),A=fromHsl(h0,Math.max(.75,s0),.46),B=red?'#7a3ac8':'#c8102a',D1=fromHsl(h0,.28,.09),D2=fromHsl(h0,.3,.16),hx=(H.hx||[]).slice(),ex=(H.ex||[]).slice();
+ if(!H.head&&!hx.some(x=>/mask|helm|visor|hood|goggles|spartan|muzzle/.test(x)))hx.push('eyemask');if(!ex.some(x=>/cape|coattails|wings|mantle|tail|beewings/.test(x)))ex.push('cape');
+ const o={top:D1,top2:D2,sleeve:D2,shoe:D2,acc:A,acc2:B,trim:B,glove:D2,capeC:D1,capeT:B,scarfC:B,hoodC:D1,maskC:'#0c0c10',visorC:B,ledC:B,helmC:D2,pauldron:1,pauldC:A,kneepad:1,boots:1,spikes:A,eye:'#ff3030',hx,ex,ctA:D1,ctB:B,gogC:B,bandC:B,capC:D1,hatC:D1,tieC:B};
+ if(H.skirt){o.skirt=D1;o.socks=D2;}else o.pants=D1;if(H.wingC){o.wingC=D2;o.wingT=B;}if(H.tailC)o.tailC=D2;if(H.print)o.print=B;return copy(H,o);}
+function beach(C,B0,i,fem){if(B0.body==='dino')return copy(B0,{dP:'#2ac8b8',dM:'#ffd040',dD:'#ff6a8a',spk:1});
+ const[h0]=hsl(C.col||'#4ab8ff'),c1=fromHsl(h0,.75,.52),c2=fromHsl(h0+.45,.7,.56),c3=fromHsl(h0+.12,.8,.62),c4=fromHsl(h0-.2,.65,.7),W='#f4f4f8',sk=B0.skin,f=baseFace(B0),o=Object.assign({},PLAIN,{shoe:'#c8a060',sole:'#8a6a3a',hx:f.hx,ex:f.ex,skirt:null,socks:null}),human=!B0.head;
+ const hat=()=>{if(human&&!o.hx.includes('cap')){o.hx=o.hx.concat(['cap']);o.capC=c2;}},shades=()=>{if(human&&!o.hx.includes('glasses')&&!o.hx.includes('visor')){o.hx=o.hx.concat(['visor']);o.visorC='#16161c';}},flower=()=>{if(human&&!o.hx.includes('flower'))o.hx=o.hx.concat(['flower']);};
+ if(fem){const v=i%8,top=(c,sl,out)=>{o.outfit=out||'tee';o.sl=sl;o.top=c;o.sleeve=c;},skirt=c=>{o.skirt=c;o.socks=sk;},shorts=c=>{o.pants=sk;o.shorts=c;};
+   if(v===0){top(c1,'none');skirt(c1);o.print=W;}            /* one-piece with a swim skirt */
+   else if(v===1){top(c2,'short');o.print=c3;shorts(c1);}    /* rash guard and shorts */
+   else if(v===2){top(c3,'none','dress');o.acc=c1;skirt(c3);} /* sundress cover-up */
+   else if(v===3){top(W,'none');o.print=c1;shorts(c2);}      /* tank and shorts */
+   else if(v===4){top(c2,'none');skirt(c4);o.trim=W;}         /* sporty two-piece: tank top and skirt in different colours */
+   else if(v===5){top(W,'long','wrap');o.acc=c1;shorts(c1);} /* belted beach robe over shorts */
+   else if(v===6){top(c1,'none');skirt(c3);o.gown=1;o.gownTrim=W;} /* one-piece with a long sarong */
+   else{top(c4,'short','sailor');o.acc=c1;o.trim=c1;shorts(W);} /* sailor-collar swim top and shorts */
+   if(i%3===0)flower();else if(i%3===1)hat();if(i%4===2)shades();}
+ else{const v=i%6;o.pants=sk;o.shorts=[c1,c2,c3][i%3];if(i%2)o.pantStripe=1,o.acc=W;
+   if(v===0||v===3){o.outfit='bare';o.sl='none';o.top=sk;o.sleeve=sk;}else if(v===1){o.outfit='tee';o.sl='short';o.top=c3;o.sleeve=c3;o.print=c1;}
+   else if(v===2){o.outfit='tee';o.sl='none';o.top=W;o.sleeve=W;}else if(v===4){o.outfit='vest';o.sl='none';o.top=c2;o.acc=sk;o.sleeve=sk;}else{o.outfit='happi';o.sl='short';o.top=c4;o.sleeve=c4;o.acc=c1;}
+   if(i%3===0)hat();if(i%3===1||i%5===0)shades();}
+ return copy(B0,o);}
+function prom(C,B0,k,fem){if(B0.body==='dino')return copy(B0,{dP:'#16161c',dM:'#e8b848',dD:'#f4f0e8',spk:1});
+ const f=baseFace(B0),[h0]=hsl(C.col||'#c8283e'),acc=fromHsl(h0,.7,.5),o=Object.assign({},PLAIN,{hx:f.hx,ex:f.ex,skirt:null,socks:null});
+ if(fem){const st=FSTY[k%FSTY.length],col=DRESSC[((k/FSTY.length|0)*3+k)%DRESSC.length];Object.assign(o,{outfit:st.outfit,sl:st.sl,top:col,sleeve:col,acc:acc,skirt:col,socks:B0.skin,shoe:k%2?'#e8e8f0':'#16161c',gown:st.gown?1:null,gownTrim:st.gown&&k%3===0?acc:null,bracelet:1,earring:1});
+   if(st.trim)o.trim=acc;if(!o.hx.includes('flower')&&!o.hx.includes('ribbon'))o.hx=o.hx.concat([k%2?'ribbon':'flower']);}
+ else{const st=MSTY[k%MSTY.length],col=SUITC[((k/MSTY.length|0)*5+k)%SUITC.length],light=hsl(col)[2]>.7,sh=st.shirt?(k%3===0?fromHsl(h0,.35,.86):'#f4f4f8'):col;
+   Object.assign(o,{outfit:st.outfit,sl:st.sl,top:st.shirt&&st.outfit==='tee'?sh:col,sleeve:st.shirt?sh:col,acc:st.outfit==='vest'?sh:acc,pants:st.sus?'#2a2a32':col,shoe:light?'#6a4a2a':'#101014',tieC:st.tie?acc:null,trim:acc,cuff:st.cuff||null,emblem:st.emblem||null});
+   if(st.tails){o.ex=o.ex.concat(['coattails']);o.ctA=col;o.ctB=acc;}if(st.sus)o.pantStripe=null;}
+ return copy(B0,o);}
+function greyed(H){return copy(H,{grey:1});}
+let GREYNOW=false;const ps0=paintSprite;paintSprite=function(buf,L,p,S){GREYNOW=!!(L&&L.grey);try{return ps0.apply(this,arguments);}finally{GREYNOW=false;}};
+const fl0=flushT;flushT=function(){if(GREYNOW&&T&&T.bx1>=T.bx0){const w=T.w,d=T.d;for(let y=T.by0;y<=T.by1;y++)for(let x=T.bx0;x<=T.bx1;x++){const i=y*w+x,o=d[i],al=o>>>24;if(al<10)continue;let g=(.299*(o&255)+.587*((o>>8)&255)+.114*((o>>16)&255));g=Math.max(0,Math.min(255,(g-128)*1.12+128))|0;d[i]=((al<<24)|(g<<16)|(g<<8)|g)>>>0;}}return fl0.apply(this,arguments);};
+function ninja(C,B0){if(B0.body==='dino')return copy(B0,{dP:'#1e2030',dM:C.col||'#b070ff',dD:'#101018',spk:1.3});const f=baseFace(B0);
+ return copy(B0,Object.assign({},PLAIN,{outfit:'ninja',sl:'long',top:'#1e2030',sleeve:'#1e2030',pants:'#16182a',shoe:'#101018',glove:'#101018',acc:C.col||'#b070ff',hx:B0.head?f.hx:f.hx.concat(['ninjahood']),hoodC:'#1e2030',ex:f.ex.concat(['scarf']),scarfC:C.col||'#b070ff',skirt:null,socks:null,boots:1}));}
+const OLD=/^(BEACH|HAWAIIAN|SUNDRESS|FORMAL|GALA|ICE GALA)$/;
+let gi=0,bi=0,fi=0;
+for(const C of CH){if(C.hidden||!C.looks)continue;const fem=!!C.look.fem,H=C.looks[HERO_I]||C.look,B0=C.look,idx=fem?fi++:gi++;bi++;
+ C.look.cname='UNIFORM';C.look.req={t:'c',n:1};for(let i=1;i<HERO_I&&i<C.looks.length;i++)C.looks[i].alt=1;
+ let e=0;for(let i=HERO_I+1;i<C.looks.length;i++){const L=C.looks[i];if(OLD.test(L.cname||'')){L.hide=1;continue;}L.req=[{t:'ko',n:15},{t:'dmg',n:1000},{t:'ko',n:30}][Math.min(e++,2)];}
+ const add=(L,name,req,kit)=>{L.cname=name;L.req=req;if(kit)L.heroKit=1;C.looks.push(L);};
+ add(villain(C,H,bi),'VILLAIN',{t:'m',n:5},1);add(beach(C,B0,idx,fem),'BEACH',{t:'m',n:10});add(prom(C,B0,idx,fem),'PROM',{t:'m',n:15});add(greyed(H),'GREYSCALE',{t:'m',n:20},1);add(ninja(C,B0),'NINJA',{t:'sv',n:5});}
+/* ---------- what each player has earned ---------- */
+let ST={};try{ST=JSON.parse(localStorage.getItem('qc_stats')||'{}')||{};}catch(e){ST={};}
+const stat=id=>ST[id]||(ST[id]={m:0,c:0,ko:0,dmg:0,sv:0});const saveST=()=>{try{localStorage.setItem('qc_stats',JSON.stringify(ST));}catch(e){}};
+const have=(C,L)=>{const r=L.req;if(!r)return true;const s=stat(C.id);return(s[r.t]||0)>=r.n;};
+const need=(C,L)=>{const r=L.req;if(!r)return'';const s=stat(C.id),k=Math.max(0,Math.ceil(r.n-(s[r.t]||0)));return r.t==='c'?'play 1 campaign fight':r.t==='m'?k+' more match'+(k===1?'':'es'):r.t==='ko'?k+' more KO'+(k===1?'':'s'):r.t==='dmg'?k+'% more damage':'reach wave '+r.n+' in Survival';};
+const clash=n=>{for(let j=0;j<4;j++)if(j!==n&&SEL.mode[j]!=='off'&&SEL.p[j]===SEL.p[n])return true;return false;};
+const allowed=(n,i)=>{const C=CH[SEL.p[n]],L=C&&C.looks&&C.looks[i];if(!L||L.hide)return false;if(L.alt)return clash(n);return have(C,L);};
+function fix(n,d){const C=CH[SEL.p[n]];if(!C||!C.looks)return;const N=C.looks.length;let s=((SEL.skin[n]||0)%N+N)%N,g=0;while(!allowed(n,s)&&g++<N)s=((s+(d||1))%N+N)%N;if(g>=N)s=HERO_I;if(SEL.skin[n]!==s){SEL.skin[n]=s;try{PREV4[n]=null;}catch(e){}}}
+window.SKINS2={stat,have,need,allowed,fix,get all(){return ST;},reset(){ST={};saveST();}};
+const LASTK=[-1,-1,-1,-1],LASTS=[0,0,0,0];
+function norm(n){const C=CH[SEL.p[n]],N=(C&&C.looks||[]).length||1,cur=SEL.skin[n]||0,key=SEL.p[n];let dir=1;if(LASTK[n]===key&&LASTS[n]!==cur){const d=((cur-LASTS[n])%N+N)%N;dir=d<=N/2?1:-1;}fix(n,dir);LASTK[n]=key;LASTS[n]=SEL.skin[n];}
+if(typeof cycleSkin==='function'){cycleSkin=function(s,d){if(SEL.mode[s]==='off')return;const C=CH[SEL.p[s]],N=Math.max(1,(C&&C.looks||[]).length);SEL.skin[s]=(((SEL.skin[s]||0)+d)%N+N)%N;fix(s,d<0?-1:1);try{PREV4[s]=null;sfx('pop');refreshSel();}catch(e){}};if(window.TOKENS)try{Object.defineProperty(window.TOKENS,'cycleSkin',{value:cycleSkin,configurable:true});}catch(e){}}
+if(typeof ssbuDecor==='function'){const sd=ssbuDecor;ssbuDecor=function(){for(let n=0;n<4;n++)if(SEL.mode[n]!=='off')norm(n);sd.apply(this,arguments);
+ for(let n=0;n<4;n++){const p=document.getElementById('pp'+n);if(!p)continue;let c=p.querySelector('.sknext');if(!c){c=document.createElement('span');c.className='sknext';p.appendChild(c);}const C=CH[SEL.p[n]],show=SEL.mode[n]==='h'&&C&&C.looks;c.hidden=!show;if(!show)continue;
+  const nx=C.looks.filter(L=>!L.hide&&!L.alt&&L.req&&!have(C,L)).sort((a,b)=>(a.req.t==='c'?0:a.req.t==='m'?a.req.n:99)-(b.req.t==='c'?0:b.req.t==='m'?b.req.n:99))[0];const tx=nx?'NEXT: '+nx.cname+' · '+need(C,nx):'ALL COSTUMES EARNED';if(c.textContent!==tx)c.textContent=tx;}};}
+function resolve(){const used={};for(let n=0;n<4;n++){if(SEL.mode[n]==='off')continue;norm(n);let s=SEL.skin[n],g=1;while(used[SEL.p[n]+':'+s]&&g<HERO_I){s=g++;}used[SEL.p[n]+':'+s]=1;SEL.skin[n]=s;LASTS[n]=s;}}
+SKINS2.resolve=resolve;try{fixSkinClash=function(){try{resolve();}catch(e){SKINS2.err=String(e);}};}catch(e){}
+if(typeof applySkins==='function'){const as=applySkins;applySkins=function(){try{resolve();}catch(e){SKINS2.err=String(e);}
+ const r=as.apply(this,arguments);try{for(const f of F)if(f.L&&f.L.heroKit&&f.C.heroLook)f.hero=true;}catch(e){}return r;};}
+{const st=document.createElement('style');st.textContent='.sknext{position:absolute;left:8px;right:8px;bottom:-15px;z-index:3;font:600 10px/1.1 Rubik,system-ui,sans-serif;letter-spacing:.3px;color:#ffe9a8;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-shadow:0 1px 2px #000}';document.head.appendChild(st);}
+/* ---------- count what Player 1 does ---------- */
+let prevGS='';const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(GS==='over'&&prevGS!=='over'){const f=F[0];if(f&&f.ctrl==='human'&&f.C&&!f.C.hidden&&MODE!=='training'){const C=f.C,before=C.looks.filter(L=>!L.hide&&!L.alt&&have(C,L)).length,s=stat(C.id);
+   if(MODE==='survival'){if(typeof SV!=='undefined')s.sv=Math.max(s.sv||0,SV.wave||0);}else{s.m++;if(MODE==='campaign')s.c++;s.ko+=f.kos||0;s.dmg+=Math.round(f.dealt||0);}saveST();
+   const now=C.looks.filter(L=>!L.hide&&!L.alt&&have(C,L));if(now.length>before){const names=now.slice(-(now.length-before)).map(L=>L.cname).join(', ');setTimeout(()=>{try{toast('NEW COSTUME: '+C.sn+' · '+names);sfx('power');}catch(e){}},1600);}}}prevGS=GS;}catch(e){}return r;};
 })();
 
 /* bodies.js — clearer builds. Girls: narrower shoulders, a defined waist, wider hips, slimmer limbs. Guys: broader shoulders and chest, thicker arms and neck.
