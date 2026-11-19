@@ -2679,7 +2679,7 @@ function applyHit(t,h,dirX,a,o){o=o||{};
   if(eff==='para'){t.hitstun+=18;t.paraT=t.hitstun;}
   if(eff==='haze')t.hazeT=140;
   if((eff==='poison'&&!t.C.noPoison)||eff==='burn')t.dot={n:6,t:0,c:eff==='burn'?'#ff8020':'#a0ff40'};
-  const hl=Math.min(16,fl(3+dmg*.45));t.hl=hl;if(a&&!o.proj)a.hl=h.ri?1:hl;
+  const hl=Math.min(20,fl(3.2+dmg*.65));t.hl=hl;if(a&&!o.proj)a.hl=h.ri?1:hl;
   if(!RM)shakeA=Math.max(shakeA,Math.min(9,kb*.45));if(kb>15)flashA=4;
   hitFX2(t,a,kb,dmg,col,hx,hy);if(kb>7.5&&GS==='play')killCheck(t,a,kb,col);
   sfx(kb>13?'smash':dmg>8?'hitH':'hit');return 'hit';}
@@ -9608,7 +9608,7 @@ const STEPS=[
  {t:'MOVE',d:'Walk and run across the stage.',pad:'Left stick',key:'A and D',need:70,chk:(f)=>f.ground&&Math.abs(f.vx)>1.2?1:0},
  {t:'JUMP',d:'Jump, then jump again in the air.',pad:'X or Y  (or flick the stick up)',key:'Space',need:1,chk:(f,d,s)=>{if(f.ground){s.j=f.jumps;return 0;}return s.j!==undefined&&f.jumps<s.j?1:0;}},
  {t:'ATTACK',d:'Hit the dummy with three normal attacks. Hold a direction to change the attack.',pad:'A',key:'J',need:3,chk:(f,d,s)=>{const k=f.mv&&NORM.test(f.mv.k)?f.mv:null;if(k&&s.m!==k){s.m=k;return 1;}return 0;}},
- {t:'SMASH ATTACK',d:'Flick a direction and press attack at the same moment. Hold the button to charge it.',pad:'Flick left stick + A  (or the right stick)',key:'Direction + J together',need:1,chk:(f)=>f.mv&&/smash/.test(f.mv.k)&&!f.mv.charging?1:0},
+ {t:'SMASH ATTACK',d:'Flick a direction and press attack at the same moment. Hold the button to charge it.',pad:'Flick left stick + A',key:'Direction + J together',need:1,chk:(f)=>f.mv&&/smash/.test(f.mv.k)&&!f.mv.charging?1:0},
  {t:'SPECIAL MOVES',d:'Every fighter has four. Use three different ones: B alone, B with left or right, B with up, B with down.',pad:'B  (+ a direction)',key:'K  (+ a direction)',need:3,chk:(f,d,s)=>{const k=f.mv&&/^[nsud]B$/.test(f.mv.k)?f.mv.k:null;if(k&&!s[k]){s[k]=1;return 1;}return 0;}},
  {t:'SHIELD',d:'Hold your shield. It shrinks while you hold it, so let go before it breaks.',pad:'ZL or ZR',key:'L',need:40,chk:(f)=>f.st==='shield'?1:0},
  {t:'GRAB AND THROW',d:'Grab the dummy, then press a direction to throw. Grabs beat shields.',pad:'L or R, then a direction',key:'U, then a direction',need:1,chk:(f)=>f.mv&&/throw$/.test(f.mv.k)?1:0},
@@ -10235,7 +10235,7 @@ const PBN=['Bottom button','Right button','Left button','Top button','L','R','ZL
 const kname=c=>!c?'—':c.replace(/^Key/,'').replace(/^Digit/,'').replace(/^Arrow/,'Arrow ').replace('Numpad','Num ');
 function keysPop(tab){tab=tab||'p1';const old=document.getElementById('rpop');if(old)old.remove();const m=el('div');m.id='rpop';const b=el('div','rb');b.appendChild(el('h3','','Change controls'));
   const tabs=el('div','rr');tabs.appendChild(seg([['p1','PLAYER 1 KEYS'],['p2','PLAYER 2 KEYS'],['pad','CONTROLLERS']],()=>tab,v=>{keysPop(v);}));b.appendChild(tabs);
-  b.appendChild(el('p','',tab==='pad'?'Click an action, then press the controller button you want. This applies to every controller. Movement stays on the left stick and tilts on the right stick.':'Click an action, then press the key you want. Escape cancels.'));
+  b.appendChild(el('p','',tab==='pad'?'Click an action, then press the controller button you want. This applies to every controller. Movement stays on the left stick and tilts on the right stick.':'Click an action, then press the key you want. Escape cancels. Hold H or C (player 2: M or Numpad 5) to walk instead of run; attacks while walking are tilts.'));
   let stop=null;const cur=(k)=>tab==='pad'?((KM.pad&&KM.pad[k])||PD[k]):(()=>{const v=(tab==='p1'?P1K:P2K)[k];return Array.isArray(v)?v:[v];})();
   for(const[k,lab]of(tab==='pad'?PACTS:ACTS)){const r=el('div','rr');r.appendChild(el('b','',lab));const kb=el('button','kb');const txt=()=>{kb.textContent=tab==='pad'?cur(k).map(i=>PBN[i]||('Button '+i)).join(' / '):(cur(k).map(kname).join(' / ')||'—');};txt();
     kb.onclick=()=>{if(stop)stop();kb.classList.add('wait');kb.textContent=tab==='pad'?'Press a button…':'Press a key…';
@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1119-1722';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1119-1737';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10683,7 +10683,7 @@ let chipEl=null;function chip(){if(!chipEl){chipEl=E('div');chipEl.id='netchip';
 function copy(t){try{navigator.clipboard.writeText(t).then(()=>{try{toast('Link copied');}catch(e){}},()=>prompt('Copy this link',t));}catch(e){prompt('Copy this link',t);}}
 /* =============================================================== guest =============================================================== */
 const GK={};let view=null,tstate={x:0,y:0,b:0};
-function guestStart(T){NET.role='guest';NET.T=T;NET.on=true;const L=T.link;view=E('div');view.id='netview';view.innerHTML='<video autoplay playsinline></video><div class="nvbar"><span id="nvs">Connected. Waiting for the host to share their game…</span><button id="nvfs">FULLSCREEN</button><button id="nvsnd">SOUND ON</button><button id="nvleave">LEAVE</button></div><div class="nvmsg"><div class="netbox"><h1>CONNECTED</h1><p id="nvm">Waiting for the host to share their game…</p><p class="netlist"><b>Keyboard:</b> WASD move · Space jump · J attack · K special · L shield · U grab · T taunt · Enter start · Q / E costume.<br><b>Controller:</b> works as normal. <b>Phone:</b> on-screen stick and buttons.<br>On the menus, the stick moves your hand and <b>J / A</b> picks. Press any button to join as a player.</p></div></div>';
+function guestStart(T){NET.role='guest';NET.T=T;NET.on=true;const L=T.link;view=E('div');view.id='netview';view.innerHTML='<video autoplay playsinline></video><div class="nvbar"><span id="nvs">Connected. Waiting for the host to share their game…</span><button id="nvfs">FULLSCREEN</button><button id="nvsnd">SOUND ON</button><button id="nvleave">LEAVE</button></div><div class="nvmsg"><div class="netbox"><h1>CONNECTED</h1><p id="nvm">Waiting for the host to share their game…</p><p class="netlist"><b>Keyboard:</b> WASD move · hold H to walk and tilt · Space jump · J attack · K special · L shield · U grab · T taunt · Enter start · Q / E costume.<br><b>Controller:</b> works as normal. <b>Phone:</b> on-screen stick and buttons.<br>On the menus, the stick moves your hand and <b>J / A</b> picks. Press any button to join as a player.</p></div></div>';
  document.body.appendChild(view);const vid=view.querySelector('video'),msg=view.querySelector('.nvmsg');
  view.querySelector('#nvleave').onclick=()=>leave();view.querySelector('#nvfs').onclick=()=>{try{(document.fullscreenElement?document.exitFullscreen():view.requestFullscreen());}catch(e){}};
  view.querySelector('#nvsnd').onclick=e=>{vid.muted=!vid.muted;e.currentTarget.textContent=vid.muted?'SOUND OFF':'SOUND ON';};
@@ -12760,6 +12760,18 @@ try{const AUTO=[null,null,null,null];const myName=()=>{try{const p=window.PROFIL
    if(N.role==='guest'&&N.T&&N.T.link){const n=myName();if(n)N.T.link.send({t:'name',n});}
    if(N.role==='host'&&typeof PADMAP!=='undefined'&&typeof NICK!=='undefined'){for(const G of N.guests){if(!G._nm){G._nm=1;G.L.onData(d=>{if(d&&d.t==='name'&&typeof d.n==='string')G.name=d.n.toUpperCase().replace(/[^A-Z0-9 _.-]/g,'').slice(0,8);});}}
      for(let n=1;n<4;n++){const G=N.guests.find(g=>PADMAP[n]===100+g.k);if(G&&G.name){if(!NICK[n]||NICK[n]===AUTO[n]){if(NICK[n]!==G.name){NICK[n]=G.name;AUTO[n]=G.name;}}}else if(AUTO[n]&&NICK[n]===AUTO[n]){NICK[n]='';AUTO[n]=null;}}}}catch(e){}},1500);}catch(e){}
+/* ---------- feel ---------- */
+/* 1. a key tapped and released between two frames used to vanish: now every press lasts at least one frame of the game */
+try{const DOWN={},PEND={};addEventListener('keydown',e=>{if(!e.repeat&&DOWN[e.code]===undefined)DOWN[e.code]=(typeof FR!=='undefined'?FR:0);if(PEND[e.code])delete PEND[e.code];},true);
+ addEventListener('keyup',e=>{const c=e.code;if(DOWN[c]!==undefined&&typeof FR!=='undefined'&&DOWN[c]===FR&&typeof running!=='undefined'&&running&&!(typeof paused!=='undefined'&&paused)){PEND[c]=FR;setTimeout(()=>{try{if(PEND[c]!==undefined){delete PEND[c];K[c]=false;}}catch(x){}},80);}delete DOWN[c];});
+ /* the game's own keyup handler has already cleared the key: put it back until one step has read it */
+ addEventListener('keyup',e=>{try{if(PEND[e.code]!==undefined)K[e.code]=true;}catch(x){}});
+ const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const c in PEND){if(PEND[c]<FR){delete PEND[c];K[c]=false;}}
+   /* 2. the input buffer does not run down while a hit is frozen on screen, so a button pressed during hit-pause still comes out when it ends */
+   for(const f of F){if(f.hl>0&&!f.dead&&!f.gone){for(const k of['lastA','lastB','lastJ','lastS'])if(FR-f[k]<=11)f[k]++;}}}catch(x){}return r;};
+ addEventListener('blur',()=>{for(const c in PEND)delete PEND[c];for(const c in DOWN)delete DOWN[c];});}catch(e){}
+/* 3. keyboard walking: hold the walk key and directions walk instead of run, and attacks are tilts, never smashes */
+try{window.WALKKEYS={p1:['KeyH','KeyC'],p2:['Numpad5','KeyM']};const k0=keyIn;keyIn=function(m){const r=k0.apply(this,arguments);try{const L=m===P1K?WALKKEYS.p1:m===P2K?WALKKEYS.p2:null;if(r&&L&&L.some(c=>K[c])){r.x*=.6;r.tl=1;}}catch(e){}return r;};}catch(e){}
 })();
 
 /* results2.js — the versus results screen, laid out the way Smash does it: a victory splash for the winner, then a column for every player with their place, then their stats. */
