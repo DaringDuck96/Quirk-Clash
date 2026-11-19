@@ -12587,7 +12587,7 @@ const itemsLive=()=>ITM.on&&typeof MODE!=='undefined'&&MODE==='versus'&&!(typeof
 
 /* ---------- drawn on the fighter: what they hold, their shield, their clone ---------- */
 {const n0=ninjaFX;ninjaFX=function(f){const r=n0.apply(this,arguments);try{if(!f||f.dead||f.gone||typeof X==='undefined'||!X)return r;const b=f.ib,x=f.x,y=f.y;
-   if(f.item){const mt=mounted(f),d=f.item.d,hx=mt?x-f.face*4:x+f.face*13,hy=(mt?y-62:y-30)+Math.sin(FR*.2)*.6;if(mt){wr(DK,hx-5,hy+6,10,4);wr('#8a94a8',hx-4,hy+6,8,3);}icon(d,hx,hy,FR);if(d.ammo>1&&!d.hold){X.font='5px "Press Start 2P", monospace';X.textAlign='center';X.fillStyle=DK;X.fillText(String(f.item.n),hx+1,hy-9);X.fillStyle='#ffffff';X.fillText(String(f.item.n),hx,hy-10);}
+   if(f.item){const mt=mounted(f),d=f.item.d,hp=!mt&&typeof PARTOF==='function'?PARTOF(f,'hand'):null,hx=mt?x-f.face*4:hp?hp.x+f.face*3:x+f.face*13,hy=mt?y-62+Math.sin(FR*.2)*.6:hp?hp.y-2:y-30+Math.sin(FR*.2)*.6;if(mt){wr(DK,hx-5,hy+6,10,4);wr('#8a94a8',hx-4,hy+6,8,3);}icon(d,hx,hy,FR);if(d.ammo>1&&!d.hold){X.font='5px "Press Start 2P", monospace';X.textAlign='center';X.fillStyle=DK;X.fillText(String(f.item.n),hx+1,hy-9);X.fillStyle='#ffffff';X.fillText(String(f.item.n),hx,hy-10);}
      if(d.id==='recall'&&f.item.mark){const m=f.item.mark;X.globalAlpha=.6+.3*Math.sin(FR*.2);wring(m.x,m.y-4,8,'#7af0a0',1.6);wr('#7af0a0',m.x-1,m.y-22,2,20);X.globalAlpha=1;}}
    if(f._netT>FR){X.strokeStyle='#e8d8a0';X.lineWidth=1;X.globalAlpha=.85;for(let i=-2;i<=2;i++){X.beginPath();X.moveTo(x+i*6,y-56);X.lineTo(x+i*7,y);X.moveTo(x-15,y-28+i*11);X.lineTo(x+15,y-28+i*11);X.stroke();}X.globalAlpha=1;}
    if(!b)return r;
@@ -12811,6 +12811,22 @@ if(typeof startMatch==='function'){const s0=startMatch;startMatch=function(){try
 addEventListener('keydown',e=>{try{if(!SR.el||ov.hidden||SR.stage>=2||e.repeat)return;if(e.code==='Enter'||e.code==='Space'||e.code==='NumpadEnter'||e.code==='KeyJ'||e.code==='KeyF'||e.code==='KeyZ'){e.preventDefault();e.stopImmediatePropagation();advance();}}catch(x){}},true);
 {let was=false;setInterval(()=>{try{if(!SR.el||ov.hidden||SR.stage>=2){was=true;return;}const gp=navigator.getGamepads?[...navigator.getGamepads()].filter(Boolean):[];let dn=false;for(const g of gp)for(const i of[0,1,2,3,9])if(g.buttons[i]&&g.buttons[i].pressed)dn=true;if(dn&&!was)advance();was=dn;}catch(x){}},60);}
 window.RESULTS2={SR,advance};
+})();
+
+/* anchors.js — things that reach out from a fighter (tentacles, chains, strings, wands, web lines, flame streams, held items) now start at the hand, or the hair, in the pose actually on screen, instead of at a fixed spot on the chest. */
+(function(){
+if(typeof NEWFX==='undefined'||typeof joints!=='function')return;
+/* where a body part is right now, in world pixels; null for bodies without a human skeleton */
+function partOf(f,which){try{const L=(typeof lookOf==='function'?lookOf(f):f.L);if(!L||L.body==='dino'||(typeof BEAST!=='undefined'&&BEAST[L.body])||!L._r)return null;const ps=f.pb||(typeof exaggerate==='function'?exaggerate(poseOf(f),f):poseOf(f));if(!ps)return null;const J=joints(ps,L),z=(L.size||1),d=f.face||1;let p;
+   if(which==='tail')p={x:J.P.x-4,y:J.P.y-3};else if(which==='hair')p={x:J.Hd.x+1.5,y:J.Hd.y-5};else if(which==='mouth')p={x:J.Hd.x+5,y:J.Hd.y+3};else if(which==='head')p=J.Hd;
+   else{/* the hand that is reaching furthest forward */p=J.WF.x>=J.WB.x?J.WF:J.WB;p={x:p.x+1.5,y:p.y};}
+   if(!isFinite(p.x)||!isFinite(p.y))return null;return{x:f.x+d*p.x*z,y:f.y+p.y*z};}catch(e){return null;}}
+window.PARTOF=partOf;
+const CFG={jelly:{dx:8,dy:38,at:f=>f.C.id==='kairi'?'hair':'hand',skip:['glow','bell']},gum:{dx:8,dy:38,at:'mouth',skip:['glow','bell']},slime:{dx:8,dy:38,at:'hand',skip:['glow','bell']},
+ chain:{dx:8,dy:38,at:'hand',skip:['cage']},puppet:{dx:8,dy:44,at:'hand'},magic:{dx:8,dy:38,at:'hand',skip:['ward']},luck:{dx:8,dy:38,at:'hand',skip:['ward']},clover:{dx:8,dy:38,at:'hand',skip:['ward']},tech:{dx:8,dy:38,at:'hand',skip:['ward']},
+ lance:{dx:8,at:'hand',xonly:1,skip:['twin']},crystal:{dx:8,at:'hand',xonly:1,skip:['twin']},hand:{dx:14,at:'hand',xonly:1,only:['grab']},magma:{dx:18,at:'hand',xonly:1,only:['whip']},stinger:{dx:-6,dy:40,at:'tail'},stail:{dx:-8,dy:34,at:'tail'},
+ iron:{dx:16,dy:40,at:'hand',only:['flamer']},web:{dx:0,dy:34,at:'hand',only:['line']}};
+for(const el in CFG){const fn=NEWFX[el],c=CFG[el];if(typeof fn!=='function')continue;NEWFX[el]=function(sub,x,y,d,pr,fx,f,R,T){try{if(f&&f.C&&f.L&&!(c.skip&&c.skip.includes(sub))&&!(c.only&&!c.only.includes(sub))){const a=partOf(f,typeof c.at==='function'?c.at(f):c.at);if(a){/* hit effects are drawn at 64% size around the point of impact, so the root is placed where it will land on the hand after that shrink */const K=.64,rx=x+(a.x-x)/K,ry=y+(a.y-y)/K,g=Object.create(f);g.x=rx-d*c.dx;if(!c.xonly)g.y=ry+c.dy;return fn.call(this,sub,x,y,d,pr,fx,g,R,T);}}}catch(e){}return fn.apply(this,arguments);};}
 })();
 
 </script>
