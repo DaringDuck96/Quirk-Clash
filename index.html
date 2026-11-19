@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1119-2212';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1119-2247';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -13612,8 +13612,10 @@ function build(Tb,C,key,name,kind,shape,desc,o,slot){const d0=Tb[key];if(!d0||!d
  const reach=()=>{const a=at(1.42),b=at(.95),c=at(.5),rr=Math.max(7,r0*.75);h0.b=[[a[0]-g.ux*rr,a[1]-g.uy*rr,rr],[b[0]-g.ux*rr,b[1]-g.uy*rr,rr*.95],[c[0],c[1],rr*.9]];d.sweet='tip';d.s+=2;};
  switch(kind){
   case 'reach':reach();break;
-  case 'erupt':h0.b=[[R*1.25,-r0*.9,r0*1.05],[R*1.25,-r0*2.5,r0*.95]];h0.ang=86;d.s+=2;delete d.spawn;delete d.sweet;break;
-  case 'wave':{const w=at(.6);h0.b=[[w[0],w[1],r0*.9]];}h0.dmg=base.dmg*.9;h0.kbg=base.kbg*1.1;x.proj={vx:4.6,vy:0,life:24,r:r0*.6+4,dmg:base.dmg*.4,bkb:3.6,kbg:.045,ang:45,eff:o.eff};delete d.spawn;break;
+  case 'erupt':h0.b=[[R*1.1,-r0*.95,r0*1.2],[R*1.1,-r0*2.6,r0*1.05]];h0.ang=86;d.s+=1;delete d.spawn;delete d.sweet;
+   /* a weaker hit right beside the fighter, so the move still does something at point-blank */
+   d.hits.push({b:[[R*.42,cl(Y,-44,-24),Math.max(8,r0*.7)]],dmg:base.dmg*.55,bkb:base.bkb*.85,kbg:base.kbg*.6,ang:62});break;
+  case 'wave':{const w=at(.6);h0.b=[[w[0],w[1],r0*.9]];}x.proj={vx:4.6,vy:0,life:32,r:r0*.6+4,dmg:base.dmg*.35,bkb:3.6,kbg:.045,ang:45,eff:o.eff};delete d.spawn;break;
   case 'shot':h0.b=[[0,-12,r0*.7]];h0.dmg=base.dmg*.6;x.proj={vx:o.vx||0,vy:o.vy||5,life:36,r:r0*.6+4,dmg:base.dmg*.7,bkb:4,kbg:.05,ang:70,eff:o.eff,down:1};delete d.spawn;delete h0.eff;break;
   case 'drill':case 'float':h0.dmg=base.dmg*.16;h0.bkb=.8;h0.kbg=.002;h0.ang=84;h0.ri=4;d.a=Math.max(d.a,18);x.fin={dmg:base.dmg*.5,bkb:base.bkb,kbg:base.kbg*1.55,ang:base.ang};if(kind==='float')x.hover=1;break;
   case 'rush':d.imp=[[Math.max(1,d.s-2),6.2,0]];d.a+=5;h0.b=[[R*.6,Y,r0*1.15]];break;
@@ -13979,6 +13981,92 @@ try{const s0=step;step=function(){const r=s0.apply(this,arguments);try{const cnt
    const pa=f._pa;if(pa&&pa.tum&&pa.air&&f.ground&&pa.sp>3.2){f._bnc=FR;dust(f.x,f.y,10);FXL.push({k:'ring',x:f.x,y:f.y-2,t:0,col:W,r0:6,life:12});burst(f.x,f.y-4,8,['#d8d2f0',W],2.6,12);try{if(!RM)shakeA=Math.max(shakeA,3);}catch(e){}}
    f._pa={air:!f.ground,tum:!!(f.tumble&&f.st==='hit'),sp:Math.hypot((f.ly||0)+(f.vy||0),(f.lx||0)+(f.vx||0))};}
  }catch(e){E(e);}return r;};}catch(e){E(e);}
+})();
+
+/* newsp.js — a new, stronger special for each of the ten fighters at the bottom of the win-rate table, replacing the plainest move in their kit. */
+(function(){
+if(typeof BEH==='undefined'||typeof CH==='undefined'||typeof EK==='undefined')return;
+const NS={err:null,use:{}};window.NEWSP=NS;const E=e=>{NS.err=NS.err||String(e&&e.stack||e).slice(0,400);};
+const W='#ffffff',PI=Math.PI,TAU=PI*2,cl=(v,a,b)=>v<a?a:v>b?b:v;
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const near=(f,R,fn)=>{let b=null,bd=R;for(const o of foes(f)){if(intangible(o)||o.holder||(fn&&!fn(o)))continue;const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<bd){bd=d;b=o;}}return b;};
+const say=(x,y,s,c)=>FXL.push({k:'txt',s,x,y,t:0,life:34,col:c||W});
+const ring=(x,y,c,r0,life)=>FXL.push({k:'ring',x,y,t:0,col:c,r0:r0||8,life:life||16});
+const inR=(o,x,y,r)=>{const R=hurtR(o),cx=cl(x,R[0],R[0]+R[2]),cy=cl(y,R[1],R[1]+R[3]);return Math.hypot(x-cx,y-cy)<=r;};
+/* hit everyone in a circle once per key */
+function zap(f,store,key,x,y,r,h,dir){let n=0;for(const o of foes(f)){if(intangible(o)||o.holder||store[key+o.id]||!inR(o,x,y,r))continue;store[key+o.id]=1;const q=Object.assign({},h);const res=applyHit(o,q,dir||(o.x>=x?1:-1),f,{proj:h.proj?1:0});if(res==='hit')n++;}return n;}
+const ent=(f,o)=>{const e=Object.assign({k:'nsp',owner:f,face:f.face,x:f.x,y:f.y,vx:0,vy:0,g:0,oa:1,t:0,life:60,alive:true,spec:{},hits:{},r:0,fx:(f.mv&&f.mv.d.fx)||[f.col,W]},o);e.L=e.life;ENT.push(e);return e;};
+EK.nsp={upd(e){try{if(e.t>=e.L-1||e.cut||!e.owner||e.owner.gone){if(e.end&&!e._ended){e._ended=1;e.end(e);}e.alive=false;return;}if(e.U)e.U(e);}catch(x){E(x);e.alive=false;}},draw(e){try{if(e.D){X.save();e.D(e);X.restore();}}catch(x){}}};
+const floorUnder=(x,y)=>{let best=null;try{const L=[STAGE.main].concat(STAGE.plats||[],STAGE.temp||[]);for(const p of L){if(!p||p.x===undefined)continue;if(x>=p.x+4&&x<=p.x+p.w-4&&p.y>=y-4&&(!best||p.y<best.y))best=p;}}catch(e){}return best;};
+/* ---------- the ten moves ---------- */
+const MV={
+ makiko:{k:'nB',n:'Dream Walk',d:{an:'cast',s:12,a:4,r:24,cd:90},
+  txt:'Sings a lullaby note that drifts forward and puts whoever it touches to sleep. If a rival is already asleep or dazed anywhere nearby, she steps into their dream instead: she appears beside them and hits hard.',
+  go(f,m){const o=near(f,420,q=>q.st==='dizzy');if(o){burst(f.x,f.y-30,14,[m.d.fx[0],W],2.4,16);const sd=o.x>=f.x?1:-1;f.x=o.x-sd*20;f.y=o.y;f.ground=o.ground||null;f.face=sd;f.vx=f.vy=0;burst(f.x,f.y-30,14,[m.d.fx[1],W],2.4,16);ring(o.x,o.y-30,m.d.fx[0],10,18);say(f.x,f.y-90,'DREAM WALK',m.d.fx[0]);applyHit(o,{dmg:11,bkb:5,kbg:.082,ang:48,fx:m.d.fx},sd,f,{force:1});sfx('smash');}
+   else ent(f,{x:f.x+f.face*16,y:f.y-36,vx:f.face*3,life:70,y0:f.y-36,U(e){e.x+=e.vx;e.y=e.y0+Math.sin(e.t*.25)*5;for(const o of foes(e.owner)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,11))continue;applyHit(o,{dmg:4,bkb:1,kbg:0,ang:70,eff:'sleep',fx:e.fx},Math.sign(e.vx),e.owner,{proj:1,force:1});e.alive=false;burst(e.x,e.y,10,[e.fx[0],W],2,14);return;}if(e.t%4===0)part(e.x,e.y,0,.3,14,e.fx[1],2,0);},
+    D(e){X.fillStyle=e.fx[0];X.strokeStyle='#16161c';X.lineWidth=3;X.font='bold 20px sans-serif';X.textAlign='center';X.strokeText('♪',e.x,e.y+7);X.fillText('♪',e.x,e.y+7);wring(e.x,e.y,11+Math.sin(e.t*.4)*2,e.fx[1],1);}});}},
+ akemi:{k:'nB',n:'Slow Motion',d:{an:'palm',s:7,a:4,r:15,hits:[{b:[[29,-34,17],[12,-34,13]],dmg:12,bkb:5,kbg:.102,ang:42}]},
+  txt:'A palm strike that launches the rival and leaves them in slow motion for four seconds: slower to run, slower to jump, slower to get back.',
+  onHit(f,o){o.qslow=FR+240;say(o.x,o.y-88,'SLOW MOTION','#8ab0ff');ring(o.x,o.y-30,'#8ab0ff',8,18);}},
+ suzume:{k:'nB',n:'Zip Kick',d:{an:'cast',s:10,a:3,r:28,cd:110},
+  txt:'Fires a web line a long way ahead. If it catches a rival she zips straight to them and lands a flying kick.',
+  go(f,m){ent(f,{x:f.x+f.face*14,y:f.y-36,vx:f.face*8,life:18,U(e){e.x+=e.vx;const g=e.owner;for(const o of foes(g)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,9))continue;e.alive=false;applyHit(o,{dmg:3,bkb:.6,kbg:0,ang:80,fx:e.fx},Math.sign(e.vx),g,{proj:1});g._zip={o,t:0,fx:e.fx};burst(e.x,e.y,8,[W,e.fx[0]],2,12);return;}},
+    D(e){const g=e.owner;wl(W,g.x+g.face*10,g.y-36,e.x,e.y,2);wl('#d8d8e8',g.x+g.face*10,g.y-35,e.x,e.y+1,1);wdisc(e.x,e.y,3,W);}});}},
+ sato:{k:'sB',n:'Human Cannonball',d:{an:'shoulder',s:12,a:17,r:22,hits:[{b:[[22,-32,19]],dmg:15,bkb:5,kbg:.086,ang:40}],beh:'dash',bp:{spd:7.4,f0:12,f1:29,air:'float',armor:1}},
+  txt:'Airbags go off behind him and fire him forward as a human cannonball. Small hits will not stop it, and it hits hard enough to finish a stock.'},
+ oliver:{k:'dB',n:'Arrow Rain',d:{an:'cast',s:12,a:3,r:18,cd:110},
+  txt:'Looses a volley into the sky. It marks the nearest rival and six arrows come down on that spot a moment later; the last one launches.',
+  go(f,m){const o=near(f,460),p0=o?{x:o.x,y:o.y}:{x:f.x+f.face*110,y:f.y};for(let i=0;i<3;i++)part(f.x+f.face*8,f.y-50,(i-1)*.6,-9,18,W,2,0);
+   ent(f,{x:p0.x,y:p0.y,life:74,tg:o,U(e){const g=e.owner;if(e.t<26&&e.tg&&!e.tg.dead){e.x+=(e.tg.x-e.x)*.3;e.y+=(e.tg.y-e.y)*.3;}if(e.t>=22&&(e.t-22)%6===0){const i=(e.t-22)/6;if(i<6){const last=i===5;ent(g,{x:e.x+(i-2.5)*8,y:e.y-280,vy:12,life:40,last,gy:e.y,U(a){a.y+=a.vy;for(const q of foes(a.owner)){if(intangible(q)||q.holder||!inR(q,a.x,a.y,9))continue;applyHit(q,a.last?{dmg:7,bkb:5.2,kbg:.1,ang:82,fx:a.fx}:{dmg:4,bkb:1.4,kbg:.004,ang:85,fx:a.fx},q.x>=a.x?1:-1,a.owner,{proj:1});a.alive=false;return;}if(a.y>=a.gy+2){a.alive=false;dust(a.x,a.gy,2);}},D(a){wl('#8a6a40',a.x,a.y-16,a.x,a.y,2);wl(W,a.x,a.y-4,a.x,a.y,2);wl(a.fx[0],a.x-2,a.y-16,a.x+2,a.y-16,2);}});}}},
+    D(e){const k=Math.min(1,e.t/22),r=20-8*k;X.globalAlpha=e.t>58?Math.max(0,(74-e.t)/16):1;wring(e.x,e.y-1,r,'#ff3a3a',2);wl('#ff3a3a',e.x-r-4,e.y-1,e.x+r+4,e.y-1,1);wl('#ff3a3a',e.x,e.y-30,e.x,e.y-6,1);}});}},
+ toguchi:{k:'sB',n:'Drop Kick',d:{an:'kickF',s:14,a:44,r:22,cd:150,hits:[{b:[[3,-6,17]],dmg:11,bkb:4.8,kbg:.07,ang:52}]},
+  txt:'Jumps into a portal and comes out directly above the nearest rival, already falling, heel first. Landing sends a shock both ways.',
+  go(f,m){const o=near(f,280);let tx=o?o.x:f.x+f.face*70,ty=(o?o.y:f.y)-118;const fl=floorUnder(tx,ty);if(!fl){tx=f.x;ty=f.y-70;}const pr=(x,y)=>{ring(x,y-30,m.d.fx[0],10,18);ring(x,y-30,W,4,12);burst(x,y-30,10,[m.d.fx[0],W],2.4,14);};pr(f.x,f.y);f.x=tx;f.y=ty;f.ground=null;f.vx=0;f.vy=2;if(o)f.face=o.x>=f.x?1:-1;pr(tx,ty);m.v.dk=1;sfx('warp');},
+  run(f,m){if(!m.v.dk||m.t<=m.d.s)return;if(!f.ground){f.vy=10.5;f.vx*=.6;if(FR%2===0)part(f.x,f.y-40,0,-2,8,m.d.fx[0],2,0);}else if(!m.v.land){m.v.land=1;const st={};for(const sd of[-1,1])zap(f,st,'l',f.x+sd*18,f.y-10,26,{dmg:6,bkb:4.4,kbg:.05,ang:70,fx:m.d.fx},sd);dust(f.x,f.y,10);ring(f.x,f.y-4,m.d.fx[0],8,14);try{if(!RM)shakeA=Math.max(shakeA,4);}catch(e){}m.t=Math.max(m.t,m.d.s+m.d.a);}}},
+ evona:{k:'nB',n:'Glacier',d:{an:'cast',s:13,a:3,r:22,cd:110},
+  txt:'Raises a block of ice and sends it grinding forward along the floor. It ploughs through rivals, then shatters and freezes anyone beside it.',
+  go(f,m){const fl=f.ground||floorUnder(f.x+f.face*26,f.y-10);const gy=fl?fl.y:f.y;ent(f,{x:f.x+f.face*28,y:gy,vx:f.face*2.7,life:62,fl,
+    U(e){e.x+=e.vx;const g=e.owner;for(const o of foes(g)){if(intangible(o)||o.holder)continue;if(Math.abs(o.x-e.x)<22&&o.y>e.y-56&&o.y<e.y+10){if(!e.hits[o.id]){e.hits[o.id]=1;applyHit(o,{dmg:11,bkb:4.8,kbg:.076,ang:48,fx:e.fx},Math.sign(e.vx),g,{proj:1});}}}
+     if(e.t%3===0)part(e.x-Math.sign(e.vx)*12,e.y-2,-Math.sign(e.vx),-.6,12,'#e8fdff',2,0);if(e.fl&&e.fl.x!==undefined&&(e.x<e.fl.x+6||e.x>e.fl.x+e.fl.w-6))e.cut=1;},
+    end(e){const st={};zap(e.owner,st,'s',e.x,e.y-26,40,{dmg:6,bkb:3.4,kbg:.03,ang:70,eff:'freeze',fx:e.fx,proj:1});burst(e.x,e.y-26,22,['#8fe4ff','#e8fdff',W],4,20,.12);ring(e.x,e.y-26,'#bff4ff',10,16);try{sfx('hitH');}catch(q){}},
+    D(e){const k=Math.min(1,e.t/8),x=e.x,y=e.y,h=50*k,w=17;X.globalAlpha=.75;wpoly('#8fe4ff',[x-w,y,x-w*.8,y-h*.8,x-w*.2,y-h,x+w*.6,y-h*.92,x+w,y-h*.6,x+w,y]);X.globalAlpha=1;wl(W,x-w*.6,y-h*.75,x-w*.3,y-h*.25,2);wl('#d8f8ff',x+w,y-h*.6,x+w,y,1);wl('#d8f8ff',x-w,y,x-w*.8,y-h*.8,1);}});}},
+ tiki:{k:'dB',n:'Chaos Rift',d:{an:'cast',s:18,a:3,r:26,cd:420},
+  txt:'Tears a rift to the Chaos Realm open where he stands. For two seconds it drags rivals in and the spirits inside bite them, then it bursts.',
+  go(f,m){ent(f,{x:f.x,y:f.y-34,life:130,
+    U(e){const g=e.owner;for(const o of foes(g)){if(intangible(o)||o.holder||o.st==='ledge')continue;const dx=e.x-o.x,dy=e.y-(o.y-30),d=Math.hypot(dx,dy);if(d<84&&d>6){o.x+=dx/d*.8;if(!o.ground)o.y+=dy/d*.45;}}
+     if(e.t%16===7){const st={};zap(g,st,'t',e.x,e.y,44,{dmg:1.5,bkb:.7,kbg:0,ang:90,fx:e.fx,proj:1});}if(e.t%5===0){const a=Math.random()*TAU;part(e.x+Math.cos(a)*60,e.y+Math.sin(a)*40,-Math.cos(a)*2.4,-Math.sin(a)*1.6,18,Math.random()<.5?e.fx[0]:'#7af0d0',2,0);}},
+    end(e){const st={};zap(e.owner,st,'e',e.x,e.y,56,{dmg:7,bkb:4.8,kbg:.066,ang:80,fx:e.fx,proj:1});burst(e.x,e.y,28,[e.fx[0],'#7af0d0',W],5,22);ring(e.x,e.y,e.fx[0],12,20);try{sfx('boom');}catch(q){}},
+    D(e){const k=Math.min(1,e.t/10)*(e.t>114?Math.max(0,(130-e.t)/16):1),x=e.x,y=e.y;X.globalAlpha=.85*k;X.fillStyle='#0c0820';X.beginPath();X.ellipse(x,y,30*k,40*k,0,0,TAU);X.fill();X.globalAlpha=k;for(let i=0;i<3;i++){X.strokeStyle=i%2?'#7af0d0':e.fx[0];X.lineWidth=2;X.beginPath();X.ellipse(x,y,(30+i*5)*k,(40+i*6)*k,0,e.t*.12+i*2,e.t*.12+i*2+3.6);X.stroke();}
+     for(let i=0;i<3;i++){const a=e.t*.07+i*TAU/3,sx=x+Math.cos(a)*15*k,sy=y+Math.sin(a)*22*k;wdisc(sx,sy,5,'#7af0d0');wr('#0c3028',sx-3,sy-1,2,2);wr('#0c3028',sx+1,sy-1,2,2);}}});}},
+ hana:{k:'nB',n:'Cross Cut',d:{an:'slashF',s:8,a:3,r:20,lim:'hF',hits:[{b:[[30,-36,17],[14,-36,12]],dmg:5,bkb:1,kbg:0,ang:76,sd:7}]},
+  txt:'Two cuts. The first saw tears through a shield and holds the rival in place; the second comes across a beat later and launches hard.',
+  run(f,m){if(m.t>=m.d.s+8&&!m.v.c2){m.v.c2=1;const st={};zap(f,st,'c',f.x+f.face*30,f.y-36,23,{dmg:12,bkb:5.3,kbg:.097,ang:40,fx:m.d.fx},f.face);m.v.c2F=FR;try{sfx('swing');}catch(e){}}},
+  draw(f,m){const t=m.t,s=m.d.s;const sl=(a0,c)=>{X.strokeStyle=c;X.lineWidth=4;X.beginPath();if(f.face>0)X.arc(f.x+4,f.y-36,34,a0,a0+1.5);else X.arc(f.x-4,f.y-36,34,PI-a0-1.5,PI-a0);X.stroke();X.strokeStyle=W;X.lineWidth=1;X.stroke();};if(t>=s&&t<s+6)sl(-1.1,m.d.fx[0]);if(m.v.c2F&&FR-m.v.c2F<7)sl(-.4,m.d.fx[1]);}},
+ keanu:{k:'dB',n:'Volcano',d:{an:'slashDown',s:20,a:4,r:26,cd:200},
+  txt:'Drives the hook into the floor and the ground erupts under him: a column of lava that launches everyone near it straight up, and three lava bombs that leave burning patches where they land.',
+  go(f,m){const st={},h={dmg:12,bkb:5.2,kbg:.095,ang:88,eff:'burn',fx:m.d.fx};zap(f,st,'v',f.x,f.y-20,36,h);zap(f,st,'v',f.x,f.y-72,30,h);zap(f,st,'v',f.x,f.y-124,26,h);try{if(!RM)shakeA=Math.max(shakeA,6);sfx('boom');}catch(e){}
+   ent(f,{x:f.x,y:f.y,life:18,D(e){const k=1-e.t/18;X.globalAlpha=Math.min(1,k*1.5);for(let i=0;i<11;i++){const h2=(90+((i*23+e.t*9)%70))*(.5+k*.5);wr(i%3===0?'#ffd040':i%3===1?'#ff6a1a':'#c83a10',e.x-22+i*4,e.y-h2,5,h2);}wr('#fff0a0',e.x-5,e.y-150*k,10,150*k);}});
+   for(const vx of[-2.6,.5,3]){ent(f,{x:f.x,y:f.y-60,vx,vy:-7.5,life:120,U(e){e.vy+=.3;e.x+=e.vx;e.y+=e.vy;const g=e.owner;let hit=false;for(const o of foes(g)){if(!intangible(o)&&!o.holder&&inR(o,e.x,e.y,9)){hit=true;break;}}const fl=e.vy>0?floorUnder(e.x,e.y-12):null;if(hit||(fl&&e.y>=fl.y-2)){e.alive=false;const s2={};zap(g,s2,'b',e.x,e.y,22,{dmg:4,bkb:3.6,kbg:.04,ang:75,eff:'burn',fx:e.fx,proj:1});burst(e.x,e.y,14,['#ff6a1a','#ffd040',W],3,16);if(fl&&window.NORMALS&&NORMALS.Z){if(NORMALS.Z.length>10)NORMALS.Z.shift();NORMALS.Z.push({x:e.x,y:fl.y,r:18,t:FR+120,by:g,eff:'burn',fx:['#ff6a1a','#ffd040'],ri:{}});}}if(e.t%2===0)part(e.x,e.y,0,0,10,'#ff8a2a',2,0);},D(e){wdisc(e.x,e.y,6,'#c83a10');wdisc(e.x-1,e.y-1,3.5,'#ffd040');}});}}}
+};
+NS.MV=MV;
+/* ---------- install ---------- */
+const IX={nB:0,sB:1,uB:2,dB:3};
+for(const id in MV){try{const C=CH.find(c=>c.id===id),M=MV[id];if(!C||!C.mv||!C.mv[M.k])continue;const old=C.mv[M.k],fx=old.fx||(C.kit&&C.kit.fx)||[C.col,W];
+  const d=Object.assign({hits:[],fx,lim:'none'},M.d);if(!d.beh){d.beh='nsp';}d.nk=id;d.nm=M.n.toUpperCase();if(old.hf)d.hf=old.hf;
+  C.mv[M.k]=d;if(C.hmv&&C.hmv[M.k])C.hmv[M.k]=d;C.sp[IX[M.k]]=M.n;if(typeof GTXT!=='undefined'&&GTXT[id])GTXT[id][IX[M.k]]=M.txt;}catch(e){E(e);}}
+BEH.nsp={tick(f,m,I){try{const M=MV[m.d.nk];if(!M)return;if(f.ground)f.vx*=.8;if(m.t===1){say(f.x,f.y-92,m.d.nm,m.d.fx[0]);NS.use[m.d.nk]=(NS.use[m.d.nk]||0)+1;}if(m.t>=m.d.s&&!m.v.went){m.v.went=1;if(M.go)M.go(f,m,I);}if(M.run)M.run(f,m,I);}catch(e){E(e);}}};
+/* effects that ride on a landed hit, and Suzume's zip */
+try{const a0=applyHit;applyHit=function(t,h,dirX,a,o){const r=a0.apply(this,arguments);try{if(r==='hit'&&a&&a.mv&&a.mv.d&&a.mv.d.nk){const M=MV[a.mv.d.nk];if(M&&M.onHit&&!(o&&o.proj))M.onHit(a,t);}}catch(e){}return r;};}catch(e){E(e);}
+try{const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const f of F){const z=f._zip;if(!z)continue;const o=z.o;z.t++;if(f.dead||f.gone||!o||o.dead||o.gone||z.t>16||f.st==='hit'||f.st==='held'){f._zip=null;continue;}
+    const dx=o.x-f.x,dy=o.y-f.y,d=Math.hypot(dx,dy);f.mv=null;f.st='air';f.ground=null;f.vx=0;f.vy=0;f.face=dx>=0?1:-1;f.inv=Math.max(f.inv||0,2);
+    if(d<26||z.t>=14){f._zip=null;if(d<60){applyHit(o,{dmg:9,bkb:4.8,kbg:.068,ang:44,fx:z.fx},f.face,f,{force:1});try{sfx('smash');}catch(e){}}f.vy=-4.2;f.vx=-f.face*1.5;}
+    else{const sp=Math.min(d,15);f.x+=dx/d*sp;f.y+=dy/d*sp;part(f.x,f.y-30,0,0,8,W,2,0);}}
+ }catch(e){E(e);}return r;};}catch(e){E(e);}
+/* drawing that belongs to the fighter (web line while zipping, Hana's two cuts) */
+try{const n0=ninjaFX;ninjaFX=function(f){const r=n0.apply(this,arguments);try{if(!f||f.dead||f.gone||typeof X==='undefined'||!X)return r;if(f._zip&&f._zip.o){const o=f._zip.o;wl(W,f.x,f.y-34,o.x,o.y-30,2);}const m=f.mv;if(m&&m.d&&m.d.nk){const M=MV[m.d.nk];if(M&&M.draw){X.save();M.draw(f,m);X.restore();}}}catch(e){}return r;};}catch(e){E(e);}
+/* the CPU is told when each new move is worth pressing */
+const AIW={makiko:(f,o,d)=>o.st==='dizzy'||d<170,akemi:(f,o,d)=>d<40,suzume:(f,o,d)=>d>50&&d<170&&Math.abs(o.y-f.y)<26,sato:(f,o,d)=>d>40&&d<130&&Math.abs(o.y-f.y)<24,oliver:(f,o,d)=>d>90,toguchi:(f,o,d)=>d>50&&d<270,evona:(f,o,d)=>d>30&&d<170&&Math.abs(o.y-f.y)<30,tiki:(f,o,d)=>d<80,hana:(f,o,d)=>d<44&&Math.abs(o.y-f.y)<24,keanu:(f,o,d)=>d<40||(Math.abs(o.x-f.x)<28&&o.y<f.y&&f.y-o.y<130)};
+try{const a0=aiInput;aiInput=function(f){const I=a0.apply(this,arguments);try{const id=f&&f.C&&f.C.id,W2=AIW[id],M=MV[id];if(I&&W2&&M&&!f.mv&&!f.item&&!(f.copyT>0)&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')&&(f._nsT||0)<FR&&!(f.cd&&f.cd[M.k]>0)){const o=near(f,500);if(o){const d=Math.hypot(o.x-f.x,o.y-f.y);if(W2(f,o,d)&&rnd()<.12){f._nsT=FR+50;const dir=o.x>=f.x?1:-1;I.B=true;I.A=false;I.J=false;I.S=false;I.G=false;if(M.k==='nB'){I.x=0;I.y=0;f.face=dir;}else if(M.k==='sB'){I.x=dir;I.y=0;}else if(M.k==='dB'){I.x=0;I.y=1;}}}}}catch(e){}return I;};}catch(e){E(e);}
 })();
 
 </script>
