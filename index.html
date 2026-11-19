@@ -12063,14 +12063,21 @@ const FACE_HX=['horns','flower','glasses','ribbon','band','antenna','twigs','bea
 const PLAIN={glove:null,boots:null,bootTrim:null,kneepad:null,pauldron:null,armband:null,stripe:null,pantStripe:null,cuff:null,buckles:null,chain:null,fur:null,emblem:null,tieC:null,print:null,headphones:null,handfx:null,top2:null,trim:null,shorts:null,gown:null,gownTrim:null,spikes:null,grey:null};
 const copy=(L,o)=>{const N={};for(const k in L){if(k==='_r'||k==='R'||k==='cname'||k==='req'||k==='alt'||k==='hide'||k==='heroKit'||k==='sub'||k[0]==='_')continue;N[k]=L[k];}for(const k in o){if(o[k]===null)delete N[k];else N[k]=o[k];}return N;};
 /* ---------- new head pieces ---------- */
-const HW=new Set(['fangs','witchhat','dhorns','halo','piratehat','skullmask','cowl','bandage','pumpkin','sheet','bolts','clownhair','catears','bunnyears','dinohood','banana','boxhead','cowhat','crown','chefhat','elfhat']);
+const HW=new Set(['roundears','mane','antlers','unicorn','hardhat','beret','rednose','fangs','witchhat','dhorns','halo','piratehat','skullmask','cowl','bandage','pumpkin','sheet','bolts','clownhair','catears','bunnyears','dinohood','banana','boxhead','cowhat','crown','chefhat','elfhat']);
 const FULL=[-7.6,6,-8.6,-2,-6,-9,0,-11,5,-10,7.6,-6.6,8,-1,7.4,5,4,7.4,-3,7.4];
 const CRES=[-9.6,8,-10.6,-2,-8,-11,-1,-14,6,-12.4,8.4,-8,5,-9.6,0,-10.6,-5,-7.4,-6.4,0,-5.6,7];
 const dh=drawHead;drawHead=function(L,J,S){const r=dh.apply(this,arguments);const hx=L.hx;if(!hx||!L.hw9)return r;try{const H=J.Hd,h=L.h,k=ramp(D),w=ramp(W),X=(x)=>H.x+x*h,Y=(y)=>H.y+y*h;
  for(const t of hx){if(!HW.has(t))continue;switch(t){
+  case'roundears':{const c=ramp(L.earC||'#8a5a2a'),p=ramp(L.earIn||'#e8c8a0');ell(X(-6),Y(-10.4),3.2*h,3.2*h,0,c,1);ell(X(4),Y(-11.4),3.2*h,3.2*h,0,c,1);ell(X(-6),Y(-10.4),1.6*h,1.6*h,0,p,0);ell(X(4),Y(-11.4),1.6*h,1.6*h,0,p,0);break;}
+  case'mane':{const c=ramp(L.maneC||'#c87a2a');for(let i=0;i<11;i++){const a=2.2+i*.42;ell(X(-1+Math.cos(a)*9),Y(-2.4+Math.sin(a)*9.4),3*h,3*h,0,c,1);}ell(X(-5.4),Y(-10.6),2.2*h,2.2*h,0,ramp('#e8b060'),1);ell(X(3.4),Y(-11.6),2.2*h,2.2*h,0,ramp('#e8b060'),1);break;}
+  case'antlers':{const c=ramp('#8a5a2a')[2];for(const q of[[-3.6,-1],[2.4,1]]){const x0=q[0],d=q[1];lineH(H,h,x0,-9,x0+d*1.4,-16,c);lineH(H,h,x0+.5,-9,x0+d*1.4+.5,-16,c);lineH(H,h,x0+d*.6,-12,x0+d*3.6,-14.6,c);lineH(H,h,x0+d*1,-14,x0-d*1.6,-17,c);lineH(H,h,x0+d*1.4,-16,x0+d*3,-19,c);}break;}
+  case'unicorn':{const g=ramp(GOLD);polyH(H,h,[2.4,-10.4,5,-10,6.4,-18.6],g,'g');lineH(H,h,3,-12,5.2,-12.6,g[1]);lineH(H,h,3.8,-14.4,5.6,-15,g[1]);break;}
+  case'hardhat':{const c=ramp(L.hatC||'#ffd040');polyH(H,h,[-7,-7.6,-6.6,-11.6,-3,-14.2,2,-14.4,5.6,-12,6.6,-8.8],c,'g');polyH(H,h,[-7.6,-7.2,9.6,-9,9.8,-7.6,-7.6,-5.8],c,'g');lineH(H,h,-1,-14.2,-.6,-8.4,c[1]);if(L.lamp){ell(X(6),Y(-11.4),1.6*h,1.6*h,0,ramp('#fff8c0'),1);}break;}
+  case'beret':{const c=ramp(L.hatC||D);ell(X(-1.4),Y(-10.8),7.6*h,3.4*h,-.12,c,1);lineH(H,h,-1,-14,-.6,-15.6,c[1]);break;}
+  case'rednose':ell(X(7.6),Y(.6),1.6*h,1.6*h,0,ramp('#e8283a'),0);break;
   case'fangs':sp(X(5),Y(3.8),W);sp(X(6.6),Y(3.8),W);break;
-  case'witchhat':{const c=ramp(L.hatC||'#2a1a3a'),b=ramp(L.bandC||OR);polyH(H,h,[-10.4,-7.2,8.4,-9.2,8.8,-7.4,-10,-5.2],c,'g');polyH(H,h,[-5.2,-8,3.8,-9.2,1.4,-16.6,-3,-22.6,-3.4,-16],c,'g');polyH(H,h,[-5,-9.8,3.6,-11,3.8,-9.3,-5.2,-8],b,'g',0);break;}
-  case'dhorns':{const c=ramp(RED);polyH(H,h,[1.6,-8,3.6,-14.6,5,-13.6,3.8,-7.6],c,'g');polyH(H,h,[-4,-8.4,-6.6,-14.4,-4.8,-14.8,-2.2,-8.8],c,'g');break;}
+  case'witchhat':{const c=ramp(L.hatC||'#2a1a3a'),b=ramp(L.bandC||OR);if(!L.noBrim)polyH(H,h,[-10.4,-7.2,8.4,-9.2,8.8,-7.4,-10,-5.2],c,'g');polyH(H,h,[-5.2,-8,3.8,-9.2,1.4,-16.6,-3,-22.6,-3.4,-16],c,'g');if(L.hatStripe){polyH(H,h,[-4,-13,2.6,-14,2,-15.6,-3.6,-14.8],b,'g',0);ell(X(-3),Y(-23),1.5*h,1.5*h,0,b,0);}polyH(H,h,[-5,-9.8,3.6,-11,3.8,-9.3,-5.2,-8],b,'g',0);break;}
+  case'dhorns':{const c=ramp(L.hornC||RED);polyH(H,h,[1.6,-8,3.6,-14.6,5,-13.6,3.8,-7.6],c,'g');polyH(H,h,[-4,-8.4,-6.6,-14.4,-4.8,-14.8,-2.2,-8.8],c,'g');break;}
   case'halo':{const c=ramp(GOLD);for(let i=0;i<40;i++){const a=i/40*TAU;sp(X(-.6+Math.cos(a)*6.2),Y(-15.6+Math.sin(a)*1.7),c[3]);sp(X(-.6+Math.cos(a)*6.2),Y(-15.2+Math.sin(a)*1.7),c[4]||c[3]);}break;}
   case'piratehat':{polyH(H,h,[-9.4,-6.8,-6.4,-13,0,-15.4,6,-13.4,9,-8,0,-9.6],k,'g');ell(X(0),Y(-11.8),1.5*h,1.4*h,0,w,0);sp(X(-.6),Y(-12),k[1]);sp(X(.6),Y(-12),k[1]);lineH(H,h,-7.4,-6,8,-4,k[1]);ell(X(4.8),Y(-3.2),1.8*h,1.7*h,0,k,0);break;}
   case'cowl':polyH(H,h,CRES,ramp(L.hoodC||D),'g');break;
@@ -12081,60 +12088,144 @@ const dh=drawHead;drawHead=function(L,J,S){const r=dh.apply(this,arguments);cons
   case'sheet':{polyH(H,h,[-10,9.6,-10.6,-2,-7.8,-10.8,-1,-13.2,6,-11.8,9.2,-6,9.6,2,9.2,9.6,6,8,3,9.8,0,8,-3,9.8,-6,8],w,'g');ell(X(2),Y(-3.2),1.5*h,2.3*h,0,k,0);ell(X(6),Y(-3),1.4*h,2.2*h,0,k,0);ell(X(4.2),Y(1.8),1.1*h,1.3*h,0,k,0);break;}
   case'bolts':{const g=ramp('#9aa0a8');polyH(H,h,[-7.6,4.6,-4.8,4.6,-4.8,6.6,-7.6,6.6],g,'g');polyH(H,h,[3,6,6,6,6,7.8,3,7.8],g,'g');lineH(H,h,.6,-7.2,5.6,-7.6,k[1]);for(const q of[1.6,3.2,4.8])lineH(H,h,q,-8.2,q,-6.4,k[1]);break;}
   case'clownhair':{const a=ramp(L.puffC||'#3ac86a');ell(X(-7),Y(-6.4),3.6*h,3.6*h,0,a,1);ell(X(-7.4),Y(.6),3.2*h,3.2*h,0,a,1);ell(X(-2),Y(-10.6),3.2*h,2.8*h,0,a,1);break;}
-  case'catears':{const c=ramp(L.earC||D),p=ramp('#f0a0c0');polyH(H,h,[-6.6,-8,-5,-14.8,-1.6,-9.6],c,'g');polyH(H,h,[.8,-10,3.6,-15.4,5.6,-9.4],c,'g');polyH(H,h,[-5.2,-9.6,-4.6,-12.6,-3,-10],p,'g',0);polyH(H,h,[2.2,-10.6,3.6,-13.2,4.6,-10.4],p,'g',0);lineH(H,h,7,1,11,0,k[1]);lineH(H,h,7,2,11,2.6,k[1]);break;}
+  case'catears':{const c=ramp(L.earC||D),p=ramp(L.earIn||'#f0a0c0');polyH(H,h,[-6.6,-8,-5,-14.8,-1.6,-9.6],c,'g');polyH(H,h,[.8,-10,3.6,-15.4,5.6,-9.4],c,'g');polyH(H,h,[-5.2,-9.6,-4.6,-12.6,-3,-10],p,'g',0);polyH(H,h,[2.2,-10.6,3.6,-13.2,4.6,-10.4],p,'g',0);lineH(H,h,7,1,11,0,k[1]);lineH(H,h,7,2,11,2.6,k[1]);break;}
   case'bunnyears':{const c=ramp(L.earC||W),p=ramp('#f8b0c8');polyH(H,h,[-4.8,-9,-5.8,-21,-2.8,-21.8,-1.4,-9.6],c,'g');polyH(H,h,[.4,-10,1,-22.2,4.2,-21.8,3.8,-9.8],c,'g');polyH(H,h,[-4,-11,-4.6,-19,-3.2,-19.4,-2.6,-11],p,'g',0);polyH(H,h,[1.4,-11.6,1.8,-20,3.2,-19.8,3,-11.6],p,'g',0);break;}
   case'dinohood':{const c=ramp(L.hoodC||'#5ab85a'),s=ramp(L.spikeC||OR);polyH(H,h,CRES,c,'g');polyH(H,h,[-9.6,-6,-12.6,-9,-8,-10.6],s,'g');polyH(H,h,[-6.6,-11.6,-7.6,-16,-3.4,-13.4],s,'g');polyH(H,h,[-2,-14,-1,-18.4,2.4,-13.6],s,'g');for(const q of[2.4,4.4,6.4])polyH(H,h,[q-.9,-9.8+q*.12,q+.9,-9.6+q*.12,q,-7.6+q*.12],w,'g',0);sp(X(3),Y(-12.6),D);break;}
-  case'banana':{const c=ramp('#ffe040');polyH(H,h,[-9.6,8,-10.6,-2,-8.6,-12,-3.4,-19,-1.2,-23.4,.6,-23,.8,-18,5,-13,8.2,-8,5,-9.6,0,-10.6,-5,-7.4,-6.4,0,-5.6,7],c,'g');polyH(H,h,[-1.4,-23.6,.8,-23.2,.6,-21.4,-1.2,-21.6],ramp('#6a4a2a'),'g',0);lineH(H,h,-7,-9,-2.6,-19,c[1]);break;}
-  case'boxhead':{const c=ramp(L.boxC||'#c8a070'),rd='#e8283a';polyH(H,h,[-9.6,8,-9.6,-12,9,-12,9,8],c,'g');polyH(H,h,[.8,-5.2,3.6,-5.2,3.6,-2.2,.8,-2.2],k,'g',0);polyH(H,h,[5,-5.2,7.8,-5.2,7.8,-2.2,5,-2.2],k,'g',0);sp(X(2.2),Y(-3.8),'#7ae0ff');sp(X(6.4),Y(-3.8),'#7ae0ff');for(const q of[1.4,3.2,5,6.8])lineH(H,h,q,2,q,5,k[1]);lineH(H,h,.8,2,7.4,2,k[1]);lineH(H,h,.8,5,7.4,5,k[1]);lineH(H,h,-9.6,-8,9,-8,c[1]);lineH(H,h,-2,-12,-2,-16.6,k[1]);sp(X(-2),Y(-17.2),rd);sp(X(-1.4),Y(-17.2),rd);break;}
-  case'cowhat':{const c=ramp(L.hatC||'#8a5a2a'),b=ramp(L.bandC||D);polyH(H,h,[-11.4,-6.8,-8,-8.6,8,-10,11,-8,10.4,-6.6,-10.6,-4.8],c,'g');polyH(H,h,[-6,-7.6,-5.6,-13.8,-1.4,-12.4,2.6,-14.2,4.4,-9],c,'g');polyH(H,h,[-6,-8.8,4.3,-10.2,4.4,-9,-6,-7.6],b,'g',0);break;}
+  case'banana':{const c=ramp(L.peakC||'#ffe040');polyH(H,h,[-9.6,8,-10.6,-2,-8.6,-12,-3.4,-19,-1.2,-23.4,.6,-23,.8,-18,5,-13,8.2,-8,5,-9.6,0,-10.6,-5,-7.4,-6.4,0,-5.6,7],c,'g');polyH(H,h,[-1.4,-23.6,.8,-23.2,.6,-21.4,-1.2,-21.6],ramp(L.tipC||'#6a4a2a'),'g',0);if(L.peakBand)polyH(H,h,[-8.4,-12.4,4.6,-13.4,3.4,-15.4,-6.6,-15],ramp(L.peakBand),'g',0);else lineH(H,h,-7,-9,-2.6,-19,c[1]);break;}
+  case'boxhead':{const c=ramp(L.boxC||'#c8a070'),rd='#e8283a';polyH(H,h,[-9.6,8,-9.6,-12,9,-12,9,8],c,'g');
+    if(L.boxK==='tv'){polyH(H,h,[-1,-8,7.6,-8,7.6,3,-1,3],ramp('#2a3a4a'),'g',0);polyH(H,h,[0,-7,6.6,-7,6.6,2,0,2],ramp('#7ae0ff'),'g',0);sp(X(2),Y(-3.6),D);sp(X(5),Y(-3.6),D);lineH(H,h,2,-.6,5,-.6,D);lineH(H,h,-3,-12,-7,-17,k[1]);lineH(H,h,-1,-12,3,-17,k[1]);sp(X(-6),Y(2),rd);sp(X(-6),Y(-1),'#ffd040');break;}
+    if(L.boxK==='dice'){for(const q of[[1,-7],[7,-7],[4,-2.6],[1,2],[7,2],[-6,-8],[-4,2]])ell(X(q[0]),Y(q[1]),1.2*h,1.2*h,0,k,0);break;}
+    if(L.boxK==='gift'){const g=ramp(GOLD);polyH(H,h,[-1.6,-12,1.6,-12,1.6,8,-1.6,8],g,'g',0);polyH(H,h,[-9.6,-3.6,9,-3.6,9,-.6,-9.6,-.6],g,'g',0);polyH(H,h,[0,-12,-5,-17,-3,-12],g,'g');polyH(H,h,[0,-12,5,-17,3,-12],g,'g');polyH(H,h,[3.4,-8.6,5.4,-8.6,5.4,-6,3.4,-6],k,'g',0);polyH(H,h,[6.4,-8.6,8.4,-8.6,8.4,-6,6.4,-6],k,'g',0);break;}polyH(H,h,[.8,-5.2,3.6,-5.2,3.6,-2.2,.8,-2.2],k,'g',0);polyH(H,h,[5,-5.2,7.8,-5.2,7.8,-2.2,5,-2.2],k,'g',0);sp(X(2.2),Y(-3.8),'#7ae0ff');sp(X(6.4),Y(-3.8),'#7ae0ff');for(const q of[1.4,3.2,5,6.8])lineH(H,h,q,2,q,5,k[1]);lineH(H,h,.8,2,7.4,2,k[1]);lineH(H,h,.8,5,7.4,5,k[1]);lineH(H,h,-9.6,-8,9,-8,c[1]);lineH(H,h,-2,-12,-2,-16.6,k[1]);sp(X(-2),Y(-17.2),rd);sp(X(-1.4),Y(-17.2),rd);break;}
+  case'cowhat':{const c=ramp(L.hatC||'#8a5a2a'),b=ramp(L.bandC||D);polyH(H,h,[-11.4,-6.8,-8,-8.6,8,-10,11,-8,10.4,-6.6,-10.6,-4.8],c,'g');polyH(H,h,[-6,-7.6,-5.6,-13.8,-1.4,-12.4,2.6,-14.2,4.4,-9],c,'g');polyH(H,h,[-6,-8.8,4.3,-10.2,4.4,-9,-6,-7.6],b,'g',0);if(L.hatStar){sp(X(-1),Y(-11.4),'#ffd040');sp(X(-.4),Y(-11.4),'#ffd040');sp(X(-.7),Y(-12),'#ffd040');sp(X(-.7),Y(-10.8),'#ffd040');}break;}
   case'crown':{const c=ramp(GOLD);polyH(H,h,[-5.8,-8.2,-6.2,-14,-3.6,-11.4,-1.2,-15.4,1,-12,3.4,-15.2,4.8,-9.6],c,'g');sp(X(-1.2),Y(-11.2),'#e8283a');sp(X(-3.8),Y(-10),'#3ab8ff');sp(X(2.6),Y(-11),'#3ab8ff');break;}
   case'chefhat':polyH(H,h,[-5.8,-8.4,4.4,-9.8,4.6,-13,-6,-12],w,'g');ell(X(-3.6),Y(-15),3.6*h,3.4*h,0,w,1);ell(X(1.6),Y(-15.8),3.6*h,3.4*h,0,w,1);ell(X(-1),Y(-17),3.4*h,3*h,0,w,1);break;
-  case'elfhat':{const c=ramp(L.hatC||'#2a8a4a');polyH(H,h,[-6.2,-7.6,4.4,-9.6,-.6,-16.4,-9.4,-20.4,-5.6,-13],c,'g');polyH(H,h,[-6.2,-9.2,4.4,-11,4.4,-9.4,-6.2,-7.6],ramp(RED),'g',0);ell(X(-9.6),Y(-20.6),1.3*h,1.3*h,0,ramp(GOLD),0);break;}
+  case'elfhat':{const c=ramp(L.hatC||'#2a8a4a');polyH(H,h,[-6.2,-7.6,4.4,-9.6,-.6,-16.4,-9.4,-20.4,-5.6,-13],c,'g');polyH(H,h,[-6.2,-9.2,4.4,-11,4.4,-9.4,-6.2,-7.6],ramp(L.hatTrim||RED),'g',0);ell(X(-9.6),Y(-20.6),1.4*h,1.4*h,0,ramp(L.bellC||GOLD),0);break;}
  }}}catch(e){}return r;};
 /* ribs on the skeleton, wraps on the mummy */
 const db=drawHumanBody;drawHumanBody=function(L,J,S,p){const r=db.apply(this,arguments);if(L.bones||L.wraps){try{const P=J.P,h=L.h,nx=(J.SF.x+J.SB.x)/2,ny=(J.SF.y+J.SB.y)/2,c=L.bones?'#ecece0':ramp('#e8dcc0')[1];
   if(L.bones)lineP(P.x,P.y-2*h,nx,ny+1.5*h,c);for(let i=1;i<=(L.bones?4:5);i++){const u=i/(L.bones?5:6),x=P.x+(nx-P.x)*u,y=P.y+(ny-P.y)*u-1*h,wd=(L.bones?2.2+u*2.4:4.4)*h;lineP(x-wd,y+(L.bones?-.8*h:.9*h),x+wd,y+(L.bones?.2*h:-.7*h),c);}}catch(e){}}return r;};
-/* ---------- the costumes ---------- */
-const K={
- vampire:(B,f)=>['VAMPIRE',f?{outfit:'dress',sl:'long',top:D,sleeve:D,skirt:D,socks:'#e8e4f0',gown:1,gownTrim:RED,acc:RED}:{outfit:'suit',sl:'long',top:D,sleeve:D,pants:D,acc:RED,tieC:RED},{shoe:D,skin:'#e8e4f0',eye:'#ff3030',capeC:D,capeT:RED},['fangs'],['cape']],
- witch:(B,f)=>[f?'WITCH':'WIZARD',f?{outfit:'dress',sl:'long',top:'#2a1a3a',sleeve:'#2a1a3a',skirt:'#2a1a3a',socks:'#7a3ac8',gown:1,gownTrim:'#7a3ac8',acc:OR}:{outfit:'coat',sl:'long',top:'#2a2a6a',sleeve:'#2a2a6a',pants:'#1a1a3a',acc:GOLD,trim:GOLD},{shoe:D,hatC:f?'#2a1a3a':'#2a2a6a',bandC:f?OR:GOLD},['witchhat'],f?[]:['cape']],
- devil:(B,f)=>['DEVIL',f?{outfit:'dress',sl:'none',top:RED,sleeve:RED,skirt:RED,socks:'#7a0a1a',acc:D}:{outfit:'suit',sl:'long',top:RED,sleeve:RED,pants:RED,acc:D,tieC:D},{shoe:D,capeC:'#7a0a1a',capeT:D,eye:'#ffd040'},['dhorns'],['cape']],
- angel:(B,f)=>['ANGEL',f?{outfit:'dress',sl:'short',top:W,sleeve:W,skirt:W,socks:B.skin,gown:1,gownTrim:GOLD,acc:GOLD}:{outfit:'tunic',sl:'short',top:W,sleeve:W,pants:W,acc:GOLD},{shoe:GOLD,wingC:W,wingT:'#ffe9a0'},['halo'],['wings']],
- pirate:(B,f)=>['PIRATE',{outfit:'vest',sl:'long',top:'#8a1a2a',sleeve:W,acc:W,pants:D,boots:1},{shoe:'#3a2a1a'},['piratehat'],[]],
- skeleton:(B,f)=>['SKELETON',{outfit:'tee',sl:'long',top:D,sleeve:D,pants:D,glove:'#ecece0',bones:1},{shoe:D},['skullmask'],[]],
- mummy:(B,f)=>['MUMMY',{outfit:'tee',sl:'long',top:'#e8dcc0',sleeve:'#e8dcc0',pants:'#e0d4b8',glove:'#e8dcc0',wraps:1},{shoe:'#d8ccb0'},['bandage'],[]],
- pumpkin:(B,f)=>['PUMPKIN HEAD',{outfit:'coat',sl:'long',top:D,sleeve:D,pants:D,acc:OR,trim:OR,glove:'#4a8a2a'},{shoe:D},['pumpkin'],[]],
- ghost:(B,f)=>['BEDSHEET GHOST',{outfit:'dress',sl:'long',top:W,sleeve:W,skirt:W,socks:W,gown:1,glove:W},{shoe:W},['sheet'],[]],
- reaper:(B,f)=>['GRIM REAPER',{outfit:'dress',sl:'long',top:D,sleeve:D,skirt:D,socks:D,gown:1,glove:'#ecece0',acc:'#3a3a44'},{shoe:D,hoodC:D},['skullmask','cowl'],[]],
- slasher:(B,f)=>['MASKED SLASHER',{outfit:'coveralls',sl:'long',top:'#3a4a5a',sleeve:'#3a4a5a',pants:'#3a4a5a',acc:'#2a3440',glove:D,boots:1},{shoe:D,maskC:'#ecece4',ledC:'#3a3a3a'},['fullmask'],[]],
- zombie:(B,f)=>['ZOMBIE',f?{outfit:'tee',sl:'short',top:'#6a5a6a',sleeve:'#6a5a6a',skirt:'#3a3a4a',socks:'#8aa878'}:{outfit:'tee',sl:'short',top:'#5a4a3a',sleeve:'#5a4a3a',pants:'#3a3a4a'},{shoe:'#2a2a2a',skin:'#8aa878',eye:'#f0f060'},[],[]],
- frank:(B,f)=>['STITCHED MONSTER',{outfit:'blazer',sl:'long',top:'#2a2a32',sleeve:'#2a2a32',pants:'#1e1e26',acc:'#4a4a54',boots:1},{shoe:D,skin:'#8ac87a'},['bolts'],[]],
- clown:(B,f)=>['CLOWN',{outfit:'harlequin',sl:'long',top:'#e83a4a',top2:'#ffd040',sleeve:'#ffd040',pants:'#3ab8d8',acc:'#3ab8d8',glove:W},{shoe:'#e83a4a',puffC:'#3ac86a'},['nose','clownhair'],[]],
- knight:(B,f)=>['KNIGHT',{outfit:'plate',sl:'long',top:'#b0b8c8',sleeve:'#8a94a8',pants:'#6a7488',acc:RED,glove:'#8a94a8',boots:1,pauldron:1,pauldC:'#b0b8c8'},{shoe:'#6a7488',helmC:'#b0b8c8',capeC:RED,capeT:GOLD},['helm'],['cape']],
- astro:(B,f)=>['ASTRONAUT',{outfit:'astro',sl:'long',top:W,sleeve:W,pants:W,acc:OR,glove:'#c8ccd8',boots:1},{shoe:'#c8ccd8'},[],['bubble']],
- bee:(B,f)=>['BUMBLEBEE',f?{outfit:'bee',sl:'short',top:'#ffd040',sleeve:D,skirt:D,socks:'#ffd040',acc:D}:{outfit:'bee',sl:'short',top:'#ffd040',sleeve:D,pants:D,acc:D},{shoe:D},['antenna'],['beewings']],
- cat:(B,f)=>['BLACK CAT',f?{outfit:'tee',sl:'long',top:D,sleeve:D,skirt:D,socks:D,glove:D}:{outfit:'tee',sl:'long',top:D,sleeve:D,pants:D,glove:D},{shoe:D,tailC:D,tailC2:D,earC:D},['catears'],['tail']],
- bunny:(B,f)=>['BUNNY ONESIE',{outfit:'tee',sl:'long',top:'#f8d0e0',sleeve:'#f8d0e0',pants:'#f8d0e0',glove:W,print:W},{shoe:W,earC:'#f8d0e0'},['bunnyears'],[]],
- dino:(B,f)=>['DINOSAUR ONESIE',{outfit:'tee',sl:'long',top:'#5ab85a',sleeve:'#5ab85a',pants:'#5ab85a',glove:'#5ab85a',print:'#e8e0a0'},{shoe:OR,hoodC:'#5ab85a',tailC:'#5ab85a',tailC2:'#5ab85a'},['dinohood'],['tail']],
- banana:(B,f)=>['BANANA',{outfit:'dress',sl:'none',top:'#ffe040',sleeve:B.skin,skirt:'#ffe040',socks:B.skin},{shoe:'#6a4a2a'},['banana'],[]],
- robot:(B,f)=>['CARDBOARD ROBOT',{outfit:'tee',sl:'long',top:'#c8a070',sleeve:'#b89060',pants:'#b89060',glove:'#9aa0a8',print:'#e8283a',acc:'#9aa0a8'},{shoe:'#9aa0a8'},['boxhead'],[]],
- magician:(B,f)=>['MAGICIAN',{outfit:'coat',sl:'long',top:D,sleeve:D,pants:D,acc:W,tieC:RED,glove:W},{shoe:D,hatC:D,capeC:D,capeT:RED},['tophat'],['cape','coattails']],
- cowboy:(B,f)=>['COWBOY',{outfit:'vest',sl:'long',top:'#8a5a2a',sleeve:'#c83a3a',acc:'#c83a3a',pants:'#3a5a8a',boots:1},{shoe:'#6a4a2a',hatC:'#8a5a2a',scarfC:RED},['cowhat'],['scarf']],
- royal:(B,f)=>[f?'QUEEN':'KING',f?{outfit:'dress',sl:'long',top:'#7a3ac8',sleeve:'#7a3ac8',skirt:'#7a3ac8',socks:W,gown:1,gownTrim:GOLD,acc:GOLD}:{outfit:'coat',sl:'long',top:'#8a1a2a',sleeve:'#8a1a2a',pants:'#2a2a32',acc:GOLD,trim:GOLD},{shoe:GOLD,capeC:f?'#5a2a9a':'#8a1a2a',capeT:W},['crown'],['cape']],
- police:(B,f)=>['POLICE OFFICER',{outfit:'blazer',sl:'short',top:'#2a4a8a',sleeve:'#2a4a8a',pants:'#1c2a4a',acc:GOLD,tieC:D,emblem:'sun'},{shoe:D,capC:'#1c2a4a',capBand:GOLD},['officer'],[]],
- chef:(B,f)=>['CHEF',{outfit:'apron',sl:'short',top:W,sleeve:W,pants:'#3a3a4a',acc:W},{shoe:D},['chefhat'],[]],
- elf:(B,f)=>['ELF',f?{outfit:'tunic',sl:'short',top:'#2a8a4a',sleeve:'#2a8a4a',skirt:'#2a8a4a',socks:'#e83a4a',acc:RED}:{outfit:'tunic',sl:'short',top:'#2a8a4a',sleeve:'#2a8a4a',pants:'#e83a4a',acc:RED},{shoe:'#2a8a4a',hatC:'#2a8a4a'},['elfhat'],[]]};
-const ALL=Object.keys(K),ANY=['ghost','pumpkin','robot','witch','pirate','cowboy','magician','royal','angel','vampire','devil','chef','elf','police'];
-const PICK={aria:'cat',oliver:'cowboy',ichigo:'robot',pitto:'pirate',sato:'ghost',daku:'angel',shi:'bunny',kimiko:'devil',uchuu:'astro',suze:'royal',mia:'witch',tori:'ghost',yoko:'astro',marina:'pirate',kichi:'mummy',minato:'clown',tomi:'frank',oro:'vampire',tatsuya:'slasher',hippo:'banana',shiki:'cat',zabu:'dino',akio:'banana',evona:'witch',tsuki:'mummy',keanu:'pumpkin',soran:'skeleton',moya:'reaper',takeshi:'vampire',tamashi:'clown',hikari:'devil',okane:'royal',goiru:'knight',torabi:'chef',suzume:'skeleton',gomi:'chef',sanshou:'knight',emi:'bee',bara:'magician',kouji:'reaper'};
-const cnt={};for(const k of ALL)cnt[k]=0;for(const id in PICK)cnt[PICK[id]]++;
-let n=0;for(const C of CH){if(C.hidden||!C.looks||C.looks.some(L=>L.cname==='HALLOWEEN'))continue;const B=C.look;let L,sub;
- if(B.body==='dino'){L=copy(B,{dP:OR,dM:D,dD:'#7ac84a',spk:1.3});sub='PUMPKIN MECH';}
- else{const plain=!B.head,pool=plain?ALL:ANY;let key=PICK[C.id];if(!key||(!plain&&!ANY.includes(key))){/* the least used costume that suits them, so the roster is spread evenly */key=pool.slice().sort((a,b)=>cnt[a]-cnt[b]||((a.charCodeAt(0)*7+n)%5)-((b.charCodeAt(0)*7+n)%5))[0];cnt[key]++;}
-  const fem=!!B.fem,q=K[key](B,fem),hx0=(B.hx||[]).filter(x=>FACE_HX.includes(x)),ex0=(B.ex||[]).filter(x=>BODY_EX.includes(x));
-  const cover=/sheet|pumpkin|boxhead|skullmask|bandage|fullmask|helm/.test(q[3].join(' '));
-  L=copy(B,Object.assign({},PLAIN,{skirt:null,socks:null,pants:null},q[1],q[2],{hx:(cover?[]:hx0).concat(q[3]),ex:ex0.filter(x=>!q[4].includes(x)).concat(q[4]),hw9:1}));if(!L.pants&&!L.skirt)L.pants=q[1].top||D;if(!L.trim)L.trim=q[1].acc||W;if(!L.acc)L.acc=W;sub=q[0];}
- L.cname='HALLOWEEN';L.sub=sub;L.req={t:'d',n:50};C.looks.push(L);n++;}
-window.HALLOWEEN={kinds:ALL};
+/* ---------- the costumes: one each, no two the same ---------- */
+const SK='~',PL='#e8e4f0',CR='#e8dcc0',BR='#8a5a2a',TAN='#c8a878',GRN='#2a8a4a',NAVY='#1c2a4a',GREY='#8a94a8',PINK='#f8a0c8',PUR='#7a3ac8',YEL='#ffd040',BLU='#3a8ad8',STRAW='#e8c860';
+/* n name · o outfit · sl sleeves · t top · b bottom · s sleeve · x extra look fields · hx/ex pieces · any: also suits animal and masked heads · g: 'f' or 'm' only · robe: long gown for everyone · sh: shorts colour · po: trousers even for girls */
+const R=[
+ {k:'vampire',n:'VAMPIRE',o:'suit',t:D,b:D,x:{acc:RED,tieC:RED,skin:PL,eye:'#ff3030',capeC:D,capeT:RED},hx:['fangs'],ex:['cape'],any:1},
+ {k:'witch',n:'WITCH',o:'dress',t:'#2a1a3a',b:'#2a1a3a',robe:1,x:{gownTrim:PUR,acc:OR,hatC:'#2a1a3a',bandC:OR},hx:['witchhat'],any:1},
+ {k:'wizard',n:'WIZARD',o:'dress',t:'#2a3a9a',b:'#2a3a9a',robe:1,x:{gownTrim:GOLD,acc:GOLD,hatC:'#2a3a9a',bandC:GOLD},hx:['witchhat','beard'],any:1},
+ {k:'devil',n:'DEVIL',o:'suit',t:RED,b:RED,x:{acc:D,tieC:D,capeC:'#7a0a1a',capeT:D,eye:'#ffd040'},hx:['dhorns'],ex:['cape'],any:1},
+ {k:'angel',n:'ANGEL',o:'tunic',sl:'short',t:W,b:W,x:{acc:GOLD,shoe:GOLD,wingC:W,wingT:'#ffe9a0'},hx:['halo'],ex:['wings'],any:1},
+ {k:'pirate',n:'PIRATE',o:'vest',t:'#8a1a2a',b:D,s:W,po:1,x:{acc:W,boots:1,shoe:'#3a2a1a'},hx:['piratehat'],any:1},
+ {k:'skeleton',n:'SKELETON',o:'tee',t:D,b:D,po:1,x:{glove:'#ecece0',bones:1},hx:['skullmask']},
+ {k:'mummy',n:'MUMMY',o:'tee',t:CR,b:'#e0d4b8',po:1,x:{glove:CR,wraps:1,shoe:'#d8ccb0'},hx:['bandage']},
+ {k:'pumpkin',n:'PUMPKIN HEAD',o:'coat',t:D,b:D,po:1,x:{acc:OR,trim:OR,glove:'#4a8a2a'},hx:['pumpkin'],any:1},
+ {k:'ghost',n:'BEDSHEET GHOST',o:'dress',t:W,b:W,robe:1,x:{glove:W,shoe:W},hx:['sheet'],any:1},
+ {k:'reaper',n:'GRIM REAPER',o:'dress',t:D,b:D,robe:1,x:{glove:'#ecece0',acc:'#3a3a44',hoodC:D},hx:['skullmask','cowl']},
+ {k:'slasher',n:'MASKED SLASHER',o:'coveralls',t:'#3a4a5a',b:'#3a4a5a',po:1,x:{acc:'#2a3440',glove:D,boots:1,maskC:'#ecece4',ledC:'#3a3a3a'},hx:['fullmask']},
+ {k:'zombie',n:'ZOMBIE',o:'tee',sl:'short',t:'#5a4a3a',b:'#3a3a4a',x:{skin:'#8aa878',eye:'#f0f060',shoe:'#2a2a2a',socks:'#8aa878'}},
+ {k:'frank',n:'STITCHED MONSTER',o:'blazer',t:'#2a2a32',b:'#1e1e26',po:1,x:{acc:'#4a4a54',boots:1,skin:'#8ac87a'},hx:['bolts']},
+ {k:'clown',n:'CLOWN',o:'harlequin',t:'#e83a4a',b:'#3ab8d8',s:YEL,po:1,x:{top2:YEL,acc:'#3ab8d8',glove:W,shoe:'#e83a4a',puffC:'#3ac86a'},hx:['nose','clownhair']},
+ {k:'jester',n:'JESTER',o:'harlequin',t:PUR,b:'#2a8a4a',s:'#2a8a4a',po:1,x:{top2:GOLD,acc:GOLD,shoe:PUR,hatC:PUR,hatTrim:GOLD,bellC:GOLD},hx:['elfhat']},
+ {k:'knight',n:'KNIGHT',o:'plate',t:'#b0b8c8',b:'#6a7488',s:GREY,po:1,x:{acc:RED,glove:GREY,boots:1,pauldron:1,pauldC:'#b0b8c8',shoe:'#6a7488',helmC:'#b0b8c8',capeC:RED,capeT:GOLD},hx:['helm'],ex:['cape']},
+ {k:'blackknight',n:'BLACK KNIGHT',o:'plate',t:'#2a2a32',b:'#1e1e26',s:'#1e1e26',po:1,x:{acc:PUR,glove:D,boots:1,pauldron:1,pauldC:'#3a3a44',shoe:D,helmC:'#2a2a32',visorC:RED,capeC:'#3a1a5a',capeT:D},hx:['helm'],ex:['cape']},
+ {k:'astro',n:'ASTRONAUT',o:'astro',t:W,b:W,po:1,x:{acc:OR,glove:'#c8ccd8',boots:1,shoe:'#c8ccd8'},ex:['bubble']},
+ {k:'alien',n:'ALIEN',o:'astro',t:'#b0b8c8',b:'#8a94a8',po:1,x:{acc:'#5ae08a',skin:'#7ad06a',eye:D,glove:'#7ad06a',shoe:GREY},hx:['antenna']},
+ {k:'bee',n:'BUMBLEBEE',o:'bee',sl:'short',t:YEL,b:D,s:D,x:{acc:D,socks:YEL},hx:['antenna'],ex:['beewings']},
+ {k:'ladybug',n:'LADYBUG',o:'tee',sl:'short',t:'#e8283a',b:D,s:D,x:{print:D,acc:D,socks:'#e8283a'},hx:['antenna'],ex:['beewings']},
+ {k:'butterfly',n:'BUTTERFLY',o:'tee',sl:'none',t:PUR,b:'#3a2a6a',x:{acc:YEL,wingC:'#e8782a',wingT:D,socks:PUR},hx:['antenna'],ex:['wings']},
+ {k:'fairy',n:'FAIRY',o:'tunic',sl:'none',t:'#5ad08a',b:'#f8a0c8',x:{acc:PINK,shoe:'#5ad08a',wingC:'#f8d0e8',wingT:PINK},hx:['flower'],ex:['wings']},
+ {k:'bat',n:'BAT',o:'tee',t:'#2a2238',b:'#1e1a2a',po:1,x:{glove:D,wingC:'#2a2238',wingT:'#4a3a6a',earC:'#2a2238',earIn:'#6a4a8a'},hx:['catears','fangs'],ex:['wings']},
+ {k:'cat',n:'BLACK CAT',o:'tee',t:D,b:D,x:{glove:D,tailC:D,tailC2:D,earC:D,socks:D},hx:['catears'],ex:['tail']},
+ {k:'fox',n:'FOX',o:'tee',t:'#e8782a',b:'#e8782a',x:{glove:D,print:W,tailC:'#e8782a',tailC2:W,earC:'#e8782a',earIn:W,shoe:D,socks:D},hx:['catears'],ex:['tail']},
+ {k:'wolf',n:'WEREWOLF',o:'tee',sl:'short',t:'#5a4a6a',b:'#3a3a54',po:1,x:{glove:'#6a6a74',fur:1,tailC:'#6a6a74',tailC2:'#9a9aa4',earC:'#6a6a74',earIn:'#3a3a44',eye:'#ffd040'},hx:['catears','fangs'],ex:['tail']},
+ {k:'bear',n:'TEDDY BEAR',o:'tee',t:BR,b:BR,po:1,x:{glove:BR,print:'#e8c8a0',shoe:BR,earC:BR,earIn:'#e8c8a0'},hx:['roundears']},
+ {k:'panda',n:'PANDA ONESIE',o:'tee',t:W,b:D,s:D,po:1,x:{glove:D,shoe:D,earC:D,earIn:D},hx:['roundears']},
+ {k:'mouse',n:'MOUSE',o:'tee',t:'#9a9aa4',b:'#9a9aa4',x:{glove:PINK,print:PINK,shoe:PINK,earC:'#9a9aa4',earIn:PINK,tailC:PINK,tailC2:PINK,socks:'#9a9aa4'},hx:['roundears'],ex:['tail']},
+ {k:'monkey',n:'MONKEY',o:'tee',t:'#7a4a2a',b:'#7a4a2a',po:1,x:{glove:'#e8c8a0',print:'#e8c8a0',shoe:'#e8c8a0',earC:'#7a4a2a',earIn:'#e8c8a0',tailC:'#7a4a2a',tailC2:'#7a4a2a'},hx:['roundears'],ex:['tail']},
+ {k:'lion',n:'LION',o:'tee',t:'#e8b060',b:'#e8b060',po:1,x:{glove:'#e8b060',print:'#f4e0b0',shoe:'#c87a2a',tailC:'#e8b060',tailC2:'#c87a2a',maneC:'#c87a2a'},hx:['mane'],ex:['tail']},
+ {k:'reindeer',n:'REINDEER',o:'tee',t:BR,b:BR,po:1,x:{glove:D,print:'#e8c8a0',shoe:D,acc:RED},hx:['antlers','rednose'],ex:['scarf']},
+ {k:'bunny',n:'BUNNY ONESIE',o:'tee',t:'#f8d0e0',b:'#f8d0e0',po:1,x:{glove:W,print:W,shoe:W,earC:'#f8d0e0'},hx:['bunnyears']},
+ {k:'dino',n:'DINOSAUR ONESIE',o:'tee',t:'#5ab85a',b:'#5ab85a',po:1,x:{glove:'#5ab85a',print:'#e8e0a0',shoe:OR,hoodC:'#5ab85a',tailC:'#5ab85a',tailC2:'#5ab85a'},hx:['dinohood'],ex:['tail']},
+ {k:'shark',n:'SHARK ONESIE',o:'tee',t:'#6a8aa8',b:'#6a8aa8',po:1,x:{glove:'#6a8aa8',print:W,shoe:'#4a6a88',hoodC:'#6a8aa8',spikeC:'#4a6a88'},hx:['dinohood']},
+ {k:'dragon',n:'DRAGON ONESIE',o:'tee',t:'#c8283a',b:'#c8283a',po:1,x:{glove:'#c8283a',print:GOLD,shoe:GOLD,hoodC:'#c8283a',spikeC:GOLD,tailC:'#c8283a',tailC2:GOLD,wingC:'#8a1a2a',wingT:GOLD},hx:['dinohood'],ex:['tail','wings']},
+ {k:'unicorn',n:'UNICORN ONESIE',o:'tee',t:W,b:W,po:1,x:{glove:W,print:PINK,shoe:PINK,hoodC:W,spikeC:PINK,tailC:PINK,tailC2:'#a0d8ff'},hx:['dinohood','unicorn'],ex:['tail']},
+ {k:'banana',n:'BANANA',o:'dress',sl:'none',t:'#ffe040',b:'#ffe040',s:SK,tube:1,x:{shoe:'#6a4a2a'},hx:['banana'],any:1},
+ {k:'crayon',n:'CRAYON',o:'dress',sl:'none',t:'#e8283a',b:'#e8283a',s:SK,tube:1,x:{acc:D,shoe:D,peakC:'#e8283a',tipC:'#e8283a',peakBand:D},hx:['banana'],any:1},
+ {k:'cone',n:'TRAFFIC CONE',o:'dress',sl:'none',t:OR,b:OR,s:SK,tube:1,x:{acc:W,gownTrim:W,shoe:D,peakC:OR,tipC:OR,peakBand:W},hx:['banana'],any:1},
+ {k:'carrot',n:'CARROT',o:'dress',sl:'none',t:'#f08a2a',b:'#f08a2a',s:SK,tube:1,x:{shoe:'#4a8a2a',peakC:'#f08a2a',tipC:'#4a9a2a'},hx:['banana'],any:1},
+ {k:'pickle',n:'PICKLE',o:'dress',sl:'none',t:'#6aa83a',b:'#6aa83a',s:SK,tube:1,x:{shoe:'#3a6a1a',peakC:'#6aa83a',tipC:'#3a6a1a'},hx:['banana'],any:1},
+ {k:'robot',n:'CARDBOARD ROBOT',o:'tee',t:'#c8a070',b:'#b89060',s:'#b89060',po:1,x:{glove:'#9aa0a8',print:'#e8283a',acc:'#9aa0a8',shoe:'#9aa0a8'},hx:['boxhead'],any:1},
+ {k:'tv',n:'RETRO TV',o:'suit',t:'#3a3a44',b:'#2a2a32',po:1,x:{acc:'#7ae0ff',tieC:'#7ae0ff',boxC:'#8a6a4a',boxK:'tv'},hx:['boxhead'],any:1},
+ {k:'dice',n:'PAIR OF DICE',o:'tee',sl:'short',t:W,b:D,po:1,x:{print:D,acc:D,boxC:W,boxK:'dice'},hx:['boxhead'],any:1},
+ {k:'gift',n:'GIFT BOX',o:'tee',t:'#e8283a',b:'#e8283a',po:1,x:{print:GOLD,acc:GOLD,glove:GOLD,shoe:GOLD,boxC:'#e8283a',boxK:'gift'},hx:['boxhead'],any:1},
+ {k:'magician',n:'MAGICIAN',o:'coat',t:D,b:D,po:1,x:{acc:W,tieC:RED,glove:W,hatC:D,capeC:D,capeT:RED,ctA:D,ctB:RED},hx:['tophat'],ex:['cape','coattails'],any:1},
+ {k:'ringmaster',n:'RINGMASTER',o:'coat',t:'#c8283a',b:W,po:1,x:{acc:GOLD,trim:GOLD,tieC:D,glove:W,boots:1,shoe:D,hatC:D,ctA:'#c8283a',ctB:GOLD},hx:['tophat'],ex:['coattails'],any:1},
+ {k:'cowboy',n:'COWBOY',o:'vest',t:BR,b:'#3a5a8a',s:'#c83a3a',po:1,x:{acc:'#c83a3a',boots:1,shoe:'#6a4a2a',hatC:BR,scarfC:RED},hx:['cowhat'],ex:['scarf'],any:1},
+ {k:'sheriff',n:'SHERIFF',o:'vest',t:'#2a2a32',b:'#6a5a48',s:W,po:1,x:{acc:W,boots:1,shoe:D,emblem:'sun',hatC:'#2a2a32',bandC:GOLD,hatStar:1},hx:['cowhat'],any:1},
+ {k:'scarecrow',n:'SCARECROW',o:'tunic',t:'#c8782a',b:'#6a5a3a',po:1,x:{acc:'#8a5a2a',glove:STRAW,shoe:STRAW,hatC:STRAW,bandC:'#8a5a2a',print:'#3a8a4a'},hx:['cowhat','twigs'],any:1},
+ {k:'safari',n:'EXPLORER',o:'vest',sl:'short',t:TAN,b:TAN,s:'#e8dcc0',sh:TAN,x:{acc:'#e8dcc0',boots:1,shoe:BR,hatC:TAN,bandC:BR},hx:['cowhat'],any:1},
+ {k:'detective',n:'DETECTIVE',o:'coat',t:'#b89a6a',b:'#3a3a44',po:1,x:{acc:'#8a6a3a',trim:'#8a6a3a',tieC:D,hatC:'#6a6a74',bandC:D},hx:['cowhat','glasses'],any:1},
+ {k:'farmer',n:'FARMER',o:'coveralls',sl:'short',t:'#3a5a9a',b:'#3a5a9a',s:'#c83a3a',po:1,x:{acc:'#c83a3a',boots:1,shoe:BR,hatC:STRAW,bandC:RED},hx:['cowhat'],any:1},
+ {k:'king',n:'KING',o:'coat',t:'#8a1a2a',b:'#2a2a32',po:1,g:'m',x:{acc:GOLD,trim:GOLD,shoe:GOLD,capeC:'#8a1a2a',capeT:W},hx:['crown'],ex:['cape'],any:1},
+ {k:'queen',n:'QUEEN',o:'dress',t:PUR,b:PUR,robe:1,g:'f',x:{gownTrim:GOLD,acc:GOLD,shoe:GOLD,capeC:'#5a2a9a',capeT:W},hx:['crown'],ex:['cape'],any:1},
+ {k:'princess',n:'PRINCESS',o:'dress',sl:'short',t:PINK,b:PINK,robe:1,g:'f',x:{gownTrim:W,acc:W,shoe:W},hx:['crown'],any:1},
+ {k:'police',n:'POLICE OFFICER',o:'blazer',sl:'short',t:'#2a4a8a',b:NAVY,po:1,x:{acc:GOLD,tieC:D,emblem:'sun',capC:NAVY,capBand:GOLD},hx:['officer'],any:1},
+ {k:'pilot',n:'AIRLINE PILOT',o:'suit',t:NAVY,b:NAVY,po:1,x:{acc:GOLD,trim:GOLD,tieC:D,cuff:true,capC:W,capBand:GOLD},hx:['officer','visor'],any:1},
+ {k:'captain',n:'SHIP CAPTAIN',o:'blazer',t:W,b:W,po:1,x:{acc:GOLD,trim:GOLD,tieC:NAVY,shoe:W,capC:W,capBand:NAVY},hx:['officer','beard'],any:1},
+ {k:'chef',n:'CHEF',o:'apron',sl:'short',t:W,b:'#3a3a4a',po:1,x:{acc:W},hx:['chefhat'],any:1},
+ {k:'elf',n:'ELF',o:'tunic',sl:'short',t:GRN,b:'#e83a4a',x:{acc:RED,shoe:GRN,hatC:GRN,socks:'#e83a4a'},hx:['elfhat'],any:1},
+ {k:'santa',n:'SANTA',o:'coat',t:'#c8283a',b:'#c8283a',po:1,x:{acc:D,trim:W,glove:W,boots:1,shoe:D,hatC:'#c8283a',hatTrim:W,bellC:W},hx:['elfhat','beard'],any:1},
+ {k:'gnome',n:'GARDEN GNOME',o:'tunic',t:'#3a6ac8',b:'#6a5a3a',po:1,x:{acc:D,boots:1,shoe:D,hatC:'#e8283a',noBrim:1,bandC:'#e8283a'},hx:['witchhat','beard'],any:1},
+ {k:'party',n:'BIRTHDAY PARTY',o:'tee',sl:'short',t:'#3ab8d8',b:'#f08a2a',x:{print:YEL,acc:YEL,hatC:PINK,bandC:YEL,noBrim:1,hatStripe:1,socks:W},hx:['witchhat'],any:1},
+ {k:'firefighter',n:'FIREFIGHTER',o:'coat',t:'#c8a050',b:'#c8a050',po:1,x:{acc:YEL,trim:YEL,glove:D,boots:1,shoe:D,hatC:'#e8283a'},hx:['hardhat'],any:1},
+ {k:'builder',n:'CONSTRUCTION WORKER',o:'vest',sl:'short',t:OR,b:'#3a5a8a',s:W,po:1,x:{acc:YEL,boots:1,shoe:BR,hatC:YEL},hx:['hardhat'],any:1},
+ {k:'miner',n:'MINER',o:'coveralls',t:'#6a5a48',b:'#6a5a48',po:1,x:{acc:'#3a3a44',glove:D,boots:1,shoe:D,hatC:'#9aa0a8',lamp:1},hx:['hardhat'],any:1},
+ {k:'artist',n:'PAINTER',o:'apron',t:'#e8e0d0',b:'#3a3a4a',s:'#3a5a8a',po:1,x:{acc:'#e8e0d0',print:'#e8283a',hatC:'#8a1a2a'},hx:['beret'],any:1},
+ {k:'mime',n:'MIME',o:'tee',t:W,b:D,s:D,po:1,x:{print:D,acc:D,glove:W,skin:'#f0f0f4',hatC:D,scarfC:RED},hx:['beret'],ex:['scarf']},
+ {k:'gladiator',n:'GLADIATOR',o:'armor',sl:'none',t:'#c89a4a',b:'#8a1a2a',s:SK,x:{acc:'#8a1a2a',boots:1,shoe:BR,helmC:'#c89a4a',capeC:'#8a1a2a',capeT:GOLD,socks:SK},hx:['spartan'],ex:['cape']},
+ {k:'samurai',n:'SAMURAI',o:'armor',t:'#8a1a2a',b:'#2a2a32',po:1,x:{acc:GOLD,glove:D,boots:1,shoe:D,pauldron:1,pauldC:'#8a1a2a',helmC:'#2a2a32',visorC:GOLD},hx:['helm'],ex:['katana']},
+ {k:'viking',n:'VIKING',o:'tunic',sl:'short',t:'#6a5a3a',b:'#4a3a2a',po:1,x:{acc:BR,fur:1,boots:1,shoe:BR,capeC:'#8a6a4a',capeT:'#6a4a2a'},hx:['horns','beard'],ex:['cape']},
+ {k:'cave',n:'CAVE DWELLER',o:'bare',sl:'none',t:SK,b:SK,s:SK,sh:'#b8783a',x:{acc:BR,shoe:SK,bandC:BR},hx:['band']},
+ {k:'toga',n:'TOGA PARTY',o:'wrap',sl:'short',t:W,b:W,robe:1,x:{acc:GOLD,gownTrim:GOLD,shoe:BR},hx:['twigs'],any:1},
+ {k:'statue',n:'LIVING STATUE',o:'wrap',sl:'short',t:'#c8c8c8',b:'#c8c8c8',robe:1,x:{acc:'#a0a0a0',shoe:'#a0a0a0',skin:'#c8c8c8',grey:1},hx:['twigs']},
+ {k:'trophy',n:'GOLDEN TROPHY',o:'tee',t:GOLD,b:GOLD,po:1,x:{glove:GOLD,shoe:'#c89a20',acc:'#c89a20',skin:'#f0c850',hair:'#e8b020'}},
+ {k:'doctor',n:'DOCTOR',o:'coat',t:W,b:'#3aa8a0',po:1,x:{acc:'#3aa8a0',trim:'#c8d0e0',tieC:'#3aa8a0',shoe:W},hx:['glasses']},
+ {k:'scientist',n:'MAD SCIENTIST',o:'coat',t:W,b:'#3a3a44',po:1,x:{acc:'#a0ff40',trim:'#c8d0e0',glove:'#3ac86a',gogC:'#a0ff40'},hx:['goggles']},
+ {k:'convict',n:'ESCAPED CONVICT',o:'coveralls',sl:'short',t:'#f08a2a',b:'#f08a2a',po:1,x:{acc:D,shoe:W},any:1},
+ {k:'burglar',n:'BURGLAR',o:'tee',t:W,b:D,s:W,po:1,x:{print:D,stripe:1,acc:D,glove:D,capC:D},hx:['eyemask','cap']},
+ {k:'luchador',n:'MASKED WRESTLER',o:'bare',sl:'none',t:SK,b:SK,s:SK,sh:'#3a8ad8',x:{acc:GOLD,boots:1,shoe:'#e8283a',maskC:'#e8283a',capeC:'#3a8ad8',capeT:GOLD},hx:['eyemask'],ex:['cape']},
+ {k:'boxer',n:'BOXER',o:'bare',sl:'none',t:SK,b:SK,s:SK,sh:'#e8283a',x:{acc:W,glove:'#e8283a',boots:1,shoe:D,pantStripe:1},any:1},
+ {k:'superhero',n:'BARGAIN SUPERHERO',o:'tee',t:BLU,b:BLU,po:1,x:{print:YEL,acc:YEL,glove:RED,boots:1,shoe:RED,shorts:RED,capeC:RED,capeT:YEL,maskC:RED},hx:['eyemask'],ex:['cape']},
+ {k:'rockstar',n:'ROCK STAR',o:'leather',t:D,b:'#8a1a2a',po:1,x:{acc:GREY,boots:1,shoe:D,visorC:D},hx:['visor'],any:1},
+ {k:'disco',n:'DISCO DANCER',o:'suit',t:W,b:W,po:1,x:{acc:GOLD,trim:GOLD,tieC:GOLD,shoe:GOLD,visorC:PUR},hx:['visor']},
+ {k:'hippie',n:'FLOWER CHILD',o:'happi',sl:'short',t:'#e8782a',b:'#3a5a9a',x:{acc:PUR,print:YEL,shoe:BR,bandC:'#e8283a',socks:SK},hx:['band','flower','glasses']},
+ {k:'nerd',n:'BOOKWORM',o:'vest',sl:'short',t:'#6a3a2a',b:'#6a5a48',s:W,sh:'#6a5a48',x:{acc:W,tieC:RED,shoe:D},hx:['glasses']},
+ {k:'granny',n:'GRANDPARENT',o:'sweater',t:'#a87ac8',b:'#6a6a74',x:{acc:'#e8dcc0',hair:'#c8c8d0',shoe:BR,socks:'#e8dcc0'},hx:['glasses']},
+ {k:'tourist',n:'TOURIST',o:'happi',sl:'short',t:'#3ab8d8',b:SK,sh:TAN,x:{acc:YEL,print:PINK,shoe:BR,capC:W,visorC:D},hx:['cap','visor'],any:1},
+ {k:'lifeguard',n:'LIFEGUARD',o:'tee',sl:'none',t:'#e8283a',b:SK,sh:'#e8283a',x:{print:W,acc:W,shoe:'#c8a060',capC:W},hx:['cap'],any:1},
+ {k:'football',n:'QUARTERBACK',o:'plate',sl:'short',t:'#2a6ac8',b:W,s:'#2a6ac8',po:1,x:{acc:W,print:W,pauldron:1,pauldC:'#2a6ac8',boots:1,shoe:D,helmC:'#2a6ac8',visorC:W},hx:['helm']},
+ {k:'racer',n:'RACING DRIVER',o:'track',t:'#e8283a',b:'#e8283a',po:1,x:{acc:W,stripe:1,pantStripe:1,glove:D,boots:1,shoe:D,helmC:'#e8283a',visorC:D},hx:['helm']},
+ {k:'hazmat',n:'HAZMAT CREW',o:'coveralls',t:YEL,b:YEL,po:1,x:{acc:D,glove:'#3a3a44',boots:1,shoe:'#3a3a44',maskC:YEL,ledC:D,hoodC:YEL},hx:['fullmask','cowl']},
+ {k:'diver',n:'SCUBA DIVER',o:'stealth',t:'#1e2a3a',b:'#1e2a3a',po:1,x:{acc:'#3ab8d8',glove:D,shoe:'#3ab8d8',gogC:'#3ab8d8'},hx:['goggles'],ex:['pack']},
+ {k:'cheer',n:'CHEERLEADER',o:'pinafore',sl:'none',t:'#e8283a',b:'#e8283a',s:SK,sh:'#e8283a',x:{acc:W,trim:W,print:W,shoe:W,socks:W},hx:['ribbon']},
+ {k:'sailor',n:'SAILOR',o:'sailor',sl:'short',t:W,b:NAVY,x:{acc:NAVY,trim:NAVY,shoe:D,capC:W,socks:W},hx:['cap'],any:1},
+ {k:'karate',n:'MARTIAL ARTIST',o:'wrap',t:W,b:W,po:1,x:{acc:D,shoe:SK,bandC:RED},hx:['band']},
+ {k:'aviator',n:'AVIATOR',o:'leather',t:'#6a4a2a',b:'#6a5a48',po:1,x:{acc:'#e8dcc0',fur:1,boots:1,shoe:BR,gogC:'#c8a050',scarfC:W},hx:['goggles'],ex:['scarf']},
+ {k:'snowman',n:'SNOWMAN',o:'tee',t:W,b:W,po:1,x:{print:D,glove:'#e8283a',shoe:D,skin:'#f4f4f8',hatC:D,scarfC:'#e8283a'},hx:['tophat'],ex:['scarf']}];
+const BYK={};R.forEach(r=>BYK[r.k]=r);
+const PICK={aria:'cat',oliver:'sheriff',ichigo:'robot',pitto:'pirate',sato:'ghost',daku:'angel',shi:'bunny',kimiko:'devil',yoko:'astro',suze:'queen',mia:'witch',tori:'mime',marina:'captain',kichi:'mummy',minato:'clown',tomi:'frank',oro:'vampire',hippo:'banana',shiki:'wolf',akio:'racer',evona:'princess',tsuki:'shark',keanu:'pumpkin',soran:'skeleton',moya:'reaper',takeshi:'bat',tamashi:'jester',hikari:'superhero',okane:'king',goiru:'knight',torabi:'chef',suzume:'butterfly',gomi:'firefighter',sanshou:'statue',emi:'bee',bara:'magician',kouji:'blackknight',zabu:'police',uchuu:'elf',tatsuya:'tv',raion:'ringmaster',kongu:'boxer'};
+function build(C,r){const B=C.look,fem=!!B.fem,sk=B.skin||'#e8c8b0',fx=v=>v===SK?sk:v,x={};for(const k in (r.x||{}))x[k]=fx(r.x[k]);
+ const o={outfit:r.o,sl:r.sl||'long',top:fx(r.t),sleeve:fx(r.s||r.t),shoe:D};if(fem&&r.o==='bare'){o.outfit='tee';o.sl='none';o.top=fx(r.sh||r.t);o.sleeve=sk;}
+ if(r.robe||r.tube){o.skirt=fx(r.b);o.socks=r.tube?sk:fx(r.b);if(r.robe)o.gown=1;}else if(r.sh){o.pants=sk;o.shorts=fx(r.sh);}else if(fem&&!r.po){o.skirt=fx(r.b);o.socks=sk;}else o.pants=fx(r.b);
+ const hx=r.hx||[],ex=r.ex||[],hx0=(B.hx||[]).filter(q=>FACE_HX.includes(q)&&!hx.includes(q)),ex0=(B.ex||[]).filter(q=>BODY_EX.includes(q)&&!ex.includes(q)),cover=/sheet|pumpkin|boxhead|skullmask|bandage|fullmask|helm|spartan/.test(hx.join(' '));
+ const L=copy(B,Object.assign({},PLAIN,{skirt:null,socks:null,pants:null},o,x,{hx:(cover?[]:hx0).concat(hx),ex:ex0.concat(ex),hw9:1}));if(!L.trim)L.trim=L.acc||W;if(!L.acc)L.acc=W;if(!L.top2)L.top2=L.acc;return L;}
+const used={},humans=CH.filter(C=>!C.hidden&&C.looks&&!C.looks.some(L=>L.cname==='HALLOWEEN')),got={};
+const fits=(C,r)=>!used[r.k]&&(!r.g||(r.g==='f')===!!C.look.fem)&&(!C.look.head||r.any);
+/* hand-picked first; then fighters with animal or masked heads, who have fewer that suit them; then everyone else in order */
+for(const C of humans){if(C.look.body==='dino')continue;const r=BYK[PICK[C.id]];if(r&&fits(C,r)){used[r.k]=1;got[C.id]=r;}}
+let seed=7;const order=R.map((r,i)=>[r,(i*37+11)%R.length]).sort((a,b)=>a[1]-b[1]).map(q=>q[0]);
+for(const pass of[1,0])for(const C of humans){if(got[C.id]||C.look.body==='dino'||(!!C.look.head)!==!!pass)continue;const r=order.find(q=>fits(C,q));if(r){used[r.k]=1;got[C.id]=r;}}
+for(const C of humans){let L,sub;if(C.look.body==='dino'){L=copy(C.look,{dP:OR,dM:D,dD:'#7ac84a',spk:1.3});sub='PUMPKIN MECH';}else{const r=got[C.id]||BYK.zombie;L=build(C,r);sub=r.n;}
+ L.cname='HALLOWEEN';L.sub=sub;L.req={t:'d',n:50};C.looks.push(L);}
+window.HALLOWEEN={kinds:R.map(r=>r.n),left:humans.filter(C=>C.look.body!=='dino'&&!got[C.id]).map(C=>C.id)};
 })();
 
 /* bodies.js — clearer builds. Girls: narrower shoulders, a defined waist, wider hips, slimmer limbs. Guys: broader shoulders and chest, thicker arms and neck.
