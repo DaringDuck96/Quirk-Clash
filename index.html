@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1119-2202';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1119-2212';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -12661,6 +12661,8 @@ function ui(){const so=document.querySelector('.ssopts');if(!so||document.getEle
   const seg=o.querySelector('#itm'),ref=()=>seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',(b.dataset.v==='on')===ITM.on));
   /* a listener, not onclick: the game re-binds onclick on every option row and was wiping this one out */
   seg.addEventListener('click',ev=>{const b=ev.target&&ev.target.closest&&ev.target.closest('button');if(!b||!seg.contains(b))return;ITM.on=b.dataset.v==='on';try{localStorage.setItem('qc_items',ITM.on?'1':'0');}catch(e){}setTimeout(ref,0);try{sfx('pop');}catch(e){}});ref();
+  /* a controller or keyboard can press the button without a click event: follow the highlighted button itself */
+  try{new MutationObserver(()=>{const b=seg.querySelector('button.on');if(!b)return;const v=b.dataset.v==='on';if(v!==ITM.on){ITM.on=v;try{localStorage.setItem('qc_items',v?'1':'0');}catch(e){}}}).observe(seg,{attributes:true,subtree:true,attributeFilter:['class']});}catch(e){}
   o.querySelector('.ilist').onclick=showList;return true;}
 function showList(){let ov=document.getElementById('itmov');if(!ov){ov=document.createElement('div');ov.id='itmov';ov.innerHTML='<div id="itmbox" role="dialog" aria-label="Item list"><h2>Items</h2><div class="sub">Press Attack next to an item to pick it up. Weapons and traps stay in your hand: Attack uses them and Grab drops them. Everything else works the moment you pick it up. Items are lost when you are KO\'d. Gold ones are rare.</div><div id="itmlist"></div><div class="foot"><button type="button">Close</button></div></div>';document.body.appendChild(ov);
     const L=ov.querySelector('#itmlist');IT.forEach(d=>{const r=document.createElement('div');r.className='irow';r.appendChild(ITM.iconCanvas(d,40));const t=document.createElement('div');t.innerHTML='<b></b><span></span>';t.querySelector('b').textContent=d.n;const c=document.createElement('i');c.textContent=CLS[d.c];if(d.rare)c.className='r';t.querySelector('b').appendChild(c);t.querySelector('span').textContent=d.d;r.appendChild(t);L.appendChild(r);});
@@ -12773,6 +12775,14 @@ try{const DOWN={},PEND={};addEventListener('keydown',e=>{if(!e.repeat&&DOWN[e.co
  addEventListener('blur',()=>{for(const c in PEND)delete PEND[c];for(const c in DOWN)delete DOWN[c];});}catch(e){}
 /* 3. keyboard walking: hold the walk key and directions walk instead of run, and attacks are tilts, never smashes */
 try{window.WALKKEYS={p1:['KeyH','KeyC'],p2:['Numpad5','KeyM']};const k0=keyIn;keyIn=function(m){const r=k0.apply(this,arguments);try{const L=m===P1K?WALKKEYS.p1:m===P2K?WALKKEYS.p2:null;if(r&&L&&L.some(c=>K[c])){r.x*=.6;r.tl=1;}}catch(e){}return r;};}catch(e){}
+/* ---------- which version is this? ---------- */
+/* the build number sits in the corner of the title screen, and when the site has a newer one a banner offers it */
+setTimeout(()=>{try{const BUILD=(typeof NET!=='undefined'&&NET&&NET.build)||(window.NET&&window.NET.build)||undefined;const tl=document.getElementById('title');if(tl&&BUILD){const b=document.createElement('div');b.id='bstamp';b.textContent='BUILD '+BUILD;b.style.cssText='position:absolute;left:10px;top:8px;font:700 12px/1 Rubik,system-ui,sans-serif;letter-spacing:.08em;color:rgba(255,255,255,.8);background:rgba(0,0,0,.45);padding:4px 7px;z-index:50;pointer-events:none';if(getComputedStyle(tl).position==='static')tl.style.position='relative';tl.appendChild(b);}
+ const live=/^https?:$/.test(location.protocol)&&/github\.io$/.test(location.hostname);
+ const fresh=()=>{try{const go=()=>location.replace(location.pathname+'?b='+Date.now()+location.hash);if(window.caches&&caches.keys)caches.keys().then(ks=>Promise.all(ks.map(k=>caches.delete(k)))).then(go,go);else go();}catch(e){location.reload();}};
+ const check=()=>{if(!live||typeof BUILD==='undefined'||(typeof running!=='undefined'&&running))return;fetch('index.html?b='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD='([^']+)'/.exec(t);if(!m||m[1]===BUILD||document.getElementById('newver'))return;
+   const n=document.createElement('button');n.id='newver';n.type='button';n.textContent='NEW VERSION READY · TAP TO UPDATE';n.style.cssText='position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:200;background:#ffd400;color:#14121f;border:0;padding:10px 16px;font:800 13px/1 Rubik,system-ui,sans-serif;letter-spacing:.06em;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.4)';n.onclick=fresh;document.body.appendChild(n);}).catch(()=>{});};
+ if(live){setTimeout(check,2500);setInterval(check,120000);}}catch(e){}},0);
 })();
 
 /* results2.js — the versus results screen, laid out the way Smash does it: a victory splash for the winner, then a column for every player with their place, then their stats. */
