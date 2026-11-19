@@ -12698,7 +12698,7 @@ function showList(){let ov=document.getElementById('itmov');if(!ov){ov=document.
   add('sanshou','Explosions hurt him but never knock him back.');add('ryuko','Items she picks up are mounted on the mech and fire by themselves.');add('sato','His own item explosions hurt him a little and never knock him back.');add('pitto','A thrown item he catches with Pouch Catch is the next thing out of the pouch.');}catch(e){}}
 
 try{const O=CH.find(q=>q.id==='oliver'),A=CH.find(q=>q.id==='aria');if(O&&O.na)O.na+=' Bullseye: any item he throws or fires locks on to the nearest rival and homes in.';if(A&&A.na)A.na+=' Fortune: every item used against her has an even chance of simply not working.';}catch(e){}
-ITM.land=land;ITM.list=IT;ITM.by=BY;ITM.cls=CLS;ITM.drop=drop;ITM.apply=apply;ITM.take=take;ITM.show=showList;window.ITEMS=ITM;
+ITM.land=land;ITM.block=block;ITM.list=IT;ITM.by=BY;ITM.cls=CLS;ITM.drop=drop;ITM.apply=apply;ITM.take=take;ITM.show=showList;window.ITEMS=ITM;
 })();
 
 /* unlocks.js — the Unlockables screen, opened from the title menu. Every costume of every fighter; the ones not earned yet are silhouettes, and pointing at one says how to get it. */
@@ -12918,6 +12918,262 @@ if(typeof poseOf==='function'){const p0=poseOf;const FID=[
 if(typeof renderScreen==='function'){let dim=0;const r0=renderScreen;renderScreen=function(){let keep=null;try{const fs=(typeof FSCUT!=='undefined'&&FSCUT)||(typeof F!=='undefined'&&F.some(f=>f&&!f.gone&&f.st==='fs'));dim+=((fs?1:0)-dim)*.14;const pulse=J.pulse>FR?(J.pulse-FR)/16:0;
     if((dim>.02||pulse>0)&&typeof LIGHT!=='undefined'&&LIGHT&&LIGHT.key){keep=LIGHT;const k=(1-.72*dim)*(1+.5*pulse),a=(1-.6*dim)*(1+.35*pulse);LIGHT=Object.assign({},keep,{key:keep.key.map(v=>v*k),amb:keep.amb.map(v=>v*a),rim:keep.rim?keep.rim.map(v=>v*(1-.5*dim)):keep.rim});}}catch(e){}
    try{return r0.apply(this,arguments);}finally{if(keep)LIGHT=keep;}};}
+})();
+
+/* finales.js — every Heroic Finale works differently. Seventeen new kinds of Finale sit beside the four old ones, and each fighter's own numbers, control, status and after-effects make theirs their own. */
+(function(){
+if(typeof FSD==='undefined'||typeof beginFS!=='function')return;
+const DK='#0c0820',W='#ffffff',FN={err:null};window.FINALES=FN;
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const near=(f,x,y)=>{let b=null,bd=1e9;for(const o of foes(f)){const d=Math.hypot(o.x-(x===undefined?f.x:x),o.y-(y===undefined?f.y:y));if(d<bd){bd=d;b=o;}}return b;};
+const hit=(e,o,dmg,bkb,kbg,ang,eff,dir)=>applyHit(o,{dmg,bkb:bkb===undefined?.3:bkb,kbg:kbg||0,ang:ang===undefined?60:ang,eff,fx:e.d.col,pierce:1},dir||(o.x>=e.owner.x?1:-1),e.owner,{force:1,proj:1});
+const tick=(e,o,dmg,ri,eff,bkb,kbg,ang,dir)=>{const l=e.hits[o.id];if(l===undefined||e.t-l>=ri){e.hits[o.id]=e.t;hit(e,o,dmg,bkb,kbg,ang,eff,dir);e.last[o.id]=e.t;return true;}return false;};
+const fin=(e,o,q,dir)=>{if(o.dead||o.gone)return;applyHit(o,{dmg:q[0],bkb:q[1],kbg:q[2],ang:q[3],fx:e.d.col,pierce:1},dir||(o.x>=e.owner.x?1:-1),e.owner,{force:1});};
+const lock=f=>{f.st='fs';f.mv=null;f.inv=Math.max(f.inv,4);f.vx=f.vy=f.lx=f.ly=0;};
+const free=f=>{if(f.st==='fs'){f.st=f.ground?'idle':'air';f.inv=Math.max(f.inv,36);}};
+const hold=o=>{o.vx=o.vy=o.lx=o.ly=0;o.st='hit';o.mv=null;o.hitstun=Math.max(o.hitstun,10);};
+const say=(x,y,s,c)=>FXL.push({k:'txt2',s,x,y,t:0,life:60,col:c||W});
+const ring=(x,y,c,r0,life)=>FXL.push({k:'ring',x,y,t:0,col:c,r0:r0||8,life:life||20});
+const boomFX=(x,y,c,n)=>{burst(x,y,n||30,[c[0],c[1],W],4,28);ring(x,y,c[0],10,24);ring(x,y,W,18,18);try{if(!RM)shakeA=Math.max(shakeA,9);flashA=Math.max(flashA,5);}catch(e){}sfx('boom');};
+const give=(f,k,sec)=>{(f.ib||(f.ib={}))[k]=FR+sec*60;};
+const steer=(f,sp)=>{const I=f.I||{};if(f.ctrl==='human')return[(I.x||0)*sp,(I.y||0)*sp];const o=near(f);if(!o)return[0,0];const dx=o.x-f.x,dy=(o.y-10)-f.y,l=Math.hypot(dx,dy)||1;return[dx/l*sp,dy/l*sp];};
+const gnd=x=>{const y=surfY(x,-200);return y===null?STAGE.main.y:y;};
+const glow2=(x,y,r,c,a)=>{try{glow(x,y,r,c,a);}catch(e){}};
+const T={};
+/* 1. AIM — a beam you swing up and down while it fires */
+T.aim={upd(e,f,d){lock(f);const I=f.I||{};if(f.ctrl==='human')e.a+=(I.y||0)*d.turn;else{const o=near(f);if(o){const w=clamp(Math.atan2((o.y-30)-(f.y-38),Math.abs(o.x-f.x)),-1.2,1.2);e.a+=clamp(w-e.a,-d.turn,d.turn);}}e.a=clamp(e.a,-1.25,1.25);if(e.t<12)return;
+  const ox=f.x+f.face*10,oy=f.y-38,ux=Math.cos(e.a)*f.face,uy=Math.sin(e.a);for(const o of foes(f)){const px=o.x-ox,py=o.y-30-oy,al=px*ux+py*uy,pp=Math.abs(py*ux-px*uy);if(al>0&&al<d.len&&pp<d.h/2+12&&!intangible(o)){if(tick(e,o,d.tick,d.ri,d.eff,1,0,0)){o.x+=ux*d.push;o.y+=uy*d.push*.5;}}}
+  if(e.t===d.dur-1){for(const o of foes(f))if(e.last[o.id]>e.t-18)fin(e,o,d.fin,f.face);}},
+ draw(e,f,d){const k=Math.min(1,e.t/12),ox=f.x+f.face*10,oy=f.y-38,L=d.len*k,h=d.h*(.8+.2*Math.sin(e.t*.7));X.save();X.translate(ox,oy);X.rotate(Math.atan2(Math.sin(e.a),Math.cos(e.a)*f.face));X.globalCompositeOperation='lighter';X.globalAlpha=.85;wr(d.col[0],0,-h/2,L,h);X.globalAlpha=1;wr(W,0,-h/5,L,h/2.5);for(let i=0;i<5;i++)wring(((e.t*9+i*70)%Math.max(1,L)),0,h*.6,d.col[1]||W,2);X.restore();glow2(ox,oy,30,d.col[0],.7);}};
+/* 2. FLY — you become the attack, and steer it */
+T.fly={init(e,f,d){e.px=f.x;e.py=f.y-30;if(d.remote){e.px=f.x+f.face*30;}},
+ upd(e,f,d){if(d.remote)lock(f);else{f.st='fs';f.mv=null;f.inv=Math.max(f.inv,4);f.ground=null;f.lx=f.ly=0;}const v=steer(d.remote?{I:f.I,ctrl:f.ctrl,x:e.px,y:e.py+10,team:f.team,id:f.id}:f,d.spd);if(d.remote&&f.ctrl!=='human'){const o=near(f,e.px,e.py);if(o){const dx=o.x-e.px,dy=o.y-30-e.py,l=Math.hypot(dx,dy)||1;v[0]=dx/l*d.spd;v[1]=dy/l*d.spd;}}
+  e.vx2=(e.vx2||0)*.8+v[0]*.2;e.vy2=(e.vy2||0)*.8+v[1]*.2;e.px=clamp(e.px+e.vx2,BLAST.l+60,BLAST.r-60);e.py=clamp(e.py+e.vy2,BLAST.t+70,STAGE.main.y+40);if(!d.remote){f.x=e.px;f.y=e.py+30;f.vx=f.vy=0;if(Math.abs(e.vx2)>.4)f.face=Math.sign(e.vx2);if(d.tiny)f.mini=4;}
+  if(e.t%2===0)part(e.px+rnd()*10-5,e.py+rnd()*10-5,-e.vx2*.2,-e.vy2*.2,14,rnd()<.5?d.col[0]:d.col[1],2,0);
+  for(const o of foes(f))if(Math.hypot(o.x-e.px,o.y-30-e.py)<d.r+10&&!intangible(o))tick(e,o,d.tick,d.ri,d.eff,d.kb||3,d.kg||.03,60,Math.sign(e.vx2)||f.face);
+  if(e.t===d.dur-1){if(d.end){boomFX(e.px,e.py,d.col,40);for(const o of foes(f))if(Math.hypot(o.x-e.px,o.y-30-e.py)<d.end)fin(e,o,d.fin);}if(!d.remote){f.vy=-3;f.mini=0;}}},
+ draw(e,f,d){X.save();X.globalCompositeOperation='lighter';glow2(e.px,e.py,d.r*2.2,d.col[0],.75);wring(e.px,e.py,d.r+Math.sin(e.t*.5)*3,d.col[1]||W,2);if(d.remote){const a=Math.atan2(e.vy2||0,e.vx2||f.face);X.translate(e.px,e.py);X.rotate(a);wpoly(d.col[0],[d.r+8,0,-d.r,-d.r*.8,-d.r*.5,0,-d.r,d.r*.8]);wdisc(d.r*.3,-d.r*.2,2.4,W);X.setTransform(1,0,0,1,0,0);}X.restore();}};
+/* 3. RAIN — things fall from the sky while you keep fighting */
+T.rain={upd(e,f,d){if(e.t<22)lock(f);else free(f);e.L=e.L||[];if(e.t>16&&e.t<d.dur-30&&e.t%d.every===0){const fo=foes(f),o=fo.length&&d.aimed?fo[fl(rnd()*fo.length)]:null,m=STAGE.main,x=o?o.x+(rnd()-.5)*d.spread:m.x+rnd()*m.w;e.L.push({x,y:CAM.y-WH/CAM.z/2-20,vy:d.fall||7,vx:d.slant||0,s:fl(rnd()*4)});}
+  for(const p of e.L){if(p.dead)continue;p.y+=p.vy;p.x+=p.vx;const gy=surfY(p.x,p.y-p.vy-2);let land=gy!==null&&p.y>=gy;for(const o of foes(f))if(Math.hypot(o.x-p.x,o.y-30-p.y)<d.r&&!intangible(o))land=true;
+   if(land||p.y>BLAST.b){p.dead=1;if(land){burst(p.x,p.y,10,[d.col[0],W],2.4,16);ring(p.x,p.y,d.col[0],5,14);sfx('thud');for(const o of foes(f))if(Math.hypot(o.x-p.x,o.y-20-p.y)<d.r+16&&!intangible(o))hit(e,o,d.tick,d.kb,d.kg,d.ang===undefined?75:d.ang,d.eff,o.x>=p.x?1:-1);}}}
+  if(e.t>=d.dur-1)free(f);},
+ draw(e,f,d){for(const p of(e.L||[])){if(p.dead)continue;X.save();X.translate(p.x,p.y);X.rotate(Math.atan2(p.vy,p.vx)-PI/2);shape(d.shape,d.col,p.s,e.t);X.restore();const gy=surfY(p.x,p.y);if(gy!==null){X.globalAlpha=.35;wr(d.col[0],p.x-d.r*.6,gy-1,d.r*1.2,2);X.globalAlpha=1;}}}};
+function shape(k,c,s,t){switch(k){case'meteor':wdisc(0,0,9,'#5a2a10');wdisc(0,0,7,c[0]);wdisc(-2,-2,3,c[1]);wtri(c[0],-6,-4,6,-4,0,-30);break;case'blade':wpoly('#e8ecf4',[0,12,-3,-10,3,-10]);wr('#5a4a3a',-4,-14,8,4);break;case'missile':wr('#c8ccd8',-3,-10,6,18);wtri('#e8283a',-3,8,3,8,0,14);wtri(c[0],-3,-10,3,-10,0,-18-(t%3)*2);break;
+  case'coin':wdisc(0,0,6,'#8a6a10');wdisc(0,0,5,'#ffd040');wr('#fff0a0',-1,-3,2,6);break;case'feather':wpoly(c[0],[0,12,-4,-6,0,-12,4,-6]);wl(W,0,10,0,-10,1);break;case'bolt':wpoly(c[0],[2,14,-5,0,0,0,-3,-14,5,-2,0,-2]);break;
+  case'note':wdisc(-2,6,4,c[0]);wr(c[0],1,-10,2,16);wr(c[0],1,-10,7,3);break;default:wdisc(0,0,7,c[0]);wdisc(0,0,4,W);}}
+/* 4. CROSS — a crosshair you move, and shots where you put it */
+T.cross={init(e,f,d){const o=near(f);e.cx=o?o.x:f.x+f.face*80;e.cy=o?o.y-30:f.y-40;e.n=0;},
+ upd(e,f,d){lock(f);const I=f.I||{};if(f.ctrl==='human'){e.cx+=(I.x||0)*d.spd;e.cy+=(I.y||0)*d.spd;}else{const o=near(f,e.cx,e.cy+30);if(o){e.cx+=clamp(o.x-e.cx,-d.spd*.8,d.spd*.8);e.cy+=clamp(o.y-30-e.cy,-d.spd*.8,d.spd*.8);}}e.cx=clamp(e.cx,CAM.x-WW/CAM.z/2+10,CAM.x+WW/CAM.z/2-10);e.cy=clamp(e.cy,CAM.y-WH/CAM.z/2+10,CAM.y+WH/CAM.z/2-10);
+  if(e.t>=d.first&&e.n<d.n&&(e.t-d.first)%d.every===0){e.n++;const last=e.n===d.n;boomFX(e.cx,e.cy,d.col,last?36:18);for(const o of foes(f))if(Math.hypot(o.x-e.cx,o.y-30-e.cy)<d.r+12&&!intangible(o)){if(last)fin(e,o,d.fin,o.x>=e.cx?1:-1);else hit(e,o,d.tick,3,.03,70,d.eff,o.x>=e.cx?1:-1);}e.bt=e.t;if(d.coins)for(let i=0;i<14;i++)part(e.cx,e.cy,rnd()*6-3,-rnd()*5,30,'#ffd040',2,.2);}},
+ draw(e,f,d){const r=d.r,p=1+.12*Math.sin(e.t*.5),nx=d.first+e.n*d.every-e.t;X.save();wring(e.cx,e.cy,r*p,DK,4);wring(e.cx,e.cy,r*p,d.col[0],2);for(const a of[0,PI/2,PI,PI*1.5])wl(d.col[0],e.cx+Math.cos(a)*(r*.5),e.cy+Math.sin(a)*(r*.5),e.cx+Math.cos(a)*(r*1.3),e.cy+Math.sin(a)*(r*1.3),2);wdisc(e.cx,e.cy,2,W);if(e.n<d.n&&nx<14){X.globalAlpha=.5;wring(e.cx,e.cy,r+nx*3,W,2);}X.restore();X.globalAlpha=1;}};
+/* 5. TRANS — no hit at all: you change, for a while */
+T.trans={upd(e,f,d){if(e.t<26){lock(f);return;}if(!e.done){e.done=1;free(f);if(d.heal)f.dmg=Math.max(0,f.dmg-d.heal);for(const k in(d.ib||{}))give(f,k,d.ib[k]);if(d.big)f.big=d.big;if(d.buff)f.buff={k:d.buff,until:FR+d.sec*60};if(d.counter)f._fsCounter=FR+d.counter*60;if(d.invis){give(f,'invis',d.invis);}boomFX(f.x,f.y-30,d.col,36);for(const o of foes(f))if(Math.hypot(o.x-f.x,o.y-f.y)<70)hit(e,o,d.tick||6,6,.06,55);}
+  if(d.aura&&e.t%d.aura[1]===0)for(const o of foes(f))if(Math.hypot(o.x-f.x,o.y-f.y)<d.aura[0]&&!intangible(o))hit(e,o,d.aura[2],1.4,0,70,d.eff);
+  if(d.turret&&e.t%d.turret===0){const o=near(f);if(o){f.face=o.x>=f.x?1:-1;spawnEnt(f,{k:'missile',n:1,life:90,r:6,dmg:6,bkb:4,kbg:.05,ang:60});}}
+  if(e.t%4===0)part(f.x+rnd()*24-12,f.y-rnd()*56,0,-1,16,rnd()<.5?d.col[0]:d.col[1],2,0);},
+ draw(e,f,d){X.save();X.globalCompositeOperation='lighter';glow2(f.x,f.y-30,d.aura?d.aura[0]:38,d.col[0],.35+.1*Math.sin(e.t*.3));wring(f.x,f.y-30,30+Math.sin(e.t*.2)*3,d.col[0],2);X.restore();const left=(d.dur-e.t)/d.dur;wr(DK,f.x-16,f.y-78,32,4);wr(d.col[0],f.x-15,f.y-77,30*left,2);}};
+/* 6. GRAB — one rival, up close. Miss and it is wasted; land it at high damage and they are gone */
+T.grab={upd(e,f,d){lock(f);if(!e.tg){if(e.t<d.win){const g=f.ground||STAGE.main,nx=f.x+f.face*d.spd;if(nx>g.x+6&&nx<g.x+g.w-6)f.x=nx;for(const o of foes(f))if(Math.abs(o.x-(f.x+f.face*16))<28&&Math.abs(o.y-f.y)<46&&!intangible(o)){e.tg=o;e.t0=e.t;releaseHolds(o);sfx('grab');break;}}else if(e.t>d.win+10){e.life=1;free(f);}return;}
+  const o=e.tg,k=e.t-e.t0;if(o.dead||o.gone){e.life=1;free(f);return;}hold(o);if(d.up){f.y-=Math.min(9,k*.5);f.ground=null;}o.x=f.x+f.face*18;o.y=f.y;if(k%d.ri===0&&k<d.hold){hit(e,o,d.tick,0,0,80);o.lx=o.ly=0;if(d.heal)f.dmg=Math.max(0,f.dmg-d.heal);burst(o.x,o.y-30,8,[d.col[0],W],2,12);}
+  if(k>=d.hold){if(d.ohko&&o.dmg>=d.ohko-.5&&MODE!=='training'){say(o.x,o.y-80,d.call||'FINISHED!',d.col[0]);boomFX(o.x,o.y-30,d.col,50);o.x=d.up?o.x:(f.face>0?BLAST.r+40:BLAST.l-40);o.y=d.up?BLAST.t-40:o.y;o.ground=null;o.st='air';ko(o);}else{boomFX(o.x,o.y-30,d.col,30);fin(e,o,d.fin,f.face);}e.life=1;free(f);if(d.up){f.vy=2;}}},
+ draw(e,f,d){X.save();X.globalCompositeOperation='lighter';glow2(f.x+f.face*18,f.y-30,44,d.col[0],.5);if(e.tg&&(e.t>>1)%2)star8(f.x+f.face*20,f.y-34,24,d.col[0]);if(d.up&&e.tg)for(let i=0;i<4;i++)wtri(i%2?d.col[0]:'#ffd040',f.x-6+i*4,f.y+4,f.x+i*4,f.y+4,f.x-3+i*4,f.y+22+rnd()*10);X.restore();}};
+/* 7. GLOBAL — nobody on screen is out of reach. Usually weak, with something that lingers */
+T.global={upd(e,f,d){if(e.t<d.at+14)lock(f);else free(f);if(e.t!==d.at)return;const L=foes(f).filter(o=>!d.range||Math.hypot(o.x-f.x,o.y-f.y)<d.range).sort((a,b)=>Math.abs(a.x-f.x)-Math.abs(b.x-f.x));let n=0;try{flashA=Math.max(flashA,8);if(!RM)shakeA=Math.max(shakeA,10);}catch(x){}sfx('smash');
+  for(const o of L){const dist=Math.hypot(o.x-f.x,o.y-f.y);let dm=d.dmg*(d.fall?Math.pow(d.fall,n):1),eff=d.eff;if(d.karma)dm=clamp((o.dealt||0)*.5,8,60);if(d.rand)eff=['freeze','burn','sleep','conf','para'][fl(rnd()*5)];
+   if(d.reap&&o.dmg>=d.reap&&MODE!=='training'){say(o.x,o.y-80,'REAPED',d.col[0]);boomFX(o.x,o.y-30,d.col,40);o.y=BLAST.t-40;o.ground=null;ko(o);n++;continue;}
+   const kb=d.roar?Math.max(2,d.kb*(1-dist/420)):d.kb||1.5;hit(e,o,dm,kb,d.kg||0,d.ang===undefined?60:d.ang,eff,d.yank?(f.x>=o.x?1:-1):undefined);
+   if(eff==='sleep'){o.st='dizzy';o.dz=d.long||200;o.sleepT=o.dz;}if(eff==='conf')o.confT=d.long||360;if(eff==='para')o.paraT=d.long||120;if(eff==='haze')o.hazeT=d.long||420;if(eff==='root'){o.rootT=d.long||170;o.vx=0;}if(eff==='poison'||eff==='burn')o.dot={n:d.dot||12,t:0,c:eff==='burn'?'#ff8020':'#a0ff40'};
+   if(d.drop){burst(o.x,o.y-30,16,[d.col[0],W],2.4,18);o.x=STAGE.main.x+STAGE.main.w/2+(rnd()-.5)*120;o.y=CAM.y-WH/CAM.z/2+10;o.ground=null;o.st='hit';o.hitstun=30;o.lx=0;o.ly=9;}
+   if(d.mind){o._mind=FR+d.mind;o._mindX=(o.x>STAGE.main.x+STAGE.main.w/2)?1:-1;}
+   if(d.yank){o.rootT=0;o.lx=(f.x-o.x)*.045;o.ly=-6;o.ground=null;}
+   ring(o.x,o.y-30,d.col[0],8,24);wlq.push([f.x,f.y-34,o.x,o.y-30,d.col[0],FR+14]);n++;}
+  if(d.dark)e.dark=1;for(const k in(d.ib||{}))give(f,k,d.ib[k]);},
+ draw(e,f,d){const k=e.t/d.dur;X.save();X.globalCompositeOperation='lighter';if(e.t<d.at+20){const r=(e.t/(d.at+20))*520;wring(f.x,f.y-30,r,d.col[0],4);wring(f.x,f.y-30,r*.7,W,2);}X.restore();
+  if(e.dark){const a=Math.min(.86,(e.t-d.at)/10)*Math.min(1,(d.dur-e.t)/20),vw=WW/CAM.z+60,vh=WH/CAM.z+60;X.globalAlpha=a;wr('#03020a',CAM.x-vw/2,CAM.y-vh/2,vw,vh);X.globalAlpha=1;wring(f.x,f.y-30,20,d.col[0],2);for(const o of foes(f)){wdisc(o.x-4,o.y-52,1.5,W);wdisc(o.x+4,o.y-52,1.5,W);}}}};
+const wlq=[];
+/* 8. TRAP — something is left on the stage, and it keeps working after you walk away */
+T.trap={init(e,f,d){const o=d.onFoe&&near(f);e.tx=o?o.x:f.x;e.ty=d.floor?(surfY(e.tx,(o?o.y:f.y)-6)===null?STAGE.main.y:surfY(e.tx,(o?o.y:f.y)-6)):(o?o.y-30:f.y-30)-(d.lift||0);},
+ upd(e,f,d){if(e.t<24)lock(f);else free(f);if(e.t<16)return;const R=d.r,end=e.t===d.dur-2;
+  for(const o of foes(f)){const dx=e.tx-o.x,dy=e.ty-(o.y-30),dd=Math.hypot(dx,dy)||1,inF=d.floor?(Math.abs(dx)<R&&o.ground&&Math.abs(o.y-e.ty)<10):dd<R;
+   if(d.pull&&dd<R*1.7&&dd>8&&!intangible(o)&&o.st!=='ledge'){o.x+=dx/dd*d.pull;if(!o.ground)o.y+=dy/dd*d.pull*.7;}
+   if(inF&&!intangible(o)){if(d.beat){if(e.t%d.beat===0){hit(e,o,d.tick,d.kb||5,.04,86,d.eff);}}else tick(e,o,d.tick,d.ri,d.eff,.3,0,80);if(d.slow)o.stickT=Math.max(o.stickT||0,20);}
+   if(end&&dd<R*1.2){if(d.reel){o.x=e.tx;o.y=e.ty+30;}fin(e,o,d.fin,o.x>=e.tx?1:-1);}}
+  if(d.beat&&e.t%d.beat===0){for(let i=0;i<5;i++){const x=e.tx+(i-2)*R*.4;burst(x,e.ty,8,[d.col[0],d.col[1]],3,18,.1);}sfx('boom');}
+  if(end){boomFX(e.tx,e.ty,d.col,36);}},
+ draw(e,f,d){const k=Math.min(1,e.t/16)*Math.min(1,(d.dur-e.t)/14),R=d.r,x=e.tx,y=e.ty;X.save();
+  if(d.floor){X.globalAlpha=.55*k;wr(d.col[0],x-R,y-3,R*2,5);X.globalAlpha=k;for(let i=0;i<12;i++){const px=x-R+(i+.5)*R/6,h=(d.spike||10)*(.6+.4*Math.sin(e.t*.2+i*1.7));wtri(i%2?d.col[0]:d.col[1],px-5,y,px+5,y,px,y-h);}}
+  else{X.globalCompositeOperation='lighter';glow2(x,y,R,d.col[0],.4*k);X.globalCompositeOperation='source-over';if(d.hole){wdisc(x,y,14*k+Math.sin(e.t*.3)*2,'#000000');wring(x,y,16*k,d.col[0],2);}
+   if(d.web){X.strokeStyle=d.col[1];X.globalAlpha=.7*k;X.lineWidth=1;for(let i=0;i<10;i++){const a=i/10*TAU;X.beginPath();X.moveTo(x,y);X.lineTo(x+Math.cos(a)*R,y+Math.sin(a)*R);X.stroke();}for(const q of[.3,.55,.8,1])wring(x,y,R*q,d.col[1],1);}
+   else for(let i=0;i<4;i++){const r=d.pull?R-((e.t*2+i*R/4)%R):((e.t*2+i*R/4)%R);X.globalAlpha=.5*k*(1-r/R*.5);wring(x,y,r,d.col[i%2],2);}}
+  X.restore();X.globalAlpha=1;}};
+/* 9. SUMMON — helpers come out and hunt for you */
+T.summon={init(e,f,d){e.U=[];for(let i=0;i<d.n;i++)e.U.push({x:d.run?(i%2?BLAST.l+80:BLAST.r-80):f.x+(i-(d.n-1)/2)*16,y:d.fly?f.y-50-i*8:f.y,vx:d.run?(i%2?1:-1)*d.spd:0,vy:0,i,d:d.run?i*26:0});},
+ upd(e,f,d){if(e.t<22)lock(f);else free(f);const fo=foes(f);for(const u of e.U){if(u.d>0){u.d--;continue;}if(d.run){u.x+=u.vx;u.y=STAGE.main.y;if(u.x<BLAST.l+60||u.x>BLAST.r-60)u.vx*=-1;}
+    else{const o=fo.length?fo[(u.i+fl(e.t/90))%fo.length]:null;if(o){const tx=o.x+Math.sin(e.t*.07+u.i*2)*14,ty=d.fly?o.y-30+Math.cos(e.t*.09+u.i)*14:o.y,dx=tx-u.x,dy=ty-u.y,l=Math.hypot(dx,dy)||1;u.vx=u.vx*.86+dx/l*d.spd*.14;u.x+=u.vx;if(d.fly){u.vy=u.vy*.86+dy/l*d.spd*.14;u.y+=u.vy;}else{const gy=surfY(u.x,u.y-20);u.y=gy===null?u.y+4:gy;}}}
+    for(const o of fo)if(Math.hypot(o.x-u.x,(o.y-(d.fly?30:14))-u.y)<d.r&&!intangible(o)){const key=o.id+'_'+u.i,l=e.hits[key];if(l===undefined||e.t-l>=d.ri){e.hits[key]=e.t;hit(e,o,d.tick,d.kb||2.4,d.kg||.012,65,d.eff,Math.sign(u.vx)||1);}}}
+  if(e.t===d.dur-1)for(const u of e.U){burst(u.x,u.y-10,10,[d.col[0],W],2,14);if(d.pop)for(const o of fo)if(Math.hypot(o.x-u.x,o.y-20-u.y)<34)fin(e,o,d.fin,o.x>=u.x?1:-1);}},
+ draw(e,f,d){for(const u of e.U){if(u.d>0)continue;const fc=Math.sign(u.vx)||1,b=Math.sin(e.t*.4+u.i)*2;X.save();X.translate(u.x,u.y+(d.fly?b:0));X.scale(fc,1);unit(d.unit,d.col,e.t+u.i*9);X.restore();}}};
+function unit(k,c,t){const st=Math.sin(t*.5)*3;switch(k){case'bee':wdisc(0,0,5,'#ffd040');wr(DK,-2,-5,2,10);wr(DK,2,-4,2,8);X.globalAlpha=.6;wdisc(-1,-6-(t%2)*2,4,W);X.globalAlpha=1;wtri(DK,-5,0,-9,-1,-5,2);break;
+  case'puppet':wr('#5a3a1e',-5,-22,10,14);wdisc(0,-27,5,'#e8c8a0');wr('#3a2a1a',-5,-8,3,8+st);wr('#3a2a1a',2,-8,3,8-st);wl('#c88aff',0,-32,0,-60,1);wl('#c88aff',-5,-20,-8,-56,1);break;
+  case'ink':wdisc(0,-10,9,DK);wdisc(5,-13,4,DK);wtri(DK,-8,-10,-20,-6+st,-8,-4);wdisc(7,-14,1.4,'#e8283a');break;
+  case'beast':wr('#7a5a3a',-12,-16,22,11);wdisc(12,-17,6,'#7a5a3a');wtri('#e8dcc0',14,-22,18,-28,16,-20);wr('#5a3a1e',-10,-6,3,6+st);wr('#5a3a1e',6,-6,3,6-st);wr('#5a3a1e',-2,-6,3,6-st);break;
+  case'clone':X.globalAlpha=.75;wr(c[0],-5,-34,10,20);wdisc(0,-40,6,c[1]);wr(c[0],-5,-14,4,14+st);wr(c[0],1,-14,4,14-st);X.globalAlpha=1;break;
+  default:wdisc(0,-8,7,c[0]);wdisc(2,-10,2,W);}}
+/* 10. TIME — the world stops, or drags, and you do not */
+T.time={upd(e,f,d){if(e.t<14){lock(f);return;}free(f);const on=e.t<d.dur-6;for(const o of foes(f)){if(on&&(!d.half||e.t%2===0)){o.hl=Math.max(o.hl,2);}if(e.t===d.dur-6&&!d.half){ring(o.x,o.y-30,d.col[0],8,22);if((o.dmg||0)>(e.d0&&e.d0[o.id]||0))fin(e,o,[4,6+Math.min(6,((o.dmg-(e.d0[o.id]||0))/8)),.06,45]);}}
+   if(e.t===14){e.d0={};for(const o of foes(f))e.d0[o.id]=o.dmg;give(f,d.half?'drink':'amp',d.dur/60);}
+   for(const p of ENT)if(on&&p.proj&&p.owner!==f&&!d.half){p.x-=p.vx;p.y-=p.vy;p.vy-=p.g;p.life++;}},
+ draw(e,f,d){const a=Math.min(1,(e.t-14)/10)*Math.min(1,(d.dur-e.t)/12),vw=WW/CAM.z+60,vh=WH/CAM.z+60;if(a<=0)return;X.save();X.globalAlpha=.22*a;wr(d.col[0],CAM.x-vw/2,CAM.y-vh/2,vw,vh);X.globalAlpha=.9*a;const cx=CAM.x,cy=CAM.y-vh/2+34;wring(cx,cy,16,W,2);wl(W,cx,cy,cx,cy-12,2);wl(W,cx,cy,cx+Math.cos(e.t*(d.half?.05:0))*9,cy+Math.sin(e.t*(d.half?.05:0))*9,2);
+  X.globalAlpha=.8*a;wr(DK,cx-41,cy+22,82,5);wr(d.col[0],cx-40,cy+23,80*(1-e.t/d.dur),3);X.restore();X.globalAlpha=1;}};
+/* 11. DIVE — up out of sight, then down where you choose */
+T.dive={init(e,f,d){e.n=d.n||1;e.ph=0;e.tx=f.x;},
+ upd(e,f,d){lock(f);f.inv=Math.max(f.inv,6);const k=e.t-(e.t1||0);if(e.ph===0){f.y-=14;f.ground=null;if(k>=10){e.ph=1;e.t1=e.t;const o=near(f);e.tx=o?o.x:f.x;f.y=BLAST.t+20;}}
+  else if(e.ph===1){const I=f.I||{};if(f.ctrl==='human'&&d.steer)e.tx+=(I.x||0)*d.steer;else{const o=near(f,e.tx,STAGE.main.y);if(o)e.tx+=clamp(o.x-e.tx,-(d.track||3),d.track||3);}e.tx=clamp(e.tx,BLAST.l+70,BLAST.r-70);f.x=e.tx;f.y=BLAST.t+20;if(k>=d.wait){e.ph=2;e.t1=e.t;const o=near(f,e.tx,STAGE.main.y),sy=o?surfY(e.tx,o.y-6):null;e.gy=sy===null?gnd(e.tx):sy;}}
+  else if(e.ph===2){f.x=e.tx;f.y=Math.min(e.gy,f.y+d.fall);if(f.y>=e.gy){f.y=e.gy;f.ground=groundBelow(f.x,f.y-4)||null;boomFX(f.x,f.y-6,d.col,40);for(const o of foes(f)){const dd=Math.hypot(o.x-f.x,o.y-f.y);if(dd<d.r&&!intangible(o)){fin(e,o,e.n>1?[d.fin[0]*.5,d.fin[1]*.6,d.fin[2]*.6,d.fin[3]]:d.fin,o.x>=f.x?1:-1);if(d.eff==='poison')o.dot={n:16,t:0,c:'#a0ff40'};}
+     else if(d.wave&&o.ground&&Math.abs(o.x-f.x)<d.wave&&Math.abs(o.y-f.y)<12&&!intangible(o))hit(e,o,d.tick||8,5,.05,80);}
+    if(d.wave)for(const s of[-1,1])for(let i=1;i<=6;i++)part(f.x+s*i*d.wave/6,f.y-2,s*2,-2-rnd()*2,18,d.col[0],3,.15);e.n--;if(e.n>0){e.ph=0;e.t1=e.t;}else{e.ph=3;e.t1=e.t;}}}
+  else if(k>=14){e.life=1;free(f);for(const q in(d.ib||{}))give(f,q,d.ib[q]);}},
+ draw(e,f,d){if(e.ph===1){const gy=gnd(e.tx),p=((e.t-e.t1)/d.wait);X.save();X.globalAlpha=.5+.4*p;wring(e.tx,gy-2,d.r*(1.2-p*.4),d.col[0],2);wl(d.col[0],e.tx,gy,e.tx,gy-400,1);wtri(d.col[0],e.tx-7,gy-20,e.tx+7,gy-20,e.tx,gy-6);X.restore();X.globalAlpha=1;}if(e.ph===2){X.save();X.globalCompositeOperation='lighter';wr(d.col[0],f.x-10,f.y-160,20,150);wr(W,f.x-4,f.y-160,8,150);X.restore();}
+  if(d.darkSky&&e.ph>0&&e.ph<3){const vw=WW/CAM.z+60,vh=WH/CAM.z+60;X.globalAlpha=.5;wr('#03020a',CAM.x-vw/2,CAM.y-vh/2,vw,vh);X.globalAlpha=1;}}};
+/* 12. COLUMN — a marker under each rival, then a pillar. Keep moving and it misses */
+T.column={init(e,f,d){e.P=[];e.v=0;},
+ upd(e,f,d){lock(f);if(e.v<d.n&&e.t>=14+e.v*d.every){for(const o of foes(f))e.P.push({x:o.x+(o.vx||0)*d.lead,t:e.t,v:e.v});e.v++;}
+  for(const p of e.P){const k=e.t-p.t;if(k===d.tele){const eff=d.effs?d.effs[p.v%d.effs.length]:d.eff;burst(p.x,gnd(p.x),14,[d.col[p.v%2],W],3,20,.1);sfx('boom');for(const o of foes(f))if(Math.abs(o.x-p.x)<d.r+8&&!intangible(o)){hit(e,o,d.tick,p.v===d.n-1?d.fin[1]:4.5,p.v===d.n-1?d.fin[2]:.04,86,eff);if(eff==='root')o.rootT=120;if(eff==='stick')o.stickT=200;}}}
+  if(e.t>=14+(d.n-1)*d.every+d.tele+16){e.life=1;free(f);}},
+ draw(e,f,d){for(const p of e.P){const k=e.t-p.t,gy=gnd(p.x),c=d.cols?d.cols[p.v%d.cols.length]:d.col[0];X.save();if(k<d.tele){X.globalAlpha=.4+.5*k/d.tele;wr(c,p.x-d.r,gy-2,d.r*2,3);wring(p.x,gy-2,d.r*(1.4-k/d.tele*.4),c,1.5);}else if(k<d.tele+12){const a=1-(k-d.tele)/12;X.globalCompositeOperation='lighter';X.globalAlpha=a;wr(c,p.x-d.r,gy-420,d.r*2,420);wr(W,p.x-d.r*.4,gy-420,d.r*.8,420);}X.restore();X.globalAlpha=1;}}};
+/* 13. SWEEP — back and forth across the whole stage, faster than anyone can follow */
+T.sweep={init(e,f,d){e.pass=0;e.dir=f.face;e.sy=f.y;},
+ upd(e,f,d){lock(f);f.inv=Math.max(f.inv,6);if(e.t<10)return;f.ground=null;f.x+=e.dir*d.spd;f.y=e.sy+(d.arc?Math.sin((e.t-10)*.2)*d.arc:0);f.face=e.dir;if(e.t%2===0)part(f.x-e.dir*10,f.y-30+rnd()*30-15,-e.dir*3,0,12,d.col[fl(rnd()*2)],2,0);
+  for(const o of foes(f))if(Math.abs(o.x-f.x)<26&&Math.abs(o.y-f.y)<d.h&&!intangible(o)){const key=o.id+'_'+e.pass;if(e.hits[key]===undefined){e.hits[key]=e.t;const last=e.pass>=d.n-1;if(last)fin(e,o,d.fin,e.dir);else{hit(e,o,d.tick,2,0,d.lift?88:75,d.eff,e.dir);o.lx*=.3;if(d.lift){o.ly=-5;o.ground=null;}}if(d.bleed)o.dot={n:10,t:0,c:'#ff8020'};}}
+  if((e.dir>0&&f.x>BLAST.r-70)||(e.dir<0&&f.x<BLAST.l+70)){e.pass++;e.dir*=-1;const o=near(f);if(o&&d.seek)e.sy=o.y;if(e.pass>=d.n){e.life=1;const m=STAGE.main;f.x=m.x+m.w/2;f.y=m.y-80;f.vy=0;free(f);}}},
+ draw(e,f,d){X.save();X.globalCompositeOperation='lighter';for(let i=1;i<6;i++){X.globalAlpha=.5-i*.08;wr(d.col[i%2],f.x-e.dir*i*26-10,f.y-52,20,50);}glow2(f.x,f.y-30,40,d.col[0],.7);X.restore();X.globalAlpha=1;}};
+/* 14. BLINK — to each rival in turn */
+T.blink={init(e,f,d){e.q=0;e.hx=f.x;e.hy=f.y;},
+ upd(e,f,d){lock(f);f.inv=Math.max(f.inv,6);if(e.t<8||(e.t-8)%d.every!==0)return;const fo=foes(f);if(e.q>=d.n||!fo.length){f.x=e.hx;f.y=e.hy;f.ground=groundBelow(f.x,f.y-4)||null;e.life=1;free(f);return;}const o=fo[e.q%fo.length],last=e.q>=d.n-fo.length;burst(f.x,f.y-30,10,[d.col[0],W],2,14);f.x=o.x-(e.q%2?1:-1)*20;f.y=o.y;f.face=o.x>=f.x?1:-1;sfx('warp');ring(f.x,f.y-30,d.col[0],6,12);
+  if(!intangible(o)){if(last)fin(e,o,d.fin,f.face);else{hit(e,o,d.tick,1,0,80,d.eff,f.face);hold(o);o.hitstun=d.every+4;}}e.q++;},
+ draw(e,f,d){X.save();X.globalCompositeOperation='lighter';glow2(f.x,f.y-30,34,d.col[0],.6);for(let i=0;i<3;i++)wring(f.x,f.y-30,10+((e.t*3+i*12)%30),d.col[i%2],1.5);X.restore();}};
+/* 15. NOVA — one blast, centred on you. The closer they are, the worse it is */
+T.nova={upd(e,f,d){lock(f);if(e.t===d.at){boomFX(f.x,f.y-30,d.col,70);for(const o of foes(f)){const dd=Math.hypot(o.x-f.x,o.y-f.y);if(dd<d.r&&!intangible(o)){const k=1-dd/d.r*.6;applyHit(o,{dmg:d.fin[0]*k,bkb:d.fin[1]*k,kbg:d.fin[2]*k,ang:d.fin[3],eff:d.eff,fx:d.col,pierce:1},o.x>=f.x?1:-1,f,{force:1});}}if(d.self)f.dmg=Math.min(999,f.dmg+d.self);}if(e.t>=d.at+24){e.life=1;free(f);}},
+ draw(e,f,d){X.save();X.globalCompositeOperation='lighter';if(e.t<d.at){const k=e.t/d.at;glow2(f.x,f.y-30,20+k*30,d.col[0],.8);for(let i=0;i<10;i++){const a=i/10*TAU+e.t*.2,r=d.r*(1-k);wdisc(f.x+Math.cos(a)*r,f.y-30+Math.sin(a)*r,3,d.col[i%2]);}}else{const k=(e.t-d.at)/24;X.globalAlpha=1-k;glow2(f.x,f.y-30,d.r*(.4+k),d.col[0],1);wring(f.x,f.y-30,d.r*(.3+k*.9),W,5*(1-k)+1);}X.restore();X.globalAlpha=1;}};
+/* 16. VICE — two walls close in from the sides of the screen */
+T.vice={init(e,f,d){e.l=CAM.x-WW/CAM.z/2-10;e.r=CAM.x+WW/CAM.z/2+10;e.c=f.x;},
+ upd(e,f,d){if(e.t<20)lock(f);else free(f);if(e.t<14)return;const gap=d.gap;if(e.r-e.l>gap){e.l+=Math.min(d.spd,(e.c-gap/2)-e.l);e.r-=Math.min(d.spd,e.r-(e.c+gap/2));e.l=Math.min(e.l,e.c-gap/2);e.r=Math.max(e.r,e.c+gap/2);}
+  for(const o of foes(f)){if(intangible(o)||o.st==='ledge')continue;if(o.x<e.l+8){o.x=e.l+8;tick(e,o,d.tick,d.ri,null,.3,0,80);}if(o.x>e.r-8){o.x=e.r-8;tick(e,o,d.tick,d.ri,null,.3,0,80);}}
+  if(e.t===d.dur-1){boomFX(e.c,f.y-30,d.col,40);for(const o of foes(f))if(o.x>e.l-4&&o.x<e.r+4&&e.r-e.l<=gap+2)fin(e,o,d.fin,o.x>=e.c?1:-1);}},
+ draw(e,f,d){const a=Math.min(1,(e.t-10)/8)*Math.min(1,(d.dur-e.t)/8),top=CAM.y-WH/CAM.z/2-20,h=WH/CAM.z+40;if(a<=0)return;X.save();for(const[x,s]of[[e.l,-1],[e.r,1]]){X.globalAlpha=.3*a;wr(d.col[0],s<0?x-400:x,top,400,h);X.globalAlpha=.9*a;wr(W,x-1,top,2,h);for(let i=0;i<8;i++)wr(d.col[1],x-3,top+((e.t*4+i*60)%h),6,10);}X.restore();X.globalAlpha=1;}};
+/* 17. PUSH — a wall that shoves instead of catching: sideways, both ways at once, or straight up */
+T.push={init(e,f,d){e.w1=f.x;e.w2=f.x;e.wy=STAGE.main.y+60;},
+ upd(e,f,d){if(e.t<20)lock(f);else if(!d.keep)free(f);else lock(f);if(e.t<12)return;const fo=foes(f);
+  if(d.up){e.wy-=d.spd;for(const o of fo)if(o.y>e.wy&&!intangible(o)&&o.st!=='ledge'){o.y=e.wy;o.ground=null;o.vy=Math.min(o.vy,-d.spd);tick(e,o,d.tick,d.ri,d.eff,.3,0,90);hold(o);o.hitstun=6;}if(e.t===d.dur-1)for(const o of fo)if(e.last[o.id]>e.t-12)fin(e,o,d.fin);return;}
+  e.w1+=f.face*d.spd;if(d.both)e.w2-=f.face*d.spd;{const m=STAGE.main;e.w1=clamp(e.w1,m.x-26,m.x+m.w+26);e.w2=clamp(e.w2,m.x-26,m.x+m.w+26);}for(const[wx,dir]of(d.both?[[e.w1,f.face],[e.w2,-f.face]]:[[e.w1,f.face]]))for(const o of fo){if(intangible(o)||o.st==='ledge')continue;if((o.x-wx)*dir<10&&(o.x-wx)*dir>-(d.w||40)&&o.y>f.y-d.h&&o.y<f.y+50){o.x=wx+dir*10;tick(e,o,d.tick,d.ri,d.eff,.3,0,d.lift?88:40,dir);if(d.lift){o.y-=2.2;o.ground=null;}}}
+  if(e.t===d.dur-1){for(const o of fo)if(e.last[o.id]>e.t-70)fin(e,o,d.fin,o.x>=f.x?1:-1);if(d.leave){const t2={T:'trap',floor:1,r:d.leave[0],dur:d.leave[1],tick:1.5,ri:20,eff:'stick',slow:1,fin:[0,0,0,60],col:d.col,spike:5};const g=E2(f,t2);g.tx=STAGE.main.x+STAGE.main.w/2;g.ty=STAGE.main.y;g.t=20;}}},
+ draw(e,f,d){X.save();const c=d.col,a=Math.min(1,(e.t-8)/8)*Math.min(1,(d.dur-e.t)/8);if(a<=0){X.restore();return;}X.globalAlpha=a;
+  if(d.up){const vw=WW/CAM.z+40,x0=CAM.x-vw/2;X.globalAlpha=.8*a;wr('#05040c',x0,e.wy,vw,600);X.globalAlpha=a;wr(c[0],x0,e.wy-2,vw,3);X.font='7px "Press Start 2P", monospace';X.textAlign='center';X.fillStyle=W;['A GAME BY DARINGDUCK96','STARRING: EVERYONE HERE','NO HIPPOS WERE HARMED','THANK YOU FOR PLAYING','THE END?'].forEach((s,i)=>X.fillText(s,CAM.x,e.wy+24+i*26));}
+  else for(const[wx,dir]of(d.both?[[e.w1,f.face],[e.w2,-f.face]]:[[e.w1,f.face]])){const h=d.h;for(let i=0;i<5;i++){wpoly(i%2?c[1]:c[0],[wx-dir*(d.w||40),f.y+30,wx-dir*((d.w||40)*.6),f.y+30-h*(.7+i*.05),wx+dir*(8-i*3),f.y+30-h*(1-i*.08),wx+dir*(14-i*3),f.y+30]);}if(d.hands)for(let i=0;i<4;i++){const y=f.y-20-i*h/5;wdisc(wx+dir*8,y,9,c[0]);for(let q=-1;q<=1;q++)wr(c[0],wx+dir*12-2,y+q*5-2,dir*8,4);}}
+  X.restore();X.globalAlpha=1;}};
+/* ---------- the engine ---------- */
+function E2(f,d){const e={k:'fs2',attached:1,owner:f,d,t:0,alive:true,life:d.dur+2,x:f.x,y:f.y-30,face:f.face,hits:{},last:{},a:0,dmg:0,r:0,spec:{}};const k=T[d.T];if(k&&k.init)k.init(e,f,d);ENT.push(e);return e;}
+EK.fs2={upd(e){const f=e.owner,d=e.d;try{if(!f||f.dead||f.gone){e.alive=false;return;}e.life=Math.min(e.life,d.dur+2-e.t+1);T[d.T].upd(e,f,d);if(e.t>=d.dur||e.life<=1){e.alive=false;free(f);if(d.tiny)f.mini=0;if(d.call&&!e._c){e._c=1;}}}catch(x){FN.err=FN.err||(f&&f.C.id)+' '+String(x&&x.stack||x);e.alive=false;try{free(f);}catch(y){}}},
+ draw(e){try{T[e.d.T].draw(e,e.owner,e.d);for(let i=wlq.length-1;i>=0;i--){const q=wlq[i];if(q[5]<FR){wlq.splice(i,1);continue;}X.globalAlpha=(q[5]-FR)/14;wl(q[4],q[0],q[1],q[2],q[3],3);wl(W,q[0],q[1],q[2],q[3],1);X.globalAlpha=1;}}catch(x){FN.err=FN.err||'draw '+String(x&&x.stack||x);}}};
+{const b0=beginFS;beginFS=function(f){const d=f&&f.fsd;if(d&&d.T&&T[d.T]){try{if(d.healNow)f.dmg=Math.max(0,f.dmg-d.healNow);const o=opp(f);if(o&&!o.dead&&o.x!==f.x)f.face=Math.sign(o.x-f.x);E2(f,d);sfx('boom');if(!RM)shakeA=8;if(d.call)FXL.push({k:'txt2',s:d.call,x:CAM.x,y:CAM.y-70,t:0,life:70,col:d.col[0]});return;}catch(x){FN.err=FN.err||String(x);}}return b0.apply(this,arguments);};}
+/* Ali's Mind Break walks a rival toward the nearest edge; Kal's foresight answers every attack */
+if(typeof procIn==='function'){const p0=procIn;procIn=function(f,r){if(f&&f._mind>FR&&f.st!=='hit')r={x:f._mindX||1,y:0,A:0,B:0,J:0,S:0,G:0};return p0.call(this,f,r);};}
+if(typeof preHit==='function'){const p1=preHit;preHit=function(t,h,a,o){try{if(t._fsCounter>FR&&a&&a!==t&&!(o&&o.force)){if((t._fcT||0)<FR){t._fcT=FR+14;FXL.push({k:'txt',s:'SAW IT COMING',x:t.x,y:t.y-84,t:0,life:36,col:'#ffe060'});burst(t.x,t.y-30,10,['#ffe060',W],2,14);if(!(o&&o.proj)&&Math.hypot(a.x-t.x,a.y-t.y)<90)applyHit(a,{dmg:12,bkb:6,kbg:.07,ang:45,fx:['#ffe060']},a.x>=t.x?1:-1,t,{force:1});}if(h&&h.hits&&h.t!==undefined)h.hits[t.id]=h.t;return true;}}catch(e){}return p1.apply(this,arguments);};}
+{const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const f of F){if(f._fsCounter>FR&&FR%5===0)part(f.x+rnd()*20-10,f.y-rnd()*56,0,-.8,14,'#ffe060',2,0);if(f._mind>FR&&FR%6===0)part(f.x+rnd()*14-7,f.y-60-rnd()*8,0,-.5,12,'#c8a0ff',2,0);}}catch(e){}return r;};}
+/* ---------- who gets what ---------- */
+const C=(a,b)=>[a,b||W];
+const N={
+ kouji:{T:'column',n:3,every:26,tele:22,lead:6,r:20,tick:11,fin:[0,9.5,.105,86],cols:['#fff6c0','#3a2a6a'],col:C('#fff6c0','#3a2a6a'),dur:140,d:'Three volleys of light and shadow fall on every rival wherever they stand. Each is marked for a moment first, so keep moving.'},
+ suze:{T:'summon',n:7,fly:1,spd:5.2,r:16,ri:30,tick:1.3,eff:'stick',unit:'bee',col:C('#ffd040','#1a1a1a'),dur:420,d:'Seven of her swarm hunt rivals for seven seconds, each sting leaving them sticky. She is free to fight alongside them.'},
+ uchuu:{T:'trap',r:120,pull:2.6,hole:1,tick:1.4,ri:11,fin:[18,10.5,.12,60],col:C('#b890ff','#ffe890'),dur:300,lift:20,d:'Leaves a black hole where he stands for five seconds. It drags everyone toward it, and detonates at the end.'},
+ shuko:{T:'global',at:18,dmg:9,eff:'haze',long:540,kb:1.5,dark:0,col:C('#d8d0c0','#8a8478'),dur:60,ib:{invis:6},d:'Ash covers the whole stage: every rival is slowed for nine seconds, and he vanishes into it for six.'},
+ riku:{T:'fly',tiny:1,spd:6,r:12,ri:10,tick:2,kb:1,kg:0,end:64,fin:[24,10.5,.125,80],col:C('#7ae0ff','#ffffff'),dur:210,d:'Shrinks to nothing and cannot be hit. Steer him for three and a half seconds, then he springs to full size fist-first wherever he is.'},
+ sanshou:{T:'trans',ib:{armor:12,gloves:12,amp:12},col:C('#9ad88a','#5a5650'),dur:720,sec:12,d:'No attack at all. For twelve seconds his plating thickens: he takes far less, hits harder, and weak hits no longer move him.'},
+ kairi:{T:'global',at:20,dmg:13,eff:'para',long:200,kb:1,col:C('#ff8ac8','#e8f4ff'),dur:70,d:'Her bloom reaches the whole screen. Everyone is paralysed for over three seconds. It will not finish anyone by itself.'},
+ kichi:{name:'THOUSAND LINKS',type:'zone',r:300,dur:70,tick:1.6,ri:9,pull:1,fin:[19,10.6,.128,70],col:C('#c8ccd8','#ffffff'),vis:'gen',d:'Chains catch everyone within a huge radius and drag them all the way to him before the slam.'},
+ tamashi:{T:'summon',n:5,spd:3.6,r:18,ri:40,tick:3,kb:3.4,kg:.02,unit:'puppet',pop:1,fin:[10,7,.08,70],col:C('#c88aff','#7a5230'),dur:480,d:'Five marionettes walk the stage for eight seconds, hitting whoever they reach, and burst when the strings are cut.'},
+ akemi:{T:'time',col:C('#7ae0ff','#ffffff'),dur:250,d:'Everything stops but her for four seconds. Every hit she lands in that time arrives at once when the clock restarts.'},
+ taru:{T:'column',n:4,every:20,tele:20,lead:5,r:18,tick:9,effs:['burn','stick','stun','root'],cols:['#ff6a1a','#3ab8ff','#b8864a','#5ad06a'],fin:[0,9.5,.1,86],col:C('#ff6a1a','#5ad06a'),dur:130,d:'Fire, water, rock and vine in turn, each a pillar under every rival: one burns, one soaks and slows, one stuns, one roots.'},
+ sai:{T:'rain',shape:'blade',every:3,r:18,tick:4,kb:2,kg:.01,fall:10,col:C('#e8ecf4','#8a94a8'),dur:260,d:'Blades fall across the whole stage for four seconds. Each is weak; there are a great many, and he can fight while they fall.'},
+ tenmetsu:{T:'blink',n:9,every:9,tick:4.5,fin:[13,9.6,.11,50],col:C('#5ad8ff','#ffffff'),dur:120,d:'Blinks to every rival in turn, three times round, and ends back where he started. Nobody is too far away.'},
+ yado:{T:'dive',wait:26,fall:26,r:44,track:6,eff:'poison',fin:[20,9,.1,70],col:C('#a0ff40','#e8283a'),dur:120,d:'One enormous leap that tracks a rival by itself. It hits hard, and the toxin keeps hurting for a long time after.'},
+ hari:{T:'aim',len:520,h:14,turn:.07,tick:1.9,ri:5,push:1.2,fin:[14,10.6,.125,40],col:C('#ffe890','#ffffff'),dur:120,d:'A thin lance of light across the whole screen. Swing it up and down while it fires: narrow, fast, and very long.'},
+ toguchi:{T:'global',at:20,dmg:16,drop:1,kb:0,col:C('#8a60ff','#5ad8ff'),dur:60,d:'A portal opens under every rival and drops them out of the sky above the stage, tumbling.'},
+ pitto:{T:'grab',spd:8,win:16,hold:54,ri:6,tick:3.4,ohko:110,fin:[14,10,.11,45],call:'KNOCKOUT!',col:C('#e0a050','#ff3a5a'),dur:110,d:'A rush that only catches one rival, up close. Nine punches, then the big one: if they are at 110% or more after the combo, they are out, wherever they are standing.'},
+ maho:{T:'rain',shape:'meteor',aimed:1,spread:120,every:9,r:22,tick:10,kb:6.5,kg:.07,eff:'burn',fall:8,slant:1.5,col:C('#ff6a1a','#ffd040'),dur:300,d:'Meteors fall near his rivals for five seconds while he keeps fighting. Each one can launch.'},
+ raion:{T:'global',at:16,dmg:10,roar:1,kb:13,kg:.05,ang:35,eff:'stun',col:C('#ffd27a','#ffffff'),dur:60,d:'A roar that throws everyone on screen away from him. The closer they stand, the further they go; from across the stage it is only a shove.'},
+ tsuki:{T:'fly',remote:1,spd:7,r:22,ri:14,tick:2.6,kb:3.2,kg:.035,end:70,fin:[14,9.6,.11,70],col:C('#5fd0ff','#e8fdff'),dur:300,d:'A water dragon she steers from where she stands for five seconds. She cannot move while it flies.'},
+ rei:{T:'time',half:1,col:C('#ffe890','#ffffff'),dur:420,d:'Bullet time. For seven seconds every rival moves at half speed, and he moves a little faster.'},
+ tai:{T:'trans',heal:60,ib:{regen:15},tick:4,col:C('#7af0a0','#ffffff'),dur:120,sec:2,d:'No real attack. Heals 60% at once and keeps healing for fifteen seconds.'},
+ hatsuko:{name:'NECROTIC REQUIEM',type:'beam',len:340,h:60,dur:104,tick:1.9,ri:6,fin:[17,10.6,.128,40],col:C('#b04aff','#16161c'),vis:'gen',scale:1,d:'A beam down the lane that hits harder the more damage she has taken herself: at 150% it does more than twice as much.'},
+ ginko:{T:'fly',spd:8.5,r:22,ri:10,tick:3.2,kb:4.5,kg:.05,end:90,fin:[20,10.5,.125,60],col:C('#ffe890','#ff8a3a'),dur:240,d:'Four seconds of free flight at full speed, hitting everything she passes through, ending in a supernova where she stops.'},
+ makiko:{T:'global',at:20,dmg:6,eff:'sleep',long:260,kb:0,col:C('#ffb8e0','#2a1a4a'),dur:70,d:'Everyone on screen falls asleep for over four seconds. It does almost no damage; what she does next is the Finale.'},
+ koki:{T:'grab',spd:9,win:18,hold:48,ri:8,tick:5,heal:4,fin:[16,10.4,.12,40],col:C('#6a8aa8','#e8283a'),dur:110,d:'Catches one rival in his jaws. Six bites, each healing him, then throws them.'},
+ hana:{name:'THOUSAND CUTS',type:'rush',spd:11,win:22,dur:88,tick:1.9,ri:3,eff:'burn',fin:[16,10.4,.125,50],col:C('#c8ccd8','#e8283a'),vis:'gen',d:'A blur of cuts on one rival. The launch is ordinary; the bleeding afterwards is not.'},
+ tomi:{T:'trans',big:900,ib:{amp:15,armor:15},col:C('#ffd27a','#ffffff'),dur:900,sec:15,d:'Grows to full height for fifteen seconds: bigger, harder to launch, and hitting far harder.'},
+ yoko:{T:'trap',r:100,pull:2.2,tick:1.8,ri:13,fin:[16,11,.12,90],col:C('#c88aff','#1a0a2a'),dur:210,d:'A gravity well where she stands for three and a half seconds. It crushes whoever it drags in, then throws them straight up.'},
+ chiyoki:{T:'global',at:18,dmg:9,eff:'conf',long:420,kb:1.5,col:C('#ffe060','#ff60c0'),dur:60,d:'Nobody is out of earshot. Every rival has their controls reversed for seven seconds.'},
+ yurei:{T:'trans',ib:{phase:8,amp:8},invis:8,col:C('#c8d8ff','#ffffff'),dur:480,sec:8,d:'Becomes a ghost for eight seconds: unseen, untouchable, and hitting harder. Nothing can hurt her until it ends.'},
+ ivan:{T:'push',spd:5,w:46,h:150,tick:2,ri:9,hands:1,keep:1,fin:[14,9.6,.11,35],col:C('#b06aff','#e0d0ff'),dur:130,d:'A wall of giant hands that does not catch anyone: it shoves, all the way to the edge of the stage and off it.'},
+ bisu:{T:'summon',n:8,run:1,spd:7.5,r:22,ri:14,tick:4.5,kb:5,kg:.05,unit:'beast',col:C('#7a5a3a','#e8dcc0'),dur:330,d:'A stampede crosses the stage from both sides, again and again, for five seconds. Stay off the ground.'},
+ kurai:{T:'dive',n:3,wait:14,fall:30,r:36,track:9,darkSky:1,fin:[26,10.4,.12,65],col:C('#c8b890','#ffffff'),dur:200,d:'The lights go out and he drops on a rival three times, silently. Only the last one launches hard.'},
+ homura:{T:'trap',floor:1,r:120,beat:30,tick:8,kb:6,eff:'burn',spike:14,fin:[14,10,.115,86],col:C('#ff6a1a','#5a1408'),dur:390,d:'The floor around him becomes a caldera for six seconds, erupting on every beat. He is free to push people into it.'},
+ kuragari:{T:'trap',r:130,web:1,slow:1,tick:1.1,ri:16,reel:1,eff:'poison',fin:[15,10,.115,80],col:C('#16161c','#e8e8f0'),dur:330,d:'Strings a web across the area for five seconds. Anyone in it is slowed and poisoned, and at the end reeled to the middle and bitten.'},
+ mia:{T:'vice',spd:6,gap:60,tick:2,ri:10,fin:[20,10.6,.125,85],col:C('#c8a0ff','#ffffff'),dur:112,d:'Two force fields close in from the sides of the screen and squeeze everyone between them into one spot, then crush.'},
+ shi:{T:'global',at:22,dmg:20,reap:100,kb:4,kg:.04,col:C('#8a2a3a','#16161c'),dur:70,d:'The harvest. Every rival on screen at 100% or more is taken outright. Anyone below that takes 20% and survives.'},
+ takeshi:{T:'summon',n:4,fly:1,spd:4.6,r:20,ri:36,tick:3.4,kb:3.6,kg:.03,unit:'ink',col:C('#16161c','#e8283a'),dur:420,d:'Four tattoos come off his skin as ink beasts and hunt rivals through the air for seven seconds.'},
+ ali:{T:'global',at:20,dmg:10,mind:140,kb:0,range:400,col:C('#c8a0ff','#ffffff'),dur:60,d:'Reaches into every mind in range: for over two seconds each rival walks toward the nearest edge and can do nothing about it.'},
+ daku:{T:'trans',buff:'overheat',ib:{amp:10,speed:10},aura:[46,20,3],eff:'burn',col:C('#ff4a1a','#2a1a1a'),dur:600,sec:10,d:'Ten seconds as the hound: faster, stronger, and burning everything that stands near him.'},
+ kongu:{T:'grab',spd:8,win:18,hold:40,ri:10,tick:6,up:1,fin:[22,11.2,.13,270],col:C('#e8e8f0','#5a5a6a'),dur:110,d:'Grabs one rival, carries them into the sky and throws them straight down. On the stage they bounce; off it, they do not come back.'},
+ hippo:{T:'push',up:1,spd:3,tick:2,ri:9,fin:[12,10,.12,90],col:C('#6aa8ff','#ffffff'),dur:150,d:'The credits roll up from the bottom of the screen and carry everyone toward the top with them.'},
+ dawson:{T:'cross',n:4,first:26,every:30,spd:6,r:30,tick:11,fin:[18,10.4,.12,60],col:C('#e8283a','#ffffff'),dur:150,d:'A crosshair he moves anywhere on screen. Four shots, about half a second apart; the fourth is the one that launches.'},
+ maya:{name:'CIRCLE OF LIFE',type:'zone',r:190,dur:104,tick:2.4,ri:8,fin:[14,9.8,.115,70],col:C('#7af0a0','#ff8ac8'),vis:'gen',swap:1,d:'Before anything else, she trades damage with the nearest rival if hers is higher. Then the circle drains everyone inside it and heals her.'},
+ sarah:{name:'LIGHTS OUT',T:'global',at:16,dmg:8,eff:'haze',long:300,kb:1,dark:1,ib:{amp:6,speed:6},col:C('#6a4a9a','#ffffff'),dur:330,d:'The whole screen goes dark for five seconds. Rivals are slowed and can barely see; she is faster and stronger in it.'},
+ aria:{T:'roulette',col:C('#ffd84a','#ffffff'),dur:10,d:'Pulls the lever. One of four things happens: a jackpot blast around her, coins raining on everyone, a full heal, or everyone else falling asleep.'},
+ bryson:{T:'trans',big:600,ib:{berserk:10,gloves:10,speed:10},col:C('#ff4040','#ffffff'),dur:600,sec:10,d:'Ten seconds of full tantrum: huge, fast, unflinching, and hitting half again as hard. He also takes more while it lasts.'},
+ conor:{T:'cross',n:1,first:70,every:1,spd:7,r:46,coins:1,tick:0,fin:[30,11.5,.135,80],col:C('#ffd040','#3ac86a'),dur:110,d:'One crosshair, one second to place it, and one pot of gold dropped on it. A single hit, and the hardest in the game if it lands.'},
+ ray:{T:'aim',len:420,h:46,turn:.022,tick:2.1,ri:6,push:.6,eff:'burn',fin:[16,10.4,.12,40],col:C('#ff4060','#ffe060'),dur:150,d:'A wide beam he can only turn slowly. It burns, and it lasts two and a half seconds.'},
+ oliver:{T:'global',at:24,dmg:17,kb:8.5,kg:.085,ang:50,col:C('#7ae04a','#ffffff'),dur:60,d:'One arrow for every rival on screen. None of them miss, and each one launches.'},
+ chris:{T:'trans',heal:20,ib:{regen:20,gloves:12,amp:12},col:C('#ff6080','#ffffff'),dur:720,sec:12,d:'Refuses to go down: heals, keeps healing for twenty seconds, and for twelve cannot be flinched by weak hits.'},
+ evona:{T:'palace',col:C('#8fe4ff','#ffffff'),dur:40,d:'Raises ice walls on both sides of herself that stand for ten seconds, and freezes anyone caught between them as they rise.'},
+ jack:{T:'fly',spd:7.5,r:26,ri:10,tick:2.8,kb:3.6,kg:.04,eff:'burn',end:70,fin:[15,9.8,.115,70],healNow:25,col:C('#ff8a3a','#5ad8ff'),dur:210,d:'Becomes the phoenix for three and a half seconds of steered flight. It burns what it touches, and rising as it heals him 25%.'},
+ kal:{T:'trans',counter:7,ib:{speed:7},tick:0,col:C('#ffe060','#ffffff'),dur:420,sec:7,d:'He already saw this. For seven seconds every attack aimed at him misses, and anyone who swings at him up close is hit back.'},
+ kora:{T:'push',spd:6.5,w:50,h:140,lift:1,tick:2.2,ri:8,keep:1,fin:[15,9.2,.105,90],col:C('#ffffff','#ffe9a0'),dur:110,d:'Sweeps the stage on full wings and carries everyone she reaches up into the sky.'},
+ ash:{T:'trap',floor:1,r:140,tick:2,ri:16,eff:'root',spike:22,fin:[13,9.6,.11,86],col:C('#3a8a4a','#7a5230'),dur:420,d:'A forest comes up through the floor for seven seconds. Anyone standing in it is rooted again and again.'},
+ moya:{T:'trans',ib:{phase:7},aura:[52,14,2.6],col:C('#c8d8e8','#ffffff'),dur:420,sec:7,d:'Becomes fog for seven seconds. Nothing can touch him, and anyone standing inside him chokes.'},
+ sato:{T:'nova',at:30,r:190,self:6,fin:[30,12,.135,55],col:C('#f0e0a8','#ffffff'),dur:60,d:'Every airbag at once. One blast around him: point blank it is the hardest hit in the game, at the edge it is half that. It costs him 6%.'},
+ akio:{T:'sweep',n:6,spd:26,h:44,tick:5,seek:1,fin:[12,10.6,.125,40],col:C('#3a6aff','#ffffff'),dur:200,d:'Six passes across the whole stage, each one aimed at a rival, faster than they can see. The last one launches.'},
+ sata:{T:'rain',shape:'missile',aimed:1,spread:40,every:14,r:20,tick:9,kb:6,kg:.065,fall:11,col:C('#c8ccd8','#e8283a'),dur:240,d:'Locks on to every rival and fires. Missiles come down on them, accurately, for three and a half seconds.'},
+ kitsu:{T:'push',both:1,spd:6,w:40,h:150,tick:2,ri:8,eff:'blind',keep:1,fin:[13,9,.105,45],col:C('#ff6ad0','#6ae8ff'),dur:110,d:'Two walls of colour leave him at once, one each way, and push everyone off both ends of the stage.'},
+ uzi:{T:'push',spd:5,w:60,h:170,tick:2.2,ri:9,eff:'stick',keep:1,leave:[150,360],fin:[13,9,.1,45],col:C('#7ad06a','#c8ffb0'),dur:120,d:'A wave of slime taller than the stage. It shoves, and it leaves the floor sticky for six seconds afterwards.'},
+ ichigo:{T:'trans',ib:{armor:9},turret:22,col:C('#b8c860','#ff8a3a'),dur:540,sec:9,d:'Climbs into the mech for nine seconds. It takes hits for her and fires a missile at the nearest rival about three times a second.'},
+ bentou:{T:'global',at:22,dmg:0,karma:1,kb:5,kg:.05,col:C('#c8a0ff','#ffe060'),dur:60,d:'Karma. Every rival takes half of all the damage they have dealt since they last fell, up to 60%.'},
+ okane:{T:'trans',ib:{bubble:6,amp:10},col:C('#ffd040','#ffffff'),dur:600,sec:10,d:'Solid gold. Nothing at all can hurt him for six seconds, and he hits harder for ten.'},
+ goiru:{T:'dive',wait:44,fall:30,r:58,steer:7,wave:150,tick:10,fin:[26,11.4,.13,75],ib:{armor:8,gloves:8},col:C('#9a9aa0','#ffffff'),dur:140,d:'Climbs out of sight, and you steer where he lands. The landing sends a shockwave along the ground, and he stays stone for eight seconds.'},
+ aya:{T:'trap',floor:1,r:260,tick:2.4,ri:12,spike:9,fin:[12,9.6,.11,86],col:C('#c8a0ff','#9affea'),dur:360,d:'Crystal covers the whole floor for six seconds. Anyone touching the ground is cut; the platforms and the air are safe.'},
+ hikari:{T:'global',at:16,dmg:22,fall:.7,eff:'para',long:90,kb:4,kg:.04,range:300,col:C('#6aff6a','#e0ffe0'),dur:60,d:'Lightning jumps from her to the nearest rival and on to the next, weaker each time. It only reaches so far.'},
+ ryo:{T:'trap',floor:1,r:110,tick:5,ri:30,eff:'root',spike:6,fin:[17,10.4,.12,86],col:C('#b8864a','#5a3a1e'),dur:150,d:'Collapses the ground around him. Rivals standing on it are buried to the waist, then thrown out when it settles.'},
+ suzume:{T:'global',at:22,dmg:10,eff:'root',long:120,yank:1,kb:0,col:C('#ff6ad0','#6ae8ff'),dur:70,d:'A strand catches every rival on screen and yanks them all toward her at once.'},
+ ayame:{T:'wind',col:C('#bfe8d0','#ffffff'),dur:300,d:'Five seconds in the eye of the storm. A steady wind pushes every rival away from her, wherever they are, while she fights.'},
+ sota:{T:'grab',spd:10,win:16,hold:40,ri:8,tick:4,up:1,ohko:90,fin:[18,10,.115,270],call:'ESCAPE VELOCITY!',col:C('#ff8a30','#bfe8ff'),dur:110,d:'Grabs one rival and takes off. If they are at 90% or more by the top of the climb, they do not come back down.'},
+ tiki:{T:'global',at:20,dmg:12,rand:1,long:200,kb:2,col:C('#b04aff','#6aff8a'),dur:60,d:'Opens the door. Every rival on screen gets a different spirit: frozen, burning, asleep, confused or paralysed.'}
+};
+/* three that need a little more than numbers */
+T.roulette={upd(e,f,d){lock(f);if(e.t<9)return;const k=fl(rnd()*4),P=[{T:'nova',at:14,r:150,fin:[26,11.4,.13,60],col:d.col,dur:44,nm:'JACKPOT!'},{T:'rain',shape:'coin',aimed:1,spread:70,every:6,r:16,tick:6,kb:4.5,kg:.05,col:d.col,dur:240,nm:'PAYOUT!'},{T:'trans',heal:999,ib:{amp:8},col:d.col,dur:60,sec:1,nm:'LUCKY BREAK!'},{T:'global',at:8,dmg:6,eff:'sleep',long:240,kb:0,col:d.col,dur:50,nm:'EVERYONE ELSE LOSES'}][k];say(f.x,f.y-90,P.nm,d.col[0]);e.life=1;E2(f,P);},draw(e,f,d){const s=['7','$','♣','★'];X.font='10px "Press Start 2P", monospace';X.textAlign='center';for(let i=0;i<3;i++){wr(DK,f.x-22+i*15,f.y-96,13,16);X.fillStyle=d.col[0];X.fillText(s[(fl(e.t/2)+i*3)%4],f.x-15.5+i*15,f.y-84);}}};
+T.palace={upd(e,f,d){lock(f);if(e.t===12){for(const s of[-1,1]){const x=f.x+s*70,gy=surfY(x,f.y-40);if(gy!==null&&window.ITEMS&&ITEMS.block){ITEMS.block(f,x,gy);}}for(const o of foes(f))if(Math.abs(o.x-f.x)<90&&Math.abs(o.y-f.y)<60){hit(e,o,16,2,0,80,'freeze');o.frozen=Math.max(o.frozen,110);o.hitstun=Math.max(o.hitstun,110);}boomFX(f.x,f.y-30,d.col,40);sfx('ice');}if(e.t>=30){e.life=1;free(f);}},
+ draw(e,f,d){X.save();X.globalCompositeOperation='lighter';glow2(f.x,f.y-30,90,d.col[0],.5);for(const s of[-1,1])for(let i=0;i<4;i++)wtri(d.col[i%2],f.x+s*(40+i*12)-6,f.y,f.x+s*(40+i*12)+6,f.y,f.x+s*(40+i*12),f.y-Math.min(50,e.t*5)-i*6);X.restore();}};
+T.wind={upd(e,f,d){if(e.t<18)lock(f);else free(f);if(e.t<14)return;for(const o of foes(f)){if(intangible(o)||o.st==='ledge')continue;const s=o.x>=f.x?1:-1;o.x+=s*2.1;if(!o.ground)o.y-=.5;if(e.t%30===0){hit(e,o,2.5,0,0,70);o.lx=0;o.ly=0;}}if(e.t%3===0){const y=CAM.y-WH/CAM.z/2+rnd()*WH/CAM.z;for(const s of[-1,1])part(f.x+s*20,y,s*(7+rnd()*4),0,24,rnd()<.5?d.col[0]:W,2,0);}},
+ draw(e,f,d){X.save();X.globalAlpha=.5;for(let i=0;i<3;i++)wring(f.x,f.y-30,30+((e.t*5+i*40)%120),d.col[i%2],1.5);X.globalAlpha=1;wring(f.x,f.y-30,26,W,2);X.restore();}};
+/* small twists on the four old kinds */
+{const u0=EK.fs.upd;EK.fs.upd=function(e){const f=e.owner,d=e.d;try{if(d.swap&&e.t===1){const o=near(f);if(o&&f.dmg>o.dmg){const a=f.dmg;f.dmg=o.dmg;o.dmg=a;say(f.x,f.y-90,'TRADED',d.col[0]);wlq.push([f.x,f.y-34,o.x,o.y-30,d.col[0],FR+20]);}}
+    if(d.swap&&e.t%10===0&&e.caught&&e.caught.size)f.dmg=Math.max(0,f.dmg-1.5);
+    if(d.scale&&!e._sc){e._sc=1;const k=1+Math.min(1.4,f.dmg/110);e.d=Object.assign({},d,{tick:d.tick*k});}}catch(x){}return u0.apply(this,arguments);};}
+let n=0;for(const id in N){if(!FSD[id])continue;const o=N[id],old=FSD[id];const d=Object.assign({},o.T?{name:old.name,call:old.call,vis:'gen',type:'zone',r:1,tick:0,ri:99,fin:[0,0,0,0]}:{call:old.call},o);if(!d.name)d.name=old.name;if(!d.fin)d.fin=[0,0,0,60];FSD[id]=d;n++;try{if(typeof GTXT!=='undefined'&&GTXT[id]&&o.d)GTXT[id][4]=o.d;}catch(e){}}
+/* what the rest say they do, kept honest about how they differ */
+const KEEP={kimiko:'A blizzard around her that catches and holds everyone inside, freezing them solid before the shattering blow.',keanu:'A tsunami that crosses the stage, catching and carrying everyone it reaches.',bara:'A storm of plumes around him. It holds whoever is inside while it shreds them.',tori:'A dash that catches one rival; she phases through them again and again before the last strike. Miss and it is gone.',minato:'Rocket punches fill the lane in front of him and hold whoever they catch.',oro:'A giant mamba strikes down the lane. Its venom keeps working long after the launch.',gomi:'A firestorm around him with geysers bursting inside it. Whoever survives is still on fire.',emi:'A whirlwind of feathers around her that holds and lifts everyone inside.',soran:'Warps straight to his rival, so it cannot miss by distance, and strikes from every side.',ryuko:'The mech fires a giant beam down the lane, and missiles on top of it.',shiki:'A charge that catches one rival. When the Oni King finishes, the shockwave hits everyone else nearby too.',zabu:'A dash and a frenzy of tail strikes on one rival.',marina:'A colossal koi swims the length of the stage and carries off whoever it meets.',torabi:'A feast around him that hurts everyone nearby, heals him 25%, and leaves him hitting harder for seven seconds.',tatsuya:'Copies the Heroic Finale of the nearest rival, whatever it is.'};
+try{for(const id in KEEP)if(typeof GTXT!=='undefined'&&GTXT[id])GTXT[id][4]=KEEP[id];}catch(e){}
+FN.n=n;FN.kinds=Object.keys(T);
 })();
 
 </script>
