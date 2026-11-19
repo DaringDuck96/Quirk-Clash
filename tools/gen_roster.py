@@ -33,6 +33,8 @@ for C in J['ch']:
         if not c: print('no move',C['id'],k)
     if C.get('qa'):
         a=re.sub(r'<div class="mv"><kbd>Shield \+ B</kbd>.*?</div></div>',lambda _:mv('Shield + B',E(C['qa'][0].title()),C['qa'][4]),a,count=1,flags=re.S)
+    if C.get('th'):
+        a=re.sub(r'<div class="mv"><kbd>Grab, then (a direction|↓)</kbd>.*?</div></div>',lambda _:mv('Grab, then ↓',E(C['th'][0].title())+' <i>Ability throw</i>',C['th'][1]),a,count=1,flags=re.S)
     fsn=E((C['fs'] or 'Heroic Finale').title())+' <i>Heroic Finale</i>'
     a,c=re.subn(r'<div class="mv fs">.*?</div></div>',lambda _:mv('B, meter full',fsn,C['g'][4],True),a,count=1,flags=re.S)
     if not c: print('no finale',C['id'])
@@ -55,8 +57,9 @@ ctl='''<div class="ctl">
 <div><b>Tilt attack</b><span>Hold a direction + A, or use the <em>right stick</em>. On keyboard, hold <em>H</em> + a direction + <em>J</em>. Quick pokes.</span></div>
 <div><b>Smash attack</b><span><em>Flick</em> a direction and press A at the same moment (keyboard: direction + <em>J</em> together). Hold A to charge. These are the finishers.</span></div>
 <div><b>Special (B)</b><span>Controller: <em>B</em> · Keyboard: <em>K</em>. B alone, or with left/right, up or down, gives four different moves. Up + B is usually how you get back to the stage.</span></div>
+<div><b>Turn a special around</b><span>Hold <em>back</em> in the first instant of a neutral or down special to fire it the other way.</span></div>
 <div><b>Shield and dodge</b><span>Controller: <em>ZL / ZR</em> · Keyboard: <em>L</em>. Hold to shield; flick a direction while shielding to roll or dodge.</span></div>
-<div><b>Grab</b><span>Controller: <em>L / R</em>, or shield + A · Keyboard: <em>U</em>. Then press a direction to throw.</span></div>
+<div><b>Grab</b><span>Controller: <em>L / R</em>, or shield + A · Keyboard: <em>U</em>. Attack pummels; a direction throws. <em>Down</em> is every fighter's own ability throw.</span></div>
 <div><b>Ability action</b><span><em>Shield + B</em>. A utility move unique to each fighter; most do no damage.</span></div>
 <div><b>Heroic Finale</b><span>Dealing and taking damage fills a meter. When it is full, press <em>B with no direction</em>. Every fighter's Finale works differently: some you aim, some you steer, some change the whole stage.</span></div>
 <div><b>Items</b><span>Off by default; switch them on at stage select. <em>Attack</em> picks one up and uses it, <em>Grab</em> drops it.</span></div>
