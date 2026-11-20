@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-0434';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-0448';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14156,7 +14156,28 @@ try{const M=CH.find(c=>c.id==='mia');if(M&&M.mv&&M.mv.sB&&typeof EK!=='undefined
   /* the CPU detonates when a rival is standing beside a barrier */
   const ai1=aiInput;aiInput=function(f){const I=ai1.apply(this,arguments);try{if(TW.miaOn&&I&&f.C===M&&!f.mv&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')&&(f._detT||0)<FR){const ws=walls(f);if(ws.length){let hit=false;for(const w of ws)for(const o of foes(f))if(Math.abs(o.x-w.x)<40&&Math.abs((o.y-30)-w.y)<50&&!intangible(o))hit=true;if(hit&&rnd()<.3){f._detT=FR+40;f._detGo=FR+40;I.B=true;I.x=f.face;I.y=0;I.A=I.J=I.S=I.G=false;}}}}catch(e){}return I;};
   const sb=TW.set;TW.set=function(o){sb(o);TW.mia(!!(o&&o.mia));};}}catch(e){TW.err=String(e);}
-try{if(TW.set)TW.set({yado:1,kichi:1,ayame:1,mia:1});}catch(e){TW.err=String(e);}
+/* TENMETSU: Down B is Blink Storm. Hold to charge, release to blink through every rival in range; the last hit launches. */
+try{const T=CH.find(c=>c.id==='tenmetsu');if(T&&T.mv&&T.mv.dB&&typeof BEH!=='undefined'){const old=T.mv.dB,t0=[T.sp[3],GTXT.tenmetsu[3]],fx=old.fx||['#5ad8ff','#ffffff'];
+  const nw={an:'cast',s:8,a:4,r:24,hits:[],beh:'bstorm',fx,lim:'none',nm:'BLINK STORM'};if(old.hf)nw.hf=old.hf;
+  TW.ten=function(on){TW.tenOn=!!on;T.mv.dB=on?nw:old;try{T.sp[3]=on?'Blink Storm (hold to charge)':t0[0];GTXT.tenmetsu[3]=on?'Hold B to gather aura, then let go: he blinks through every rival in range in a zig-zag, hitting each in turn, and the last hit launches. A tap is two blinks; a full charge is five and reaches further. He is left open afterwards, and if nobody is in range it fizzles.':t0[1];}catch(e){}};
+  BEH.bstorm={tick(f,m,I){try{const v=m.v,d=m.d;if(f.ground)f.vx*=.8;
+    if(!v.ph){if(m.t===1){v.c=0;v.cT=f.ctrl==='human'?45:8+Math.floor(rnd()*30);}
+     if(m.t>=6){const hold=f.ctrl==='human'?!!(I&&I.B):v.c<v.cT;if(hold&&v.c<45){v.c++;m.t=5;if(!f.ground){f.vy=Math.min(f.vy,.6);}if(FR%3===0){const a=Math.random()*6.283,r=26+v.c*.5;part(f.x+Math.cos(a)*r,f.y-30+Math.sin(a)*r,-Math.cos(a)*2,-Math.sin(a)*2,10,FR%2?fx[0]:'#ffffff',2,0);}if(v.c===45){FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:fx[0],r0:10,life:14});try{sfx('power');}catch(e){}}return;}
+      /* release */
+      const R=150+v.c*2;v.tg=foes(f).filter(o=>!intangible(o)&&!o.holder&&Math.hypot(o.x-f.x,o.y-f.y)<R);v.n=2+Math.floor(v.c/15);v.i=0;v.ph=v.tg.length?1:2;v.w=0;
+      FXL.push({k:'txt',s:'BLINK STORM',x:f.x,y:f.y-92,t:0,life:34,col:fx[0]});if(v.ph===2){burst(f.x,f.y-30,8,[fx[0],'#ffffff'],2,12);m.t=d.s+d.a;}else m.t=d.s-1;}
+     return;}
+    if(v.ph===1){m.t=d.s-1;f.inv=Math.max(f.inv||0,2);if(v.w>0){v.w--;return;}
+     const tg=v.tg.filter(o=>!o.dead&&!o.gone&&o.st!=='respawn');if(!tg.length||v.i>=v.n){v.ph=2;m.t=d.s+d.a;if(!f.ground)f.vy=-2.5;return;}
+     const o=tg[v.i%tg.length],last=v.i===v.n-1,side=(v.i%2?1:-1)*(o.x>=f.x?1:-1)||1;FXL.push({k:'shadow',x:f.x,y:f.y,t:0,face:f.face,col:fx[0],ci:f.ci});burst(f.x,f.y-30,8,[fx[0],'#ffffff'],2,12);
+     f.x=o.x-side*20;f.y=o.y;f.ground=o.ground||null;f.vx=0;f.vy=0;f.face=side;burst(f.x,f.y-30,8,[fx[0],'#ffffff'],2,12);try{sfx('warp');}catch(e){}
+     applyHit(o,last?{dmg:6,bkb:5.2,kbg:(TW.tenK||.095),ang:46,fx,nsp:1}:{dmg:3.5,bkb:1,kbg:0,ang:82,fx,nsp:1},side,f,{});v.i++;v.w=last?0:6;TW.tenHit=(TW.tenHit||0)+1;}
+   }catch(e){TW.err=String(e);}}};
+  /* the old move was limited to once per stock and needed charging up; this one is not */
+  const sm=startMove;startMove=function(f,k){try{if(TW.tenOn&&f&&f.C===T&&k==='dB'){f._earn=99;f._tpUsed=0;}}catch(e){}return sm.apply(this,arguments);};
+  const ai2=aiInput;aiInput=function(f){const I=ai2.apply(this,arguments);try{if(TW.tenOn&&I&&f.C===T&&!f.mv&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')&&(f._bsT||0)<FR){for(const o of foes(f)){const dd=Math.hypot(o.x-f.x,o.y-f.y);if(dd>30&&dd<170&&!intangible(o)&&rnd()<.06){f._bsT=FR+90;I.B=true;I.x=0;I.y=1;I.A=I.J=I.S=I.G=false;TW.tenUse=(TW.tenUse||0)+1;break;}}}}catch(e){}return I;};
+  const sc=TW.set;TW.set=function(o){sc(o);TW.ten(!!(o&&o.ten));};}}catch(e){TW.err=String(e);}
+try{if(TW.set)TW.set({yado:1,kichi:1,ayame:1,mia:1,ten:1});}catch(e){TW.err=String(e);}
 })();
 
 </script>
