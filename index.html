@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1554';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1602';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14462,7 +14462,7 @@ try{
  const Y=CH.find(c=>c.id==='yado'),K=CH.find(c=>c.id==='kichi'),A=CH.find(c=>c.id==='ayame');
  /* YADO: every smash can stun (10%, rising to 70% at full charge), and his basic attacks do half as much again to a stunned rival */
  const BASIC=/^(jab\d?|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair)$/;
- {const a0=applyHit;applyHit=function(t,h,dirX,a,o){let st=false;try{if(TW.on.yado&&a&&a.C===Y&&a!==t&&a.mv&&/smash/.test(a.mv.k||'')&&h&&!(o&&o.proj)&&!h._ys){const ch=Math.min(1,(a.mv.chargeT||0)/60),p=.1+.6*ch;h=Object.assign({},h,{_ys:1});if(rnd()<p&&!(t&&t.dmg>=(TW.yKO===undefined?90:TW.yKO))){st=true;h.eff='stun';h.bkb=1.2;h.kbg=0;h.ang=80;}TW.ySm=(TW.ySm||0)+1;}}catch(e){}
+ {const a0=applyHit;applyHit=function(t,h,dirX,a,o){let st=false;try{if(TW.on.yado&&a&&a.C===Y&&a!==t&&a.mv&&/smash/.test(a.mv.k||'')&&h&&!(o&&o.proj)&&!h._ys){const ch=Math.min(1,(a.mv.chargeT||0)/60),ven=!!(t&&t.dot&&t.dot.c==='#a0ff40'&&t.dot.n>0),p=ven?1:.1+.6*ch;if(ven)TW.yVen=(TW.yVen||0)+1;h=Object.assign({},h,{_ys:1});if(rnd()<p&&!(t&&t.dmg>=(TW.yKO===undefined?90:TW.yKO))){st=true;h.eff='stun';h.bkb=1.2;h.kbg=0;h.ang=80;}TW.ySm=(TW.ySm||0)+1;}}catch(e){}
    const r=a0.call(this,t,h,dirX,a,o);
    /* the stun from his smash is a full one: three quarters of a second, whatever came before it */
    try{if(st&&r==='hit'&&t&&!t.dead){t.st='dizzy';t.dz=46;t.hitstun=0;t.lx=t.ly=0;t.vx=0;TW.yStun=(TW.yStun||0)+1;FXL.push({k:'txt',s:'STUNNED',x:t.x,y:t.y-90,t:0,life:34,col:'#e83a2a'});}}catch(e){}return r;};
@@ -14827,6 +14827,46 @@ try{const c=id=>CH.find(x=>x.id===id);
  if(typeof kbMod==='function'){const k0=kbMod;kbMod=function(a,t,h,o){let m=k0.apply(this,arguments);try{if(a&&a._b3T&&FR-a._b3T<260&&o&&(o.proj||o.force)){if(a.C===I)m*=.9;else if(a.C===K)m*=1.2;}}catch(e){}return m;};}
  B3.log.ichigo={sB:.9};
 }catch(e){B3.err=String(e);}
+})();
+/* kitlift.js — seven fighters lifted through their own abilities, not through bigger numbers. */
+(function(){
+if(typeof CH==='undefined'||typeof applyHit!=='function')return;const KL={err:null,use:{}};window.KITLIFT=KL;const use=k=>{KL.use[k]=(KL.use[k]||0)+1;};
+try{const c=id=>CH.find(x=>x.id===id),TK=c('takeshi'),AK=c('akemi'),KM=c('kimiko'),BA=c('bara'),MI=c('mia'),YA=c('yado'),AL=c('ali');
+ const say=(x,y,s,col)=>FXL.push({k:'txt',s,x,y,t:0,life:34,col:col||'#ffffff'}),SM=/smash/;
+ KL.K={sig:1.5,shat:1.3,mia:.8,feather:.05};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){
+  try{/* ALI: a held rock takes one melee hit for her, then crumbles */
+   if(t&&AL&&t.C===AL&&!t.form&&a&&a!==t&&!(o&&(o.proj||o.force))&&!(t.inv>0)&&h&&a.mv){if(t._rkMv===a.mv)return 'miss';if(t.rocks>0){t.rocks--;t._rkMv=a.mv;t._rkT=FR;burst(t.x+dirX*-10,t.y-34,14,['#8a8478','#b8b0a0','#ffffff'],2.4,18);FXL.push({k:'ring',x:t.x,y:t.y-34,t:0,col:'#4a8aff',r0:10,life:14});try{sfx('clank');}catch(e){}say(t.x,t.y-88,'BLOCKED','#b8b0a0');a.hl=Math.max(a.hl||0,6);use('rock');return 'miss';}}
+   if(a&&a!==t&&t&&h&&a.mv&&!(o&&o.proj)){
+    /* TAKESHI: a smash sets off a sigil */
+    if(TK&&a.C===TK&&SM.test(a.mv.k)&&t._sigil>FR){h=Object.assign({},h,{kbg:(h.kbg||0)*KL.K.sig,bkb:(h.bkb||0)+1});t._sigil=0;t._sigN=0;say(t.x,t.y-92,'SIGIL BREAK','#8a8aa8');burst(t.x,t.y-34,22,['#16161c','#8a8aa8','#ffffff'],3.2,20);use('sigil');}
+    /* KIMIKO: a smash shatters a frozen rival */
+    if(KM&&a.C===KM&&SM.test(a.mv.k)&&t.frozen>0){h=Object.assign({},h,{kbg:(h.kbg||0)*KL.K.shat,bkb:(h.bkb||0)+1});delete h.eff;t.frozen=0;say(t.x,t.y-92,'SHATTER','#8fe4ff');burst(t.x,t.y-34,26,['#8fe4ff','#ffffff','#c8f4ff'],3.6,22);try{sfx('break');}catch(e){}use('shatter');}}
+  }catch(e){KL.err=String(e);}
+  const r=ah.call(this,t,h,dirX,a,o);
+  try{if(r==='hit'&&a&&a!==t&&t&&a.mv){
+    /* AKEMI: hitting a slowed rival gives Fast Forward straight back */
+    if(AK&&a.C===AK&&t.qslow>FR&&a.cds&&a.cds.sB>FR&&a.mv.k!=='sB'){a.cds.sB=0;use('ff');}
+    /* BARA: Shadow Step tears his feathers out of whoever it cuts */
+    if(BA&&a.C===BA&&a.mv.k==='sB'&&!(o&&o.proj)&&!a.mv._tear&&t._emb){const mine=t._emb.filter(e=>e.by===a&&e.until>FR),k=mine.length;if(k){a.mv._tear=1;for(const e of mine)e.until=0;try{for(let i=0;i<k;i++)BARAQ.RET.push({x:t.x+rnd()*10-5,y:t.y-30+rnd()*20-10,owner:a,t:0,hit:{[t.id]:1},vx:0,vy:0});}catch(e){}
+      ah.call(this,t,{dmg:(1.5+2.6*k)*2,bkb:3+k*.9,kbg:.03+.011*k,ang:48,b:[[0,0,8]],fx:['#d8e0ee','#ff4a5a']},Math.sign(a.x-t.x)||1,a,{proj:1,force:1});burst(t.x,t.y-30,6+k*3,['#d8e0ee','#ff4a5a','#ffffff'],2.4,18);say(t.x,t.y-92,'TORN OUT','#d8e0ee');use('tear');}}}}catch(e){KL.err=String(e);}
+  return r;};
+ /* MIA: with a barrier standing she is launched less far */
+ if(typeof kbMod==='function'){const k0=kbMod;kbMod=function(a,t,h,o){let m=k0.apply(this,arguments);try{if(MI&&t&&t.C===MI&&ENT.some(e=>e.alive&&e.k==='fwall'&&e.owner===t)){m*=KL.K.mia;if(t._klT!==FR){t._klT=FR;use('glass');}}}catch(e){}return m;};}
+ /* AKEMI: in slow motion a rival cannot air-dodge or tech. BARA: every feather stuck in a rival slows them a little */
+ const s0=step;step=function(){const r=s0.apply(this,arguments);try{const akIn=AK&&F.some(f=>f.C===AK&&!f.gone);for(const o of F){if(o.gone||o.dead)continue;
+    if(akIn&&o.qslow>FR&&o.C!==AK){if(o.st==='airdodge'&&o.stT<=1){o.st='air';o.stT=0;o.adUsed=true;say(o.x,o.y-88,'TOO SLOW','#8ab0ff');use('nododge');}else if(o.st==='tech'&&o.stT<=1){o.st='land';o.stT=0;o.landLen=16;use('notech');}}
+    if(BA&&o._emb&&o._emb.length&&o.ground&&(o.st==='run'||o.st==='walk')){let k=0;for(const e of o._emb)if(e.until>FR)k++;if(k)o.x-=o.vx*Math.min(.3,KL.K.feather*k);}}}catch(e){KL.err=String(e);}return r;};
+ /* words */
+ const add=(C,i,s)=>{try{if(C&&typeof GTXT!=='undefined'&&GTXT[C.id]&&GTXT[C.id][i]!==undefined)GTXT[C.id][i]+=' '+s;}catch(e){}},tr=(C,s)=>{try{if(C&&typeof C.trait==='string')C.trait+=' '+s;if(C&&typeof C.na==='string')C.na+=' '+s;}catch(e){}};
+ tr(TK,'SIGIL BREAK: a smash attack on a rival carrying his sigil sets it off and launches them much further.');
+ tr(AK,'A rival in slow motion cannot air-dodge or tech, and hitting one gives her Fast Forward straight back.');add(AK,0,'While it lasts they cannot air-dodge or tech.');
+ tr(KM,'SHATTER: a smash attack on a frozen rival breaks the ice and launches them much further.');
+ tr(BA,'Shadow Step tears out every feather he has left in the rival it cuts, and each feather stuck in a rival slows them a little.');add(BA,1,'If the rival has his feathers in them, the cut tears them all out, as Recall would.');
+ tr(MI,'SAFE BEHIND GLASS: while one of her barriers is standing she is launched a fifth less far.');add(MI,1,'While a barrier stands she is launched less far.');
+ tr(YA,'A smash attack on a rival carrying his poison always stuns (until they are at 90%, when it launches as normal).');
+ tr(AL,'Each rock she holds also takes one melee hit for her before it crumbles.');add(AL,3,'A held rock also absorbs one melee attack.');
+}catch(e){KL.err=String(e);}
 })();
 /* overdrive.js — the OVERDRIVE costume: every fighter's hero uniform pushed to the limit. Earned with 300 KOs as that fighter. */
 (function(){
