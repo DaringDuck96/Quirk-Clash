@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-0512';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1348';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14177,6 +14177,31 @@ try{const T=CH.find(c=>c.id==='tenmetsu');if(T&&T.mv&&T.mv.dB&&typeof BEH!=='und
   const sm=startMove;startMove=function(f,k){try{if(TW.tenOn&&f&&f.C===T&&k==='dB'){f._earn=99;f._tpUsed=0;}}catch(e){}return sm.apply(this,arguments);};
   const ai2=aiInput;aiInput=function(f){const I=ai2.apply(this,arguments);try{if(TW.tenOn&&I&&f.C===T&&!f.mv&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')&&(f._bsT||0)<FR){for(const o of foes(f)){const dd=Math.hypot(o.x-f.x,o.y-f.y);if(dd>30&&dd<170&&!intangible(o)&&rnd()<.06){f._bsT=FR+90;I.B=true;I.x=0;I.y=1;I.A=I.J=I.S=I.G=false;TW.tenUse=(TW.tenUse||0)+1;break;}}}}catch(e){}return I;};
   const sc=TW.set;TW.set=function(o){sc(o);TW.ten(!!(o&&o.ten));};}}catch(e){TW.err=String(e);}
+
+/* RIKU: small means light (no knockback resistance), Pinpoint Dash leaves him open as he regrows, and his launching power sits in the Minimize uppercut rather than the forward smash.
+   MINATO: rubber is bouncy, not heavy (no knockback resistance); a stretched arm can be hit; a punch at full stretch launches less; a missed long grab leaves him open longer. */
+try{const R=CH.find(c=>c.id==='riku'),M=CH.find(c=>c.id==='minato');if(R&&M){
+ const O={rK:R.defKb,mK:M.defKb,rR:R.mv.nB.r,rF:[R.mv.fsmash.hits[0].kbg,R.hmv&&R.hmv.fsmash?R.hmv.fsmash.hits[0].kbg:0],mS:M.mv.fsmash.sweet,gt:[typeof GTXT!=='undefined'&&GTXT.riku?GTXT.riku.slice():null,typeof GTXT!=='undefined'&&GTXT.minato?GTXT.minato.slice():null],na:[R.na,M.na]};
+ TW.rk={a:1,b:1,c:1};TW.mn={a:1,b:1,c:1,d:1};TW.rmK={rk:1,mk:1,dash:10,fs:.8,tip:.75,grab:14};
+ TW.rm=function(){const r=TW.rk||{},m=TW.mn||{},K=TW.rmK;R.defKb=r.a?K.rk:O.rK;R.mv.nB.r=O.rR+(r.b?K.dash:0);R.mv.fsmash.hits[0].kbg=O.rF[0]*(r.c?K.fs:1);if(O.rF[1])R.hmv.fsmash.hits[0].kbg=O.rF[1]*(r.c?K.fs:1);
+  M.defKb=m.a?K.mk:O.mK;M.mv.fsmash.sweet=m.c?(K.sw||null):O.mS;
+  try{if(O.gt[0]){GTXT.riku[0]=O.gt[0][0]+(r.b?' He is open for a moment as he regrows at the end.':'');}
+   if(typeof R.na==='string')R.na=O.na[0]+((r.a||r.c)?' Small means light: he is launched as far as anyone, and his real finisher is the uppercut out of Minimize.':'');
+   if(typeof M.na==='string')M.na=O.na[1]+((m.a||m.b||m.c||m.d)?' Rubber is bouncy: he is launched as far as anyone. His stretched arm can be hit, a punch at full stretch launches less than one up close, and a missed grab leaves him open.':'');}catch(e){}};
+ TW.rm();
+ /* full stretch launches less */
+ const k1=kbMod;kbMod=function(a,t,h,o){let m=k1.apply(this,arguments);try{if(TW.mn&&TW.mn.c&&a&&a.C===M&&t&&a!==t&&a.mv&&a.mv.k==='fsmash'&&!(o&&o.proj)){const hb=a.mv.d.hits[0].b[0],reach=Math.abs(hb[0])+hb[2];if(Math.abs(t.x-a.x)>reach*.6)m*=TW.rmK.tip;}}catch(e){}return m;};
+ /* the stretched arm is part of him: a rival's attack that meets the arm lands on Minato; a missed grab hangs */
+ const segD=(px,py,x0,y0,x1,y1)=>{const dx=x1-x0,dy=y1-y0,L=dx*dx+dy*dy||1,u=Math.max(0,Math.min(1,((px-x0)*dx+(py-y0)*dy)/L));return Math.hypot(px-(x0+dx*u),py-(y0+dy*u));};
+ const s9=step;step=function(){try{for(const f of F){if(f.C!==M||f.dead||f.gone)continue;
+    if(f.st==='grab'){if(TW.mn.d&&f.stT>=26&&(f._gw||0)<TW.rmK.grab){f.stT--;f._gw=(f._gw||0)+1;}}else f._gw=0;
+    const m=f.mv;if(!TW.mn.b||!m||f.st!=='move'||f.form||!m.d.hits||!m.d.hits.length||intangible(f))continue;const d=m.d;if(m.t<d.s-1||m.t>d.s+d.a+6)continue;
+    let far=null;for(const h of d.hits)for(const b of(h.b||[]))if(!far||Math.hypot(b[0],b[1]+34)>Math.hypot(far[0],far[1]+34))far=b;if(!far||Math.hypot(far[0],far[1]+34)<50)continue;
+    const x0=f.x+f.face*12,y0=f.y-36,x1=f.x+f.face*far[0]*.92,y1=f.y+far[1];
+    for(const o of F){if(o===f||o.dead||o.gone||!o.mv||o.st!=='move'||(f.team!==undefined&&o.team===f.team))continue;const om=o.mv,od=om.d;if(!od.hits||!od.hits.length||om.t<od.s||om.t>od.s+od.a||om._armHit===m)continue;
+     let hitH=null;for(const h of od.hits){for(const b of(h.b||[])){if(segD(o.x+o.face*b[0],o.y+b[1],x0,y0,x1,y1)<b[2]+5){hitH=h;break;}}if(hitH)break;}
+     if(hitH){om._armHit=m;const hh=Object.assign({},hitH);delete hh.eff;const r=applyHit(f,hh,o.x<=f.x?1:-1,o,{});if(r==='hit'){TW.armHit=(TW.armHit||0)+1;FXL.push({k:'txt',s:'ARM!',x:(x0+x1)/2,y:y0-30,t:0,life:26,col:'#ffd860'});}break;}}}}catch(e){TW.err=String(e);}return s9.apply(this,arguments);};
+}}catch(e){TW.err=String(e);}
 try{if(TW.set)TW.set({yado:1,kichi:1,ayame:1,mia:1,ten:1});}catch(e){TW.err=String(e);}
 })();
 /* overdrive.js — the OVERDRIVE costume: every fighter's hero uniform pushed to the limit. Earned with 300 KOs as that fighter. */
