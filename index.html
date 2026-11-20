@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1852';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1907';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -15612,6 +15612,22 @@ TF.sign=sign;
 async function apply(){try{const c=await sign(),entry={urls:['turn:'+HOST+':80','turn:'+HOST+':443','turn:'+HOST+':80?transport=tcp','turn:'+HOST+':443?transport=tcp','turns:'+HOST+':443?transport=tcp'],username:c.username,credential:c.credential};
   for(const I of[window.__ICE,window.PRESENCE&&window.PRESENCE.ICE]){if(!I||!I.iceServers)continue;I.iceServers=I.iceServers.filter(s=>!JSON.stringify(s.urls).includes('openrelay'));I.iceServers.push(entry);}TF.ok=true;TF.user=c.username;}catch(e){TF.err=String(e);}}
 TF.apply=apply;apply();setInterval(apply,30*60*1000);
+})();
+/* hitfix.js — hitbox check, November 2026.
+   1. Hurtboxes reach the top of each fighter's head (measured from their sprite), so a hit that visibly lands on the head counts. Hair spikes, ears tips, fans and wings stay outside.
+   2. Up tilts and up smashes reach down far enough to hit someone standing right next to you, as in Smash.
+   3. Ryuko: the dinosaur's hurtbox covers her head as well as her body, her down tilt sweeps the front as well as the back, and her jab comes out 2 frames sooner. */
+(function(){
+const NH={"kimiko":56,"keanu":62,"bara":69,"tori":60,"minato":60,"oro":56,"gomi":62,"kouji":61,"emi":58,"soran":60,"ryuko":58,"shiki":67,"zabu":44,"marina":56,"uchuu":64,"shuko":63,"torabi":63,"suze":57,"tatsuya":55,"riku":62,"sanshou":71,"kairi":61,"kichi":61,"tamashi":59,"akemi":64,"taru":62,"sai":58,"tenmetsu":60,"yado":50,"hari":64,"toguchi":58,"pitto":62,"maho":60,"raion":73,"tsuki":60,"rei":55,"tai":60,"hatsuko":57,"ginko":63,"makiko":65,"koki":73,"hana":55,"tomi":61,"yoko":62,"chiyoki":60,"yurei":60,"ivan":62,"bisu":55,"kurai":67,"homura":62,"kuragari":57,"mia":58,"shi":61,"takeshi":62,"ali":61,"daku":55,"kongu":77,"hippo":62,"dawson":60,"maya":58,"sarah":58,"aria":59,"bryson":60,"conor":44,"ray":60,"oliver":61,"chris":60,"evona":58,"jack":61,"kal":61,"kora":58,"ash":70,"moya":65,"sato":61,"akio":48,"sata":59,"kitsu":59,"uzi":58,"ichigo":60,"bentou":47,"okane":60,"goiru":73,"aya":58,"hikari":58,"ryo":61,"suzume":61,"ayame":61,"sota":67,"tiki":60,"trunks":88,"meisei":58,"hazmat":65,"twine":62,"chuckles":69};const HF={n:0,up:[]};window.HITFIX=HF;
+for(const C of CH){const h=NH[C.id];if(!h)continue;const hb=(C.hurt||[16,52]).slice();if(h>hb[1]){hb[1]=h;C.hurt=hb;HF.n++;}}
+{const R=CH.find(c=>c.id==='ryuko');if(R){R.hurt=[60,(R.hurt||[34,58])[1]];
+  const tables=[R.mv,R.hmv].filter(Boolean);for(const T of tables){const d=T.dtilt;if(d&&d.hits&&d.hits[0]&&!d._hf){d._hf=1;const b=d.hits[0].b,q=b[0];if(q&&q[0]<0)d.hits[0].b=b.concat([[-q[0]*.8,q[1],q[2]*.9]]);}
+   for(const k of['jab1','jab']){const j=T[k];if(j&&!j._hf&&j.s>6){j._hf=1;const s0=j.s;j.s=6;for(const h of j.hits||[]){if(h.f0!==undefined)h.f0-=s0-6;if(h.f1!==undefined)h.f1-=s0-6;}}}}}}
+const done=new WeakSet(),FLOOR=-44;
+const fix=(d,id,k)=>{if(!d||!d.hits||done.has(d)||d.beh)return;done.add(d);let best=null;for(const h of d.hits)for(const q of h.b||[]){if(!Array.isArray(q))continue;if(!best||q[1]+q[2]>best[1]+best[2])best=q;}
+  if(!best)return;const bottom=best[1]+best[2];if(bottom>=FLOOR)return;const ny=FLOOR-best[2]+2;
+  for(const h of d.hits){h.b=h.b.map(q=>q===best?[q[0],ny,q[2]]:q);}HF.up.push(id+' '+k+' '+Math.round(bottom)+'>'+Math.round(ny+best[2]));};
+for(const C of CH){const T=[C.mv,C.hmv];if(C.fmv)for(const f in C.fmv)T.push(C.fmv[f]);for(const t of T){if(!t)continue;for(const k of['utilt','usmash'])fix(t[k],C.id,k);}}
 })();
 
 </script>
