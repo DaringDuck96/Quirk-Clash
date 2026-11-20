@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1815';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1818';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10647,7 +10647,7 @@ function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{l
     /* copies nobody answers within 7 seconds are leftovers (or hosts we cannot reach: checked below) */
     setTimeout(()=>{if(settled||picked>=0)return;let n=0;st.forEach((x,k)=>{if(x.s!=='wait')return;n++;diag(x.c&&x.c.peerConnection).then(d=>{if(x.s==='wait'){x.d=d;x.s=d.answered?'answer?':'stale';}if(--n===0)later();});});if(!n)decide();},7000);
     /* a host that answered gets more time to finish connecting */
-    const later=()=>{if(settled||picked>=0)return;if(!st.some(x=>x.s==='answer?')){decide();return;}setTimeout(()=>{if(settled||picked>=0)return;let n=0;st.forEach(x=>{if(x.s!=='answer?')return;n++;diag(x.c&&x.c.peerConnection).then(d=>{x.d=d;x.s='answered';if(--n===0)decide();});});},15000);};});
+    const later=()=>{if(settled||picked>=0)return;if(!st.some(x=>x.s==='answer?')){decide();return;}setTimeout(()=>{if(settled||picked>=0)return;let n=0;st.forEach(x=>{if(x.s!=='answer?')return;n++;diag(x.c&&x.c.peerConnection).then(d=>{if(!d.answered&&x.d&&x.d.answered)d=Object.assign({},x.d,{ice:d.ice&&d.ice!=='none'?d.ice:x.d.ice});x.d=d;x.s='answered';if(--n===0)decide();});});},15000);};});
   setTimeout(()=>{if(!settled&&picked<0&&!decided&&st.every(x=>!x.c)){decided=true;try{me.destroy();}catch(e){}fin(false,new Error('The connection service did not answer.'));}},15000);
   /* 2. nobody there: host in the first free copy */
   const hostAt=list=>{if(settled)return;if(!list.length){fin(false,new Error('Every copy of this room is stuck from earlier games. Pick a different room name, or wait a minute and try again.'));return;}
@@ -10664,7 +10664,7 @@ function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{l
 
 /* what actually happened to a connection attempt, so a failure says something useful */
 async function diag(pc){const d={ice:'none',answered:false,relay:false,direct:false};try{if(!pc)return d;d.ice=pc.iceConnectionState+'/'+pc.connectionState;d.answered=!!pc.remoteDescription;const st=await pc.getStats();d.c={};st.forEach(r=>{if(r.type==='local-candidate'||r.type==='remote-candidate'){const ad=String(r.address||r.ip||''),k=(r.type[0]==='l'?'L':'R')+(r.candidateType==='host'?(!ad||/\.local$/.test(ad)?'m':'h'):r.candidateType==='srflx'?'s':r.candidateType==='relay'?'r':'p');d.c[k]=(d.c[k]||0)+1;}if(r.type==='local-candidate'){if(r.candidateType==='relay')d.relay=true;if(r.candidateType==='srflx'||r.candidateType==='host')d.direct=true;}});}catch(e){}return d;}
-function diagText(d){if(!d.answered)return'The room is marked as taken, but its host did not answer. They may have closed or reloaded the page: the room frees itself about a minute later. Wait a minute, or agree on a different room name, and connect again: host first, then everyone else.';
+function diagText(d){if(!d.answered)return'The room is marked as taken, but its host did not answer. They may have closed or reloaded the page: the room frees itself about a minute later. Wait a minute, or agree on a different room name, and connect again: host first, then everyone else. Code: '+(d.ice||'')+'.';
  const code=' Code: '+(d.ice||'')+' '+Object.keys(d.c||{}).sort().map(k=>k+d.c[k]).join(' ')+(window.SAMEWIFI&&SAMEWIFI.on?' W1':' W0')+'.';if(!d.relay&&window.SAMEWIFI&&SAMEWIFI.on)return'The host answered, and Same Wi-Fi mode is on, but the two devices still could not reach each other. The host should press the SAME WI-FI button on their screen too, then you connect again. If it still fails, the router is keeping its devices apart (common on guest and mesh networks): put one device on a phone hotspot.'+code;if(!d.relay)return'The host answered, but no direct route between your two networks worked and the free relay servers could not be reached from here. If you are both on the same Wi-Fi, use the green SAME WI-FI button below. Otherwise try a different network on one side (home wifi instead of mobile data, or a phone hotspot).'+code;
  return'The host answered and a relay was available, but the connection still did not complete. Both of you reload and try once more; if it repeats, tell Claude this code: '+d.ice+(d.direct?' d':'')+(d.relay?' r':'')+'.';}
 /* why this browser cannot do it, in words someone can act on */
@@ -15664,8 +15664,8 @@ const mk=(id,label,small)=>{const b=document.createElement('button');b.id=id;b.c
 setInterval(()=>{try{const panel=document.getElementById('netpanel');
  if(panel){const stat=panel.querySelector('#netstat'),go=panel.querySelector('#netgo');
   /* guest: the host answered but the two devices could not reach each other */
-  if(stat&&go&&/host answered/i.test(stat.textContent||'')&&!panel.querySelector('#lanG')){const b=mk('lanG','ON THE SAME WI-FI AS THE HOST? TAP HERE','Your browser will ask for the microphone. Nothing is recorded: it only lets the two devices find each other on your network.');
-   b.onclick=async()=>{b.disabled=true;if(await LAN.enable()){try{toast('Same Wi-Fi mode on. Connecting again…');}catch(e){}go.disabled=false;go.click();}else b.disabled=false;};stat.parentNode.insertBefore(b,stat.nextSibling);}
+  if(stat&&go&&!panel.querySelector('#lanG')&&!panel.querySelector('#netstat2')){const failed=/host answered|did not answer|could not/i.test(stat.textContent||'');if(!failed&&LAN.on){}else{const b=mk('lanG','ON THE SAME WI-FI AS THE HOST? TAP HERE','Your browser will ask for the microphone. Nothing is recorded: it only lets the two devices find each other on your network.');
+   b.onclick=async()=>{b.disabled=true;if(await LAN.enable()){try{toast('Same Wi-Fi mode on. Connecting again…');}catch(e){}go.disabled=false;go.click();}else b.disabled=false;};if(!failed){b.firstChild.textContent='ON THE SAME WI-FI AS THE HOST? TAP HERE FIRST';}stat.parentNode.insertBefore(b,stat.nextSibling);}}
   /* host: offer it before anyone has trouble */
   const s2=panel.querySelector('#netstat2');if(s2&&!panel.querySelector('#lanH')){const b=mk('lanH',LAN.on?'SAME WI-FI MODE: ON':'A FRIEND ON YOUR WI-FI CANNOT JOIN?','Tap this, allow the microphone (nothing is recorded), then have them reload and join again.');
    b.onclick=async()=>{b.disabled=true;if(await LAN.enable(600000)){b.firstChild.textContent='SAME WI-FI MODE: ON';try{toast('Same Wi-Fi mode on. Ask your friend to reload and join again.');}catch(e){}}b.disabled=false;};s2.parentNode.insertBefore(b,s2.nextSibling);}}
