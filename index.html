@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-0415';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-0428';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14130,7 +14130,33 @@ try{
  const n0=ninjaFX;ninjaFX=function(f){const r=n0.apply(this,arguments);try{const m=f&&f.mv;if(m&&m.d&&m.d._ke&&typeof X!=='undefined'&&X&&m.t>=m.d.s-2&&m.t<=m.d.s+m.d.a+8){const u=Math.min(1,(m.t-m.d.s+3)/5),fade=m.t>m.d.s+m.d.a?Math.max(0,1-(m.t-m.d.s-m.d.a)/8):1;X.save();X.globalAlpha=fade;for(let i=0;i<8;i++){const a=i*PI2/8,L=60*u,x0=f.x,y0=f.y-30;for(let j=1;j<=6;j++){const q=j/6;wr(j%2?'#c8c8d8':'#7a7a86',x0+Math.cos(a)*L*q-2,y0+Math.sin(a)*L*.92*q-2,4,4);}wdisc(x0+Math.cos(a)*L,y0+Math.sin(a)*L*.92,4,'#e8e8f0');}X.restore();}}catch(e){}return r;};
  const ai0=aiInput;aiInput=function(f){const I=ai0.apply(this,arguments);try{if(TW.on.yado&&I&&f.C===Y&&f.ground&&!f.mv){for(const o of foes(f)){if(o.st==='dizzy'&&Math.abs(o.x-f.x)<34&&Math.abs(o.y-f.y)<24){f.face=o.x>=f.x?1:-1;I.A=(FR%6)<3;I.x=0;I.y=0;I.B=I.J=I.S=I.G=false;break;}else if(o.st==='dizzy'&&Math.abs(o.x-f.x)<160&&Math.abs(o.y-f.y)<30){I.x=o.x>=f.x?1:-1;I.A=I.B=I.S=I.G=false;break;}}}if(TW.on.ayame&&I&&f.C===A&&f.ground&&!f.mv&&(f._tnT||0)<FR){for(const o of foes(f)){if(Math.abs(o.x-f.x)<34&&Math.abs(o.y-f.y)<30&&rnd()<.05){f._tnT=FR+140;I.B=true;I.x=0;I.y=-1;I.A=I.J=I.S=I.G=false;break;}}}}catch(e){}return I;};
 }catch(e){TW.err=String(e);}
-try{if(TW.set)TW.set({yado:1,kichi:1,ayame:1});}catch(e){TW.err=String(e);}
+/* MIA: up to three barriers placed in any direction (fewer last longer), barriers send shots back at whoever fired them, and anything she reflects does double damage */
+try{const M=CH.find(c=>c.id==='mia');if(M&&M.mv&&M.mv.sB&&typeof EK!=='undefined'&&EK.fwall){const sOld=M.mv.sB,sNew=Object.assign({},sOld,{_mb:1});delete sNew.cd;for(const k in sNew)if(/^_s[\d.]/.test(k))delete sNew[k];
+  const LIFE=[260,170,115],walls=f=>ENT.filter(e=>e.alive&&e.k==='fwall'&&e.owner===f);const t0=[M.sp[1],GTXT.mia[1],GTXT.mia[0]];
+  TW.mia=function(on){TW.miaOn=!!on;M.mv.sB=on?sNew:sOld;try{M.sp[1]=on?'Barrier (up to three, placed in any direction)':t0[0];GTXT.mia[1]=on?'Raises a barrier in the direction you hold: ahead, behind, above or below. Up to three can stand at once, and the fewer there are the longer they last (about 4, 3 and 2 seconds). A barrier shoves rivals who touch it and sends any shot that hits it straight back at whoever fired it, at double damage. A rival knocked into a barrier takes 8% and is thrown back off it; one caught between two is crushed for 12% and launched. With three out, Side B detonates them all instead, launching anyone beside one; hold B to detonate sooner. No cooldown.':t0[1];GTXT.mia[0]=on?t0[2]+' Anything she reflects comes back at double damage.':t0[2];}catch(e){}};
+  const se=spawnEnt;spawnEnt=function(f,s){const mine=TW.miaOn&&f&&f.C===M&&s&&s.k==='fwall';let old=null;if(mine){old=walls(f);
+    /* three out, or B still held: detonate instead of placing */
+    if(old.length&&(old.length>=3||(f._detGo||0)>FR||(f.pi&&f.pi.B&&f.ctrl==='human'))){f._detGo=0;const got={};for(const w of old){w.alive=false;burst(w.x,w.y,22,['#c8a0ff','#ffffff','#8a60e0'],4,20);FXL.push({k:'ring',x:w.x,y:w.y,t:0,col:'#c8a0ff',r0:10,life:18});
+       for(const o of foes(f)){if(got[o.id]||intangible(o)||o.holder)continue;const dx=o.x-w.x,dy=(o.y-30)-w.y;if(Math.abs(dx)<(w.hz?58:46)&&Math.abs(dy)<(w.hz?46:58)){got[o.id]=1;applyHit(o,{dmg:9,bkb:5.4,kbg:.1,ang:52,fx:['#c8a0ff','#ffffff'],nsp:1},dx>=0?1:-1,f,{proj:1});}}}
+      FXL.push({k:'txt',s:'DETONATE',x:f.x,y:f.y-92,t:0,life:34,col:'#c8a0ff'});try{sfx('boom');if(!RM)shakeA=Math.max(shakeA,5);}catch(x){}TW.miaDet=(TW.miaDet||0)+1;return{alive:false,k:'none',x:f.x,y:f.y,vx:0,vy:0,hits:{},spec:{},t:0};}
+    s=Object.assign({},s);delete s.max;}
+   const e=se.call(this,f,s);try{if(mine){const w=(e&&e.k==='fwall')?e:walls(f).filter(q=>old.indexOf(q)<0)[0];if(w){const I=f.pi||{};let dx=I.x||0,dy=I.y||0;const l=Math.hypot(dx,dy);if(l>.4){dx/=l;dy/=l;}else{dx=f.face;dy=0;}w.hz=Math.abs(dy)>Math.abs(dx);w.x=f.x+dx*(w.hz?16:46);w.y=f.y-30+dy*52;const n=old.length+1,L=LIFE[n-1];w.life=L;for(const q of old)q.life=Math.min(q.life,L);}}}catch(x){TW.err=String(x);}return e;};
+  const u0=EK.fwall.upd,d0=EK.fwall.draw;
+  EK.fwall.upd=function(e){try{if(TW.miaOn&&e.owner&&e.owner.C===M){for(const q of ENT){if(q===e||!q.alive||!q.proj||q.owner===e.owner)continue;const hx=e.hz?36:14,hy=e.hz?14:34;if(Math.abs(q.x-e.x)<hx&&Math.abs(q.y-e.y)<hy){const o0=q.owner,sp=Math.max(3,Math.hypot(q.vx||0,q.vy||0)*1.1);q.owner=e.owner;q._o0=e.owner;q._mref=1;q.dmg=(q.dmg||0)*2;q.hits={};q.life=Math.max(q.life||0,50);
+       if(o0&&!o0.dead){const ax=o0.x-q.x,ay=(o0.y-30)-q.y,al=Math.hypot(ax,ay)||1;q.vx=ax/al*sp;q.vy=(q.g?Math.min(ay/al*sp,-1.5):ay/al*sp);}else{q.vx=-(q.vx||0)*1.1;if(e.hz)q.vy=-(q.vy||0);}q.face=q.vx>=0?1:-1;burst(q.x,q.y,10,['#c8a0ff','#ffffff'],2.4,14);FXL.push({k:'txt',s:'x2',x:q.x,y:q.y-14,t:0,life:22,col:'#c8a0ff'});try{sfx('counter');}catch(x){}TW.miaRef=(TW.miaRef||0)+1;}}
+     /* barriers that hit: a rival knocked into one is thrown back off it, and one caught between two is crushed */
+     const g=e.owner,wh=e._wh||(e._wh={}),hx=e.hz?36:13,hy=e.hz?13:34;for(const o of foes(g)){if(intangible(o)||o.holder||(wh[o.id]||0)>FR)continue;const dx=o.x-e.x,dy=(o.y-30)-e.y;if(Math.abs(dx)>hx+8||Math.abs(dy)>hy+22)continue;
+       let two=false;for(const w of ENT){if(w!==e&&w.alive&&w.k==='fwall'&&w.owner===g&&Math.abs(o.x-w.x)<(w.hz?36:13)+12&&Math.abs((o.y-30)-w.y)<(w.hz?13:34)+24){two=true;w._wh=w._wh||{};w._wh[o.id]=FR+70;break;}}
+       const sx=(o.lx||0)+(o.vx||0),sy=(o.ly||0)+(o.vy||0),sp=Math.hypot(sx,sy);
+       if(two){wh[o.id]=FR+70;applyHit(o,{dmg:12,bkb:5.4,kbg:.095,ang:86,fx:['#c8a0ff','#ffffff'],nsp:1},dx>=0?1:-1,g,{proj:1});FXL.push({k:'txt',s:'CRUSH',x:o.x,y:o.y-88,t:0,life:30,col:'#c8a0ff'});burst(o.x,o.y-30,16,['#c8a0ff','#ffffff'],3,16);TW.miaCr=(TW.miaCr||0)+1;}
+       else if(o.st==='hit'&&sp>2.4&&Math.abs(dx)<hx+4&&Math.abs(dy)<hy+16){wh[o.id]=FR+50;const dir=e.hz?(dx>=0?1:-1):(sx>0?-1:1);applyHit(o,{dmg:8,bkb:5,kbg:.085,ang:e.hz?(sy>0?80:-60):50,fx:['#c8a0ff','#ffffff'],nsp:1},dir,g,{proj:1});e.life=Math.max(12,e.life-30);burst(o.x,o.y-30,12,['#c8a0ff','#ffffff'],2.6,14);FXL.push({k:'ring',x:e.x,y:e.y,t:0,col:'#ffffff',r0:8,life:12});TW.miaWh=(TW.miaWh||0)+1;}}}}catch(x){TW.err=String(x);}return u0.apply(this,arguments);};
+  EK.fwall.draw=function(e){if(e.hz&&TW.miaOn){const x=e.x,y=e.y;X.save();X.translate(x,y);X.rotate(Math.PI/2);e.x=0;e.y=0;try{d0.call(this,e);}finally{e.x=x;e.y=y;X.restore();}return;}return d0.apply(this,arguments);};
+  /* double damage for anything her push or bubble turns round */
+  const s0=step;step=function(){try{if(TW.miaOn)for(const q of ENT){if(q.alive&&q.proj&&q._o0===undefined)q._o0=q.owner||null;}}catch(x){}const r=s0.apply(this,arguments);try{if(TW.miaOn)for(const q of ENT){if(!q.alive||!q.proj)continue;if(q._o0===undefined){q._o0=q.owner||null;continue;}if(q.owner!==q._o0){if(q.owner&&q.owner.C===M&&!q._mref){q.dmg=(q.dmg||0)*1.6;q._mref=1;FXL.push({k:'txt',s:'x2',x:q.x,y:q.y-14,t:0,life:22,col:'#c8a0ff'});TW.miaRef=(TW.miaRef||0)+1;}q._o0=q.owner;}}}catch(x){}return r;};
+  /* the CPU detonates when a rival is standing beside a barrier */
+  const ai1=aiInput;aiInput=function(f){const I=ai1.apply(this,arguments);try{if(TW.miaOn&&I&&f.C===M&&!f.mv&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')&&(f._detT||0)<FR){const ws=walls(f);if(ws.length){let hit=false;for(const w of ws)for(const o of foes(f))if(Math.abs(o.x-w.x)<40&&Math.abs((o.y-30)-w.y)<50&&!intangible(o))hit=true;if(hit&&rnd()<.3){f._detT=FR+40;f._detGo=FR+40;I.B=true;I.x=f.face;I.y=0;I.A=I.J=I.S=I.G=false;}}}}catch(e){}return I;};
+  const sb=TW.set;TW.set=function(o){sb(o);TW.mia(!!(o&&o.mia));};}}catch(e){TW.err=String(e);}
+try{if(TW.set)TW.set({yado:1,kichi:1,ayame:1,mia:1});}catch(e){TW.err=String(e);}
 })();
 
 </script>
