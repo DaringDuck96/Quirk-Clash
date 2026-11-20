@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-2109';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-2243';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -15662,6 +15662,119 @@ const MAX=.3;
 diApply=function(t,kb,eff){if(kb<4||eff==='yank'||eff==='relay')return;t._diP={kb};if(t.ctrl==='cpu'){t._diC=1;}};
 const bend=(t,sx,sy)=>{const m=Math.hypot(sx,sy);if(m<.3)return;sx/=m;sy/=m;const sp=Math.hypot(t.lx,t.ly);if(!sp)return;const a=clamp((t.lx*sy-t.ly*sx)/sp,-1,1)*MAX,c=Math.cos(a),s=Math.sin(a),nx=t.lx*c-t.ly*s,ny=t.lx*s+t.ly*c;t.lx=nx;t.ly=ny;};
 const u0=update;update=function(f,I){try{if(f._diP&&!(f.hl>1)){const p=f._diP;f._diP=null;if(f.st==='hit'||f.tumble){if(f.ctrl==='cpu'){if(f.lvl>=2&&rnd()<(f.lvl-1)/8*.9)bend(f,Math.sign(STAGE.main.x+STAGE.main.w/2-f.x),-.8);}else{const r=I||f.raw||{};bend(f,r.x||0,r.y||0);}}}}catch(e){}return u0.apply(this,arguments);};
+})();
+/* twine.js — Twine's yarn arms, drawn properly.
+   1. Yarn Punch, forward tilt and forward smash all draw one yarn arm from her hand to where the hit lands,
+      shooting out on the wind-up, held at full length while it hits, then winding back in with a little slack.
+   2. Each tip looks like itself: NEEDLE is a steel needle, KNOT a fat ball of knotted yarn, HOOK a crochet hook.
+   3. Up or down can be pressed during the wind-up to aim (so Yarn Punch can be aimed even though up+B is Spring Stitch).
+   4. Unravel turns her into a single strand of yarn that zips forward and winds back into her.
+   5. Spring Stitch shows a coil of yarn under her feet as it fires. */
+(function(){
+const C=(typeof CH!=='undefined')&&CH.find(c=>c.id==='twine');if(!C||typeof drawFighter!=='function')return;
+const TW={err:null};window.TWINE=TW;const E=e=>{TW.err=TW.err||String(e&&e.stack||e).slice(0,300);};
+const Y='#e8667e',Y2='#ffc0cc',YD='#a83a52',DK='#0c0820',ST='#d8dce8',PI=Math.PI,TAU=PI*2;
+const ARMK={ftilt:1,fsmash:1,nB:1};
+const tipOf=f=>(f.cycN||0)%3;
+const mine=f=>f&&f.C===C&&!f.form&&!(f.copyT>0);
+/* the far end of a move: the circle furthest from her chest */
+const farB=d=>{let b=null;for(const h of d.hits||[])for(const q of h.b)if(!b||Math.hypot(q[0],q[1]+38)>Math.hypot(b[0],b[1]+38))b=q;return b;};
+
+/* ---------- drawing ---------- */
+function strand(x0,y0,x1,y1,sag,w,t){/* a yarn strand with a bit of sag and knit ticks */
+  const dx=x1-x0,dy=y1-y0,l=Math.hypot(dx,dy)||1,nx=-dy/l,ny=dx/l,n=Math.max(4,Math.round(l/7));const pts=[];
+  for(let i=0;i<=n;i++){const k=i/n,s=Math.sin(k*PI)*sag+Math.sin(k*9+t*.5)*Math.min(1.4,sag*.15);pts.push([x0+dx*k+nx*s,y0+dy*k+ny*s+Math.abs(s)*.25]);}
+  const path=(c,lw)=>{X.strokeStyle=c;X.lineWidth=lw;X.lineCap='round';X.lineJoin='round';X.beginPath();X.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)X.lineTo(pts[i][0],pts[i][1]);X.stroke();};
+  path(DK,w+2.4);path(Y,w);
+  /* twisted-ply ticks */
+  X.strokeStyle=YD;X.lineWidth=1.1;for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,ux=(b[0]-a[0]),uy=(b[1]-a[1]),ll=Math.hypot(ux,uy)||1;X.beginPath();X.moveTo(mx-ny*w*.45-ux/ll*1.2,my+nx*w*.45-uy/ll*1.2);X.lineTo(mx+ny*w*.45+ux/ll*1.2,my-nx*w*.45+uy/ll*1.2);X.stroke();}
+  X.strokeStyle=Y2;X.lineWidth=.9;X.beginPath();X.moveTo(pts[0][0]-nx*w*.25,pts[0][1]-ny*w*.25);for(let i=1;i<pts.length;i++)X.lineTo(pts[i][0]-nx*w*.25,pts[i][1]-ny*w*.25);X.stroke();
+  const e=pts[pts.length-1],p=pts[pts.length-2];return{x:e[0],y:e[1],a:Math.atan2(e[1]-p[1],e[0]-p[0])};}
+function needle(x,y,a,r){const ux=Math.cos(a),uy=Math.sin(a),nx=-uy,ny=ux,L=Math.max(13,r*1.5),w=2.6;
+  const bx=x-ux*3,by=y-uy*3,tx=x+ux*L,ty=y+uy*L;
+  wpoly(DK,[bx+nx*(w+1.2),by+ny*(w+1.2),tx+ux*2,ty+uy*2,bx-nx*(w+1.2),by-ny*(w+1.2),bx-ux*3,by-uy*3]);
+  wpoly(ST,[bx+nx*w,by+ny*w,tx,ty,bx-nx*w,by-ny*w]);
+  wl('#ffffff',bx+nx*.6+ux*2,by+ny*.6+uy*2,tx-ux*3,ty-uy*3,1);
+  wdisc(bx+ux*1.5,by+uy*1.5,1.1,DK);/* the eye */}
+function knot(x,y,a,r,t){const R=Math.max(8,r*.85);wdisc(x,y,R+1.8,DK);wdisc(x,y,R,Y);
+  X.strokeStyle=YD;X.lineWidth=1.3;for(let i=0;i<4;i++){X.beginPath();X.ellipse(x,y,R*.92,R*(.35+i*.17),a+i*.8+t*.04,0,TAU);X.stroke();}
+  X.strokeStyle=Y2;X.lineWidth=1.2;X.beginPath();X.arc(x-R*.2,y-R*.25,R*.5,PI*1.1,PI*1.6);X.stroke();
+  /* a loose end */
+  wl(DK,x-Math.cos(a)*R*.4,y+R*.7,x-Math.cos(a)*R*.9,y+R*1.25,3.4);wl(Y,x-Math.cos(a)*R*.4,y+R*.7,x-Math.cos(a)*R*.9,y+R*1.25,1.8);}
+function hook(x,y,a,r,face){const ux=Math.cos(a),uy=Math.sin(a),L=Math.max(14,r*1.4),ex=x+ux*L,ey=y+uy*L;
+  wl(DK,x,y,ex,ey,5.2);wl('#e8b848',x,y,ex,ey,3.2);wl('#fff0b0',x+ux*2,y+uy*2-.6,ex-ux*2,ey-uy*2-.6,1);
+  /* the hook curls back toward her, opening downward-backward */
+  const s=face>0?1:-1,cx=ex-uy*2.6*s*-1,cy=ey+ux*2.6*s*-1;X.lineCap='round';
+  X.strokeStyle=DK;X.lineWidth=5;X.beginPath();X.arc(cx,cy,3.6,a-PI/2,a+PI*0.9,s<0);X.stroke();
+  X.strokeStyle='#e8b848';X.lineWidth=3;X.beginPath();X.arc(cx,cy,3.6,a-PI/2,a+PI*0.9,s<0);X.stroke();}
+const TIPS=[needle,knot,hook];
+
+function drawArm(f){const m=f.mv,d=m.d,b=farB(d);if(!b)return;const ip=(typeof interpPos==='function')?interpPos(f):f,x=ip.x,y=ip.y,fc=f.face;
+  const s=d.s,a=d.a,r=d.r,t=m.t;
+  /* hand: where the punch pose puts it */
+  const hx=x+fc*16,hy=y-41;
+  const tx=x+fc*b[0],ty=y+b[1];
+  let k,sag;
+  if(m.charging){k=.12+Math.sin(FR*.5)*.03;sag=1;}
+  else if(t<s-3){k=.08;sag=0;}
+  else if(t<s){k=.15+(t-(s-3)+1)/4*.85;sag=1;}     /* shoots out */
+  else if(t<s+a){k=1;sag=t===s?0:1.2;}               /* full length while it can hit */
+  else{const u=(t-s-a)/Math.max(1,r);k=Math.max(0,1-u*1.25);sag=6*Math.sin(Math.min(1,u*1.3)*PI)+1;} /* winds back with slack */
+  if(k<=.02)return;
+  const ex=hx+(tx-hx)*k,ey=hy+(ty-hy)*k;
+  const w=d===undefined?3:(m.k==='fsmash'?4:3.4);
+  const e=strand(hx,hy,ex,ey,sag*(fc>0?1:-1),w,FR);
+  /* the angle of the arm itself, so tips always point outward */
+  const ang=Math.atan2(ey-hy,ex-hx);
+  const tp=tipOf(f);TIPS[tp](e.x,e.y,ang,b[2]*(k<1?.75+.25*k:1),tp===2?fc:FR);
+}
+
+/* Unravel: she is a single strand while it lasts */
+function drawUnravel(f){const m=f.mv,d=m.d,ip=(typeof interpPos==='function')?interpPos(f):f,x=ip.x,y=ip.y,fc=f.face;const t=m.t,bp=d.bp||{},f0=bp.f0||7,f1=bp.f1||21;
+  const o=m.v._ux!==undefined?m.v._ux:x;const back=Math.min(150,Math.abs(x-o)+10);
+  const L=Math.max(18,back),hx=x+fc*10,hy=y-30;
+  /* wavy strand from where she came apart to the leading end */
+  const n=Math.max(6,Math.round(L/6));X.lineCap='round';X.lineJoin='round';
+  for(const[c,lw]of[[DK,5],[Y,3],[Y2,1]]){X.strokeStyle=c;X.lineWidth=lw;X.beginPath();for(let i=0;i<=n;i++){const k=i/n,px=hx-fc*L*k,py=hy+Math.sin(k*10-t*.9)*5*(1-k*.3)+k*k*8;i?X.lineTo(px,py):X.moveTo(px,py);}X.stroke();}
+  /* the leading end is a tight little ball of yarn */
+  wdisc(hx,hy,6.4,DK);wdisc(hx,hy,5,Y);X.strokeStyle=YD;X.lineWidth=1;X.beginPath();X.ellipse(hx,hy,4.4,2,t*.4,0,TAU);X.stroke();X.beginPath();X.ellipse(hx,hy,2,4.4,t*.4,0,TAU);X.stroke();
+  }
+
+/* Spring Stitch: a coil of yarn under her feet */
+function drawSpring(f){const m=f.mv,t=m.t,ip=(typeof interpPos==='function')?interpPos(f):f,x=ip.x,y=ip.y;if(t>16)return;
+  const sq=t<6?1-t/6*.55:Math.min(1.6,.45+(t-6)*.25),h=12*sq,o=m.v._sy!==undefined?Math.max(0,m.v._sy-y):0,top=y+1,bot=y+1+Math.max(h,o);
+  const n=6;X.lineCap='round';for(const[c,lw]of[[DK,4.2],[Y,2.4]]){X.strokeStyle=c;X.lineWidth=lw;X.beginPath();for(let i=0;i<=n*8;i++){const k=i/(n*8),a=k*n*TAU,px=x+Math.cos(a)*7,py=top+(bot-top)*k+Math.sin(a)*1.6;i?X.lineTo(px,py):X.moveTo(px,py);}X.stroke();}
+  X.globalAlpha=1;}
+
+/* ---------- hook into drawing ---------- */
+const PT=(typeof PROPS!=='undefined')?PROPS.T:null;
+const df=drawFighter;drawFighter=function(f){
+  let hide=false,row=null,unr=false;
+  try{if(mine(f)&&f.mv&&!f.dead&&!f.gone){const k=f.mv.k;
+    if(ARMK[k]&&PT){row=PT.twine;PT.twine=null;hide=true;}
+    if(k==='sB'&&f.mv.d.bp){const t=f.mv.t,bp=f.mv.d.bp;if(f.mv.v._ux===undefined)f.mv.v._ux=f.x;if(t>=(bp.f0||7)-1&&t<=(bp.f1||21)+1&&!f.invis){unr=true;}}
+    if(k==='uB'&&f.mv.v._sy===undefined)f.mv.v._sy=f.y;}}catch(e){E(e);}
+  let r;
+  if(unr){/* skip the body: she is yarn right now */try{drawUnravel(f);}catch(e){E(e);}return;}
+  try{r=df.apply(this,arguments);}finally{if(hide&&PT)PT.twine=row;}
+  try{if(hide&&!f.invis)drawArm(f);else if(mine(f)&&f.mv&&f.mv.k==='uB'&&!f.invis)drawSpring(f);}catch(e){E(e);X.globalAlpha=1;}
+  return r;};
+
+/* ---------- aim during the wind-up ---------- */
+if(typeof update==='function'){const up=update;update=function(f,I){
+  try{if(mine(f)&&f.mv&&ARMK[f.mv.k]&&!(f.hl>0)){const m=f.mv;if(m.t<m.d.s&&!m.v._aimed){const iy=(I&&I.y)||0,ai=iy<-.4?1:(iy>.4&&!f.ground)?2:0;
+      const nd=TW.ARM&&TW.ARM[m.k]&&TW.ARM[m.k][tipOf(f)]&&TW.ARM[m.k][tipOf(f)][ai];
+      if(nd&&nd!==m.d&&ai!==0){m.d=nd;m.v._aimed=1;}}}}catch(e){E(e);}
+  return up.apply(this,arguments);};}
+/* the ARM table lives inside trio.js; rebuild a lookup by asking resolveDef for each tip and angle */
+try{const A={};const fk={C,ci:CH.indexOf(C),pi:{x:0,y:0},ground:{},cycN:0};
+  for(const k in ARMK){A[k]=[];for(let tp=0;tp<3;tp++){A[k][tp]=[];for(const[ai,iy,gr]of[[0,0,1],[1,-1,1],[2,1,0]]){fk.cycN=tp;fk.pi={x:0,y:iy};fk.ground=gr?{}:null;const r=resolveDef(fk,k);A[k][tp][ai]=r&&r.d;}}}
+  TW.ARM=A;}catch(e){E(e);}
+/* wording: aim by pressing up or down as she winds up */
+try{if(C.sp)C.sp[0]='Yarn Punch (a long arm punch; press up or down as she winds up to aim it)';
+  if(typeof GTXT!=='undefined'&&GTXT.twine&&GTXT.twine[0])GTXT.twine[0]=GTXT.twine[0].replace('Hold up as you throw it to angle it upward, or down in the air to angle it down.','Press up as she winds up to aim it upward, or down in the air to aim it down.');
+  if(C.trait)C.trait=C.trait.replace('Angle any long punch with up or down.','Aim any long punch with up or down as she winds up.');
+  if(C.na)C.na=C.na.replace('Hold up or down as you throw one to angle it.','Press up or down as she winds up to aim it.');}catch(e){E(e);}
 })();
 
 </script>
