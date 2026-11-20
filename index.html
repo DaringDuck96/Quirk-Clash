@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1818';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1822';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10624,7 +10624,15 @@ function loadLib(){return new Promise((res,rej)=>{if(window.Peer)return res();co
 /* STUN finds a direct route; the TURN relays (PeerJS's own free ones) carry the connection when a home router or phone network will not allow a direct one */
 const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},{urls:['turn:staticauth.openrelay.metered.ca:80','turn:staticauth.openrelay.metered.ca:443','turn:staticauth.openrelay.metered.ca:443?transport=tcp','turns:staticauth.openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'},{urls:['turn:freeturn.net:3478','turn:freeturn.net:3478?transport=tcp','turns:freeturn.tel:5349'],username:'free',credential:'free'}],sdpSemantics:'unified-plan'};window.__ICE=ICE;
 /* PeerJS: returns {role:'host', onGuest(cb), close()} or {role:'guest', link, close()} where link = {send, onData, onStream, onClose, sendStream, id} */
-function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{let settled=false;const SLOTS=4;
+/* RELAY: a free Cloudflare Worker hands out short-lived Cloudflare relay passwords, so phones on mobile data and strict networks can still connect. Paste the Worker address here. */
+const RELAY_URL='';
+let relayAt=0;
+function relayCfg(){let url=RELAY_URL;try{const q=new URLSearchParams(location.search).get('relay');if(q)localStorage.setItem('qc_relay',q);url=localStorage.getItem('qc_relay')||url;}catch(e){}
+  if(!url||Date.now()-relayAt<6*3600e3)return Promise.resolve();
+  const ctl=typeof AbortController!=='undefined'?new AbortController():null,t=setTimeout(()=>{try{ctl&&ctl.abort();}catch(e){}},6000);
+  return fetch(url,{cache:'no-store',signal:ctl&&ctl.signal}).then(r=>r.ok?r.json():null).then(j=>{clearTimeout(t);const got=(j&&j.iceServers||[]).map(x=>Object.assign({},x,{urls:[].concat(x.urls||[]).filter(u=>!/:53(\?|$)/.test(u))})).filter(x=>x.urls.length);
+    if(got.length){ICE.iceServers=got.concat(ICE.iceServers.filter(x=>!x._cf));got.forEach(x=>x._cf=1);relayAt=Date.now();NET.relay='cloudflare';}}).catch(()=>{clearTimeout(t);NET.relay='unreachable';});}
+function peerTransport(room){return relayCfg().then(()=>loadLib()).then(()=>new Promise((res,rej)=>{let settled=false;const SLOTS=4;
   const fin=(ok,v)=>{if(settled)return;settled=true;if(ok)res(v);else rej(v);};
   const svc=err=>new Error(err&&err.type==='browser-incompatible'?noRTC():err&&err.type==='network'||err&&err.type==='server-error'||err&&err.type==='socket-error'||err&&err.type==='socket-closed'?'Could not reach the connection service. Try again in a moment.':String(err&&err.message||err));
   const ids=[];for(let n=0;n<SLOTS;n++)ids.push(PREFIX+room+(n?'-'+(n+1):''));
