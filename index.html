@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-0334';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-0345';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14082,6 +14082,18 @@ try{const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0.apply(this,arguments);try{
     if(FR>=g.n){g.n=FR+60;f.dmg+=1;if(g.by)g.by.dealt=(g.by.dealt||0)+1;f.flash=2;FXL.push({k:'txt',s:'1',x:f.x+8,y:f.y-70,t:0,life:22,col:'#ff8020'});}}}catch(e){TW.err=String(e);}return r;};
  if(typeof GTXT!=='undefined'&&GTXT.daku){GTXT.daku[0]=GTXT.daku[0].replace('throws a ball of hellfire that bursts and burns.','throws a ball of hellfire that bursts and burns, and the embers linger: 1% a second for three more seconds. It does not stack.');GTXT.daku[3]=GTXT.daku[3].replace('with every hit burning,','with every hit burning and doing a fifth more damage,');}
 }catch(e){TW.err=String(e);}
+/* CHIYOKI: Down B is a shovel-smack counter, and one bowling pin in three is live: more damage, and it goes off like a grenade */
+try{const C=CH.find(c=>c.id==='chiyoki');if(C&&C.mv&&C.mv.dB){const old=C.mv.dB,oldT=[C.sp[3],typeof GTXT!=='undefined'&&GTXT.chiyoki?GTXT.chiyoki[3]:'',typeof GTXT!=='undefined'&&GTXT.chiyoki?GTXT.chiyoki[1]:''];
+  const nw={an:'counter',s:4,a:24,r:20,hits:[],beh:'counter',bp:{f0:4,f1:27,mult:1.6},fx:old.fx,lim:'none',sub:'shovel',nm:'SHOVEL SMACK'};if(old.hf)nw.hf=old.hf;
+  TW.chiyoki=function(on){TW.chiOn=!!on;C.mv.dB=on?nw:old;C.sp[3]=on?'Shovel Smack (counter)':oldT[0];try{if(GTXT.chiyoki){GTXT.chiyoki[3]=on?'Braces with the shovel for a moment. If anything hits him while he does, he laughs it off and smacks the attacker with the flat of it: at least 16%, more the harder they hit him, and a big launch.':oldT[1];GTXT.chiyoki[1]=on?oldT[2]+' One pin in three is live: it glows red, does more damage and goes off like a grenade.':oldT[2];if(TW._t0===undefined)TW._t0=GTXT.chiyoki[0];GTXT.chiyoki[0]=on?TW._t0+' Dread also makes his hits carry: a PANICKED rival is launched 25% further by anything he lands, and a FROZEN one 40% further.':TW._t0;}}catch(e){}};
+  const t0=triggerCounter;triggerCounter=function(t,a,h){try{if(t&&t.C===C&&TW.chiOn&&t.mv&&t.mv.d===nw){const fx=nw.fx;burst(t.x,t.y-30,20,[fx[0],'#ffffff'],2.6,22);try{sfx('counter');}catch(e){}t.face=a.x>=t.x?1:-1;t.inv=Math.max(t.inv||0,14);const dmg=Math.max(16,(h.dmg||0)*1.6);t.mv=null;t.st='land';t.stT=16;
+     const far=Math.abs(a.x-t.x)>70||Math.abs(a.y-t.y)>60;FXL.push({k:'txt2',s:'BONK!',x:t.x+t.face*20,y:t.y-84,t:0,life:40,col:fx[0]});
+     if(!far){applyHit(a,{dmg,bkb:5.4,kbg:.1,ang:48,fx},t.face,t,{force:1});try{if(!RM)shakeA=Math.max(shakeA,6);}catch(e){}}
+     else FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:fx[0],r0:10,life:16});return;}}catch(e){TW.err=String(e);}return t0.apply(this,arguments);};
+  const se=spawnEnt;spawnEnt=function(f,s){let lv=false;try{if(TW.chiOn&&f&&f.C===C&&s&&s.sh==='pin'&&rnd()<1/3){lv=true;s=Object.assign({},s,{dmg:14,bkb:4.6,kbg:.075,explode:1,c:'#ff4a3a'});FXL.push({k:'txt',s:'LIVE ONE!',x:f.x,y:f.y-90,t:0,life:30,col:'#ff4a3a'});}}catch(e){}const e=se.call(this,f,s);try{if(lv){const q=e&&e.k?e:ENT[ENT.length-1];if(q&&q.owner===f){q.explode=1;q.live=1;q.c='#ff4a3a';TW.pinLive=(TW.pinLive||0)+1;}}}catch(x){}return e;};
+  /* Dread pays off: a Panicked rival flies 25% further from anything he lands, a Frozen one 40% further */
+  const k0=kbMod;kbMod=function(a,t,h,o){let m=k0.apply(this,arguments);try{if(TW.chiOn&&a&&a.C===C&&t&&a!==t){if(t.frzT>FR)m*=TW.chiK?TW.chiK[1]:1.4;else if((t.dr||0)>=TW.drP)m*=TW.chiK?TW.chiK[0]:1.25;}}catch(e){}return m;};TW.drP=66;
+  TW.chiyoki(true);}}catch(e){TW.err=String(e);}
 })();
 
 </script>
