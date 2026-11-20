@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1512';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1535';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -12169,6 +12169,148 @@ try{if(typeof PROPS!=='undefined')PROPS.T.meisei=['rainbow',PINK,'#6ae8ff'];}cat
 }catch(e){E(e);}
 })();
 
+/* trio.js — three more fighters, open from the start: HAZMAT (living toxic waste), TWINE (a girl made of yarn, with long yarn arms) and CHUCKLES (a hyena who hits harder the more hurt, and the more unhinged, he gets). */
+(function(){
+if(typeof CH==='undefined'||typeof M!=='function'||typeof hit!=='function'||CH.find(c=>c.id==='hazmat'))return;
+const T3={err:null,use:{}};window.TRIO=T3;const E=e=>{T3.err=T3.err||String(e&&e.stack||e).slice(0,400);};
+try{
+const clone=v=>{if(Array.isArray(v))return v.map(clone);if(v&&typeof v==='object'){const o={};for(const k in v){if(k==='R'||k==='_r')continue;o[k]=clone(v[k]);}return o;}return v;};
+const W='#ffffff',cl=(v,a,b)=>v<a?a:v>b?b:v;
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const inR=(o,x,y,r)=>{const R=hurtR(o),cx=cl(x,R[0],R[0]+R[2]),cy=cl(y,R[1],R[1]+R[3]);return Math.hypot(x-cx,y-cy)<=r;};
+const near=f=>{let b=null,bd=1e9;for(const o of foes(f)){if(intangible(o))continue;const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<bd){bd=d;b=o;}}return b?{o:b,d:bd}:null;};
+const floorY=(x,y)=>{let best=null;try{for(const s of surfaces()){if(x>=s.x&&x<=s.x+s.w&&s.y>=y-8&&(best===null||s.y<best))best=s.y;}}catch(e){}return best;};
+const say=(x,y,s,c)=>FXL.push({k:'txt',s,x,y,t:0,life:34,col:c||W});
+const use=k=>{T3.use[k]=(T3.use[k]||0)+1;};
+if(!EK.t3)EK.t3={init(){},upd(e){try{if(!e.owner||e.owner.gone||e.t>=e.L-1){if(e.end)e.end(e);e.alive=false;return;}e.U(e);}catch(x){E(x);e.alive=false;}},draw(e){try{X.save();e.D(e);X.restore();}catch(x){}}};
+const ent=(f,o)=>{const e=Object.assign({k:'t3',owner:f,face:f.face,x:f.x,y:f.y,vx:0,vy:0,g:0,oa:1,t:0,life:400,L:100,alive:true,spec:{},hits:{},r:6},o);ENT.push(e);return e;};
+/* a standard set of fifteen normals, scaled: r reach, d damage, q extra startup */
+const kit=(fx,r,d,q)=>{const H=(b,dm,bk,kg,an,o)=>hit(b.map(p=>[p[0]*r,p[1],p[2]*(r>1?1+(r-1)*.5:1)]),dm*d,bk,kg,an,o),m=(an,s,a,rc,h,o)=>M(an,Math.max(2,s+q),a,rc+q,h,Object.assign({lim:'none',fx},o||{}));return{
+ jab1:m('jabP1',3,2,7,H([[22,-36,9]],2.4,1.8,.01,70)),jab2:m('jabP2',3,2,8,H([[24,-36,9]],2.4,1.8,.01,70)),jab3:m('j3P',4,3,14,H([[28,-36,11]],4.4,4,.055,45)),
+ ftilt:m('kickF',6,3,13,H([[32,-30,11],[16,-30,9]],8.5,3.4,.062,38)),utilt:m('uppercut',5,4,12,H([[6,-64,12],[8,-44,10]],7,3.6,.058,88)),dtilt:m('kickLow',5,3,10,H([[30,-8,10]],6.5,3,.042,70)),
+ dash:m('shoulder',6,9,15,H([[20,-30,15]],9,4.2,.062,50),{imp:[[4,5.6,0]]}),
+ fsmash:m('smashH',14,4,25,H([[38,-36,16],[18,-36,12]],16,3.8,.104,40),{charge:1,face:'atk'}),usmash:m('usO',9,5,23,H([[4,-68,15],[6,-46,12]],14,3.9,.1,88),{charge:1,face:'atk'}),
+ dsmash:m('dsS',8,4,23,[H([[30,-10,14]],12.5,3.6,.088,32),H([[-30,-10,14]],12.5,3.6,.088,148)],{charge:1,face:'atk'}),
+ nair:m('nairK',4,12,10,H([[0,-30,20]],7.5,3.4,.05,45),{ll:8}),fair:m('fairK',7,4,13,H([[28,-32,13]],10,3.8,.076,40),{ll:10}),bair:m('bairK',6,4,12,H([[-28,-32,13]],10,3.8,.084,140),{ll:9}),
+ uair:m('uairK',5,5,11,H([[4,-62,13]],7.5,3.4,.06,84),{ll:8}),dair:m('dairK',11,5,18,H([[0,-6,13]],10.5,3.4,.07,-76),{ll:16})};};
+const make=(src,o,st,fx,norm)=>{const S=CH.find(c=>c.id===src),C=clone(S);Object.assign(C,{pas:null,impact:null,sig:null,sigT:null,heroLook:1,_nocd:false,atkM:1,kbM:1,defKb:1},o);for(const k of['hmv','fmv','heroNote','heroDisjoint','disjoint','gim','shR','cargo','iron','ironMv','armorSmash','hover','crystals','noSig'])delete C[k];
+ C.st=Object.assign({},S.st,st);for(const k in norm)C.mv[k]=norm[k];if(C.mv.jab)delete C.mv.jab;for(const k in C.mv){const d=C.mv[k];if(!d)continue;delete d.nx;delete d._nx;if(!norm[k]&&d.fx)d.fx=fx;if(norm[k]){d.qn=undefined;d.nm=undefined;}}return[C,S];};
+const looks=(C,S,body,uni,hero)=>{const mk=(L,o)=>{const N=clone(L);Object.assign(N,body);for(const k in(o||{})){if(o[k]===null)delete N[k];else N[k]=o[k];}if(body.head){delete N.hairS;N.hx=(N.hx||[]).filter(x=>!/horns|flower|glasses|ribbon|antenna|twigs|beard|headphones|cap|goggles|visor|band|mask/.test(x));}return N;};
+ C.looks=S.looks.map(L=>L?mk(L):L);C.looks[0]=mk(S.looks[0],Object.assign({cname:undefined},uni));C.looks[6]=mk(S.looks[0],Object.assign({cname:'HERO'},hero));for(const L of C.looks)if(L){delete L.req;delete L.alt;delete L.hide;delete L.heroKit;}C.look=C.looks[0];};
+const reg=(C,gt,fsd,call,range,prop)=>{CH.push(C);try{GTXT[C.id]=gt;}catch(e){}try{FSD[C.id]=fsd;}catch(e){}try{FSCALL[C.id]=call;}catch(e){}try{RANGE[C.id]=range;}catch(e){}try{PROPS.T[C.id]=prop;}catch(e){}};
+const UNI={outfit:'blazer',sl:'long',top:'#a9adb8',top2:'#9ea2ad',sleeve:'#a9adb8',cuff:true,pants:'#1e2430',shoe:'#3a2418',ex:[]};
+
+/* ======================= HAZMAT ======================= */
+{const G='#7dff4a',G2='#c8ff4a',DG='#2a8a1e',fx=[G,G2];
+ const[C,S]=make('tomi',{id:'hazmat',n:'HAZMAT',sn:'HAZMAT',card:'HAZMAT',q:'Hazmat',ty:'Mutation',col:G,aura:G,
+  d:'A boy made of hazardous, toxic chemicals. His skin glows green, everything he touches is poisoned, and so is anyone who touches him.',
+  na:'Normals: heavy, sloppy punches and kicks of living sludge. His smash attacks poison. TOXIC BODY: anyone who hits him with their bare hands is poisoned for two seconds.',
+  role:'Poison bruiser',tip:'Leave puddles and clouds where they want to stand, and let the poison add up.',weak:'Slow to start his attacks, and none of his poison finishes a stock on its own.',
+  trait:'TOXIC BODY — rivals who strike him up close take 1% a second for two seconds. His specials leave poison behind on the stage.',
+  rng:2,pwr:1.05,atkM:.97,kbM:.97,defKb:1.03,grabR:28,shMax:54,style:'heavy',tauntT:'DO NOT TOUCH.',taunt2T:'I AM THE SPILL.',taunt3T:'YOU LOOK A LITTLE GREEN.',persona:'calm',
+  qa:['FUMES','fear',{r:125,slow:130},9,'Vents a breath of fumes: nearby rivals are slowed.']},
+  {w:1.12,walk:1.6,run:3.4,air:2.5,jump:-9,sj:-5.6,dj:-8.4,g:.4,fall:5.4,ff:8,aj:1,acc:.2,trac:.7,dash:.55,jsq:4,aacc:.14},fx,kit(fx,1.1,1.14,1));
+ C.kit={st:'heavy',fx,el:'venom',pow:1.08,reach:1.1};
+ for(const k of['fsmash','usmash','dsmash'])for(const h of C.mv[k].hits)h.eff='poison';
+ C.sp=['Toxic Glob (lobbed; leaves a puddle that poisons whoever stands in it)','Spill (he pours himself forward, passing through attacks)','Vapour (turns to gas and rises, burning what it passes)','Gas Leak (a cloud that hangs where he stood)'];
+ looks(C,S,{skin:G,eye:'#f4ffb0',hair:DG,hairS:'messy',bw:1.14,size:1.08,stance:'guard'},Object.assign({},UNI,{trim:G,tieC:G}),{outfit:'coveralls',sl:'long',top:'#f4c020',top2:'#d8a010',sleeve:'#f4c020',pants:'#f4c020',shoe:'#16161c',boots:1,bootTrim:1,glove:'#16161c',acc:'#16161c',trim:'#16161c',kneepad:1,armband:1,stripe:1,emblem:'rivets',ex:[],hx:[]});
+ const pud=(f,x,y)=>{const mine=ENT.filter(e=>e.alive&&e.k==='t3'&&e.pud&&e.owner===f);if(mine.length>=2)mine[0].alive=false;return ent(f,{x,y,pud:1,L:190,U(e){if(e.t%4===0)part(e.x+(rnd()-.5)*40,e.y-2,0,-.5-rnd()*.6,14,rnd()<.5?G:G2,2,0);if(e.t%20===0)for(const o of foes(e.owner)){if(intangible(o)||o.holder||!o.ground||Math.abs(o.x-e.x)>26||Math.abs(o.y-e.y)>10)continue;o.dmg+=1.3;e.owner.dealt=(e.owner.dealt||0)+1.3;o.flash=3;o.lastBy=e.owner;o.lastHurt=FR;use('pud');}},
+   D(e){const k=Math.min(1,e.t/8)*Math.min(1,(e.L-e.t)/20);X.globalAlpha=.85*k;X.fillStyle=DG;X.beginPath();X.ellipse(e.x,e.y,27*k,5,0,0,7);X.fill();X.fillStyle=G;X.beginPath();X.ellipse(e.x,e.y-.6,24*k,3.6,0,0,7);X.fill();X.fillStyle=G2;for(let i=0;i<3;i++){const bx=e.x-14+i*14,r=1.5+((e.t>>2)+i*3)%3;X.beginPath();X.arc(bx,e.y-1.2,r*k,0,7);X.fill();}}});};
+ BEH.hglob={tick(f,m,I){try{if(m.t===m.d.s&&!m.v.th){m.v.th=1;use('glob');let far=cl(((I.x||0)*f.face+1)/2,0,1);if(f.ctrl==='cpu'){const q=near(f);far=q?cl((q.d-50)/190,0,1):.5;}
+   ent(f,{x:f.x+f.face*14,y:f.y-44,vx:f.face*(2.8+far*2.6),vy:-5,L:90,U(e){e.vy+=.28;e.x+=e.vx;e.y+=e.vy;const fy=floorY(e.x,e.y-e.vy);if(fy!==null&&e.y>=fy-5&&e.vy>0){e.alive=false;pud(e.owner,e.x,fy);for(let i=0;i<8;i++)part(e.x,fy-3,(rnd()-.5)*4,-1-rnd()*2,14,G,2,.12);return;}
+     for(const o of foes(e.owner)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,8))continue;applyHit(o,{dmg:6.5,bkb:3,kbg:.04,ang:55,eff:'poison',fx},Math.sign(e.vx)||1,e.owner,{proj:1});e.alive=false;const y2=floorY(e.x,e.y);if(y2!==null&&y2-e.y<70)pud(e.owner,e.x,y2);return;}if(e.t%3===0)part(e.x,e.y,0,.4,9,G2,2,.06);},
+    D(e){X.fillStyle=DG;X.beginPath();X.arc(e.x,e.y,7.6,0,7);X.fill();X.fillStyle=G;X.beginPath();X.arc(e.x,e.y,6,0,7);X.fill();X.fillStyle=G2;X.beginPath();X.arc(e.x-1.6,e.y-2,2.4,0,7);X.fill();}});try{sfx('swing');}catch(x){}}}catch(x){E(x);}}};
+ C.mv.nB={an:'throwF',s:10,a:2,r:18,hits:[],beh:'hglob',fx,lim:'none'};
+ C.mv.sB=M('dashF',8,14,17,hit([[10,-30,17]],9.5,4.2,.064,40,{eff:'poison'}),{beh:'dash',bp:{spd:6,f0:8,f1:22,air:'float',intang:1},fx,lim:'none'});
+ C.mv.uB=M('float',4,38,12,hit([[0,-30,22]],1.5,1.6,.01,80,{ri:6}),{beh:'fly',bp:{dur:38,spd:4},helpless:1,fx,lim:'none',onStart(f){f.inv=Math.max(f.inv||0,14);}});
+ BEH.hcloud={tick(f,m,I){try{if(m.t===m.d.s&&!m.v.go){m.v.go=1;use('cloud');try{sfx('pop');}catch(x){}ent(f,{x:f.x,y:f.y-32,L:140,in:{},U(e){if(e.t%2===0){const a=rnd()*6.283,r=rnd()*52;part(e.x+Math.cos(a)*r,e.y+Math.sin(a)*r*.7,(rnd()-.5)*.6,-.3,18,rnd()<.5?G:'#b8e89a',3,0);}
+     for(const o of foes(e.owner)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,54))continue;if(!e.in[o.id]){e.in[o.id]=1;applyHit(o,{dmg:2.5,bkb:.6,kbg:0,ang:80,eff:'poison',fx},o.x>=e.x?1:-1,e.owner,{proj:1});}else if(e.t%15===0){o.dmg+=1.3;e.owner.dealt=(e.owner.dealt||0)+1.3;o.flash=3;o.lastBy=e.owner;o.lastHurt=FR;use('gas');}}},
+    D(e){const k=Math.min(1,e.t/10)*Math.min(1,(e.L-e.t)/24);X.globalAlpha=.2*k;X.fillStyle=G;for(let i=0;i<5;i++){const a=e.t*.03+i*1.257;X.beginPath();X.arc(e.x+Math.cos(a)*22,e.y+Math.sin(a)*14,30,0,7);X.fill();}}});}}catch(x){E(x);}}};
+ C.mv.dB={an:'castDown',s:10,a:3,r:20,hits:[],beh:'hcloud',fx,lim:'none'};
+ C._aik={nB:'far',sB:'mid',dB:'near'};
+ /* toxic body */
+ {const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah.apply(this,arguments);try{if(r==='hit'&&t&&t.C===C&&a&&a!==t&&!(o&&(o.proj||o.force))&&a.C!==C&&!a._hz){a._hz={T:FR+125,n:FR+60,by:t};}}catch(e){}return r;};
+  const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const f of F){const z=f._hz;if(!z)continue;if(f.dead||f.gone||f.st==='respawn'||FR>z.T+1){f._hz=null;continue;}if(FR%8===0)part(f.x+(rnd()-.5)*14,f.y-14-rnd()*30,0,-.5,12,G,2,0);if(FR>=z.n){z.n=FR+60;f.dmg+=1;if(z.by&&!z.by.gone)z.by.dealt=(z.by.dealt||0)+1;use('touch');}}}catch(e){E(e);}return r;};}
+ reg(C,['Lobs a glob of toxic sludge. Hold forward to throw it further. It poisons on a direct hit, and wherever it lands it leaves a puddle that hurts anyone standing in it. Two puddles at most.','Pours himself forward as a rush of liquid. Attacks pass through him on the way, and whoever he hits is poisoned.','Turns to gas and rises, steering as he goes. He cannot be hit as he starts, and the vapour burns whatever it passes.','Leaves a cloud of gas hanging where he stood. It poisons whoever walks in and keeps hurting them while they stay.','Total Meltdown: a storm of toxic waste around him that holds and burns everyone inside.'],
+  {name:'TOTAL MELTDOWN',type:'zone',r:150,dur:100,tick:2.4,ri:8,fin:[14,9.5,.11,60],col:[G,G2],vis:'gen',call:'MELTDOWN!'},'MELTDOWN!',[2,1],['fist',G,DG]);}
+
+/* ======================= TWINE ======================= */
+{const Y='#e8667e',Y2='#ffc0cc',YD='#a83a52',fx=[Y,Y2];
+ const[C,S]=make('maya',{id:'twine',n:'TWINE',sn:'TWINE',card:'TWINE',q:'Twine',ty:'Mutation',col:Y,
+  d:'A girl made entirely of yarn. Her arms unravel across half the stage and wind themselves back, and so does the rest of her.',
+  na:'Normals: her forward tilt and forward smash are long yarn-arm punches, strongest at the very end. Hold up or down as you throw one to angle it. Down B changes what is on the end of her arms.',
+  role:'Long-range puncher',tip:'Keep them at the end of your arms. Needle to poke, Knot to finish, Hook to drag them back in.',weak:'Her long punches are slow to come back, and she is light. Up close she has very little.',
+  trait:'YARN ARMS — three arm tips on Down B: NEEDLE (fast and longest), KNOT (slow and heavy), HOOK (drags the rival toward her). Angle any long punch with up or down.',
+  rng:5,pwr:.95,atkM:1.1,kbM:1.07,defKb:.92,grabR:54,tether:130,shMax:44,style:'poker',tauntT:'I AM A LITTLE UNRAVELLED.',taunt2T:'HOLD THIS END.',taunt3T:'KNIT ONE, PURL ONE.',persona:'shy',
+  qa:['LOOSE THREAD','decoy',{},8,'Leaves a tangle of yarn in her shape and slips backward.']},
+  {w:.97,walk:1.8,run:3.8,air:2.7,jump:-9.6,sj:-6,dj:-9,g:.36,fall:4.7,ff:7.4,aj:1,acc:.26,trac:.8,dash:.7,jsq:3,aacc:.16},fx,kit(fx,.95,.9,0));
+ C.kit={st:'brawler',fx,el:'web',pow:.95,reach:1.3};
+ C.sp=['Yarn Punch (a long arm punch; hold up or down to angle it)','Unravel (she comes apart into a single strand and zips forward)','Spring Stitch (her legs coil and fire her upward)','Change Tip (Needle, Knot or Hook on the end of her arms)'];
+ looks(C,S,{skin:Y,eye:'#2a1a22',hair:'#ffe9a8',hair2:'#fff6d8',hairS:'pigtails',fem:1,stance:'guard',yarn:1},Object.assign({},UNI,{skirt:'#1e2430',socks:Y,pants:null,trim:Y2,tieC:Y2}),{outfit:'tee',sl:'none',top:'#6a4ac8',top2:'#5a3ab0',sleeve:Y,pants:null,skirt:'#6a4ac8',socks:Y,shoe:'#ffe9a8',glove:null,acc:'#ffe9a8',trim:'#ffe9a8',print:null,emblem:null,tieC:null,cuff:null,ex:['scarf'],scarfC:'#ffe9a8',hx:['ribbon']});
+ /* knit stitches all over her */
+ {const db=drawHumanBody;drawHumanBody=function(L,J,S2,p){const r=db.apply(this,arguments);if(L.yarn){try{if(!L._yd)L._yd=ramp(YD);const c=L._yd[2],h=L.h||1,st=(A,B,n)=>{for(let i=0;i<n;i++){const k=(i+.5)/n,x=A.x+(B.x-A.x)*k,y=A.y+(B.y-A.y)*k;sp(x-1*h,y,c);sp(x+1*h,y+1*h,c);}};st(J.SF,J.EF,2);st(J.EF,J.WF,2);st(J.SB,J.EB,2);st(J.EB,J.WB,2);st(J.KF,J.AF,2);st(J.KB,J.AB,2);const H=J.Hd;sp(H.x-4*h,H.y+3*h,c);sp(H.x-3*h,H.y+4*h,c);sp(H.x+1*h,H.y+5*h,c);}catch(e){}}return r;};}
+ /* the arms: three tips x three angles for each long punch */
+ const TIP=[{n:'NEEDLE',dm:.85,s:-2,r:14,kb:.92,rad:8},{n:'KNOT',dm:1.22,s:4,r:-16,kb:1.18,rad:14},{n:'HOOK',dm:.9,s:1,r:0,kb:.6,rad:10,pull:1}];
+ const BASE={ftilt:{R:88,dmg:8.5,s:8,r:17,bkb:3.4,kbg:.066},nB:{R:122,dmg:10.5,s:11,r:21,bkb:3.8,kbg:.078},fsmash:{R:134,dmg:15.5,s:16,r:27,bkb:3.8,kbg:.104,charge:1}};
+ const ARM={};for(const key in BASE){const b=BASE[key];ARM[key]=TIP.map(tp=>[0,-.5,.5].map(an=>{const R=b.R+tp.r,pts=[];for(let d=22;d<R;d+=22)pts.push([Math.cos(an)*d,-38+Math.sin(an)*d,8]);pts.unshift([Math.cos(an)*R,-38+Math.sin(an)*R,tp.rad]);
+   const h=hit(pts,b.dmg*tp.dm,b.bkb,b.kbg*tp.kb,an<0?52:an>0?24:38,tp.pull?{qk:{k:'pull',v:1.1}}:{});return M('punch',Math.max(4,b.s+tp.s),5,b.r+Math.max(0,tp.s),h,{lim:'none',fx,sweet:'tip',face:'atk',charge:b.charge||0,nm:(key==='nB'?'YARN PUNCH':key==='fsmash'?'LONG ARM':'REACH')+' · '+tp.n});}));}
+ for(const key in ARM)C.mv[key]=ARM[key][0][0];
+ {const rd=resolveDef;resolveDef=function(f,key){try{if(f&&f.C===C&&!f.form&&!(f.copyT>0)&&ARM[key]){const iy=(f.pi&&f.pi.y)||0,ai=iy<-.4?1:(iy>.4&&!f.ground)?2:0;return{d:ARM[key][(f.cycN||0)%3][ai],mc:-1};}}catch(e){}return rd.apply(this,arguments);};}
+ C.mv.dB=M('roar',5,2,8,null,{fx,lim:'none',onStart(f){if(f.C!==C)return;f.cycN=((f.cycN||0)+1)%3;FXL.push({k:'txt2',s:TIP[f.cycN].n,x:f.x,y:f.y-84,t:0,life:40,col:Y});try{sfx('pop');}catch(x){}use('tip');}});
+ C.mv.sB=M('dashF',7,14,15,hit([[8,-30,15]],8,4.4,.066,45),{beh:'dash',bp:{spd:7.4,f0:7,f1:21,air:'float',intang:1},fx,lim:'none',vanish:1});
+ C.mv.uB=M('castUp',6,10,18,hit([[0,-40,16]],6,4.6,.05,84),{beh:'leapUp',bp:{vy:-11.4,vx:1.8},helpless:1,fx,lim:'none'});
+ C._aik={nB:'far',sB:'mid',dB:'self'};
+ if(typeof hudName==='function'){const h0=hudName;hudName=function(f){const s=h0.apply(this,arguments);return f&&f.C===C?s+' ['+TIP[(f.cycN||0)%3].n+']':s;};}
+ /* the CPU changes tips now and then, and angles upward at rivals above it */
+ {const a0=aiInput;aiInput=function(f){const I=a0.apply(this,arguments);try{if(I&&f.C===C&&!f.mv&&f.ground&&(f._twT||0)<FR){const q=near(f);if(q&&q.d>150&&rnd()<.012){f._twT=FR+200;I.B=true;I.x=0;I.y=1;I.A=I.J=I.S=I.G=false;}}}catch(e){}return I;};}
+ reg(C,['A long punch with one yarn arm. Hold up as you throw it to angle it upward, or down in the air to angle it down. What it does depends on the tip: Needle is fast and longest, Knot is slow and heavy, Hook drags the rival toward her.','She comes apart into a single strand and zips forward. Attacks pass through her until she winds herself back together.','Her legs coil like a spring and fire her upward. Her yarn can also catch a ledge from a long way off: hold Grab in the air near one.','Changes the tip on the end of her arms: Needle, then Knot, then Hook. Instant, and it changes her forward tilt, forward smash and Yarn Punch.','All Tied Up: lunges, binds one rival in yarn, and beats them senseless before the last blow.'],
+  Object.assign(clone(FSD.kongu||{}),{name:'ALL TIED UP',col:fx,call:'ALL TIED UP!'}),'ALL TIED UP!',[5,1.2],['whip',Y,YD]);}
+
+/* ======================= CHUCKLES ======================= */
+{const P='#b060ff',YL='#ffe14a',FUR='#c8a468',fx=[P,YL];
+ const[C,S]=make('tomi',{id:'chuckles',n:'CHUCKLES',sn:'CHUCKLES',card:'CHUCKLES',q:'Hyena',ty:'Mutation',col:P,
+  d:'A hyena who walks like a man and cannot stop laughing. The more he is hurt, the funnier he finds it, and the harder he hits.',
+  na:'Normals: fast, exact strikes with fists, knees and elbows. INSANITY: his damage rises with his own: at 0% his hits are weak, and by 170% they do nearly half as much again and launch further.',
+  role:'Comeback fighter',tip:'Stay alive while hurt. Every special gets bigger the closer he is to losing the stock.',weak:'Weak while he is healthy, and he has to be in danger to be dangerous.',
+  trait:'INSANITY — he deals from 82% to 140% of his normal damage as his own damage climbs from 0% to 170%. His Laugh grows, and his Mad Dash goes further.',
+  rng:2,pwr:1,grabR:26,shMax:46,style:'even',tauntT:'HEE HEE HEE HEE!',taunt2T:'DO THAT AGAIN!',taunt3T:'YOU SHOULD SEE YOUR FACE!',persona:'bold',
+  qa:['CACKLE','hype',{},10,'Throws back his head and laughs: his next hit does more.']},
+  {w:.98,walk:1.8,run:3.9,air:2.8,jump:-9.6,sj:-6,dj:-9.1,g:.4,fall:5.2,ff:8,aj:1,acc:.28,trac:.78,dash:.75,jsq:3,aacc:.16},fx,kit(fx,1.04,1,0));
+ C.kit={st:'brawler',fx,el:'psy',pow:1,reach:1};
+ C.sp=['Laugh (hold B to build a ball of mad laughter; bigger the longer you hold, and the more hurt he is)','Howl Palm (a point-blank blast from his open hand)','Mad Dash (a burst in any direction; goes further the more hurt he is)','Punchline (if he is hit, he vanishes and hits back)'];
+ looks(C,S,{head:'hyena',skin:FUR,eye:YL,bw:1.06,size:1.06,stance:'guard'},Object.assign({},UNI,{trim:P,tieC:P}),{outfit:'vest',sl:'none',top:'#5a2a8a',top2:'#48206e',sleeve:FUR,acc:'#5a2a8a',trim:YL,pants:'#2a1a3a',shoe:'#1a1024',boots:1,bracelet:1,armband:1,pantStripe:1,ex:['scarf'],scarfC:YL,hx:[]});
+ /* hyena head: no human face underneath */
+ {const dh=drawHead;drawHead=function(L,J,S2){if(L.head!=='hyena')return dh.apply(this,arguments);try{const H0=J.Hd,h=L.h*1.18,H={x:H0.x+.6*L.h,y:H0.y-1*L.h},t=S2.t||0,g=L.R.skin,dk=ramp('#5a4028'),mz=ramp('#3a2a22'),cr=ramp('#e8d8b0'),k=ramp('#16161c'),wh=ramp('#f4f0e0'),ye=ramp(YL),atk=S2.face==='atk'||S2.face==='win',hurt=S2.face==='hurt'||S2.face==='dizzy',lau=atk||(S2.ins>.5&&(t>>3)%3===0);
+   polyH(H,h,[-6,-6,-9,-12,-7.6,-15.6,-4,-14.6,-2,-8],dk,'g');polyH(H,h,[-6,-8,-8,-12,-7,-14,-4.6,-13,-3.4,-8.6],ramp('#d89aa0'),'g',0);
+   for(let i=0;i<5;i++)polyH(H,h,[-8+i*1.6,-7,-7.4+i*1.6,-11.6-(i%2)*1.4,-6+i*1.6,-7.4],dk,'g');
+   polyH(H,h,[-7,5,-8,-2,-6,-8,-1,-10.6,4,-9.6,7,-6.4,8,-2,7.4,2,4,6.4,-3,6.6],g,{cx:H.x-1,cy:H.y-3,r:9*h});
+   polyH(H,h,[2,-3,8,-3.6,13,-1.6,14,1,12.6,2.6,6,3,2,2],g,'g');polyH(H,h,[9,-3,13,-1.6,14,1,12.6,2.4,9.6,1.6],mz,'g',0);sp(H.x+13.6*h,H.y-.8*h,k[1]);sp(H.x+12.8*h,H.y-1.4*h,k[1]);
+   const op=lau?3.2:hurt?1.4:.5;polyH(H,h,[3,2.6,12.6,2.4,11.4,3.6+op,4,3.8+op*.9],lau?ramp('#7a1820'):mz,'g');if(lau||hurt){for(let i=0;i<4;i++){sp(H.x+(5+i*2)*h,H.y+2.9*h,wh[5]);sp(H.x+(5.6+i*1.8)*h,H.y+(3.4+op*.8)*h,wh[4]);}}
+   polyH(H,h,[4.6,3.6+op,11,3.6+op,9,5.6+op,5,5.4+op],cr,'g',0);
+   for(const q of[[-3,-5],[-5,0],[-1,2],[-4,3.6],[0,-7],[2,3.6]])sp(H.x+q[0]*h,H.y+q[1]*h,dk[2]);
+   ell(H.x+4.4*h,H.y-3.4*h,1.5*h,1.5*h,0,k,0,1);sp(H.x+4.6*h,H.y-3.4*h,ye[5]);sp(H.x+5.4*h,H.y-3.4*h,S2.ins>.5?ramp('#ff3a4a')[4]:ye[4]);lineH(H,h,2.4,-6,7,-4.6,dk[1]);
+  }catch(e){}return;};}
+ const ins=f=>cl((f.dmg||0)/170,0,1);T3.ins=ins;
+ {const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0.apply(this,arguments);try{if(a&&a.C===C&&a!==t)m*=.82+.58*ins(a);}catch(e){}return m;};
+  const k0=kbMod;kbMod=function(a,t,h,o){let m=k0.apply(this,arguments);try{if(a&&a.C===C&&a!==t)m*=.95+.18*ins(a);}catch(e){}return m;};
+  const ss=spriteState;spriteState=function(f){const S2=ss.apply(this,arguments);try{if(f&&f.C===C){S2.ins=ins(f);if(S2.ins>.45&&!S2.aura)S2.aura=S2.ins>.8?'#ff3a6a':P;}}catch(e){}return S2;};
+  const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const f of F){if(f.C!==C||f.dead||f.gone||f.st==='respawn')continue;const k=ins(f);if(k>.5&&FR%Math.round(70-k*40)===0)FXL.push({k:'txt',s:k>.85?'HA HA HA!':'HEE!',x:f.x+(rnd()-.5)*30,y:f.y-80-rnd()*14,t:0,life:22,col:k>.85?'#ff3a6a':YL});}}catch(e){}return r;};}
+ BEH.cball={tick(f,m,I){try{const d=m.d,v=m.v;if(m.t<d.s||v.done)return;const k=ins(f),held=f.ctrl==='cpu'?(v.c||0)<(v.goal||(v.goal=8+Math.floor(rnd()*56))):I.B;
+   if(held&&(v.c||0)<66){v.c=(v.c||0)+1;m.t=d.s;f.vx*=.8;const u=v.c/66,r=4+u*8+k*4;if(v.c%2===0)part(f.x+f.face*22+(rnd()-.5)*r*2,f.y-38+(rnd()-.5)*r*2,0,0,8,rnd()<.5?P:YL,2,0);if(v.c%16===0)say(f.x+f.face*22,f.y-60,'HA',YL);return;}
+   v.done=1;const u=cl((v.c||0)/66,0,1),r=5+u*7+k*4,dm=(5+u*11);use('ball');ent(f,{x:f.x+f.face*24,y:f.y-38,vx:f.face*(5.4+u*1.6),L:76,r,U(e){e.x+=e.vx;for(const o of foes(e.owner)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,e.r))continue;applyHit(o,{dmg:dm,bkb:3.6+u*1.4,kbg:.04+u*.055,ang:42,fx},Math.sign(e.vx)||1,e.owner,{proj:1});e.alive=false;burst(e.x,e.y,14,[P,YL,W],2.6,16);say(e.x,e.y-24,'HA!',YL);use('ballHit');return;}if(e.t%2===0)part(e.x-e.vx,e.y+(rnd()-.5)*e.r,0,0,9,rnd()<.5?P:YL,2,0);},
+     D(e){X.fillStyle='#2a1040';X.beginPath();X.arc(e.x,e.y,e.r+1.6,0,7);X.fill();X.fillStyle=P;X.beginPath();X.arc(e.x,e.y,e.r,0,7);X.fill();X.fillStyle=YL;X.beginPath();X.arc(e.x,e.y,e.r*.55,0,7);X.fill();X.fillStyle='#2a1040';X.fillRect(e.x-e.r*.3,e.y-e.r*.2,e.r*.18,e.r*.18);X.fillRect(e.x+e.r*.14,e.y-e.r*.2,e.r*.18,e.r*.18);X.beginPath();X.arc(e.x,e.y+e.r*.05,e.r*.32,0,3.14);X.fill();}});try{sfx('swing');}catch(x){}}catch(x){E(x);}}};
+ C.mv.nB={an:'cast',s:8,a:2,r:16,hits:[],beh:'cball',fx,lim:'none',face:'atk'};
+ C.mv.sB=M('palm',9,5,20,hit([[40,-34,17],[22,-34,13]],11,4.4,.086,42),{fx,lim:'none',face:'atk'});
+ BEH.cdash={tick(f,m,I){try{const d=m.d,v=m.v,t=m.t;if(t<d.s){f.vx*=.6;f.vy*=.5;v.ix=I.x;v.iy=I.y;return;}if(!v.dir){let dx=v.ix||0,dy=v.iy||0;const l=Math.hypot(dx,dy);if(l<.3){dx=0;dy=-1;}else{dx/=l;dy/=l;}v.dir=[dx,dy];v.sp=8.4+3.4*ins(f);if(dx)f.face=Math.sign(dx);if(dy<0)f.ground=null;use('dash');try{sfx('warp');}catch(x){}}
+   if(t<=d.s+d.a){const l=Math.hypot(I.x,I.y);if(l>.3){v.dir[0]+=(I.x/l-v.dir[0])*.08;v.dir[1]+=(I.y/l-v.dir[1])*.08;}f.vx=v.dir[0]*v.sp;f.vy=v.dir[1]*v.sp;if(v.dir[1]<0)f.ground=null;FXL.push({k:'shadow',x:f.x,y:f.y,t:0,face:f.face,col:P,ci:f.ci});}else{f.vx*=.5;f.vy*=.5;}}catch(x){E(x);}}};
+ C.mv.uB=M('dashF',9,14,14,hit([[0,-30,16]],4.5,3.6,.03,60),{beh:'cdash',helpless:1,fx,lim:'none'});
+ C.mv.dB=M('counter',5,2,13,null,{beh:'counter',bp:{f0:5,f1:25,mode:'dodge',mult:1.3},fx,lim:'none'});
+ C._aik={nB:'far',sB:'near',dB:'near'};
+ reg(C,['Hold B to build a ball of mad laughter in his hands, then let go to throw it. It grows the longer you hold and the more hurt he is.','A point-blank blast from his open palm. Short reach, and one of his better finishers.','Gathers himself, then bursts in whichever direction you hold: any of eight, and you can bend it as he goes. It carries further the more hurt he is. He cannot act afterwards.','A stance. If he is hit during it he vanishes, reappears beside the attacker and hits back harder than he was hit.','The Last Laugh: a beam of screaming laughter down the whole lane.'],
+  {name:'THE LAST LAUGH',type:'beam',len:442,h:120,dur:117,tick:2.4,ri:6,fin:[19,11.2,.13,35],col:[P,YL],vis:'gen',call:'HA HA HA HA!'},'HA HA HA HA!',[2,1],['fist',P,YL]);}
+}catch(e){E(e);}
+})();
+
 /* skins.js — costumes are earned. Every fighter starts with their Hero costume. The rest unlock per player profile:
    Uniform (1 campaign fight), Villain (5 matches), Beach (10), Prom (15), Greyscale (20), the older themed outfits (KOs / damage), Ninja (Survival wave 5). */
 (function(){
@@ -13625,6 +13767,9 @@ bentou:['BAD OMEN','hold',28,'omen',0,[3,60,3.6,.03],{st:'doom',sec:3},'Marks th
 okane:['GOLD STANDARD','slam',36,'gold',0,[12,64,5,.072],{},'Lifts the rival, turns to solid gold, and brings all that weight down on them.'],
 goiru:['STONE FIST','pin',34,'fist',0,[12,-85,5.2,.07],{},'Holds the rival down and brings a stone fist onto them from above. They bounce off the floor.'],
 meisei:['WET PAINT','spin',30,'rainbow',[4,1.4],[7,60,5,.085],{},'Spins the rival through every colour she has, then flings them away dripping.'],
+hazmat:['CONTAMINATE','hug',32,'slime',[5,1.4],[5,65,4.6,.07,'poison'],{},'Pulls the rival into himself and holds them under, then spits them out poisoned.'],
+twine:['CAT\'S CRADLE','wrap',32,'webline',[4,1.2],[8,62,5,.085],{},'Winds the rival up in her own arms, spins them like a bobbin and lets go.'],
+chuckles:['GAG','shake',30,'haha',[4,1.5],[7,58,5,.085],{},'Grabs them by the collar and laughs in their face until they fly off.'],
 trunks:['TRUNK SLAM','slam',30,'coil',[2,2],[9,72,5.2,.09],{},'Wraps the rival in his trunk, swings them overhead and slams them into the floor.'],
 aya:['GEODE','hold',34,'geode',[4,1.5],[5,60,5,.065],{},'Crystals close over the rival, then burst outward.'],
 hikari:['LIVE WIRE','hold',32,'arc',[5,1.3],[4,80,5,.06],{chain:5},'Crosses her blades on the rival and runs current through them. It arcs to anyone standing close.'],
@@ -13801,6 +13946,9 @@ bentou:[['MISFORTUNE','status','orb','Leaves the rival dazed.',{eff:'haze'}],['F
 okane:[['GOLD FIST','armor','bigfist','Solid gold. Does not flinch.'],['BULLION','armor','comet','Runs as a gold statue.'],['dair','GOLD BRICK','dive','shock','Turns to gold and drops.']],
 goiru:[['WING HAMMER','quake','shock','Both wings into the floor.'],['GARGOYLE RAM','armor','comet','Stone, at speed.'],['dair','STONE DROP','dive','shock','Turns to stone and falls.']],
 meisei:[['BRUSHSTROKE','wave','wave','One sweep of the arm and a wall of red paint.'],['SLIP AND SLIDE','slide','wave','Skates in on her own paint.'],['dair','DRIP','dive','wave','Straight down, trailing violet.']],
+hazmat:[['OVERFLOW','erupt','wave','A wave of sludge bursts out of his chest.',{eff:'poison'}],['SLICK','slide','wave','Slides in on himself.'],['dair','DRIP','dive','wave','All of him, straight down.']],
+twine:[['LONG ARM','reach','fan','Her arm unravels across the stage.'],['TUMBLE','rush','gust','A rolling ball of yarn.'],['dair','PLUMB LINE','dive','shard','A weighted strand, straight down.']],
+chuckles:[['PUNCHLINE','late','text','Wait for it.',{w:'HA!'}],['POUNCE','rush','gust','On all fours for a moment.'],['dair','HEEL','dive','shock','Laughing all the way down.']],
 trunks:[['MONSOON','erupt','wave','A burst of water from his trunk at point-blank range.'],['STAMPEDE','rush','gust','Head down, ears back.'],['dair','EARTHSHAKER','dive','shock','Both feet, all of him.']],
 aya:[['CRYSTAL SPIRE','erupt','pillar','A spire of crystal a step ahead.'],['FACET SLIDE','slide','shards','Slides in on crystal.'],['fair','PRISM LANCE','reach','blade','A long blade of crystal.']],
 hikari:[['CROSS CURRENT','late','bolt','Two blades, then the arc between them.',{eff:'para'}],['FLASH STEP','blink','bolt','Is behind you.'],['dair','LIGHTNING ROD','dive','bolt','Blades down.']],
@@ -14041,7 +14189,7 @@ koki:'H splash drip',hana:'P zip spark',tomi:'H shrink -',yoko:'F light mote',ch
 kuragari:'N thread -',mia:' beam spark',shi:'N shadow wisp',takeshi:'P poof ooze',ali:'F light mote',daku:'P flame ember',kongu:'H drop -',hippo:'B poof -',dawson:'N zip -',maya:' light mote',
 sarah:'N shadow wisp',aria:'B leap glint',bryson:'B drop -',conor:'B leap glint',ray:'P zip -',oliver:' leap -',chris:'P drop -',evona:' ice frost',jack:'P flame ember',kal:' zip -',
 kora:'P fly feather',ash:'H rise leaf',moya:'F poof smoke',sato:'B drop -',akio:'S zip static',sata:' beam spark',kitsu:' light glint',uzi:'B rise ooze',ichigo:' beam spark',bentou:' blink wisp',
-okane:'P drop glint',goiru:'H drop dust',trunks:'H drop dust',meisei:'N dash wisp',aya:' rise glint',hikari:'S bolt static',ryo:'H rise dust',suzume:'S thread -',ayame:'F fly leaf',sota:'S zip ember',tiki:' shadow wisp'};
+okane:'P drop glint',goiru:'H drop dust',trunks:'H drop dust',hazmat:'H rise wisp',twine:'N thread wisp',chuckles:'N dash wisp',meisei:'N dash wisp',aya:' rise glint',hikari:'S bolt static',ryo:'H rise dust',suzume:'S thread -',ayame:'F fly leaf',sota:'S zip ember',tiki:' shadow wisp'};
 const R={};for(const k in ROW){const a=ROW[k].split(' ');R[k]={w:a[0],e:a[1],a:a[2]==='-'?'':a[2]};}
 A2.R=R;const row=f=>(f&&f.C&&R[f.C.id])||{w:'',e:'poof',a:''};
 const humanoid=f=>!(f.L&&f.L.body)&&!f.formL;
