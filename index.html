@@ -8373,7 +8373,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
   for(let i=LIVE.length-1;i>=0;i--){const e=LIVE[i];if(e.alive){e._lx=e.x;e._ly=e.y;continue;}LIVE.splice(i,1);if(e._hit)continue;const x=e._lx===undefined?e.x:e._lx,y0=e._ly===undefined?e.y:e._ly;let best=null;for(const s of surfaces()){if(x>s.x&&x<s.x+s.w&&s.y>=y0-6&&(!best||s.y<best.y))best=s;}if(best&&best.y-y0<160)STUCK.push({x,y:best.y,owner:e._quill,until:FR+540,a:-1.2-rnd()*.7});}
   for(let i=STUCK.length-1;i>=0;i--)if(FR>STUCK[i].until||STUCK[i].owner.gone)STUCK.splice(i,1);
   for(let i=RET.length-1;i>=0;i--){const q=RET[i],f=q.owner,tx=f.x,ty=f.y-34,dx=tx-q.x,dy=ty-q.y,d=Math.hypot(dx,dy)||1;if(f.dead||f.gone||++q.t>90){RET.splice(i,1);continue;}if(d<16){RET.splice(i,1);f.qf=Math.min(MAX,(f.qf||0)+1);if(FR%2===0)sfx('pop');continue;}q.vx=dx/d*13;q.vy=dy/d*13;q.x+=q.vx;q.y+=q.vy;
-    for(const o of F){if(o===f||o.dead||o.gone||o.inv>0||q.hit[o.id]||(typeof sameTeam==='function'&&sameTeam(f,o)))continue;if(Math.abs(o.x-q.x)<14&&Math.abs((o.y-30)-q.y)<30){q.hit[o.id]=1;try{applyHit(o,{dmg:3.5,bkb:2.6,kbg:.03,ang:72,b:[[0,0,6]],fx},Math.sign(q.vx)||1,f,{proj:1});}catch(e){}}}}
+    for(const o of F){if(o===f||o.dead||o.gone||o.inv>0||q.hit[o.id]||(typeof sameTeam==='function'&&sameTeam(f,o)))continue;if(Math.abs(o.x-q.x)<14&&Math.abs((o.y-30)-q.y)<30){q.hit[o.id]=1;try{applyHit(o,{dmg:7,bkb:2.6,kbg:.03,ang:72,b:[[0,0,6]],fx},Math.sign(q.vx)||1,f,{proj:1});}catch(e){}}}}
   for(const f of F){if(f.C!==C||f.gone)continue;if(f.qf===undefined)f.qf=MAX;if(f.dead||f.st==='respawn'){f.qf=MAX;continue;}if(f.form||f.copyT>0)continue;
     if(f.qf<MAX){f._qr=(f._qr||0)+1;if(f._qr>=90){f._qr=0;f.qf++;}}
     const m=f.mv;if(!m||f.hl>0)continue;const d=m.d,I=f.pi||{};
@@ -8383,7 +8383,7 @@ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0(a,t,h,o);if(a){if(a.sapT>FR)m*
       if(best){f.x=clamp(best.x+f.face*26,-30,WW+30);f.y=best.y;if(!best.ground)f.ground=null;f.face=-f.face;f.vx=0;f.vy=Math.min(f.vy,0);}else{f.x=clamp(f.x+f.face*78,-30,WW+30);f.vx=f.face*2;}f.lx=f.ly=0;f.inv=Math.max(f.inv||0,7);sfx('warp');FXL.push({k:'ring',x:x0,y:y0-30,t:0,col:SL,r0:8,life:12});}
     if(m.k==='dB'&&m.t===d.s&&!m._rc){m._rc=1;let n=0;for(let i=STUCK.length-1;i>=0;i--){const q=STUCK[i];if(q.owner!==f)continue;STUCK.splice(i,1);RET.push({x:q.x,y:q.y-8,owner:f,t:0,hit:{},vx:0,vy:0});n++;}
       for(const o of F){if(o===f||o.dead||o.gone)continue;const E=emb(o),mine=E.filter(e=>e.by===f);if(!mine.length)continue;o._emb=E.filter(e=>e.by!==f);const k=mine.length,dir=Math.sign(f.x-o.x)||1;n+=k;for(let i=0;i<k;i++)RET.push({x:o.x+rnd()*10-5,y:o.y-30+rnd()*20-10,owner:f,t:0,hit:{[o.id]:1},vx:0,vy:0});
-        try{applyHit(o,{dmg:1.5+2.6*k,bkb:3+k*.9,kbg:.03+.011*k,ang:48,b:[[0,0,8]],fx},dir,f,{proj:1,force:1});}catch(e){}burst(o.x,o.y-30,6+k*3,[SL,RD,'#ffffff'],2.4,18);}
+        try{applyHit(o,{dmg:(1.5+2.6*k)*2,bkb:3+k*.9,kbg:.03+.011*k,ang:48,b:[[0,0,8]],fx},dir,f,{proj:1,force:1});}catch(e){}burst(o.x,o.y-30,6+k*3,[SL,RD,'#ffffff'],2.4,18);}
       if(n){say(f,'RECALL');sfx('reflect');FXL.push({k:'ring',x:f.x,y:f.y-34,t:0,col:SL,r0:30,life:16});}else say(f,'NOTHING OUT',SD);}
   }}catch(e){}};
  const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const q of STUCK){if(q.until-FR<60&&FR%6<2)continue;quillAt(q.x,q.y+1,q.a);}for(const q of RET){quillAt(q.x,q.y,Math.atan2(q.vy,q.vx)+Math.PI);wl(SL,q.x,q.y,q.x-q.vx*1.4,q.y-q.vy*1.4,1);}}catch(e){}};
@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1411';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1423';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -13551,7 +13551,7 @@ koki:[['BITE','armor','jaws','Jaws wide. Does not flinch.'],['LAND SHARK','erupt
 hana:[['RIP SAW','drill','saw','Holds the saw in: five cuts and a launcher.'],['SAW SLIDE','slide','saw','Slides in on one blade.'],['dair','BUZZ DROP','float','saw','Hovers on a spinning blade, cutting below.']],
 tomi:[['GIANT FIST','grow','bigfist','Just the fist. Sixty feet of it.'],['BIG STEP','quake','shock','One giant footfall: a tremor both ways.'],['dair','GIANT HEEL','grow','bigfist','One foot, grown to giant size.']],
 yoko:[['CRUSH','pull','orb','Gravity drags rivals in, then throws them out.'],['HEAVY STEP','quake','shock','Lands with ten times her weight.'],['dair','FREE FALL','dive','orb','Triples her own gravity.']],
-chiyoki:[['BOWLING PIN','status','text','Hits rivals with a bowling pin. They no longer know which way is up.',{eff:'conf',w:'BONK'}],['PRATFALL','slide','text','Trips on purpose.',{w:'OOF'}],['fair','HORN HONK','wave','text','A honk you can feel.',{w:'HONK'}]],
+chiyoki:[['GRAVEDIGGER','status','text','Swings the flat of his shovel. They no longer know which way is up.',{eff:'conf',w:'BONK'}],['PRATFALL','slide','text','Trips on purpose.',{w:'OOF'}],['fair','HORN HONK','wave','text','A honk you can feel.',{w:'HONK'}]],
 yurei:[['COLD SPOT','erupt','cloud','Her blade comes up through the floor a step ahead.'],['HAUNT','blink','cloud','Behind you.'],['dair','DRIFT DOWN','float','cloud','Hangs in the air, cutting below.']],
 ivan:[['BIG SLAP','grow','bigfist','A hand the size of a car.'],['SHOVE','wave','bigfist','A flying palm that carries on past him.'],['dair','SWAT DOWN','spike','bigfist','A giant hand, flat, downward.']],
 bisu:[['RHINO HORN','armor','comet','Turns into a rhino for exactly one charge.'],['CHEETAH','rush','comet','Turns into a cheetah for exactly one sprint.'],['dair','ELEPHANT','dive','shock','Turns into an elephant in mid-air.']],
@@ -14085,7 +14085,7 @@ try{const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0.apply(this,arguments);try{
 /* CHIYOKI: Down B is a shovel-smack counter, and one bowling pin in three is live: more damage, and it goes off like a grenade */
 try{const C=CH.find(c=>c.id==='chiyoki');if(C&&C.mv&&C.mv.dB){const old=C.mv.dB,oldT=[C.sp[3],typeof GTXT!=='undefined'&&GTXT.chiyoki?GTXT.chiyoki[3]:'',typeof GTXT!=='undefined'&&GTXT.chiyoki?GTXT.chiyoki[1]:''];
   const nw={an:'counter',s:4,a:24,r:20,hits:[],beh:'counter',bp:{f0:4,f1:27,mult:1.6},fx:old.fx,lim:'none',sub:'shovel',nm:'SHOVEL SMACK'};if(old.hf)nw.hf=old.hf;
-  TW.chiyoki=function(on){TW.chiOn=!!on;if(TW._ir===undefined)TW._ir=C.iron||0;C.iron=on?(TW.chiIron||10):TW._ir;/* feels no pain: hits under 10% do not make him flinch (it was 4%) */try{if(typeof C.na==='string'){if(TW._na===undefined)TW._na=C.na;C.na=on?TW._na.replace('Small hits do not make him flinch','He feels no pain: hits under 10% do not make him flinch'):TW._na;}}catch(e){}C.mv.dB=on?nw:old;C.sp[3]=on?'Shovel Smack (counter)':oldT[0];try{if(GTXT.chiyoki){GTXT.chiyoki[3]=on?'Braces with the shovel for a moment. If anything hits him while he does, he laughs it off and smacks the attacker with the flat of it: at least 16%, more the harder they hit him, and a big launch.':oldT[1];GTXT.chiyoki[1]=on?oldT[2]+' One pin in three is live: it glows red, does more damage and goes off like a grenade.':oldT[2];if(TW._t0===undefined)TW._t0=GTXT.chiyoki[0];GTXT.chiyoki[0]=on?TW._t0+' Dread also makes his hits carry: a PANICKED rival is launched 25% further by anything he lands, and a FROZEN one 40% further.':TW._t0;}}catch(e){}};
+  TW.chiyoki=function(on){TW.chiOn=!!on;if(TW._ir===undefined)TW._ir=C.iron||0;C.iron=on?(TW.chiIron||12):TW._ir;/* feels no pain: hits under 12% do not make him flinch (it was 4%) */try{if(typeof C.na==='string'){if(TW._na===undefined)TW._na=C.na;C.na=on?TW._na.replace('Small hits do not make him flinch','He feels no pain: hits under 12% do not make him flinch'):TW._na;}}catch(e){}C.mv.dB=on?nw:old;C.sp[3]=on?'Shovel Smack (counter)':oldT[0];try{if(GTXT.chiyoki){GTXT.chiyoki[3]=on?'Braces with the shovel for a moment. If anything hits him while he does, he laughs it off and smacks the attacker with the flat of it: at least 16%, more the harder they hit him, and a big launch.':oldT[1];GTXT.chiyoki[1]=on?oldT[2]+' One pin in three is live: it glows red, does more damage and goes off like a grenade.':oldT[2];if(TW._t0===undefined)TW._t0=GTXT.chiyoki[0];GTXT.chiyoki[0]=on?TW._t0+' Dread also makes his hits carry: a PANICKED rival is launched 25% further by anything he lands, and a FROZEN one 40% further.':TW._t0;}}catch(e){}};
   const t0=triggerCounter;triggerCounter=function(t,a,h){try{if(t&&t.C===C&&TW.chiOn&&t.mv&&t.mv.d===nw){const fx=nw.fx;burst(t.x,t.y-30,20,[fx[0],'#ffffff'],2.6,22);try{sfx('counter');}catch(e){}t.face=a.x>=t.x?1:-1;t.inv=Math.max(t.inv||0,14);const dmg=Math.max(16,(h.dmg||0)*1.6);t.mv=null;t.st='land';t.stT=16;
      const far=Math.abs(a.x-t.x)>70||Math.abs(a.y-t.y)>60;FXL.push({k:'txt2',s:'BONK!',x:t.x+t.face*20,y:t.y-84,t:0,life:40,col:fx[0]});
      if(!far){applyHit(a,{dmg,bkb:5.4,kbg:.1,ang:48,fx},t.face,t,{force:1});try{if(!RM)shakeA=Math.max(shakeA,6);}catch(e){}}
@@ -14320,6 +14320,128 @@ if(typeof GTXT!=='undefined'&&GTXT.tamashi){const G=GTXT.tamashi;
 if(typeof C.trait==='string')C.trait=C.trait.replace('Objects fight for her.','Her suit and her sword fight for her.').replace('tilts drag rivals in; smashes daze.','smashes daze.');
 if(C.feel){C.feel.good='attacking from two sides at once';C.feel.plan='Throw the katana, then close in as the dragon while it harries them.';C.feel.beat='Catch her while the sword is away: her punches are short. The dragon is a wide target.';}
 }catch(e){E(e);}
+})();
+/* batch2.js — Tatsuya's mimic menu; Yurei's Fade, Haunt and Ghost Rise; Ryuko's charged laser; Kimiko's guided freeze; Koki's smashes; Bara's bleeding feathers; Chiyoki's shovel smashes. */
+(function(){
+if(typeof CH==='undefined'||typeof BEH==='undefined'||typeof EK==='undefined')return;
+const B2={err:null,use:{}};window.BATCH2=B2;const E=e=>{B2.err=B2.err||String(e&&e.stack||e).slice(0,400);};
+const W='#ffffff',cl=(v,a,b)=>v<a?a:v>b?b:v,c=id=>CH.find(x=>x.id===id);
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const inR=(o,x,y,r)=>{const R=hurtR(o),cx=cl(x,R[0],R[0]+R[2]),cy=cl(y,R[1],R[1]+R[3]);return Math.hypot(x-cx,y-cy)<=r;};
+const say=(x,y,s,col)=>FXL.push({k:'txt',s,x,y,t:0,life:36,col:col||W});
+const ring=(x,y,col,r0,life)=>FXL.push({k:'ring',x,y,t:0,col,r0:r0||8,life:life||16});
+const nearest=(f,x,y)=>{let b=null,bd=1e9;for(const o of foes(f)){if(intangible(o))continue;const d=Math.hypot(o.x-(x===undefined?f.x:x),o.y-30-(y===undefined?f.y-30:y));if(d<bd){bd=d;b=o;}}return b?{o:b,d:bd}:null;};
+EK.b2={init(){},upd(e){try{if(!e.owner||e.owner.gone||e.t>=e.L-1){e.alive=false;return;}if(e.U)e.U(e);}catch(x){E(x);e.alive=false;}},draw(e){try{if(e.D){X.save();e.D(e);X.restore();}}catch(x){}}};
+const ent=(f,o)=>{const e=Object.assign({k:'b2',owner:f,face:f.face,x:f.x,y:f.y,vx:0,vy:0,g:0,oa:1,t:0,life:200,alive:true,spec:{},hits:{},r:0},o);e.L=e.life;ENT.push(e);return e;};
+B2.K={fade:2,grTick:1.6,grFin:[9,7.5,.135,78],lzMax:66,lz:[11,26,188,720,.06,.105],pk:[8,19,.05,.1],koki:[1.2,1.1],bleed:60,rolls:3};
+
+/* ================= TATSUYA: Down B is a menu. Pick anyone; become them until he loses a stock or changes again ================= */
+try{const T=c('tatsuya');if(T){const GOLD='#e8c040',MENU={an:'cast',s:5,a:2,r:9,hits:[],beh:'tmenu',fx:[GOLD,W],lim:'none',nm:'MIMIC'};
+ for(const tb of[T.mv,T.hmv])if(tb)tb.dB=MENU;
+ const real=o=>o._tat?o._tat.ci:o.ci,TI=CH.indexOf(T);
+ const revert=f=>{const s=f._tat;if(!s)return;f.C=s.C;f.L=s.L;f.hero=s.hero;f._tat=null;f._mim=-1;f.form=null;f.formL=null;f.buf=null;f.S=null;f.mini=0;f.big=0;f.fadeT=0;f.invis=false;f.buff=null;f.cds={};};
+ const become=(f,ci)=>{if(ci<0||ci===TI){if(f._tat){revert(f);say(f.x,f.y-90,'HIMSELF',GOLD);}return;}const N=CH[ci];if(!N||N.hidden)return;if(!f._tat)f._tat={C:f.C,L:f.L,hero:f.hero,ci:f.ci};
+  f.C=N;const sk=typeof defSkin==='function'?defSkin(ci):0;f.L=(N.looks&&N.looks[sk])||N.look;f.hero=!!(N.heroLook&&sk===6);f._mim=ci;f.form=null;f.formL=null;f.buf=null;f.S=null;f.copyT=0;f.copyCi=-1;f.mini=0;f.big=0;f.fadeT=0;f.invis=false;f.buff=null;f.cds={};f.jumps=Math.min(f.jumps,N.st.aj);f.shp=Math.min(f.shp,N.shMax||50);
+  burst(f.x,f.y-30,24,[GOLD,W,N.col||GOLD],2.6,22);ring(f.x,f.y-30,GOLD,10,20);FXL.push({k:'txt2',s:'MIMIC: '+N.sn,x:f.x,y:f.y-86,t:0,life:50,col:GOLD});try{sfx('power');}catch(x){}B2.use.mim=(B2.use.mim||0)+1;};
+ B2.become=become;B2.revert=revert;
+ const options=f=>{const cur=f._tat?f._mim:-1,o=[];if(f._tat)o.push(-1);const seen={};for(const q of F){if(q===f||q.gone)continue;const ci=real(q);if(ci===TI||ci===cur||seen[ci]||CH[ci].hidden)continue;seen[ci]=1;o.push(ci);}
+  for(let i=0;i<CH.length;i++){const C2=CH[i];if(C2.hidden||!C2.looks||i===TI||i===cur||seen[i])continue;o.push(i);}return o;};
+ BEH.tmenu={tick(f,m,I){try{const v=m.v;if(m.t<m.d.s)return;if(!v.o){v.o=options(f);v.i=0;v.n=0;v.rel=0;v.rp=0;v.dir=0;try{sfx('pop');}catch(x){}}
+   if(v.done)return;v.n++;m.t=m.d.s;f.vx*=.8;
+   if(f.ctrl==='cpu'){if(v.n>=12){const tg=nearest(f);let ci=tg?real(tg.o):v.o[0];let k=v.o.indexOf(ci);if(k<0)k=f._tat?Math.min(1,v.o.length-1):0;v.i=k;v.done=1;become(f,v.o[v.i]);m.t=m.d.s+m.d.a;}return;}
+   const A=I.A||I.B;if(!A)v.rel=1;const dx=Math.abs(I.x)>.5?Math.sign(I.x):0;
+   if(dx){if(dx!==v.dir){v.dir=dx;v.rp=0;v.i+=dx;}else if(++v.rp>(v.fast?3:12)){v.rp=0;v.fast=1;v.i+=dx;}}else{v.dir=0;v.fast=0;}
+   v.i=(v.i%v.o.length+v.o.length)%v.o.length;
+   if(v.rel&&(I.aP||I.bP)){v.done=1;become(f,v.o[v.i]);m.t=m.d.s+m.d.a;}else if(I.S||I.J||v.n>300){v.done=1;m.t=m.d.s+m.d.a;}}catch(x){E(x);}}};
+ {const rd=resolveDef;resolveDef=function(f,key){if(f&&f._tat&&key==='dB')return{d:MENU,mc:-1};return rd.apply(this,arguments);};}
+ if(typeof mimicCopy==='function'){const mc=mimicCopy;mimicCopy=function(a,t,dur){if(a&&(a.C===T||a._tat))return;return mc.apply(this,arguments);};}
+ {const k0=ko;ko=function(f){try{if(f&&f._tat&&!f.dead&&!f.gone)revert(f);}catch(x){E(x);}const r=k0.apply(this,arguments);try{if(typeof GS!=='undefined'&&GS==='over')for(const q of F)if(q._tat)revert(q);}catch(x){}return r;};}
+ if(typeof endByTime==='function'){const e0=endByTime;endByTime=function(){const r=e0.apply(this,arguments);try{if(GS==='over')for(const q of F)if(q._tat)revert(q);}catch(x){}return r;};}
+ if(typeof hudName==='function'){const h0=hudName;hudName=function(f){const s=h0.apply(this,arguments);return f&&f._tat?'TATSUYA ('+s+')':s;};}
+ {const ss=spriteState;spriteState=function(f){const S=ss.apply(this,arguments);try{if(f&&f._tat&&!S.tint)S.tint=[GOLD,.14];}catch(x){}return S;};}
+ {const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const f of F){const m=f.mv;if(!m||m.d!==MENU||!m.v.o||m.v.done||f.ctrl==='cpu')continue;const v=m.v,n=v.o.length,cx=f.x,cy=f.y-108;
+    X.save();X.fillStyle='rgba(12,8,32,.82)';X.fillRect(cx-70,cy-17,140,44);X.strokeStyle=GOLD;X.lineWidth=1.5;X.strokeRect(cx-70,cy-17,140,44);
+    for(let k=-2;k<=2;k++){const ci=v.o[((v.i+k)%n+n)%n],s=k===0?28:18,x=cx+k*27-s/2,y=cy-s/2;if(n<5&&Math.abs(k)>(n-1)/2)continue;X.globalAlpha=k===0?1:.6;const hd=ci<0?HEADS[TI]:HEADS[ci];if(hd)X.drawImage(hd,x,y,s,s);if(k===0){X.strokeStyle=GOLD;X.lineWidth=2;X.strokeRect(x-1,y-1,s+2,s+2);}}
+    X.globalAlpha=1;const ci=v.o[v.i];X.fillStyle=W;X.font='bold 8px sans-serif';X.textAlign='center';X.fillText(ci<0?'HIMSELF':CH[ci].sn,cx,cy+23);X.fillStyle=GOLD;X.fillText('<',cx-64,cy+3);X.fillText('>',cx+64,cy+3);X.restore();}}catch(x){}};}
+ {const a0=aiInput;aiInput=function(f){const I=a0.apply(this,arguments);try{if(I&&f.C===T&&!f._tat&&!f.mv&&!f.item&&(f.st==='idle'||f.st==='walk'||f.st==='run')&&f.ground&&(f._tmT||0)<FR){const q=nearest(f);if(q&&q.d>B2.TA[0]&&rnd()<B2.TA[1]){f._tmT=FR+60;I.B=true;I.x=0;I.y=1;I.A=I.J=I.S=I.G=false;}}}catch(x){}return I;};}
+ B2.TA=[80,.08];
+ T.sp=['Golden Orb','Lunge','Borrowed Leap','Mimic (a menu of every other fighter; become any of them)'];T.role='Mimic';T.tip='Open the menu, become whoever suits the fight, and change again when it stops working.';
+ if(typeof GTXT!=='undefined'&&GTXT.tatsuya){const G=GTXT.tatsuya;G[0]='A golden orb that weaves up and down as it flies.';G[1]='A quick lunge.';G[2]='A rising leap. Lower than most, but he can still act afterwards.';
+  G[3]='Opens a menu of every other fighter: the rivals in this match first, then the whole roster. Left and right to scroll, A or B to choose, Shield to cancel. He becomes that fighter: their moves, their weight, their speed, everything except their Down B, which stays Mimic. He stays that way until he loses a stock or opens the menu again. He is open while he chooses.';
+  if(G[4]!==undefined)G[4]='As himself: copies the Heroic Finale of the nearest rival. While he is someone else: theirs.';}
+ if(typeof T.d==='string')T.d='He can become anyone. Down B opens a menu of every other fighter, and he takes on whoever he picks until he loses a stock or chooses again.';
+}}catch(e){E(e);}
+
+/* ================= YUREI ================= */
+try{const Y=c('yurei');if(Y){
+ const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0.apply(this,arguments);try{if(a&&a.C===Y&&a!==t&&a.fadeT>0){m*=B2.K.fade;if(a._fdS!==FR){a._fdS=FR;say(t.x,t.y-92,'FROM NOWHERE','#d8e0ff');}}}catch(x){}return m;};
+ for(const tb of[Y.mv,Y.hmv]){const d=tb&&tb.sB;if(d&&d.hits&&d.hits[0]&&!d._b2){d._b2=1;d.hits[0].kbg*=1.22;d.hits[0].bkb+=.5;}}
+ const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const f of F){if(f.C!==Y||f.gone)continue;const m=f.mv,g=f._gr;
+   if(m&&m.k==='uB'&&f.st==='move'&&m.d.beh==='fly'){const G=g&&g.m===m?g:(f._gr={m,c:{},n:0,k:0}),d=m.d,end=d.s+d.bp.dur;G.k++;
+    if(m.t>=d.s&&m.t<end-1){for(const o of foes(f)){if(o.holder||(!G.c[o.id]&&(intangible(o)||!inR(o,f.x,f.y-28,22))))continue;if(!G.c[o.id]){G.c[o.id]=1;G.n++;ring(o.x,o.y-30,'#d8e0ff',8,14);}
+      o.x=f.x+f.face*9;o.y=f.y-4;o.vx=o.vy=o.lx=o.ly=0;o.ground=null;if(G.k%6===0){o.dmg+=B2.K.grTick;f.dealt=(f.dealt||0)+B2.K.grTick;o.flash=4;o.lastBy=f;o.lastHurt=FR;part(o.x+(rnd()-.5)*14,o.y-30+(rnd()-.5)*20,0,-.6,12,'#d8e0ff',2,0);}o.vx=o.vy=0;o.hitstun=Math.max(o.hitstun||0,8);if(o.st!=='hit'&&!o.dead){o.st='hit';o.mv=null;}}}
+    else if(m.t>=end-1&&!G.fin){G.fin=1;launch(f,G);}}
+   else if(g&&!g.fin){g.fin=1;if(f.st!=='hit'&&!f.dead&&f.st!=='dead'&&f.st!=='respawn')launch(f,g);f._gr=null;}}}catch(x){E(x);}return r;};
+ const launch=(f,G)=>{const q=B2.K.grFin;let n=0;for(const o of foes(f)){if(!G.c[o.id]||o.dead)continue;n++;applyHit(o,{dmg:q[0],bkb:q[1],kbg:q[2],ang:q[3],fx:['#d8e0ff','#ffffff']},o.x>=f.x?1:-1,f,{force:1});burst(o.x,o.y-30,22,['#d8e0ff',W,'#8a8ab8'],3.4,22);}
+  if(n){say(f.x,f.y-96,'GHOST RISE','#d8e0ff');ring(f.x,f.y-30,W,14,20);try{sfx('smash');if(!RM)shakeA=Math.max(shakeA,7);}catch(x){}B2.use.gr=(B2.use.gr||0)+1;}};
+ Y.sp[1]='Haunt (appears behind a nearby rival and cuts; launches harder)';Y.sp[2]='Ghost Rise (carries off anyone she touches on the way up, then hurls them)';Y.sp[3]='Fade (invisible for 2 seconds; her next attack out of it does double damage)';
+ if(typeof GTXT!=='undefined'&&GTXT.yurei){const G=GTXT.yurei;G[2]='Drifts upward. She cannot be hit as she takes off. Anyone she touches on the way up is carried with her, hurt as they rise, and hurled away with enormous force when the rise ends.';G[3]=G[3].replace('Attacking brings her back.','Attacking brings her back, and that attack does double damage.');}
+}}catch(e){E(e);}
+
+/* ================= RYUKO: Dino Laser is charged. Hold B; at full charge it crosses the stage and hits enormously ================= */
+try{const R=c('ryuko');if(R){
+ BEH.dlaser={tick(f,m,I){try{const d=m.d,v=m.v;if(v.fired||m.t<d.s-1)return;const held=f.ctrl==='cpu'?(v.c||0)<(v.goal||(v.goal=18+Math.floor(rnd()*50)))&&!(nearest(f)&&nearest(f).d<64):I.B;
+   if(held&&(v.c||0)<B2.K.lzMax){v.c=(v.c||0)+1;m.t=d.s-1;f.vx*=.7;const k=v.c/B2.K.lzMax;if(v.c%3===0)part(f.x+f.face*(40+rnd()*20),f.y-46+rnd()*24-12,-f.face*(1.5+rnd()),(rnd()-.5),10,rnd()<.5?'#ff40c0':W,2,0);if(v.c===B2.K.lzMax){say(f.x,f.y-96,'FULL CHARGE','#ff40c0');ring(f.x+f.face*34,f.y-46,'#ff40c0',10,16);try{sfx('power');}catch(x){}}if(k>=1)return;return;}
+   v.fired=1;const k=cl((v.c||0)/B2.K.lzMax,0,1),q=B2.K.lz,full=k>=1,e=spawnEnt(f,{k:'laser',len:q[2]+(q[3]-q[2])*k,life:12,dmg:q[0]+(q[1]-q[0])*k*(full?1:.75),bkb:4+k*1.4,kbg:q[4]+(q[5]-q[4])*k*(full?1:.75),ang:25});if(e){e._k=k;}m.t=d.s;try{sfx(full?'boom':'laser');if(full&&!RM)shakeA=Math.max(shakeA,8);}catch(x){}B2.use.lz=(B2.use.lz||0)+1;if(full)B2.use.lzFull=(B2.use.lzFull||0)+1;}catch(x){E(x);}}};
+ for(const tb of[R.mv,R.hmv]){const d=tb&&tb.nB;if(!d)continue;d.spawn=[];d.beh='dlaser';delete d.cd;delete d._rg;}
+ if(EK.laser&&EK.laser.draw){const dr=EK.laser.draw,ht=EK.laser.hitTest;EK.laser.draw=function(e){if(e._k>.3){const x0=e.x-e.len/2,k=e._k,h=(6+k*10)*Math.max(.2,e.life/12);wr('#ff40c0',x0,e.y-h,e.len,h*2);wr('#ffd0f0',x0,e.y-h*.5,e.len,h);}return dr.apply(this,arguments);};
+  EK.laser.hitTest=function(e,Rr){if(e._k>.3){const x0=e.x-e.len/2,h=6+e._k*8;return Rr[0]<x0+e.len&&Rr[0]+Rr[2]>x0&&Rr[1]<e.y+h&&Rr[1]+Rr[3]>e.y-h;}return ht.apply(this,arguments);};}
+ R.sp[0]='Dino Laser (hold B to charge; at full charge it crosses the whole stage)';
+ if(typeof GTXT!=='undefined'&&GTXT.ryuko)GTXT.ryuko[0]='Hold B to charge the laser in the mech’s jaws, and let go to fire. A tap is a short, light beam. The longer the charge, the further it reaches and the harder it hits; at full charge it crosses the whole stage and does enormous damage. She cannot move while charging. No cooldown.';
+}}catch(e){E(e);}
+
+/* ================= KIMIKO: a guided freeze. Hold B and steer the snowflake; let go and it bursts ================= */
+try{const Km=c('kimiko');if(Km){const IC='#8fe4ff';
+ BEH.pkf={tick(f,m,I){try{const d=m.d,v=m.v;if(m.t<d.s||v.done)return;
+   if(!v.e){v.e=ent(f,{x:f.x+f.face*24,y:f.y-44,vx:f.face*1.6,vy:0,life:400,m,
+     U(e){const o=e.owner;if(o.mv!==e.m||o.st!=='move'){e.alive=false;burst(e.x,e.y,8,[IC,W],1.6,12);return;}e.x+=e.vx;e.y+=e.vy;e.p=Math.min(1,e.t/80);if(e.t%3===0)part(e.x+(rnd()-.5)*10,e.y+(rnd()-.5)*10,0,.3,12,rnd()<.5?IC:W,2,0);},
+     D(e){const r=7+e.p*9;X.translate(e.x,e.y);X.rotate(e.t*.12);X.strokeStyle='#0c0820';X.lineWidth=4;for(const pass of[0,1]){if(pass){X.strokeStyle=IC;X.lineWidth=2;}for(let i=0;i<3;i++){const a=i*Math.PI/3;X.beginPath();X.moveTo(Math.cos(a)*r,Math.sin(a)*r);X.lineTo(-Math.cos(a)*r,-Math.sin(a)*r);X.stroke();}}X.fillStyle=W;X.fillRect(-2,-2,4,4);X.rotate(-e.t*.12);X.strokeStyle=W;X.globalAlpha=.5;X.lineWidth=1;X.beginPath();X.arc(0,0,22+e.p*16,0,Math.PI*2);X.stroke();}});B2.use.pk=(B2.use.pk||0)+1;}
+   const e=v.e;if(!e.alive){v.done=1;m.t=d.s+d.a;return;}
+   let ix=I.x,iy=I.y,held=I.B;if(f.ctrl==='cpu'){const q=nearest(f,e.x,e.y);if(q){const dx=q.o.x-e.x,dy=q.o.y-30-e.y,l=Math.hypot(dx,dy)||1;ix=dx/l;iy=dy/l;held=!(q.d<(22+e.p*16)*.6&&e.t>8)&&e.t<110;}else held=e.t<40;}
+   if(held&&e.t<130){m.t=d.s;f.vx*=.7;const l=Math.hypot(ix,iy);if(l>.3){e.vx+=(ix/l*2.7-e.vx)*.22;e.vy+=(iy/l*2.7-e.vy)*.22;}else{e.vx+=(f.face*1.2-e.vx)*.1;e.vy*=.9;}return;}
+   v.done=1;e.alive=false;const p=e.p||0,q=B2.K.pk,rad=22+p*16;if(e.t>=8){burst(e.x,e.y,20+p*20,[IC,W,'#c8f4ff'],3+p*2,22);ring(e.x,e.y,IC,rad*.5,18);ring(e.x,e.y,W,rad*.8,14);try{sfx('freeze');}catch(x){try{sfx('boom');}catch(y){}}
+    for(const o of foes(f)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,rad))continue;applyHit(o,{dmg:q[0]+(q[1]-q[0])*p,bkb:4+p*1.6,kbg:q[2]+(q[3]-q[2])*p,ang:72,eff:'freeze',fx:[IC,W]},o.x>=e.x?1:-1,f,{proj:1});B2.use.pkHit=(B2.use.pkHit||0)+1;}}
+   m.t=d.s+d.a;}catch(x){E(x);}}};
+ for(const tb of[Km.mv,Km.hmv]){if(!tb||!tb.nB)continue;tb.nB={an:'cast',s:10,a:2,r:20,hits:[],beh:'pkf',fx:[IC,W],lim:'none',nm:'DEEP FREEZE'};}
+ Km.sp[0]='Deep Freeze (hold B and steer a snowflake; let go and it bursts and freezes)';
+ if(typeof GTXT!=='undefined'&&GTXT.kimiko)GTXT.kimiko[0]='Sends out a snowflake. Hold B and steer it anywhere with the stick; it grows stronger the longer you hold. Let go and it bursts, freezing and launching anyone inside. She cannot move while she guides it, and if she is hit it fizzles.';
+}}catch(e){E(e);}
+
+/* ================= KOKI: smash attacks bite harder ================= */
+try{const Ko=c('koki');if(Ko)for(const tb of[Ko.mv,Ko.hmv])for(const k of['fsmash','usmash','dsmash']){const d=tb&&tb[k];if(!d||d._b2)continue;d._b2=1;for(const h of d.hits||[]){h.dmg*=B2.K.koki[0];h.kbg*=B2.K.koki[1];}}}catch(e){E(e);}
+
+/* ================= BARA: feathers left in a rival make them bleed; three rolls shake one loose ================= */
+try{const Ba=c('bara');if(Ba){const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const t of F){if(t.gone)continue;if(t.dead||t.st==='respawn'){if(t._emb&&t._emb.length)t._emb=[];t._rl=0;continue;}const Em=t._emb;if(!Em||!Em.length){t._wasRoll=t.st==='roll';continue;}
+    const live=Em.filter(e=>e.until>FR);if(!live.length){t._wasRoll=t.st==='roll';continue;}
+    const rolling=t.st==='roll';if(rolling&&!t._wasRoll){t._rl=(t._rl||0)+1;if(t._rl>=B2.K.rolls){t._rl=0;const e=live[0];e.until=0;say(t.x,t.y-88,'SHOOK ONE OFF','#d8e0ee');burst(t.x,t.y-30,8,['#d8e0ee','#ff4a5a'],2,14);B2.use.shake=(B2.use.shake||0)+1;}}t._wasRoll=rolling;
+    for(const e of live){if(e.until<=FR)continue;if(e.bn===undefined)e.bn=FR+B2.K.bleed;if(FR>=e.bn){e.bn=FR+B2.K.bleed;t.dmg+=1;if(e.by&&!e.by.gone)e.by.dealt=(e.by.dealt||0)+1;part(t.x+(rnd()-.5)*12,t.y-30+(rnd()-.5)*20,0,.8,16,'#d02828',2,.05);B2.use.bleed=(B2.use.bleed||0)+1;}}}}catch(x){E(x);}return r;};
+ Ba.sp[0]=Ba.sp[0].replace('feathers that hit stay in the rival','feathers that hit stay in the rival and make them bleed');
+ if(typeof GTXT!=='undefined'&&GTXT.bara){const G=GTXT.bara;G[0]+=' Every feather left in a rival makes them bleed: 1% a second each, and it stacks. A rival can shake them loose by rolling, but it takes three rolls to lose one feather.';G[3]=G[3].replace('Recalled feathers go back into his tail.','Recalled feathers go back into his tail. Recall does twice the damage it used to.');}
+}}catch(e){E(e);}
+
+/* ================= CHIYOKI: every smash attack is the shovel ================= */
+try{const Ch=c('chiyoki');if(Ch){const SM={fsmash:['smashH','A full swing with the flat of his shovel. They no longer know which way is up.'],usmash:['usO','Heaves the shovel up over his head like he is clearing a grave.'],dsmash:['dsS','Scrapes the shovel across the floor on both sides.']};
+ for(const tb of[Ch.mv,Ch.hmv])for(const k in SM){const d=tb&&tb[k];if(!d)continue;d.qn=SM[k][1];d.vfx=null;d._shov=1;for(const h of d.hits||[]){h.b=h.b.map(q=>[q[0]*1.12,q[1],q[2]]);}}
+ const ROW=typeof PROPS!=='undefined'?PROPS.T.chiyoki:null;
+ const shovel=(x,y,a,len)=>{X.save();X.translate(x,y);X.rotate(a);X.fillStyle='#0c0820';X.fillRect(-2,-3,len+2,6);X.fillStyle='#8a5a2a';X.fillRect(0,-1.6,len-8,3.2);X.fillStyle='#0c0820';X.beginPath();X.moveTo(len-11,-7);X.lineTo(len+4,-5.5);X.lineTo(len+9,0);X.lineTo(len+4,5.5);X.lineTo(len-11,7);X.closePath();X.fill();X.fillStyle='#a8b0bc';X.beginPath();X.moveTo(len-9,-5);X.lineTo(len+3,-4);X.lineTo(len+7,0);X.lineTo(len+3,4);X.lineTo(len-9,5);X.closePath();X.fill();X.fillStyle='#e0e6ee';X.fillRect(len-7,-3.4,9,1.6);X.fillStyle='#5a3a1a';X.fillRect(-4,-3,5,6);X.restore();};
+ const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{let any=0;for(const f of F){if(f.C!==Ch||f.dead||f.gone)continue;const m=f.mv;if(!m||f.st!=='move'||!m.d._shov)continue;any=1;const d=m.d,u=cl((m.t-(d.s-5))/(d.a+7),0,1),fc=f.face,hx=f.x+fc*6,hy=f.y-40;let a;
+    if(m.k==='fsmash')a=-2.3+u*2.7;else if(m.k==='usmash')a=-.1-u*2.9;else a=.5+u*2.1;
+    if(m.t<d.s-5)a=m.k==='usmash'?-.1:m.k==='fsmash'?-2.3:.5;const ang=fc>0?a:Math.PI-a;shovel(hx,hy+(m.k==='dsmash'?18:0),ang,36);
+    if(m.t>=d.s&&m.t<=d.s+d.a){X.save();X.globalAlpha=.5;X.strokeStyle='#e0e6ee';X.lineWidth=3;X.beginPath();const a0=fc>0?a-.7:Math.PI-a+.7,a1=fc>0?a:Math.PI-a;X.arc(hx,hy+(m.k==='dsmash'?18:0),40,Math.min(a0,a1),Math.max(a0,a1));X.stroke();X.restore();}}
+   if(ROW&&typeof PROPS!=='undefined')PROPS.T.chiyoki=any?['blast','rgba(0,0,0,0)','rgba(0,0,0,0)']:ROW;}catch(x){}};
+ if(Array.isArray(Ch.nrm))Ch.nrm=Ch.nrm.map(s=>s.replace(/BOWLING PIN — [^.]*\./,'GRAVEDIGGER — Swings the flat of his shovel.'));
+ if(typeof Ch.na==='string')Ch.na=Ch.na.replace(/Forward smash: BOWLING PIN — [^.]*\.( They no longer know which way is up\.)?/,'Forward smash: GRAVEDIGGER — Swings the flat of his shovel. They no longer know which way is up.')+' All three smash attacks are swings of his shovel.';
+}}catch(e){E(e);}
 })();
 /* overdrive.js — the OVERDRIVE costume: every fighter's hero uniform pushed to the limit. Earned with 300 KOs as that fighter. */
 (function(){
