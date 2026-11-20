@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-0454';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-0512';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14178,6 +14178,63 @@ try{const T=CH.find(c=>c.id==='tenmetsu');if(T&&T.mv&&T.mv.dB&&typeof BEH!=='und
   const ai2=aiInput;aiInput=function(f){const I=ai2.apply(this,arguments);try{if(TW.tenOn&&I&&f.C===T&&!f.mv&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')&&(f._bsT||0)<FR){for(const o of foes(f)){const dd=Math.hypot(o.x-f.x,o.y-f.y);if(dd>30&&dd<170&&!intangible(o)&&rnd()<.06){f._bsT=FR+90;I.B=true;I.x=0;I.y=1;I.A=I.J=I.S=I.G=false;TW.tenUse=(TW.tenUse||0)+1;break;}}}}catch(e){}return I;};
   const sc=TW.set;TW.set=function(o){sc(o);TW.ten(!!(o&&o.ten));};}}catch(e){TW.err=String(e);}
 try{if(TW.set)TW.set({yado:1,kichi:1,ayame:1,mia:1,ten:1});}catch(e){TW.err=String(e);}
+})();
+/* overdrive.js — the OVERDRIVE costume: every fighter's hero uniform pushed to the limit. Earned with 300 KOs as that fighter. */
+(function(){
+const hex=c=>{c=c.replace('#','');if(c.length===3)c=c.split('').map(x=>x+x).join('');const n=parseInt(c,16);return[(n>>16)&255,(n>>8)&255,n&255];},mix=(c,d,k)=>{try{const A=hex(c),B=hex(d);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*k).toString(16).padStart(2,'0')).join('');}catch(e){return c;}};
+const lum=c=>{try{const[r,g,b]=hex(c);return(.299*r+.587*g+.114*b)/255;}catch(e){return .5;}};
+const copy=(L,o)=>{const N={};for(const k in L){if(k==='_r'||k==='R'||k==='cname'||k==='req'||k==='alt'||k==='hide'||k==='heroKit'||k==='sub'||k[0]==='_')continue;N[k]=L[k];}for(const k in o){if(o[k]===null)delete N[k];else N[k]=o[k];}return N;};
+const STY={flame:'fire magma hell sun rage rocket oni kong beast claw food honey',bolt:'volt light speed blink tech mech relay aim eye rubber luck gold',crystal:'ice crystal stone iron water fish shark jelly slime mole hippo giant chain spine lance saw',shadow:'shade reaper ghost fear night necro venom ink web puppet omen dust mist owl',halo:'angel heal magic mind psy dream cosmic spirit essence grav force sense regen clover mimic dup phase'};
+const NAME={flame:'INFERNO',bolt:'STORM',crystal:'SPIRES',shadow:'ABYSS',halo:'HALO',wings:'BLADE WINGS'};
+function styOf(C){const e=(C.kit&&C.kit.el)||'';for(const k in STY)if(STY[k].split(' ').includes(e))return k;return'wings';}
+function build(C){const H=C.looks.find(L=>L.cname==='HERO')||C.looks[0],fx=(C.kit&&C.kit.fx)||[C.col||'#b070ff'];let c0=fx[0]||C.col||'#b070ff';if(lum(c0)<.22)c0=mix(c0,'#ffffff',.35);
+ let c1=fx[1];if(!c1||lum(c1)>.93||c1.toLowerCase()===c0.toLowerCase()||lum(c1)<.2)c1=mix(c0,'#ffffff',.6);
+ const v=styOf(C),BLK=v==='shadow'?'#0d0b18':'#15151f',BL2=mix(BLK,c0,.22);
+ if(H.body==='dino'){const L=copy(H,{dP:BLK,dM:c0,dD:c1,spk:2.4});L.sub='OVERCLOCK';return L;}
+ const o={top:BLK,top2:BL2,sleeve:BLK,acc:c0,trim:c0,glove:c0,shoe:'#0c0c14',boots:1,bootTrim:1,kneepad:1,armband:1,stripe:1,pantStripe:1,cuff:1,emblem:null,print:null,eye:mix(c0,'#ffffff',.6),hair:mix(H.hair||'#444444',c0,.6),od:{c0,c1,v}};
+ if(H.hair2)o.hair2=mix(H.hair2,c1,.6);
+ if(H.pants||(!H.skirt&&!H.shorts))o.pants=BLK;if(H.skirt)o.skirt=BLK;if(H.shorts)o.shorts=BLK;if(H.socks)o.socks=BL2;
+ for(const k of['capeC','hoodC','helmC','capC','hatC','ctA','wingC','tailC'])if(H[k])o[k]=k==='wingC'||k==='tailC'?BL2:BLK;for(const k of['capeT','ctB','wingT','visorC','ledC','gogC','bandC','scarfC','tieC'])if(H[k])o[k]=c0;
+ const ex=(H.ex||[]).slice();if(!ex.includes('coattails')&&!H.skirt&&!ex.includes('tail')){ex.push('coattails');o.ctA=BLK;o.ctB=c0;}if(!ex.includes('scarf')){ex.push('scarf');o.scarfC=c1;}
+ o.ex=ex;const L=copy(H,o);L.sub=NAME[v];return L;}
+const db=drawHumanBody;drawHumanBody=function(L,J,S,p){const od=L.od;if(!od)return db.apply(this,arguments);
+ if(!L._o0){L._o0=ramp(od.c0);L._o1=ramp(od.c1);L._ow=ramp('#ffffff');L._og=ramp('#ffd84a');L._ok=ramp('#1b1b2a');L._od=ramp(mix(od.c0,'#000000',.6));}
+ const h=L.h||1,t=(S&&S.t)||0,R0=L._o0,R1=L._o1,RW=L._ow,RG=L._og,RK=L._ok,RD=L._od,sw=i=>Math.sin(t*.16+i*1.3),v=od.v;
+ const dia=(x,y,rx,ry,R)=>poly([x,y-ry,x+rx,y,x,y+ry,x-rx,y],R,'g');
+ /* a tapering, wavering tongue: fire, smoke and tendrils are all this */
+ const tongue=(x,y,a,len,w,R,ph,curl,fat)=>{const c=Math.cos(a),s2=Math.sin(a),up=[],dn=[];for(let q=0;q<=7;q++){const k=q/7,d=len*k,wv=Math.sin(k*3.4+ph+t*.2)*curl*h*k,ww=w*h*(fat?(k<.25?.55+k*1.8:(1-k)/.75):(1-k)+.06);up.push(x+c*d-s2*(wv+ww),y+s2*d+c*(wv+ww));dn.unshift(y+s2*d+c*(wv-ww));dn.unshift(x+c*d-s2*(wv-ww));}poly(up.concat(dn),R,'g');return[x+c*len-s2*Math.sin(3.4+ph+t*.2)*curl*h,y+s2*len+c*Math.sin(3.4+ph+t*.2)*curl*h];};
+ try{const bx=J.SB.x-1*h,by=J.SB.y+2*h,P=J.P,Hd=J.Hd;
+  /* twin war-banners streaming from the shoulders (everyone) */
+  for(let i=0;i<2;i++){const y=by+(i*6-1)*h,len=(46-i*8)*h,w=(3.4-i*.6)*h;poly([bx,y-w,bx-len*.35,y-w+(sw(i)*2-3)*h,bx-len*.7,y+(sw(i+1)*4+1)*h,bx-len,y+(sw(i+2)*6-4)*h,bx-len*.72,y+(sw(i+1)*4+6)*h,bx-len*.38,y+w+(sw(i)*2+1)*h,bx,y+w],i?RD:R0,'g');}
+  if(v==='wings'){for(let i=0;i<12;i++){const up=i<6,k=i%6,a=(up?-2.25+k*.26:-3.45-k*.24)+sw(i)*.04,len=(up?52-k*6:38-k*5)*h,w=(5.2-k*.55)*h,ex=bx+Math.cos(a)*len,ey=by+Math.sin(a)*len,nx=-Math.sin(a)*w,ny=Math.cos(a)*w,mx=bx+Math.cos(a)*len*.4,my=by+Math.sin(a)*len*.4;poly([bx,by,mx+nx,my+ny,ex,ey,mx-nx,my-ny],k%2?R1:R0,'g');poly([bx,by,mx+nx*.3,my+ny*.3,ex,ey],RW,'g');}}
+  else if(v==='flame'){/* fire climbing the back and over the shoulders: dark outer tongues, bright inner ones, a white-hot core */
+   const N=9;for(let pass=0;pass<3;pass++){const R=[RD,R0,R1][pass],sc=[1,.78,.5][pass],wd=[5,3.9,2.5][pass];for(let i=0;i<N;i++){const k=i/(N-1),x=P.x-3*h+(Hd.x-P.x+6*h)*k-(1-Math.abs(k-.45))*5*h,y=P.y+2*h+(Hd.y-P.y+2*h)*k,a=-2.55+k*1.35+sw(i)*.08,len=(34+Math.sin(k*3.14)*20+((i*7)%4)*4+sw(i+pass)*3)*h*sc;tongue(x,y,a,len,wd,R,i*1.7+pass,5+pass,1);}}
+   for(let i=0;i<4;i++)tongue(P.x-4*h+i*3*h,J.SB.y-2*h,-1.75+i*.12,(22+i*3)*h,1.5,RW,i*2.1,3,1);
+   for(let i=0;i<7;i++){const k=((t*.7+i*13)%44)/44;tongue(bx-(16-i*5)*h+sw(i)*3*h,by-(8+k*52)*h,-1.57+sw(i)*.3,(5-k*3)*h,1.6-k,i%2?R1:RW,i,1.5,1);}}
+  else if(v==='bolt'){for(let i=0;i<9;i++){const a=-2.95+i*.37+sw(i)*.05,len=(34+((i*7)%3)*9)*h,c=Math.cos(a),s2=Math.sin(a),nx=-s2,ny=c,w=3.2*h,z=q=>(q%2?1:-1)*4.8*h,pts=[bx,by];for(let q=1;q<=4;q++){const d=len*q/4;pts.push(bx+c*d+nx*(z(q)+w),by+s2*d+ny*(z(q)+w));}pts.push(bx+c*len*1.2,by+s2*len*1.2);for(let q=4;q>=1;q--){const d=len*q/4;pts.push(bx+c*d+nx*(z(q)-w),by+s2*d+ny*(z(q)-w));}poly(pts,i%2?R1:R0,'g');
+    for(let q=0;q<4;q++){const d0=len*q/4,d1=len*(q+1)/4,z0=q?z(q):0,z1=z(q+1);poly([bx+c*d0+nx*(z0-h),by+s2*d0+ny*(z0-h),bx+c*d0+nx*(z0+h),by+s2*d0+ny*(z0+h),bx+c*d1+nx*(z1+h*.6),by+s2*d1+ny*(z1+h*.6),bx+c*d1+nx*(z1-h*.6),by+s2*d1+ny*(z1-h*.6)],RW,'g');}}
+   for(let i=0;i<4;i++){const a=t*.05+i*1.571,r=(24+i*2)*h;dia(P.x+Math.cos(a)*r,J.Ch.y+Math.sin(a)*r*.45,1.7*h,1.7*h,RW);}}
+  else if(v==='crystal'){for(let i=0;i<11;i++){const k=i-5,a=-1.82+k*.3,len=(50-Math.abs(k)*4+((i*5)%3)*4)*h,w=(5.4-Math.abs(k)*.35)*h,ox=bx+k*1.4*h,c=Math.cos(a),s2=Math.sin(a),nx=-s2*w,ny=c*w,mx=ox+c*len*.72,my=by+s2*len*.72,ex=ox+c*len,ey=by+s2*len;poly([ox-nx*.5,by-ny*.5,mx-nx,my-ny,ex,ey,mx+nx,my+ny,ox+nx*.5,by+ny*.5],i%2?R1:R0,'g');poly([ox,by,mx-nx*.25,my-ny*.25,ex,ey,mx+nx,my+ny,ox+nx*.5,by+ny*.5],i%2?R0:RD,'g');poly([ox,by,mx-nx*.6,my-ny*.6,ex,ey],RW,'g');}
+   for(let i=0;i<6;i++){const a=t*.04+i*1.047;dia(P.x+Math.cos(a)*26*h,J.Ch.y-4*h+Math.sin(a)*13*h,2*h,3.6*h,i%2?RW:R1);}}
+  else if(v==='shadow'){for(let i=0;i<11;i++){const a=-3.05+i*.3,len=(50-((i*3)%4)*5)*h,e=tongue(bx,by,a,len,4.8,i%2?RD:RK,i*1.9,5,0);dia(e[0],e[1],2.3*h,2.3*h,i%3?R0:R1);}
+   for(let i=0;i<12;i++){const a=-2.6+i*.19,r=18*h;dia(Hd.x-2*h+Math.cos(a)*r,Hd.y-2*h+Math.sin(a)*r,2.2*h,(2+(i%3)*1.3)*h,i%2?R0:RD);}}
+  else{for(let i=0;i<10;i++){const a=-3.05+i*.35,len=(26+(i%2)*10)*h,c=Math.cos(a),s2=Math.sin(a),ox=Hd.x-1*h,oy=Hd.y-4*h,w=2.2*h,r0=27*h;poly([ox+c*r0-s2*w,oy+s2*r0+c*w,ox+c*(r0+len),oy+s2*(r0+len),ox+c*r0+s2*w,oy+s2*r0-c*w],i%2?R1:R0,'g');}
+   for(let ring=0;ring<2;ring++){const n=ring?18:10,r=(ring?25:15)*h;for(let i=0;i<n;i++){const a=i*6.283/n+(ring?-1:1)*t*.02;dia(Hd.x-1*h+Math.cos(a)*r,Hd.y-4*h+Math.sin(a)*r,(ring?1.6:2.4)*h,(ring?4.8:3.6)*h,ring?(i%2?R1:RW):(i%2?R0:RG));}}}
+  /* risen hair, behind the head so the face stays clear */
+  if(!L.head){if(!L._oh)L._oh=ramp(L.hair||od.c0);for(let i=0;i<7;i++){const k=i-3,x=Hd.x-2*h+k*2.6*h,len=(21-Math.abs(k)*3.4+sw(i)*1.4)*h;poly([x-2.6*h,Hd.y-4*h,x+k*1.7*h-1*h,Hd.y-4*h-len,x+2.6*h,Hd.y-4*h],i%2?R0:L._oh,'g');}}
+ }catch(e){OD.err=String(e&&e.message||e);}
+ const r=db.apply(this,arguments);
+ try{const c=J.Ch||J.C;dia(c.x+1*h,c.y+1*h,4*h,5*h,RG);dia(c.x+1*h,c.y+1*h,2.8*h,3.8*h,R0);dia(c.x+1*h,c.y+1*h,1.2*h,2*h,RW);
+  poly([c.x+1*h,c.y+6*h,c.x+2*h,J.P.y,c.x,J.P.y],R0,'g');
+  for(const [A,B] of[[J.EF,J.WF],[J.EB,J.WB]]){capsule(A.x+(B.x-A.x)*.3,A.y+(B.y-A.y)*.3,3*h,A.x+(B.x-A.x)*.9,A.y+(B.y-A.y)*.9,3.3*h,RK);const dx=B.x-A.x,dy=B.y-A.y,n=Math.hypot(dx,dy)||1,ux=-dy/n,uy=dx/n,mx=A.x+dx*.55,my=A.y+dy*.55;poly([A.x+dx*.3,A.y+dy*.3,mx+ux*6.5*h,my+uy*6.5*h-2*h,A.x+dx*.85,A.y+dy*.85],R0,'g');ell(mx,my,3.3*h,1.2*h,0,R1);}
+  for(const [A,B] of[[J.KF,J.AF],[J.KB,J.AB]]){poly([A.x-2.6*h,A.y+2*h,A.x+.5*h,A.y-6*h,A.x+3*h,A.y+2*h],R0,'g');ell(A.x,A.y,2.2*h,2.2*h,0,R1);const x=A.x+(B.x-A.x)*.55,y=A.y+(B.y-A.y)*.55;ell(x,y,3.1*h,1.2*h,0,R1);}
+  for(const [Q,s2] of[[J.SF,1],[J.SB,-1]]){poly([Q.x+s2*.5*h,Q.y-2.5*h,Q.x+s2*10*h,Q.y-15*h,Q.x+s2*6*h,Q.y-1*h],R0,'g');poly([Q.x+s2*1.5*h,Q.y-2.5*h,Q.x+s2*8.2*h,Q.y-11*h,Q.x+s2*4*h,Q.y-2*h],RW,'g');ell(Q.x+s2*1.2*h,Q.y-1.4*h,4*h,2.6*h,0,R0);ell(Q.x+s2*1.2*h,Q.y-1.9*h,2.6*h,1.5*h,0,R1);}
+  for(let i=0;i<6;i++){const a=t*.07+i*1.047,x=J.P.x+Math.cos(a)*23*h,y=J.Ch.y-2*h+Math.sin(a)*8*h+Math.sin(t*.1+i)*2*h;if(Math.sin(a)>-.2)dia(x,y,1.8*h,3.4*h,i%2?RW:R0);}
+ }catch(e){OD.err=String(e&&e.message||e);}return r;};
+const OD=window.OVERDRIVE={err:'',n:0,sty:{}};
+for(const C of CH){if(C.hidden||!C.looks||C.looks.some(L=>L.cname==='OVERDRIVE'))continue;try{const L=build(C);L.cname='OVERDRIVE';L.req={t:'ko',n:300};L.heroKit=1;C.looks.push(L);OD.n++;OD.sty[C.id]=L.od?L.od.v:'dino';}catch(e){OD.err=String(e);}}
+/* the back pieces are far bigger than a normal sprite, so Overdrive fighters paint into a larger buffer */
+if(typeof drawFighter==='function'&&typeof newBuf==='function'){const df=drawFighter;drawFighter=function(f){try{if(f&&f.L&&f.L.od){if(!f.buf||!f.buf._od){f.buf=newBuf(360,300,180,250);f.buf._od=1;f.S=null;}}else if(f&&f.buf&&f.buf._od){f.buf=null;f.S=null;}}catch(e){}return df.apply(this,arguments);};}
 })();
 
 </script>
