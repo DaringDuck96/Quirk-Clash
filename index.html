@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1423';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1444';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -11961,6 +11961,116 @@ for(const id in H4){const C=CH.find(c=>c.id===id);if(!C)continue;const L={};for(
 window.HEROES4=Object.keys(H4);
 })();
 
+/* trunks.js — TRUNKS, the first unlockable fighter. Ability: Elephant. A tall, husky elephant who walks upright: a flying heavyweight who jabs with his trunk, spits water orbs from it, and uses his ears as wings. */
+(function(){
+if(typeof CH==='undefined'||typeof M!=='function'||typeof hit!=='function'||CH.find(c=>c.id==='trunks'))return;
+const TK={err:null,use:{}};window.TRUNKS=TK;const E=e=>{TK.err=TK.err||String(e&&e.stack||e).slice(0,400);};
+try{
+const SRC=CH.find(c=>c.id==='tomi');if(!SRC)return;
+const clone=v=>{if(Array.isArray(v))return v.map(clone);if(v&&typeof v==='object'){const o={};for(const k in v){if(k==='R'||k==='_r')continue;o[k]=clone(v[k]);}return o;}return v;};
+const C=clone(SRC),GREY='#8e96a8',fx=['#5ab8ff','#d8f0ff'],W='#ffffff',cl=(v,a,b)=>v<a?a:v>b?b:v;
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const inR=(o,x,y,r)=>{const R=hurtR(o),cx=cl(x,R[0],R[0]+R[2]),cy=cl(y,R[1],R[1]+R[3]);return Math.hypot(x-cx,y-cy)<=r;};
+const near=f=>{let b=null,bd=1e9;for(const o of foes(f)){if(intangible(o))continue;const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<bd){bd=d;b=o;}}return b?{o:b,d:bd}:null;};
+const floorY=(x,y)=>{let best=null;try{for(const s of surfaces()){if(x>=s.x&&x<=s.x+s.w&&s.y>=y-8&&(best===null||s.y<best))best=s.y;}}catch(e){}return best;};
+/* ---------- who he is ---------- */
+Object.assign(C,{id:'trunks',n:'TRUNKS',sn:'TRUNKS',card:'TRUNKS',q:'Elephant',ty:'Mutation',col:GREY,
+ d:'An elephant who walks upright: tall, husky and far quicker than he looks. His trunk is a spear and a water cannon, and his ears carry him through the air.',
+ na:'Normals: long stabs and sweeps with his trunk, strongest at the tip. A flying heavyweight: two extra jumps on his ears, a fast run, and a huge body that is easy to hit.',
+ role:'Flying heavyweight',tip:'Keep them at trunk length, harry them with water orbs, and land the Skewer when they stand still.',weak:'A very big target. The Skewer and the Ear Blitz leave him wide open if they miss.',
+ trait:'TIP — his trunk attacks do the most at the very end of their reach. EARS — two extra jumps in the air. Shield + B: TRUMPET.',
+ rng:3,pwr:1.1,atkM:1.12,kbM:1.06,defKb:.9,hurt:[28,72],grabR:36,shMax:58,wjMax:0,landM:1.2,style:'heavy',pas:null,impact:null,sig:null,sigT:null,heroLook:1,_nocd:false,disjoint:0,
+ tauntT:'AN ELEPHANT NEVER FORGETS.',taunt2T:'ROOM FOR ONE MORE?',taunt3T:'I CAN SMELL RAIN.',persona:'kind'});
+delete C.hmv;delete C.fmv;delete C.heroNote;delete C.heroDisjoint;delete C.cargo;delete C.iron;delete C.ironMv;delete C.armorSmash;delete C.gim;
+C.qa=['TRUMPET','fear',{r:125,slow:130},9,'A blast from his trunk that leaves nearby rivals slowed.'];
+C.st=Object.assign({},SRC.st,{w:1.42,walk:1.5,run:3.3,air:2.6,jump:-9.1,sj:-5.6,dj:-8.3,g:.4,fall:5.4,ff:8,aj:2,acc:.16,trac:.72,dash:.5,jsq:4,aacc:.13});
+C.kit={st:'heavy',fx,el:'water',pow:1.1,reach:1.2};
+C.sp=['Water Orbs (hold B for up to five; they bounce along the ground)','Trunk Drag (a rush that seizes a rival and drags them along the floor)','Ear Blitz (a charged dash in the direction you hold)','Skewer (slow; the very tip of his trunk does enormous damage and stuns)'];
+/* ---------- looks ---------- */
+const BODY={head:'elephant',skin:GREY,eye:'#2a2030',bw:1.42,ww:1.36,lw:1.3,pw:1.2,size:1.3,_b:undefined,hw:undefined,nk:undefined,hs:undefined,lg:undefined,fem:undefined,hairS:undefined,hair:'#6a7080',stance:'guard'};
+const mk=(L,o)=>{const N=clone(L);Object.assign(N,BODY,o||{});delete N.fem;delete N.hairS;for(const q of['_b','hw','nk','hs','lg'])delete N[q];N.hx=(N.hx||[]).filter(x=>!/horns|flower|glasses|ribbon|antenna|twigs|beard|headphones|cap|goggles|visor|band|mask/.test(x));return N;};
+C.looks=SRC.looks.map(L=>L?mk(L):L);
+C.looks[0]=mk(SRC.looks[0],{outfit:'blazer',sl:'long',top:'#a9adb8',top2:'#9ea2ad',sleeve:'#a9adb8',trim:'#5ab8ff',tieC:'#5ab8ff',cuff:true,pants:'#1e2430',shoe:'#3a2418',ex:[],cname:undefined});
+C.looks[6]=mk(SRC.looks[0],{outfit:'armor',sl:'none',top:'#2a4a7a',top2:'#1e3a62',sleeve:GREY,acc:'#e8c040',trim:'#e8c040',pants:'#1c2a4a',shoe:'#e8c040',boots:1,bootTrim:1,pauldron:1,pauldC:'#e8c040',kneepad:1,bracelet:1,ex:['cape'],capeC:'#2a6ac8',capeT:'#e8c040',cname:'HERO'});
+for(const L of C.looks){if(L){delete L.req;delete L.alt;delete L.hide;delete L.heroKit;}}
+C.look=C.looks[0];
+/* ---------- the head: ears, trunk and tusks ---------- */
+{const dh=drawHead;drawHead=function(L,J,S){if(L.head!=='elephant')return dh.apply(this,arguments);
+  try{const H0=J.Hd,h=L.h*1.45,H={x:H0.x+1*L.h,y:H0.y-3.5*L.h},t=S.t||0,g=L.R.skin,gB=L.R.skinB||g,gD=ramp('#6a7286'),pk=ramp('#d8a8b0'),k=ramp('#16161c'),wh=ramp('#f8f4e4'),air=!!S.air,atk=S.face==='atk',mk2=S.mk,win=S.face==='win',hurt=S.face==='hurt'||S.face==='dizzy';
+   /* ear: a great fan behind the skull; it spreads and beats in the air */
+   const fl=air?Math.sin(t*.5):Math.sin(t*.07)*.1,ew=1+(air?.5+fl*.35:fl*.4),eh=1+(air?.12:0),ex=x=>-3+(x+3)*ew,ey=y=>-1+(y+1)*eh;
+   polyH(H,h,[ex(-2),ey(-8),ex(-7),ey(-12.6),ex(-12.6),ey(-11.6),ex(-15.6),ey(-6),ex(-15.4),ey(1),ex(-12.6),ey(7),ex(-8),ey(9.4),ex(-3.6),ey(6),ex(-1.6),ey(0)],gD,'g');
+   polyH(H,h,[ex(-3.6),ey(-6.6),ex(-7.4),ey(-10),ex(-11.4),ey(-9),ex(-13.4),ey(-4.6),ex(-13),ey(1),ex(-10.8),ey(5),ex(-7.6),ey(6.6),ex(-4.6),ey(3.6)],pk,'g',0);
+   /* skull: high domed forehead, heavy brow */
+   polyH(H,h,[-6.4,5.6,-7.6,-1,-6,-7.4,-2,-10.6,3,-10.8,7,-8,8.8,-3.6,8.6,1.6,6.4,5.4,1,6.6,-3,6.4],g,{cx:H.x-1,cy:H.y-3,r:10*h});
+   polyH(H,h,[-4,-8.8,-1,-10.2,3,-10.2,5.6,-8.6,2,-8.2],ramp('#aab2c2'),'g',0);
+   /* trunk */
+   let P;if(mk2==='nB'&&atk)P=[[8,1.4],[12,-.6],[16,-2.4],[20,-3],[23.4,-2.6]];else if(mk2==='dB'&&atk)P=[[8,2],[13.6,2.4],[19.2,2.4],[24.8,2.2],[30,2]];else if(atk)P=[[8,2],[12.6,3],[17,3.2],[21.4,2.6],[25,1.6]];else if(win)P=[[8,1],[12,-3],[14,-7.6],[13,-12],[10.4,-14.6]];else if(hurt)P=[[8,2],[10,6.4],[9,10.6],[6.4,13],[3.6,13.6]];
+   else{const s=Math.sin(t*.09)*1.1;P=[[8,2],[10.4,6.4],[10.8+s*.3,10.8],[9.6+s*.7,14.6],[7.4+s,16.4]];}
+   for(let i=0;i<P.length-1;i++){const u=i/(P.length-1),r0=(3-u*1.2)*h,r1=(3-(u+.25)*1.2)*h;capsule(H.x+P[i][0]*h,H.y+P[i][1]*h,r0,H.x+P[i+1][0]*h,H.y+P[i+1][1]*h,r1,g);}
+   for(let i=1;i<P.length;i++){const dx=P[i][0]-P[i-1][0],dy=P[i][1]-P[i-1][1],l=Math.hypot(dx,dy)||1;lineH(H,h,P[i][0]-dy/l*1.8,P[i][1]+dx/l*1.8,P[i][0]+dy/l*1.8,P[i][1]-dx/l*1.8,gD[2]);}
+   S.mouth={x:H.x+P[P.length-1][0]*h,y:H.y+P[P.length-1][1]*h};
+   /* tusk, eye, brow */
+   polyH(H,h,[4.6,4,6.8,3.4,11.6,7.4,11,8.6,5.6,6.4],wh,'g');
+   ell(H.x+4.6*h,H.y-2.4*h,1.25*h,1.25*h,0,k,0,1);sp(H.x+5*h,H.y-2.9*h,wh[5]);lineH(H,h,2.4,-4.6,6.8,-4.2,gD[1]);
+   if(atk||win)lineH(H,h,2.6,-5.2,7,-3.8,k[2]);
+  }catch(e){}
+  return dh.apply(this,arguments);};}
+{const ss=spriteState;spriteState=function(f){const S=ss.apply(this,arguments);try{if(f&&f.mv&&!S.mk)S.mk=f.mv.k;}catch(e){}return S;};}
+/* ---------- normals ---------- */
+const N={
+ jab1:M('jabP1',4,3,8,hit([[36,-52,10],[18,-52,8]],3,2,.01,75),{lim:'none',fx}),
+ jab2:M('jabP2',4,3,9,hit([[40,-52,10],[20,-52,8]],3,2,.01,75),{lim:'none',fx}),
+ jab3:M('j3P',5,4,17,hit([[46,-52,12],[24,-52,9]],5.5,4.2,.06,42),{lim:'none',fx}),
+ ftilt:M('punch',9,4,19,hit([[64,-48,10],[44,-48,9],[24,-48,8]],11,3.6,.075,36),{lim:'none',fx,sweet:'tip'}),
+ utilt:M('uppercut',7,5,17,hit([[10,-96,13],[14,-70,11]],9,4,.07,86),{lim:'none',fx}),
+ dtilt:M('kickLow',7,4,14,hit([[54,-8,10],[32,-8,9]],8,3.4,.05,75),{lim:'none',fx}),
+ dash:M('shoulder',9,10,21,hit([[26,-42,19]],12,4.6,.07,45),{lim:'none',fx,imp:[[6,5.4,0]]}),
+ fsmash:M('smashH',17,5,31,hit([[48,-46,22],[22,-46,15]],20,3.9,.1,40),{charge:1,lim:'none',fx,face:'atk'}),
+ usmash:M('usHead',11,6,27,hit([[6,-102,18],[10,-74,15]],17,4,.095,88),{charge:1,lim:'none',fx,face:'atk'}),
+ dsmash:M('dsS',10,5,29,[hit([[42,-12,18]],16,3.7,.09,35),hit([[-42,-12,18]],16,3.7,.09,145)],{charge:1,lim:'none',fx,face:'atk'}),
+ nair:M('nairX',7,16,14,hit([[0,-42,31]],9,4,.06,45),{lim:'none',fx,ll:14}),
+ fair:M('fairP',8,13,16,hit([[54,-42,11],[32,-42,10]],4.6,2.4,.028,45,{ri:5}),{lim:'none',fx,ll:14}),
+ bair:M('bairK',9,4,21,hit([[-46,-38,15],[-24,-38,12]],14,4.2,.09,140),{lim:'none',fx,ll:16}),
+ uair:M('uairP',7,6,15,hit([[6,-96,14],[4,-74,12]],9.5,3.8,.07,84),{lim:'none',fx,ll:12}),
+ dair:M('dairSt',13,10,25,hit([[0,-6,17]],14,3.6,.08,-78),{lim:'none',fx,ll:22})};
+for(const k in N)C.mv[k]=N[k];if(C.mv.jab)delete C.mv.jab;
+for(const k in C.mv){const d=C.mv[k];if(d&&d.fx)d.fx=fx;if(d){delete d.nx;delete d._nx;if(N[k]){d.qn=undefined;d.nm=undefined;}}}
+/* ---------- specials ---------- */
+if(!EK.trk)EK.trk={init(){},upd(e){try{if(!e.owner||e.owner.gone||e.t>=e.L-1){e.alive=false;return;}e.U(e);}catch(x){E(x);e.alive=false;}},draw(e){try{X.save();e.D(e);X.restore();}catch(x){}}};
+const orb=(f,i)=>{const e={k:'trk',owner:f,face:f.face,x:f.x+f.face*38,y:f.y-52,vx:f.face*(4.4+i*.25),vy:-1.6-i*.3,g:0,oa:1,t:0,life:300,L:84,alive:true,spec:{},hits:{},r:7,proj:1,
+  U(e){e.vy+=.24;e.x+=e.vx;e.y+=e.vy;const fy=floorY(e.x,e.y-e.vy);if(fy!==null&&e.y>=fy-6&&e.vy>0){e.y=fy-6;e.vy=-Math.max(2.4,e.vy*.7);for(let k=0;k<3;k++)part(e.x,fy-2,(rnd()-.5)*2,-1-rnd(),10,'#bfe4ff',2,.08);}
+   for(const o of foes(e.owner)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,8))continue;applyHit(o,{dmg:4.6,bkb:2.4,kbg:.028,ang:50,fx},Math.sign(e.vx)||1,e.owner,{proj:1});e.alive=false;burst(e.x,e.y,10,['#5ab8ff',W,'#bfe4ff'],2,14);TK.use.orbHit=(TK.use.orbHit||0)+1;return;}
+   if(e.t%3===0)part(e.x,e.y,0,.2,8,'#bfe4ff',1,.04);},
+  D(e){X.fillStyle='#0c2a50';X.beginPath();X.arc(e.x,e.y,8,0,7);X.fill();X.fillStyle='#3aa0e8';X.beginPath();X.arc(e.x,e.y,6.4,0,7);X.fill();X.fillStyle='#bfe4ff';X.beginPath();X.arc(e.x-1.6,e.y-1.8,3,0,7);X.fill();X.fillStyle=W;X.fillRect(e.x-3,e.y-3.4,2,2);}};ENT.push(e);return e;};
+BEH.torb={tick(f,m,I){try{const d=m.d,v=m.v;if(m.t<d.s)return;if(v.done)return;
+  if(!v.fire){const held=f.ctrl==='cpu'?(v.c||0)<(v.goal||(v.goal=6+Math.floor(rnd()*44))):I.B;if(held&&(v.c||0)<50){v.c=(v.c||0)+1;m.t=d.s;f.vx*=.8;if(v.c%12===0){FXL.push({k:'ring',x:f.x+f.face*36,y:f.y-52,t:0,col:'#5ab8ff',r0:4,life:8});try{sfx('pop');}catch(x){}}return;}v.fire=1;v.n=1+Math.min(4,Math.floor((v.c||0)/12));v.i=0;v.w=0;}
+  if(v.i<v.n){m.t=d.s;if(v.w--<=0){orb(f,v.i);v.i++;v.w=5;try{sfx('swing');}catch(x){}TK.use.orb=(TK.use.orb||0)+1;}return;}
+  v.done=1;}catch(x){E(x);}}};
+C.mv.nB={an:'cast',s:9,a:2,r:17,hits:[],beh:'torb',fx,lim:'none',face:'atk'};
+BEH.tdrag={tick(f,m,I){try{const d=m.d,v=m.v,t=m.t;if(t<d.s||v.done)return;const end=d.s+d.a;
+  if(!v.o){f.vx=f.face*7;if(!f.ground)f.vy=Math.min(f.vy,.4);for(const o of foes(f)){if(intangible(o)||o.holder||!inR(o,f.x+f.face*26,f.y-36,20))continue;v.o=o;v.k=0;try{sfx('grab');}catch(x){}TK.use.drag=(TK.use.drag||0)+1;break;}if(t%3===0)dust(f.x,f.y,2);return;}
+  const o=v.o;v.k++;if(o.dead||o.gone||f.hitstun>0){v.done=1;return;}
+  f.vx=f.face*5.4;o.x=f.x+f.face*30;o.y=f.y-2;o.vx=o.vy=o.lx=o.ly=0;o.hitstun=Math.max(o.hitstun||0,8);if(o.st!=='hit'){o.st='hit';o.mv=null;}
+  if(v.k%5===0){o.dmg+=1.5;f.dealt=(f.dealt||0)+1.5;o.flash=4;o.lastBy=f;o.lastHurt=FR;if(f.ground)for(let k=0;k<3;k++)part(o.x,f.y-2,(rnd()-.5)*3,-1.5-rnd(),12,'#c8b890',2,.1);}
+  if(t>=end-1||!f.ground||v.k>40){v.done=1;applyHit(o,{dmg:7,bkb:5.6,kbg:.075,ang:42,fx},f.face,f,{force:1});FXL.push({k:'txt',s:'TRUNK DRAG',x:f.x,y:f.y-98,t:0,life:30,col:'#5ab8ff'});m.t=end;}}catch(x){E(x);}}};
+C.mv.sB={an:'lunge',s:10,a:26,r:22,hits:[],beh:'tdrag',fx,lim:'none'};
+BEH.tblitz={tick(f,m,I){try{const d=m.d,v=m.v,t=m.t;if(t<d.s){f.vx*=.7;f.vy=Math.min(f.vy*.5,.6);if(t%4===0)FXL.push({k:'ring',x:f.x,y:f.y-40,t:0,col:'#bfe4ff',r0:14,life:8});v.ix=I.x;v.iy=I.y;return;}
+  if(!v.dir){let dx=0,dy=-1;const ax=Math.abs(v.ix||0),ay=Math.abs(v.iy||0);if(ax>.4&&ax>=ay){dx=Math.sign(v.ix);dy=-.12;}else if(ay>.4&&v.iy>0){dx=0;dy=1;}v.dir=[dx,dy];if(dx)f.face=dx;f.ground=dy>0?f.ground:null;try{sfx('swing');}catch(x){}TK.use.blitz=(TK.use.blitz||0)+1;}
+  if(t<=d.s+d.a){f.vx=v.dir[0]*9.6;f.vy=v.dir[1]*9.6;if(v.dir[1]<0)f.ground=null;if(t%2===0)part(f.x-v.dir[0]*16,f.y-40-v.dir[1]*16,(rnd()-.5),(rnd()-.5),12,rnd()<.5?'#bfe4ff':W,2,0);}else{f.vx*=.6;f.vy*=.6;}}catch(x){E(x);}}};
+C.mv.uB=M('wingUp',11,17,15,hit([[0,-42,25]],11,5,.085,62),{beh:'tblitz',helpless:1,fx,lim:'none'});
+C.mv.dB=M('punch',27,3,34,[hit([[74,-48,7]],27,0,0,60,{eff:'stun'}),hit([[50,-48,8],[28,-48,8]],6,3,.03,50)],{fx,lim:'none',face:'atk',nm:'SKEWER'});
+C._aik={nB:'far',sB:'mid',dB:'mid'};
+/* ---------- register ---------- */
+CH.push(C);
+if(typeof GTXT!=='undefined')GTXT.trunks=['Spits water orbs from his trunk. Hold B to load up to five, then let go. They bounce along the ground and burst on the first rival they touch.','Charges forward. The first rival he reaches is seized in his trunk and dragged along the floor, taking damage all the way, then thrown.','Gathers himself, then bursts through the air on his ears. Hold a direction before he launches: up, forward, back or straight down. He cannot act afterwards.','A slow, straight stab with his trunk. The very tip does enormous damage and leaves the rival stunned on the spot. Anything short of the tip is a light poke.','Stampede: seizes one rival, carries them into the sky and hurls them straight down.'];
+try{if(typeof FSD!=='undefined'&&FSD.kongu)FSD.trunks=Object.assign(clone(FSD.kongu),{name:'STAMPEDE',col:fx});}catch(e){}
+try{if(typeof FSCALL!=='undefined')FSCALL.trunks='STAMPEDE!';}catch(e){}
+try{if(typeof RANGE!=='undefined')RANGE.trunks=[3,1.1];}catch(e){}
+try{if(typeof PROPS!=='undefined')PROPS.T.trunks=['whip',GREY,'#6a7080'];}catch(e){}
+}catch(e){E(e);}
+})();
+
 /* skins.js — costumes are earned. Every fighter starts with their Hero costume. The rest unlock per player profile:
    Uniform (1 campaign fight), Villain (5 matches), Beach (10), Prom (15), Greyscale (20), the older themed outfits (KOs / damage), Ninja (Survival wave 5). */
 (function(){
@@ -13155,6 +13265,7 @@ const N={
  ali:{T:'global',at:20,dmg:10,mind:140,kb:0,range:400,col:C('#c8a0ff','#ffffff'),dur:60,d:'Reaches into every mind in range: for over two seconds each rival walks toward the nearest edge and can do nothing about it.'},
  daku:{T:'trans',buff:'overheat',ib:{amp:10,speed:10},aura:[46,20,3],eff:'burn',col:C('#ff4a1a','#2a1a1a'),dur:600,sec:10,d:'Ten seconds as the hound: faster, stronger, and burning everything that stands near him.'},
  kongu:{T:'grab',spd:8,win:18,hold:40,ri:10,tick:6,up:1,fin:[22,11.2,.13,270],col:C('#e8e8f0','#5a5a6a'),dur:110,d:'Grabs one rival, carries them into the sky and throws them straight down. On the stage they bounce; off it, they do not come back.'},
+trunks:{T:'grab',spd:8,win:18,hold:40,ri:10,tick:5.5,up:1,fin:[20,11,.125,270],call:'STAMPEDE!',col:C('#5ab8ff','#8e96a8'),dur:110,d:'Seizes one rival, carries them into the sky and hurls them straight down.'},
  hippo:{T:'push',up:1,spd:3,tick:2,ri:9,fin:[12,10,.12,90],col:C('#6aa8ff','#ffffff'),dur:150,d:'The credits roll up from the bottom of the screen and carry everyone toward the top with them.'},
  dawson:{T:'cross',n:4,first:26,every:30,spd:6,r:30,tick:11,fin:[18,10.4,.12,60],col:C('#e8283a','#ffffff'),dur:150,d:'A crosshair he moves anywhere on screen. Four shots, about half a second apart; the fourth is the one that launches.'},
  maya:{name:'CIRCLE OF LIFE',type:'zone',r:190,dur:104,tick:2.4,ri:8,fin:[14,9.8,.115,70],col:C('#7af0a0','#ff8ac8'),vis:'gen',swap:1,d:'Before anything else, she trades damage with the nearest rival if hers is higher. Then the circle drains everyone inside it and heals her.'},
@@ -13415,6 +13526,7 @@ ichigo:['STICKY CHARGE','hold',22,'bomb',0,[3,30,3.6,.03],{st:'bomb',sec:1.1},'S
 bentou:['BAD OMEN','hold',28,'omen',0,[3,60,3.6,.03],{st:'doom',sec:3},'Marks the rival for misfortune. Three seconds later it finds them, wherever they are.'],
 okane:['GOLD STANDARD','slam',36,'gold',0,[12,64,5,.072],{},'Lifts the rival, turns to solid gold, and brings all that weight down on them.'],
 goiru:['STONE FIST','pin',34,'fist',0,[12,-85,5.2,.07],{},'Holds the rival down and brings a stone fist onto them from above. They bounce off the floor.'],
+trunks:['TRUNK SLAM','slam',30,'coil',[2,2],[9,72,5.2,.09],{},'Wraps the rival in his trunk, swings them overhead and slams them into the floor.'],
 aya:['GEODE','hold',34,'geode',[4,1.5],[5,60,5,.065],{},'Crystals close over the rival, then burst outward.'],
 hikari:['LIVE WIRE','hold',32,'arc',[5,1.3],[4,80,5,.06],{chain:5},'Crosses her blades on the rival and runs current through them. It arcs to anyone standing close.'],
 ryo:['SIX FEET UNDER','sink',36,'dirt',0,[10,90,5.2,.068],{d:30},'Drags the rival under the floor and erupts with them.'],
@@ -13589,6 +13701,7 @@ ichigo:[['ROBOT ARM','reach','bigfist','The arm on her backpack, at full extensi
 bentou:[['MISFORTUNE','status','orb','Leaves the rival dazed.',{eff:'haze'}],['FORESEEN','blink','star','Knew where you would be.'],['fair','OMEN','wave','orb','A small drifting curse.']],
 okane:[['GOLD FIST','armor','bigfist','Solid gold. Does not flinch.'],['BULLION','armor','comet','Runs as a gold statue.'],['dair','GOLD BRICK','dive','shock','Turns to gold and drops.']],
 goiru:[['WING HAMMER','quake','shock','Both wings into the floor.'],['GARGOYLE RAM','armor','comet','Stone, at speed.'],['dair','STONE DROP','dive','shock','Turns to stone and falls.']],
+trunks:[['MONSOON','erupt','wave','A burst of water from his trunk at point-blank range.'],['STAMPEDE','rush','gust','Head down, ears back.'],['dair','EARTHSHAKER','dive','shock','Both feet, all of him.']],
 aya:[['CRYSTAL SPIRE','erupt','pillar','A spire of crystal a step ahead.'],['FACET SLIDE','slide','shards','Slides in on crystal.'],['fair','PRISM LANCE','reach','blade','A long blade of crystal.']],
 hikari:[['CROSS CURRENT','late','bolt','Two blades, then the arc between them.',{eff:'para'}],['FLASH STEP','blink','bolt','Is behind you.'],['dair','LIGHTNING ROD','dive','bolt','Blades down.']],
 ryo:[['UPHEAVAL','erupt','pillar','Tears the floor up a step ahead.'],['BURROW RUSH','erupt','shock','Goes under and comes up in front.'],['dair','DRILL DIVE','dive','wheel','Claws first, spinning.']],
@@ -13828,7 +13941,7 @@ koki:'H splash drip',hana:'P zip spark',tomi:'H shrink -',yoko:'F light mote',ch
 kuragari:'N thread -',mia:' beam spark',shi:'N shadow wisp',takeshi:'P poof ooze',ali:'F light mote',daku:'P flame ember',kongu:'H drop -',hippo:'B poof -',dawson:'N zip -',maya:' light mote',
 sarah:'N shadow wisp',aria:'B leap glint',bryson:'B drop -',conor:'B leap glint',ray:'P zip -',oliver:' leap -',chris:'P drop -',evona:' ice frost',jack:'P flame ember',kal:' zip -',
 kora:'P fly feather',ash:'H rise leaf',moya:'F poof smoke',sato:'B drop -',akio:'S zip static',sata:' beam spark',kitsu:' light glint',uzi:'B rise ooze',ichigo:' beam spark',bentou:' blink wisp',
-okane:'P drop glint',goiru:'H drop dust',aya:' rise glint',hikari:'S bolt static',ryo:'H rise dust',suzume:'S thread -',ayame:'F fly leaf',sota:'S zip ember',tiki:' shadow wisp'};
+okane:'P drop glint',goiru:'H drop dust',trunks:'H drop dust',aya:' rise glint',hikari:'S bolt static',ryo:'H rise dust',suzume:'S thread -',ayame:'F fly leaf',sota:'S zip ember',tiki:' shadow wisp'};
 const R={};for(const k in ROW){const a=ROW[k].split(' ');R[k]={w:a[0],e:a[1],a:a[2]==='-'?'':a[2]};}
 A2.R=R;const row=f=>(f&&f.C&&R[f.C.id])||{w:'',e:'poof',a:''};
 const humanoid=f=>!(f.L&&f.L.body)&&!f.formL;
@@ -14499,6 +14612,61 @@ const OD=window.OVERDRIVE={err:'',n:0,sty:{}};
 for(const C of CH){if(C.hidden||!C.looks||C.looks.some(L=>L.cname==='OVERDRIVE'))continue;try{const L=build(C);L.cname='OVERDRIVE';L.req={t:'ko',n:300};L.heroKit=1;C.looks.push(L);OD.n++;OD.sty[C.id]=L.od?L.od.v:'dino';}catch(e){OD.err=String(e);}}
 /* the back pieces are far bigger than a normal sprite, so Overdrive fighters paint into a larger buffer */
 if(typeof drawFighter==='function'&&typeof newBuf==='function'){const df=drawFighter;drawFighter=function(f){try{if(f&&f.L&&f.L.od){if(!f.buf||!f.buf._od){f.buf=newBuf(360,300,180,250);f.buf._od=1;f.S=null;}}else if(f&&f.buf&&f.buf._od){f.buf=null;f.S=null;}}catch(e){}return df.apply(this,arguments);};}
+})();
+/* charlock.js — fighters you have to earn. A locked fighter shows on the select screen as a silhouette, cannot be picked, and is announced with a banner the moment they are unlocked. */
+(function(){
+if(typeof CH==='undefined'||typeof SKINS2==='undefined')return;
+const CL={err:null,force:false};window.CHARLOCK=CL;
+/* how each one is earned: test(account) and a progress line. Add new unlockable fighters here. */
+const RULES={trunks:{how:'Play 50 standard matches. Forfeits count; Campaign and Survival do not.',test:a=>(a.vm||0)>=50,prog:a=>Math.min(a.vm||0,50)+' / 50 matches'}};
+CL.RULES=RULES;
+const acct=()=>SKINS2.stat('_acct'),save=()=>{try{localStorage.setItem('qc_stats',JSON.stringify(SKINS2.all));}catch(e){}};
+const ciOf=id=>CH.findIndex(c=>c.id===id);
+const open=id=>{if(CL.force)return true;const r=RULES[id];if(!r)return true;const a=acct();if(a.un&&a.un[id])return true;try{return !!r.test(a);}catch(e){return false;}};
+const lockedCi=ci=>{const C=CH[ci];return !!(C&&RULES[C.id]&&!open(C.id));};
+CL.locked=id=>!open(id);CL.count=()=>acct().vm||0;CL.set=n=>{acct().vm=n;save();apply();};CL.unlockAll=()=>{CL.force=true;apply();};
+const tell=id=>{const r=RULES[id];try{toast('CHARACTER LOCKED · '+r.how+' ('+r.prog(acct())+')');}catch(e){}};
+let built=false;
+function apply(){try{for(const id in RULES){const ci=ciOf(id),C=CH[ci];if(!C)continue;const lk=!open(id);const card=document.querySelector('.card[data-ci="'+ci+'"]');if(!card&&!built)continue;C.hidden=lk?1:0;
+   if(card){card.classList.toggle('locked',lk);const s=card.querySelector('span:not(.bd)');if(s){if(!s.dataset.nm)s.dataset.nm=s.textContent;s.textContent=lk?'LOCKED':s.dataset.nm;}card.setAttribute('aria-label',lk?'Locked fighter':C.n);}}}catch(e){CL.err=String(e);}}
+(function wait(){const ci=ciOf('trunks');const any=document.querySelector('.card[data-ci]');if(!any){setTimeout(wait,120);return;}built=true;apply();
+ const ro=document.getElementById('roster');if(ro&&!ro._cl){ro._cl=1;ro.addEventListener('click',e=>{const c=e.target.closest&&e.target.closest('.card.locked');if(c){e.stopImmediatePropagation();e.preventDefault();try{sfx('pop');}catch(x){}tell(CH[+c.dataset.ci].id);}},true);}
+ /* a fighter is in the build but their card is missing (the screen was built before they were added): leave them hidden rather than half-shown */
+})();
+{const st=document.createElement('style');st.textContent='.card.locked .cimg{filter:brightness(0) invert(.38)}.card.locked{--cc:#3a3a48;cursor:not-allowed}.card.locked span:not(.bd){color:#b8b8c8;letter-spacing:1px}'
+ +'#clban{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(60,40,10,.92),rgba(8,6,20,.96));font-family:Rubik,system-ui,sans-serif;color:#fff;overflow:hidden}#clban[hidden]{display:none}'
+ +'#clban .bx{position:relative;display:flex;gap:26px;align-items:center;max-width:min(880px,92vw);padding:26px 30px;border:4px solid #ffd400;border-radius:18px;background:linear-gradient(160deg,#2a2440,#141024);box-shadow:0 0 60px rgba(255,212,0,.45);animation:clpop .5s cubic-bezier(.2,1.5,.4,1)}'
+ +'#clban canvas{width:min(260px,34vw);height:auto;image-rendering:pixelated;flex:none;filter:drop-shadow(0 6px 0 rgba(0,0,0,.5))}#clban h3{margin:0;font:900 15px/1 Rubik,system-ui,sans-serif;letter-spacing:4px;color:#ffd400}#clban h2{margin:6px 0 2px;font:900 clamp(34px,7vw,64px)/1 Rubik,system-ui,sans-serif;letter-spacing:2px;text-shadow:0 4px 0 #000}'
+ +'#clban .ab{font:700 15px/1.2 Rubik,system-ui,sans-serif;color:#9ad8ff;letter-spacing:2px;margin-bottom:10px}#clban p{margin:6px 0;font:500 14px/1.45 Rubik,system-ui,sans-serif;color:#e8e4f4}#clban p b{color:#ffd400}#clban button{margin-top:14px;padding:11px 26px;font:900 15px/1 Rubik,system-ui,sans-serif;letter-spacing:2px;border:0;border-radius:10px;background:#ffd400;color:#16121e;cursor:pointer}'
+ +'#clban i{position:absolute;top:-20px;width:9px;height:16px;animation:clfall linear infinite}@keyframes clpop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}@keyframes clfall{to{transform:translateY(110vh) rotate(720deg)}}@media(max-width:640px){#clban .bx{flex-direction:column;text-align:center;gap:10px;padding:18px}}';document.head.appendChild(st);}
+const Q=[];let showing=false;
+function banner(id){const ci=ciOf(id),C=CH[ci];if(!C)return;let ov=document.getElementById('clban');if(!ov){ov=document.createElement('div');ov.id='clban';document.body.appendChild(ov);}ov.innerHTML='';showing=true;
+ const cols=['#ffd400','#ff5a6a','#5ab8ff','#6ae06a','#ffffff','#c88aff'];for(let i=0;i<46;i++){const c=document.createElement('i');c.style.left=(Math.random()*100)+'%';c.style.background=cols[i%cols.length];c.style.animationDuration=(2.2+Math.random()*2.6)+'s';c.style.animationDelay=(-Math.random()*4)+'s';ov.appendChild(c);}
+ const bx=document.createElement('div');bx.className='bx';const cv=document.createElement('canvas');cv.width=240;cv.height=200;try{portrait(ci,cv,'full','win',typeof defSkin==='function'?defSkin(ci):0);}catch(e){}
+ const tx=document.createElement('div');const E=(t,cls,s)=>{const e=document.createElement(t);if(cls)e.className=cls;e.textContent=s;tx.appendChild(e);return e;};
+ E('h3','','NEW FIGHTER UNLOCKED');E('h2','',C.n);E('div','ab',(C.q||'').toUpperCase()+(C.role?' · '+C.role.toUpperCase():''));E('p','',C.d||'');
+ const p=E('p','','');p.innerHTML='<b>HOW TO PLAY</b> ';p.appendChild(document.createTextNode(C.tip||''));const sp=E('p','','');sp.innerHTML='<b>SPECIALS</b> ';sp.appendChild(document.createTextNode((C.sp||[]).map(s=>String(s).replace(/ \(.*$/,'')).join(' · ')));
+ const b=E('button','','CONTINUE');const close=()=>{ov.hidden=true;showing=false;removeEventListener('keydown',key,true);if(Q.length)setTimeout(()=>banner(Q.shift()),250);};const key=e=>{if(e.code==='Enter'||e.code==='Space'||e.code==='Escape'){e.stopImmediatePropagation();e.preventDefault();close();}};b.onclick=close;addEventListener('keydown',key,true);
+ bx.appendChild(cv);bx.appendChild(tx);ov.appendChild(bx);ov.hidden=false;try{sfx('power');}catch(e){}CL.shown=(CL.shown||[]).concat(id);
+ /* a controller button closes it too */
+ const t0=performance.now();(function poll(){if(ov.hidden)return;try{if(performance.now()-t0>900)for(const g of navigator.getGamepads?navigator.getGamepads():[]){if(g&&g.buttons&&(g.buttons[0].pressed||g.buttons[1].pressed||g.buttons[9]&&g.buttons[9].pressed)){close();return;}}}catch(e){}requestAnimationFrame(poll);})();}
+CL.banner=banner;
+function check(delay){try{const a=acct();a.un=a.un||{};const got=[];for(const id in RULES){if(a.un[id])continue;let ok=false;try{ok=!!RULES[id].test(a);}catch(e){}if(ok){a.un[id]=1;got.push(id);}}if(got.length){save();apply();for(const id of got)Q.push(id);setTimeout(()=>{if(!showing&&Q.length)banner(Q.shift());},delay||0);}}catch(e){CL.err=String(e);}}
+CL.check=check;
+/* count standard matches: finished ones, and ones you walk out of */
+let live=false,prevGS='';
+const counts=()=>typeof MODE!=='undefined'&&MODE==='versus'&&typeof F!=='undefined'&&F.some(f=>f&&f.ctrl==='human'&&!(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100));
+const bump=(delay)=>{live=false;const a=acct();a.vm=(a.vm||0)+1;save();check(delay);};
+{const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(GS==='play'&&prevGS!=='play'&&counts())live=true;if(GS==='over'&&prevGS!=='over'&&live)bump(2600);prevGS=GS;}catch(e){}return r;};}
+for(const nm of['toSelect','toTitle']){try{const fn0=eval(nm);if(typeof fn0==='function'){const w=function(){try{if(live&&typeof GS!=='undefined'&&GS!=='over')bump(500);live=false;}catch(e){}return fn0.apply(this,arguments);};if(nm==='toSelect')toSelect=w;else toTitle=w;}}catch(e){}}
+/* nobody gets a locked fighter by any other route */
+const LASTOK=[-1,-1,-1,-1];
+const guard=()=>{try{if(typeof SEL==='undefined')return;for(let n=0;n<4;n++){const ci=SEL.p[n];if(lockedCi(ci)){const id=CH[ci].id;let to=LASTOK[n];if(to<0||lockedCi(to)||CH[to].hidden)to=CH.findIndex(c=>!c.hidden&&c.looks);SEL.p[n]=to;try{PREV4[n]=null;}catch(e){}if(SEL.mode[n]==='h')tell(id);}else LASTOK[n]=ci;}}catch(e){}};
+if(typeof refreshSel==='function'){const r0=refreshSel;refreshSel=function(){apply();guard();return r0.apply(this,arguments);};}
+if(typeof startMatch==='function'){const s1=startMatch;startMatch=function(){guard();return s1.apply(this,arguments);};}
+if(typeof renderInfo==='function'){const ri=renderInfo;renderInfo=function(n,i){if(lockedCi(i)){if(CL._tl!==i||performance.now()-(CL._tt||0)>1500){CL._tl=i;CL._tt=performance.now();tell(CH[i].id);}return ri.call(this,n,SEL.p[n]);}CL._tl=-1;return ri.apply(this,arguments);};}
+/* someone who already qualifies (an old profile with 50 matches behind it) gets the banner the first time they reach the title or select screen */
+setTimeout(()=>{try{const a=acct();if(a.vm===undefined){let m=0;const all=SKINS2.all;for(const k in all)if(k!=='_acct'&&all[k]&&all[k].m)m+=(all[k].m||0)-(all[k].c||0);a.vm=Math.max(0,m);save();}check(600);apply();}catch(e){}},1500);
 })();
 
 </script>
