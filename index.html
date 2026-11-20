@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1541';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1554';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14812,7 +14812,7 @@ try{const c=id=>CH.find(x=>x.id===id);
  const mvs=(id,key,fn)=>{const C=c(id);if(!C)return;for(const tb of[C.mv,C.hmv])if(tb&&tb[key]&&!tb[key]['_b3'+key]){tb[key]['_b3'+key]=1;fn(tb[key]);}B3.log[id]=Object.assign(B3.log[id]||{},{[key]:1});};
  const kbg=(k)=>d=>{for(const h of d.hits||[])h.kbg*=k;};
  /* down from the top */
- set('minato',{atkM:1.20});set('uchuu',{defKb:.90});mvs('soran','fsmash',d=>{d.r+=2;});mvs('maya','dB',kbg(.9));
+ set('minato',{atkM:1.20});set('uchuu',{defKb:.90});mvs('soran','fsmash',d=>{d.r+=2;d.s+=1;});set('soran',{defKb:.95,kbM:1.06});set('riku',{atkM:1.10});mvs('maya','dB',d=>{kbg(.78)(d);d.r+=4;});mvs('maya','fsmash',kbg(.94));
  /* up from the bottom: ease the old hidden handicaps */
  set('pitto',{atkM:1,defKb:1});set('ryuko',{atkM:.85,defKb:1.18});set('hippo',{atkM:1,defKb:1});set('raion',{atkM:.90,defKb:1.10});set('torabi',{atkM:.88,defKb:1.14});set('tenmetsu',{atkM:.92,defKb:1.08});set('ray',{atkM:1,defKb:1});
  /* a little sturdier */
