@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-0357';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-0408';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14085,7 +14085,7 @@ try{const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0.apply(this,arguments);try{
 /* CHIYOKI: Down B is a shovel-smack counter, and one bowling pin in three is live: more damage, and it goes off like a grenade */
 try{const C=CH.find(c=>c.id==='chiyoki');if(C&&C.mv&&C.mv.dB){const old=C.mv.dB,oldT=[C.sp[3],typeof GTXT!=='undefined'&&GTXT.chiyoki?GTXT.chiyoki[3]:'',typeof GTXT!=='undefined'&&GTXT.chiyoki?GTXT.chiyoki[1]:''];
   const nw={an:'counter',s:4,a:24,r:20,hits:[],beh:'counter',bp:{f0:4,f1:27,mult:1.6},fx:old.fx,lim:'none',sub:'shovel',nm:'SHOVEL SMACK'};if(old.hf)nw.hf=old.hf;
-  TW.chiyoki=function(on){TW.chiOn=!!on;if(TW._ir===undefined)TW._ir=C.iron||0;C.iron=on?(TW.chiIron||12):TW._ir;/* feels no pain: hits under 12% do not make him flinch (it was 4%) */try{if(typeof C.na==='string'){if(TW._na===undefined)TW._na=C.na;C.na=on?TW._na.replace('Small hits do not make him flinch','He feels no pain: hits under 12% do not make him flinch'):TW._na;}}catch(e){}C.mv.dB=on?nw:old;C.sp[3]=on?'Shovel Smack (counter)':oldT[0];try{if(GTXT.chiyoki){GTXT.chiyoki[3]=on?'Braces with the shovel for a moment. If anything hits him while he does, he laughs it off and smacks the attacker with the flat of it: at least 16%, more the harder they hit him, and a big launch.':oldT[1];GTXT.chiyoki[1]=on?oldT[2]+' One pin in three is live: it glows red, does more damage and goes off like a grenade.':oldT[2];if(TW._t0===undefined)TW._t0=GTXT.chiyoki[0];GTXT.chiyoki[0]=on?TW._t0+' Dread also makes his hits carry: a PANICKED rival is launched 25% further by anything he lands, and a FROZEN one 40% further.':TW._t0;}}catch(e){}};
+  TW.chiyoki=function(on){TW.chiOn=!!on;if(TW._ir===undefined)TW._ir=C.iron||0;C.iron=on?(TW.chiIron||10):TW._ir;/* feels no pain: hits under 10% do not make him flinch (it was 4%) */try{if(typeof C.na==='string'){if(TW._na===undefined)TW._na=C.na;C.na=on?TW._na.replace('Small hits do not make him flinch','He feels no pain: hits under 10% do not make him flinch'):TW._na;}}catch(e){}C.mv.dB=on?nw:old;C.sp[3]=on?'Shovel Smack (counter)':oldT[0];try{if(GTXT.chiyoki){GTXT.chiyoki[3]=on?'Braces with the shovel for a moment. If anything hits him while he does, he laughs it off and smacks the attacker with the flat of it: at least 16%, more the harder they hit him, and a big launch.':oldT[1];GTXT.chiyoki[1]=on?oldT[2]+' One pin in three is live: it glows red, does more damage and goes off like a grenade.':oldT[2];if(TW._t0===undefined)TW._t0=GTXT.chiyoki[0];GTXT.chiyoki[0]=on?TW._t0+' Dread also makes his hits carry: a PANICKED rival is launched 25% further by anything he lands, and a FROZEN one 40% further.':TW._t0;}}catch(e){}};
   const t0=triggerCounter;triggerCounter=function(t,a,h){try{if(t&&t.C===C&&TW.chiOn&&t.mv&&t.mv.d===nw){const fx=nw.fx;burst(t.x,t.y-30,20,[fx[0],'#ffffff'],2.6,22);try{sfx('counter');}catch(e){}t.face=a.x>=t.x?1:-1;t.inv=Math.max(t.inv||0,14);const dmg=Math.max(16,(h.dmg||0)*1.6);t.mv=null;t.st='land';t.stT=16;
      const far=Math.abs(a.x-t.x)>70||Math.abs(a.y-t.y)>60;FXL.push({k:'txt2',s:'BONK!',x:t.x+t.face*20,y:t.y-84,t:0,life:40,col:fx[0]});
      if(!far){applyHit(a,{dmg,bkb:5.4,kbg:.1,ang:48,fx},t.face,t,{force:1});try{if(!RM)shakeA=Math.max(shakeA,6);}catch(e){}}
@@ -14094,6 +14094,42 @@ try{const C=CH.find(c=>c.id==='chiyoki');if(C&&C.mv&&C.mv.dB){const old=C.mv.dB,
   /* Dread pays off: a Panicked rival flies 25% further from anything he lands, a Frozen one 40% further */
   const k0=kbMod;kbMod=function(a,t,h,o){let m=k0.apply(this,arguments);try{if(TW.chiOn&&a&&a.C===C&&t&&a!==t){if(t.frzT>FR)m*=TW.chiK?TW.chiK[1]:1.4;else if((t.dr||0)>=TW.drP)m*=TW.chiK?TW.chiK[0]:1.25;}}catch(e){}return m;};TW.drP=66;
   TW.chiyoki(true);}}catch(e){TW.err=String(e);}
+/* ---------- YADO, KICHI, AYAME: each can be switched on with TWEAKS.set ---------- */
+TW.on={};const W='#ffffff',PI2=Math.PI*2;
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+try{
+ const Y=CH.find(c=>c.id==='yado'),K=CH.find(c=>c.id==='kichi'),A=CH.find(c=>c.id==='ayame');
+ /* YADO: every smash can stun (10%, rising to 70% at full charge), and his basic attacks do half as much again to a stunned rival */
+ const BASIC=/^(jab\d?|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair)$/;
+ {const a0=applyHit;applyHit=function(t,h,dirX,a,o){let st=false;try{if(TW.on.yado&&a&&a.C===Y&&a!==t&&a.mv&&/smash/.test(a.mv.k||'')&&h&&!(o&&o.proj)&&!h._ys){const ch=Math.min(1,(a.mv.chargeT||0)/60),p=.1+.6*ch;h=Object.assign({},h,{_ys:1});if(rnd()<p){st=true;h.eff='stun';h.bkb=1.2;h.kbg=0;h.ang=80;}TW.ySm=(TW.ySm||0)+1;}}catch(e){}
+   const r=a0.call(this,t,h,dirX,a,o);
+   /* the stun from his smash is a full one: three quarters of a second, whatever came before it */
+   try{if(st&&r==='hit'&&t&&!t.dead){t.st='dizzy';t.dz=46;t.hitstun=0;t.lx=t.ly=0;t.vx=0;TW.yStun=(TW.yStun||0)+1;FXL.push({k:'txt',s:'STUNNED',x:t.x,y:t.y-90,t:0,life:34,col:'#e83a2a'});}}catch(e){}return r;};
+  const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0.apply(this,arguments);try{if(TW.on.yado&&a&&a.C===Y&&t&&t.st==='dizzy'&&a.mv&&BASIC.test(a.mv.k||''))m*=1.5;}catch(e){}return m;};}
+ /* KICHI: Down B is a chain eruption in every direction, and Ball and Chain (down throw) hits harder and sends them flying */
+ const kOld=K&&K.mv.dB,kR=[];for(let i=0;i<8;i++){const a=i*PI2/8;kR.push([Math.cos(a)*44,-30+Math.sin(a)*40,17]);}kR.push([0,-30,22]);
+ const kNew=kOld&&{an:'roar',s:15,a:6,r:26,hits:[{b:kR,dmg:10,bkb:5.6,kbg:.125,ang:52}],fx:kOld.fx,lim:'none',nm:'CHAIN ERUPTION',_ke:1};if(kNew&&kOld.hf)kNew.hf=kOld.hf;
+ const kT=window.THROWS&&THROWS.T&&THROWS.T.kichi,kT0=kT&&kT[5].slice(),kD0=kT&&kT[7];
+ /* AYAME: Updraft carries her further and leaves her free to act, and a tornado stays where she took off */
+ const aOld=A&&A.mv.uB,aNew=aOld&&Object.assign({},aOld,{a:44,bp:Object.assign({},aOld.bp,{dur:58,spd:3}),helpless:0,_au:1});if(aNew)for(const k in aNew)if(/^_s[\d.]/.test(k))delete aNew[k];
+ const txt={};try{txt.k=[K.sp[3],GTXT.kichi[3]];txt.a=[GTXT.ayame[2]];txt.y=[Y.na];}catch(e){}
+ TW.set=function(o){TW.on=Object.assign({},o||{});try{
+   if(K&&kNew){K.mv.dB=TW.on.kichi?kNew:kOld;if(K.hmv&&K.hmv.dB)K.hmv.dB=K.mv.dB;K.sp[3]=TW.on.kichi?'Chain Eruption':txt.k[0];GTXT.kichi[3]=TW.on.kichi?'Chains burst out of him in every direction at once. Ordinary damage, but anyone they touch is launched a very long way.':txt.k[1];
+    if(kT){if(TW.on.kichi){kT[5][0]=15;kT[5][1]=42;kT[5][2]=6.2;kT[5][3]=.105;kT[7]='Wraps the rival in chain, swings them overhead and lets go: they fly.';}else{for(let i=0;i<kT0.length;i++)kT[5][i]=kT0[i];kT[7]=kD0;}K.throwT=kT[0]+' (Down throw). '+kT[7];}}
+   if(A&&aNew){A.mv.uB=TW.on.ayame?aNew:aOld;if(A.hmv&&A.hmv.uB)A.hmv.uB=A.mv.uB;GTXT.ayame[2]=TW.on.ayame?'An updraft carries her a long way upward, and she can still act afterwards. A tornado stays where she took off for a second and a half: it drags in and batters anyone close, then throws them when it dies.':txt.a[0];}
+   if(Y&&typeof Y.na==='string')Y.na=TW.on.yado?txt.y[0]+' Every smash has a chance to stun: 10%, rising to 70% at full charge. His jabs, tilts, dash attack and aerials do half as much again to a stunned rival.':txt.y[0];
+  }catch(e){TW.err=String(e);}};
+ const s1=startMove;startMove=function(f,k){const r=s1.apply(this,arguments);try{if(TW.on.ayame&&f&&f.C===A&&k==='uB'&&f.mv&&f.mv.d&&f.mv.d._au&&!ENT.some(e=>e.alive&&e.k==='nsp'&&e.owner===f&&e.tor)){
+    let gy=f.y;try{const L=[STAGE.main].concat(STAGE.plats||[]);let b=null;for(const p of L){if(p&&f.x>=p.x&&f.x<=p.x+p.w&&p.y>=f.y-4&&p.y-f.y<70&&(!b||p.y<b.y))b=p;}if(b)gy=b.y;}catch(e){}
+    const fx=f.mv.d.fx;ENT.push({k:'nsp',tor:1,owner:f,face:f.face,x:f.x,y:gy,vx:0,vy:0,g:0,oa:1,t:0,life:92,L:92,alive:true,spec:{},hits:{},r:0,fx,
+     U(e){const g=e.owner;for(const o of foes(g)){if(intangible(o)||o.holder||o.st==='ledge')continue;const dx=e.x-o.x,dy=(e.y-34)-(o.y-30);if(Math.abs(dx)<46&&Math.abs(dy)<60){o.x+=dx*.12;if(!o.ground)o.y+=dy*.06;if(e.t%10===5&&Math.abs(dx)<30){applyHit(o,{dmg:1.2,bkb:.8,kbg:0,ang:88,fx:e.fx,nsp:1},dx>=0?1:-1,g,{proj:1});e.got=1;}}}
+      if(e.t%2===0){const a=Math.random()*PI2,h=Math.random()*70;part(e.x+Math.cos(a)*(8+h*.25),e.y-h,-Math.sin(a)*2,-1.2,12,Math.random()<.5?e.fx[0]:W,2,0);}},
+     end(e){const g=e.owner;for(const o of foes(g)){if(intangible(o)||o.holder)continue;if(Math.abs(o.x-e.x)<38&&Math.abs((o.y-30)-(e.y-34))<64)applyHit(o,{dmg:7,bkb:5.6,kbg:.11,ang:82,fx:e.fx,nsp:1},o.x>=e.x?1:-1,g,{proj:1});}burst(e.x,e.y-34,20,[e.fx[0],W],4,18);FXL.push({k:'ring',x:e.x,y:e.y-34,t:0,col:e.fx[0],r0:10,life:16});},
+     D(e){const k=Math.min(1,e.t/8)*(e.t>78?Math.max(0,(92-e.t)/14):1);X.globalAlpha=.8*k;for(let i=0;i<9;i++){const y=e.y-i*9,w=(6+i*3.2)*k,a=e.t*.45+i*.9;X.strokeStyle=i%2?W:e.fx[0];X.lineWidth=2;X.beginPath();X.ellipse(e.x+Math.sin(a)*3,y,Math.max(1,w),Math.max(.6,w*.3),0,a,a+4.6);X.stroke();}}});}}catch(e){TW.err=String(e);}return r;};
+ /* chains for the eruption */
+ const n0=ninjaFX;ninjaFX=function(f){const r=n0.apply(this,arguments);try{const m=f&&f.mv;if(m&&m.d&&m.d._ke&&typeof X!=='undefined'&&X&&m.t>=m.d.s-2&&m.t<=m.d.s+m.d.a+8){const u=Math.min(1,(m.t-m.d.s+3)/5),fade=m.t>m.d.s+m.d.a?Math.max(0,1-(m.t-m.d.s-m.d.a)/8):1;X.save();X.globalAlpha=fade;for(let i=0;i<8;i++){const a=i*PI2/8,L=60*u,x0=f.x,y0=f.y-30;for(let j=1;j<=6;j++){const q=j/6;wr(j%2?'#c8c8d8':'#7a7a86',x0+Math.cos(a)*L*q-2,y0+Math.sin(a)*L*.92*q-2,4,4);}wdisc(x0+Math.cos(a)*L,y0+Math.sin(a)*L*.92,4,'#e8e8f0');}X.restore();}}catch(e){}return r;};
+ const ai0=aiInput;aiInput=function(f){const I=ai0.apply(this,arguments);try{if(TW.on.yado&&I&&f.C===Y&&f.ground&&!f.mv){for(const o of foes(f)){if(o.st==='dizzy'&&Math.abs(o.x-f.x)<34&&Math.abs(o.y-f.y)<24){f.face=o.x>=f.x?1:-1;I.A=(FR%6)<3;I.x=0;I.y=0;I.B=I.J=I.S=I.G=false;break;}else if(o.st==='dizzy'&&Math.abs(o.x-f.x)<160&&Math.abs(o.y-f.y)<30){I.x=o.x>=f.x?1:-1;I.A=I.B=I.S=I.G=false;break;}}}if(TW.on.ayame&&I&&f.C===A&&f.ground&&!f.mv&&(f._tnT||0)<FR){for(const o of foes(f)){if(Math.abs(o.x-f.x)<34&&Math.abs(o.y-f.y)<30&&rnd()<.05){f._tnT=FR+140;I.B=true;I.x=0;I.y=-1;I.A=I.J=I.S=I.G=false;break;}}}}catch(e){}return I;};
+}catch(e){TW.err=String(e);}
 })();
 
 </script>
