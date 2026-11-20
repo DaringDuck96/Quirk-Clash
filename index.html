@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-2105';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-2109';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -15650,6 +15650,18 @@ const say=(f,s,c)=>{try{FXL.push({k:'txt',s,x:f.x,y:f.y-80,t:0,life:46,col:c});}
    if(m&&m._xl>0){m._xl--;return;}}catch(e){}return e0.apply(this,arguments);};}
 /* a fresh stock or a new match starts cool */
 if(typeof respawn==='function'){const r0=respawn;respawn=function(f){f.heat=0;return r0.apply(this,arguments);};}
+})();
+/* looksfix.js — Sato's crash-test helmet is smooth (no hair poking through it); Ryo digs in tunnelling goggles instead of a helmet. Applies to every costume built from those looks, Shiny and Overdrive included. */
+(function(){const LF={n:0};window.LOOKSFIX=LF;
+const S=CH.find(c=>c.id==='sato');if(S&&S.looks)for(const L of S.looks.concat([S.look])){if(!L)continue;if((L.hx||[]).includes('fullmask')){delete L.hairS;delete L.hairV;L._r=0;LF.n++;}}
+const R=CH.find(c=>c.id==='ryo');if(R&&R.looks)for(const L of R.looks.concat([R.look])){if(!L)continue;const hx=L.hx||[];if(hx.includes('helm')||hx.includes('visor')){L.hx=hx.filter(x=>x!=='helm'&&x!=='visor');if(!L.hx.includes('goggles'))L.hx.push('goggles');L.gogC=L.shiny?'#3af0ff':'#ffb020';delete L.helmC;delete L.visorC;L._r=0;LF.n++;}}
+})();
+/* di.js — Directional Influence, Smash style. The launch angle is now bent by the direction held on the LAST frame of hitlag (the freeze frames), not the moment the hit lands, so a player has the whole freeze to pick their DI. Holding perpendicular to the launch bends it the most: up to about 17 degrees. CPUs DI as before. */
+(function(){if(typeof diApply!=='function'||typeof update!=='function')return;
+const MAX=.3;
+diApply=function(t,kb,eff){if(kb<4||eff==='yank'||eff==='relay')return;t._diP={kb};if(t.ctrl==='cpu'){t._diC=1;}};
+const bend=(t,sx,sy)=>{const m=Math.hypot(sx,sy);if(m<.3)return;sx/=m;sy/=m;const sp=Math.hypot(t.lx,t.ly);if(!sp)return;const a=clamp((t.lx*sy-t.ly*sx)/sp,-1,1)*MAX,c=Math.cos(a),s=Math.sin(a),nx=t.lx*c-t.ly*s,ny=t.lx*s+t.ly*c;t.lx=nx;t.ly=ny;};
+const u0=update;update=function(f,I){try{if(f._diP&&!(f.hl>1)){const p=f._diP;f._diP=null;if(f.st==='hit'||f.tumble){if(f.ctrl==='cpu'){if(f.lvl>=2&&rnd()<(f.lvl-1)/8*.9)bend(f,Math.sign(STAGE.main.x+STAGE.main.w/2-f.x),-.8);}else{const r=I||f.raw||{};bend(f,r.x||0,r.y||0);}}}}catch(e){}return u0.apply(this,arguments);};
 })();
 
 </script>
