@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1459';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1507';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14722,7 +14722,34 @@ const RULES={trunks:{how:'Play 50 standard matches. Forfeits count; Campaign and
 const ROSTER=CH.filter(c=>!c.hidden&&c.looks).map(c=>c.id);CL.ROSTER=ROSTER;
 const wonAs=()=>{const all=SKINS2.all;let n=0;const L=ROSTER.filter(id=>id!=='meisei');for(const id of L)if(all[id]&&all[id].vw>0)n++;return[n,L.length];};
 RULES.meisei={how:'Win a standard match as every other fighter, including the ones you have to unlock.',test:()=>{const w=wonAs();return w[0]>=w[1];},prog:()=>{const w=wonAs();return w[0]+' / '+w[1]+' fighters';}};
+/* twelve fighters earned in the first few hours, each a different way */
+const sum=k=>{const all=SKINS2.all;let n=0;for(const id in all)if(id!=='_acct'&&all[id])n+=all[id][k]||0;return n;},mx=k=>{const all=SKINS2.all;let n=0;for(const id in all)if(id!=='_acct'&&all[id])n=Math.max(n,all[id][k]||0);return n;};
+const cosN=()=>{let n=0;try{for(const C2 of CH){if(!C2.looks||(C2.hidden&&!RULES[C2.id]))continue;for(const L of C2.looks)if(L&&L.req&&!L.hide&&!L.alt&&SKINS2.have(C2,L))n++;}}catch(e){}return n;};
+const stN=a=>Object.keys(a.stg||{}).length,cap=(v,n,w)=>Math.min(Math.floor(v||0),n)+' / '+n+(w?' '+w:'');
+Object.assign(RULES,{
+ ichigo:{how:'Finish a standard match on 5 different stages.',test:a=>stN(a)>=5,prog:a=>cap(stN(a),5,'stages')},
+ rei:{how:'Unlock 10 costumes in total, across any fighters.',test:()=>cosN()>=10,prog:()=>cap(cosN(),10,'costumes')},
+ conor:{how:'Play a match online with another player.',test:a=>!!a.onl,prog:a=>a.onl?'done':'not yet'},
+ hikari:{how:'Land 25 smash attacks.',test:a=>(a.sm||0)>=25,prog:a=>cap(a.sm,25,'smash attacks')},
+ jack:{how:'Reach 200% damage in a match.',test:a=>!!a.d200,prog:a=>a.d200?'done':'highest so far '+Math.floor(a.dmax||0)+'%'},
+ bryson:{how:'Get knocked out 25 times. Every mode counts except Training.',test:()=>sum('d')>=25,prog:()=>cap(sum('d'),25,'KOs taken')},
+ hatsuko:{how:'Score 50 KOs in total.',test:()=>sum('ko')>=50,prog:()=>cap(sum('ko'),50,'KOs')},
+ ash:{how:'Play 5 Campaign fights.',test:()=>sum('c')>=5,prog:()=>cap(sum('c'),5,'Campaign fights')},
+ tiki:{how:'Reach wave 3 in Survival.',test:()=>mx('sv')>=3,prog:()=>'best wave '+mx('sv')},
+ sota:{how:'Win a standard match without losing a stock.',test:a=>!!a.flaw,prog:a=>a.flaw?'done':'not yet'},
+ tomi:{how:'Use 5 Heroic Finales.',test:a=>(a.fs||0)>=5,prog:a=>cap(a.fs,5,'Finales')},
+ suze:{how:'Finish 3 standard matches with items switched on.',test:a=>(a.it||0)>=3,prog:a=>cap(a.it,3,'matches')}});
 CL.RULES=RULES;CL.wonAs=wonAs;
+const localHuman=f=>!!(f&&f.ctrl==='human'&&!(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100));
+try{if(typeof setStage==='function'){const ss0=setStage;setStage=function(i){CL.stage=i;return ss0.apply(this,arguments);};}}catch(e){}
+try{const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah.apply(this,arguments);try{if(r==='hit'&&a&&a!==t&&a.mv&&!a.mv._cs&&/smash/.test(a.mv.k)&&localHuman(a)&&typeof MODE!=='undefined'&&MODE!=='training'){a.mv._cs=1;const q=acct();q.sm=(q.sm||0)+1;if(q.sm===25)CL._dirty=1;}}catch(e){}return r;};}catch(e){}
+try{if(typeof beginFS==='function'){const b0=beginFS;beginFS=function(f){try{if(localHuman(f)&&typeof MODE!=='undefined'&&MODE!=='training'){const q=acct();q.fs=(q.fs||0)+1;}}catch(e){}return b0.apply(this,arguments);};}}catch(e){}
+setInterval(()=>{try{if(typeof NET!=='undefined'&&NET.on&&NET.role==='guest'){const q=acct();if(!q.onl){q.ont=(q.ont||0)+3;if(q.ont>=60){q.onl=1;save();check(300);}}}}catch(e){}},3000);
+const matchEnd=()=>{try{const q=acct();if(typeof MODE!=='undefined'&&MODE==='versus'&&F.some(localHuman)){try{const S=STAGES[CL.stage];if(S&&S.id){q.stg=q.stg||{};q.stg[S.id]=1;}}catch(e){}
+   try{if(typeof ITEMS!=='undefined'&&ITEMS.on)q.it=(q.it||0)+1;}catch(e){}
+   try{if(typeof NET!=='undefined'&&NET.on&&NET.role==='host'&&NET.guests&&NET.guests.length)q.onl=1;}catch(e){}
+   for(const f of F){if(!localHuman(f))continue;const won=f.place===1||f===winner;if(won&&!(f.falls>0))q.flaw=1;}}save();}catch(e){}};
+CL.matchEnd=matchEnd;
 const acct=()=>SKINS2.stat('_acct'),save=()=>{try{localStorage.setItem('qc_stats',JSON.stringify(SKINS2.all));}catch(e){}};
 const ciOf=id=>CH.findIndex(c=>c.id===id);
 const open=id=>{if(CL.force)return true;const r=RULES[id];if(!r)return true;const a=acct();if(a.un&&a.un[id])return true;try{return !!r.test(a);}catch(e){return false;}};
@@ -14760,7 +14787,9 @@ CL.check=check;
 let live=false,prevGS='';
 const counts=()=>typeof MODE!=='undefined'&&MODE==='versus'&&typeof F!=='undefined'&&F.some(f=>f&&f.ctrl==='human'&&!(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100));
 const bump=(delay)=>{live=false;const a=acct();a.vm=(a.vm||0)+1;save();check(delay);};
-{const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(GS==='play'&&prevGS!=='play'&&counts())live=true;if(GS==='over'&&prevGS!=='over'&&live){try{for(const f of F){if(!f||f.ctrl!=='human'||(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100))continue;const won=f.place===1||f===winner||(typeof TEAMS_ON==='function'&&TEAMS_ON()&&winner&&f.team===winner.team);if(won&&f.C&&!f.C.hidden){const s=SKINS2.stat(f.C.id);s.vw=(s.vw||0)+1;}}}catch(e){}bump(2600);}prevGS=GS;}catch(e){}return r;};}
+{const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(GS==='play'&&FR%10===0&&typeof MODE!=='undefined'&&MODE!=='training'){const q=acct();for(const f of F){if(!localHuman(f)||f.dead)continue;if(f.dmg>(q.dmax||0))q.dmax=f.dmg;if(f.dmg>=200&&!q.d200){q.d200=1;save();check(1200);}}if(CL._dirty){CL._dirty=0;save();check(1200);}}
+  if(GS==='over'&&prevGS!=='over'){matchEnd();if(!live)check(2600);}
+  if(GS==='play'&&prevGS!=='play'&&counts())live=true;if(GS==='over'&&prevGS!=='over'&&live){try{for(const f of F){if(!f||f.ctrl!=='human'||(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100))continue;const won=f.place===1||f===winner||(typeof TEAMS_ON==='function'&&TEAMS_ON()&&winner&&f.team===winner.team);if(won&&f.C&&!f.C.hidden){const s=SKINS2.stat(f.C.id);s.vw=(s.vw||0)+1;}}}catch(e){}bump(2600);}prevGS=GS;}catch(e){}return r;};}
 for(const nm of['toSelect','toTitle']){try{const fn0=eval(nm);if(typeof fn0==='function'){const w=function(){try{if(live&&typeof GS!=='undefined'&&GS!=='over')bump(500);live=false;}catch(e){}return fn0.apply(this,arguments);};if(nm==='toSelect')toSelect=w;else toTitle=w;}}catch(e){}}
 /* nobody gets a locked fighter by any other route */
 const LASTOK=[-1,-1,-1,-1];
