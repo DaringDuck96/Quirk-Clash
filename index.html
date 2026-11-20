@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1753';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1758';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10650,9 +10650,9 @@ function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{l
   trySlot(0,false);}));}
 
 /* what actually happened to a connection attempt, so a failure says something useful */
-async function diag(pc){const d={ice:'none',answered:false,relay:false,direct:false};try{if(!pc)return d;d.ice=pc.iceConnectionState+'/'+pc.connectionState;d.answered=!!pc.remoteDescription;const st=await pc.getStats();st.forEach(r=>{if(r.type==='local-candidate'){if(r.candidateType==='relay')d.relay=true;if(r.candidateType==='srflx'||r.candidateType==='host')d.direct=true;}});}catch(e){}return d;}
+async function diag(pc){const d={ice:'none',answered:false,relay:false,direct:false};try{if(!pc)return d;d.ice=pc.iceConnectionState+'/'+pc.connectionState;d.answered=!!pc.remoteDescription;const st=await pc.getStats();d.c={};st.forEach(r=>{if(r.type==='local-candidate'||r.type==='remote-candidate'){const ad=String(r.address||r.ip||''),k=(r.type[0]==='l'?'L':'R')+(r.candidateType==='host'?(!ad||/\.local$/.test(ad)?'m':'h'):r.candidateType==='srflx'?'s':r.candidateType==='relay'?'r':'p');d.c[k]=(d.c[k]||0)+1;}if(r.type==='local-candidate'){if(r.candidateType==='relay')d.relay=true;if(r.candidateType==='srflx'||r.candidateType==='host')d.direct=true;}});}catch(e){}return d;}
 function diagText(d){if(!d.answered)return'The room is marked as taken, but its host did not answer. They may have closed or reloaded the page: the room frees itself about a minute later. Wait a minute, or agree on a different room name, and connect again: host first, then everyone else.';
- if(!d.relay)return'The host answered, but no direct route between your two networks worked and the free relay servers could not be reached from here. If you are both on the same Wi-Fi, use the green SAME WI-FI button below. Otherwise try a different network on one side (home wifi instead of mobile data, or a phone hotspot).';
+ const code=' Code: '+(d.ice||'')+' '+Object.keys(d.c||{}).sort().map(k=>k+d.c[k]).join(' ')+(window.SAMEWIFI&&SAMEWIFI.on?' W1':' W0')+'.';if(!d.relay&&window.SAMEWIFI&&SAMEWIFI.on)return'The host answered, and Same Wi-Fi mode is on, but the two devices still could not reach each other. The host should press the SAME WI-FI button on their screen too, then you connect again. If it still fails, the router is keeping its devices apart (common on guest and mesh networks): put one device on a phone hotspot.'+code;if(!d.relay)return'The host answered, but no direct route between your two networks worked and the free relay servers could not be reached from here. If you are both on the same Wi-Fi, use the green SAME WI-FI button below. Otherwise try a different network on one side (home wifi instead of mobile data, or a phone hotspot).'+code;
  return'The host answered and a relay was available, but the connection still did not complete. Both of you reload and try once more; if it repeats, tell Claude this code: '+d.ice+(d.direct?' d':'')+(d.relay?' r':'')+'.';}
 /* why this browser cannot do it, in words someone can act on */
 function noRTC(){let framed=false;try{framed=window.self!==window.top;}catch(e){framed=true;}const has=!!window.RTCPeerConnection,ua=navigator.userAgent||'',inapp=/FBAN|FBAV|Instagram|Line\/|Discord|Snapchat|Twitter|TikTok|; wv\)|Claude/i.test(ua);
@@ -15643,7 +15643,9 @@ setTimeout(()=>{try{if(!new URLSearchParams(location.search).has('nopresence'))P
 (function(){
 const LAN={on:false,err:''};window.SAMEWIFI=LAN;
 const refresh=()=>{try{navigator.permissions.query({name:'microphone'}).then(p=>{LAN.on=p.state==='granted';},()=>{});}catch(e){}};refresh();
-LAN.enable=async function(){try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('This browser cannot do that.');const st=await navigator.mediaDevices.getUserMedia({audio:true});st.getTracks().forEach(t=>{try{t.stop();}catch(e){}});LAN.on=true;return true;}
+LAN.enable=async function(hold){try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('This browser cannot do that.');const st=await navigator.mediaDevices.getUserMedia({audio:true});const off=()=>st.getTracks().forEach(t=>{try{t.stop();}catch(e){}});st.getTracks().forEach(t=>{try{t.enabled=false;}catch(e){}});
+ /* Chrome and Edge only need the permission. Safari and Firefox share the local address only while the microphone is actually open, so there it is held (silent, connected to nothing) for a while: long enough to connect. */
+ const chromium=!!window.chrome&&!/Firefox|FxiOS/i.test(navigator.userAgent);if(chromium)off();else{try{LAN._off&&LAN._off();}catch(e){}LAN._off=off;clearTimeout(LAN._t);LAN._t=setTimeout(off,hold||60000);}LAN.on=true;return true;}
  catch(e){LAN.err=String(e&&e.message||e);try{toast(/denied|NotAllowed|Permission/i.test(String(e&&e.name)+LAN.err)?'Same Wi-Fi mode needs the microphone to be allowed (it is not recorded). Allow it in the address bar and try again.':'Same Wi-Fi mode could not be switched on: '+LAN.err);}catch(x){}return false;}};
 const mk=(id,label,small)=>{const b=document.createElement('button');b.id=id;b.className='netbtn sm';b.style.cssText='margin-top:10px;background:#1f7a4a';b.innerHTML=label+(small?'<small>'+small+'</small>':'');return b;};
 setInterval(()=>{try{const panel=document.getElementById('netpanel');
@@ -15653,9 +15655,9 @@ setInterval(()=>{try{const panel=document.getElementById('netpanel');
    b.onclick=async()=>{b.disabled=true;if(await LAN.enable()){try{toast('Same Wi-Fi mode on. Connecting again…');}catch(e){}go.disabled=false;go.click();}else b.disabled=false;};stat.parentNode.insertBefore(b,stat.nextSibling);}
   /* host: offer it before anyone has trouble */
   const s2=panel.querySelector('#netstat2');if(s2&&!panel.querySelector('#lanH')){const b=mk('lanH',LAN.on?'SAME WI-FI MODE: ON':'A FRIEND ON YOUR WI-FI CANNOT JOIN?','Tap this, allow the microphone (nothing is recorded), then have them reload and join again.');
-   b.onclick=async()=>{b.disabled=true;if(await LAN.enable()){b.firstChild.textContent='SAME WI-FI MODE: ON';try{toast('Same Wi-Fi mode on. Ask your friend to reload and join again.');}catch(e){}}b.disabled=false;};s2.parentNode.insertBefore(b,s2.nextSibling);}}
+   b.onclick=async()=>{b.disabled=true;if(await LAN.enable(600000)){b.firstChild.textContent='SAME WI-FI MODE: ON';try{toast('Same Wi-Fi mode on. Ask your friend to reload and join again.');}catch(e){}}b.disabled=false;};s2.parentNode.insertBefore(b,s2.nextSibling);}}
  const chip=document.getElementById('netchip');if(chip&&!chip.hidden&&typeof NET!=='undefined'&&NET.role==='host'&&!chip.querySelector('#lanC')){const b=document.createElement('button');b.id='lanC';b.textContent=LAN.on?'SAME WI-FI: ON':'SAME WI-FI FIX';b.title='A friend on the same Wi-Fi cannot join? Tap, allow the microphone (nothing is recorded), then have them reload and join again.';
-  b.onclick=async()=>{if(await LAN.enable()){b.textContent='SAME WI-FI: ON';try{toast('Same Wi-Fi mode on. Ask your friend to reload and join again.');}catch(e){}}};const stop=[...chip.querySelectorAll('button')].pop();chip.insertBefore(b,stop||null);}}catch(e){LAN.err=String(e);}},600);
+  b.onclick=async()=>{if(await LAN.enable(600000)){b.textContent='SAME WI-FI: ON';try{toast('Same Wi-Fi mode on. Ask your friend to reload and join again.');}catch(e){}}};const stop=[...chip.querySelectorAll('button')].pop();chip.insertBefore(b,stop||null);}}catch(e){LAN.err=String(e);}},600);
 })();
 
 </script>
