@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1759';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1810';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10622,7 +10622,7 @@ const hashRoom=()=>{const m=/room=([A-Za-z0-9]+)/.exec(location.hash||'');return
 /* =============================================================== transport =============================================================== */
 function loadLib(){return new Promise((res,rej)=>{if(window.Peer)return res();const s=document.createElement('script');s.src=LIB;s.onload=()=>window.Peer?res():rej(new Error('PeerJS did not load'));s.onerror=()=>rej(new Error('Could not reach the connection service (are you offline, or is this page sandboxed?)'));document.head.appendChild(s);});}
 /* STUN finds a direct route; the TURN relays (PeerJS's own free ones) carry the connection when a home router or phone network will not allow a direct one */
-const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},{urls:['turn:staticauth.openrelay.metered.ca:80','turn:staticauth.openrelay.metered.ca:443','turn:staticauth.openrelay.metered.ca:443?transport=tcp','turns:staticauth.openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}],sdpSemantics:'unified-plan'};window.__ICE=ICE;
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},{urls:['turn:staticauth.openrelay.metered.ca:80','turn:staticauth.openrelay.metered.ca:443','turn:staticauth.openrelay.metered.ca:443?transport=tcp','turns:staticauth.openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'},{urls:['turn:freeturn.net:3478','turn:freeturn.net:3478?transport=tcp','turns:freeturn.tel:5349'],username:'free',credential:'free'}],sdpSemantics:'unified-plan'};window.__ICE=ICE;
 /* PeerJS: returns {role:'host', onGuest(cb), close()} or {role:'guest', link, close()} where link = {send, onData, onStream, onClose, sendStream, id} */
 function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{let settled=false,lastD=null;const SLOTS=4;
   const fin=(ok,v)=>{if(settled)return;settled=true;if(ok)res(v);else rej(v);};
@@ -15589,7 +15589,7 @@ if(typeof refreshSel==='function'){const r0=refreshSel;refreshSel=function(){con
 (function(){
 const HUB='pu-quirk-clash-v1-whoison',PR={on:true,role:'',names:[],n:0,ok:false,err:''};window.PRESENCE=PR;
 try{if(localStorage.getItem('qc_presence')==='off')PR.on=false;}catch(e){}
-const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}]};
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},{urls:['turn:freeturn.net:3478','turns:freeturn.tel:5349'],username:'free',credential:'free'}]};
 PR.ICE=ICE;const clean=s=>String(s||'').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,18)||'Player';
 const myName=()=>{try{const p=typeof PROFILES!=='undefined'&&PROFILES.current&&PROFILES.current();return clean(p&&p.name);}catch(e){return'Player';}};
 let P=null,peer=null,hubConn=null,members=null,timer=null,beat=null,gen=0,sent='';
