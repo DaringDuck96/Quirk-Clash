@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1535';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1541';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14462,7 +14462,7 @@ try{
  const Y=CH.find(c=>c.id==='yado'),K=CH.find(c=>c.id==='kichi'),A=CH.find(c=>c.id==='ayame');
  /* YADO: every smash can stun (10%, rising to 70% at full charge), and his basic attacks do half as much again to a stunned rival */
  const BASIC=/^(jab\d?|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair)$/;
- {const a0=applyHit;applyHit=function(t,h,dirX,a,o){let st=false;try{if(TW.on.yado&&a&&a.C===Y&&a!==t&&a.mv&&/smash/.test(a.mv.k||'')&&h&&!(o&&o.proj)&&!h._ys){const ch=Math.min(1,(a.mv.chargeT||0)/60),p=.1+.6*ch;h=Object.assign({},h,{_ys:1});if(rnd()<p){st=true;h.eff='stun';h.bkb=1.2;h.kbg=0;h.ang=80;}TW.ySm=(TW.ySm||0)+1;}}catch(e){}
+ {const a0=applyHit;applyHit=function(t,h,dirX,a,o){let st=false;try{if(TW.on.yado&&a&&a.C===Y&&a!==t&&a.mv&&/smash/.test(a.mv.k||'')&&h&&!(o&&o.proj)&&!h._ys){const ch=Math.min(1,(a.mv.chargeT||0)/60),p=.1+.6*ch;h=Object.assign({},h,{_ys:1});if(rnd()<p&&!(t&&t.dmg>=(TW.yKO===undefined?90:TW.yKO))){st=true;h.eff='stun';h.bkb=1.2;h.kbg=0;h.ang=80;}TW.ySm=(TW.ySm||0)+1;}}catch(e){}
    const r=a0.call(this,t,h,dirX,a,o);
    /* the stun from his smash is a full one: three quarters of a second, whatever came before it */
    try{if(st&&r==='hit'&&t&&!t.dead){t.st='dizzy';t.dz=46;t.hitstun=0;t.lx=t.ly=0;t.vx=0;TW.yStun=(TW.yStun||0)+1;FXL.push({k:'txt',s:'STUNNED',x:t.x,y:t.y-90,t:0,life:34,col:'#e83a2a'});}}catch(e){}return r;};
@@ -14803,6 +14803,30 @@ try{const Ch=c('chiyoki');if(Ch){const SM={fsmash:['smashH','A full swing with t
  if(Array.isArray(Ch.nrm))Ch.nrm=Ch.nrm.map(s=>s.replace(/BOWLING PIN — [^.]*\./,'GRAVEDIGGER — Swings the flat of his shovel.'));
  if(typeof Ch.na==='string')Ch.na=Ch.na.replace(/Forward smash: BOWLING PIN — [^.]*\.( They no longer know which way is up\.)?/,'Forward smash: GRAVEDIGGER — Swings the flat of his shovel. They no longer know which way is up.')+' All three smash attacks are swings of his shovel.';
 }}catch(e){E(e);}
+})();
+/* balance3.js — small nudges to bring every fighter inside 40–70%: one light change each. */
+(function(){
+if(typeof CH==='undefined')return;const B3={err:null,log:{}};window.BAL3=B3;
+try{const c=id=>CH.find(x=>x.id===id);
+ const set=(id,o)=>{const C=c(id);if(!C)return;B3.log[id]=Object.assign(B3.log[id]||{},o);for(const k in o){if(k==='def*')C.defKb=(C.defKb||1)*o[k];else C[k]=o[k];}};
+ const mvs=(id,key,fn)=>{const C=c(id);if(!C)return;for(const tb of[C.mv,C.hmv])if(tb&&tb[key]&&!tb[key]['_b3'+key]){tb[key]['_b3'+key]=1;fn(tb[key]);}B3.log[id]=Object.assign(B3.log[id]||{},{[key]:1});};
+ const kbg=(k)=>d=>{for(const h of d.hits||[])h.kbg*=k;};
+ /* down from the top */
+ set('minato',{atkM:1.20});set('uchuu',{defKb:.90});mvs('soran','fsmash',d=>{d.r+=2;});mvs('maya','dB',kbg(.9));
+ /* up from the bottom: ease the old hidden handicaps */
+ set('pitto',{atkM:1,defKb:1});set('ryuko',{atkM:.85,defKb:1.18});set('hippo',{atkM:1,defKb:1});set('raion',{atkM:.90,defKb:1.10});set('torabi',{atkM:.88,defKb:1.14});set('tenmetsu',{atkM:.92,defKb:1.08});set('ray',{atkM:1,defKb:1});
+ /* a little sturdier */
+ set('yado',{'def*':.92});set('yurei',{'def*':.92});set('akemi',{'def*':.94});set('mia',{'def*':.95});
+ /* finishers that were not finishing */
+ mvs('oro','fsmash',kbg(1.10));mvs('bara','fsmash',kbg(1.12));mvs('ali','fsmash',kbg(1.10));mvs('takeshi','fsmash',kbg(1.12));
+ mvs('kimiko','fsmash',d=>{for(const h of d.hits||[])if(h.eff==='freeze')delete h.eff;if(typeof d.qn==='string')d.qn=d.qn.replace(/[Ff]reezes?[^.]*\./,'').trim()||d.qn;});
+ mvs('keanu','dB',d=>{d.r=Math.max(8,d.r-6);});
+ /* Ichigo's side special and Keanu's Volcano launch through entities, so their launch is adjusted where the hit lands */
+ const I=c('ichigo'),K=c('keanu');
+ if(typeof startMove==='function'){const sm=startMove;startMove=function(f,key){const r=sm.apply(this,arguments);try{if(r!==false&&f&&((f.C===I&&key==='sB')||(f.C===K&&key==='dB')))f._b3T=FR;}catch(e){}return r;};}
+ if(typeof kbMod==='function'){const k0=kbMod;kbMod=function(a,t,h,o){let m=k0.apply(this,arguments);try{if(a&&a._b3T&&FR-a._b3T<260&&o&&(o.proj||o.force)){if(a.C===I)m*=.9;else if(a.C===K)m*=1.2;}}catch(e){}return m;};}
+ B3.log.ichigo={sB:.9};
+}catch(e){B3.err=String(e);}
 })();
 /* overdrive.js — the OVERDRIVE costume: every fighter's hero uniform pushed to the limit. Earned with 300 KOs as that fighter. */
 (function(){
