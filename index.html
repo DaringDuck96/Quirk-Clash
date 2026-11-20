@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1444';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1459';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -12015,7 +12015,8 @@ C.look=C.looks[0];
    ell(H.x+4.6*h,H.y-2.4*h,1.25*h,1.25*h,0,k,0,1);sp(H.x+5*h,H.y-2.9*h,wh[5]);lineH(H,h,2.4,-4.6,6.8,-4.2,gD[1]);
    if(atk||win)lineH(H,h,2.6,-5.2,7,-3.8,k[2]);
   }catch(e){}
-  return dh.apply(this,arguments);};}
+  /* the elephant head is the whole head: no human face underneath */
+  return;};}
 {const ss=spriteState;spriteState=function(f){const S=ss.apply(this,arguments);try{if(f&&f.mv&&!S.mk)S.mk=f.mv.k;}catch(e){}return S;};}
 /* ---------- normals ---------- */
 const N={
@@ -12068,6 +12069,103 @@ try{if(typeof FSD!=='undefined'&&FSD.kongu)FSD.trunks=Object.assign(clone(FSD.ko
 try{if(typeof FSCALL!=='undefined')FSCALL.trunks='STAMPEDE!';}catch(e){}
 try{if(typeof RANGE!=='undefined')RANGE.trunks=[3,1.1];}catch(e){}
 try{if(typeof PROPS!=='undefined')PROPS.T.trunks=['whip',GREY,'#6a7080'];}catch(e){}
+}catch(e){E(e);}
+})();
+
+/* meisei.js — MEISEI RAGUKAKI. Ability: Aura. Paint pours out of her, and every colour does something different. Unlocked by winning a standard match as every other fighter. */
+(function(){
+if(typeof CH==='undefined'||typeof M!=='function'||typeof hit!=='function'||CH.find(c=>c.id==='meisei'))return;
+const MS={err:null,use:{}};window.MEISEI=MS;const E=e=>{MS.err=MS.err||String(e&&e.stack||e).slice(0,400);};
+try{
+const SRC=CH.find(c=>c.id==='maya');if(!SRC)return;
+const clone=v=>{if(Array.isArray(v))return v.map(clone);if(v&&typeof v==='object'){const o={};for(const k in v){if(k==='R'||k==='_r')continue;o[k]=clone(v[k]);}return o;}return v;};
+const C=clone(SRC),W='#ffffff',RED='#ff3a4a',BLUE='#3a8aff',YEL='#ffd91a',GRN='#3ad06a',PINK='#ff6ad0',RB=['#ff4a5a','#ff9a3a','#ffe14a','#5ae06a','#4ab8ff','#b070ff'],cl=(v,a,b)=>v<a?a:v>b?b:v;
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const inR=(o,x,y,r)=>{const R=hurtR(o),cx=cl(x,R[0],R[0]+R[2]),cy=cl(y,R[1],R[1]+R[3]);return Math.hypot(x-cx,y-cy)<=r;};
+const near=f=>{let b=null,bd=1e9;for(const o of foes(f)){if(intangible(o))continue;const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<bd){bd=d;b=o;}}return b?{o:b,d:bd}:null;};
+const floorY=(x,y)=>{let best=null;try{for(const s of surfaces()){if(x>=s.x&&x<=s.x+s.w&&s.y>=y-8&&(best===null||s.y<best))best=s.y;}}catch(e){}return best;};
+const say=(x,y,s,c)=>FXL.push({k:'txt',s,x,y,t:0,life:34,col:c||W});
+const splat=(x,y,c,n,sp)=>{for(let i=0;i<n;i++){const a=rnd()*6.283,v=(sp||3)*(.4+rnd());part(x,y,Math.cos(a)*v,Math.sin(a)*v-.6,14+rnd()*10,c,rnd()<.4?3:2,.12);}};
+const coat=(o,c,v)=>{const p=o._pt||(o._pt={v:0,c});p.v=Math.min(100,p.v+v);p.c=c;};
+MS.K={coat:.3,spray:1.4,bomb:[11,4.8,.092],conf:150,heavy:240};
+/* ---------- who she is ---------- */
+Object.assign(C,{id:'meisei',n:'MEISEI RAGUKAKI',sn:'MEISEI',card:'MEISEI',q:'Aura',ty:'Emitter',col:PINK,
+ d:'Paint pours out of her, and every colour does something different: blue stings, red bursts, yellow confuses, green weighs you down.',
+ na:'Normals: quick, light kicks and palm strikes that leave paint behind. The more of her paint a rival is wearing, the more her hits hurt them: up to 30% more. The paint wears off in a few seconds.',
+ role:'Fast paint brawler',tip:'Cover them in paint first. Everything she lands afterwards hits harder.',weak:'Light, and short on reach. Her yellow and green paints set things up but do little or no damage.',
+ trait:'PAINTED — rivals wearing her paint take up to 30% more from her. Each special is a different colour with a different effect.',
+ rng:2,pwr:.95,atkM:1.09,kbM:1.06,defKb:.94,grabR:26,shMax:44,pas:null,impact:null,sig:null,sigT:null,heroLook:1,_nocd:false,style:'even',
+ tauntT:'HOLD STILL, YOU ARE MY CANVAS.',taunt2T:'THAT COLOUR SUITS YOU.',taunt3T:'I AM NOT FINISHED.',persona:'bold'});
+delete C.hmv;delete C.fmv;delete C.heroNote;delete C.heroDisjoint;delete C.disjoint;delete C.gim;delete C.shR;
+C.qa=['FRESH COAT','hype',{},10,'Shakes off a shower of colour: her next hit does more.'];
+C.st=Object.assign({},SRC.st,{w:1,walk:1.9,run:4.3,air:2.9,jump:-9.6,sj:-6.1,dj:-9.1,g:.38,fall:5,ff:7.8,aj:1,acc:.3,trac:.78,dash:.8,jsq:3,aacc:.18});
+C.kit={st:'brawler',fx:[PINK,'#6ae8ff'],el:'light',pow:.95,reach:1};
+C.sp=['Blue Spray (hold B: a stream of stinging blue paint)','Red Paint Bomb (lobbed; bounces once and bursts)','Green Launcher (blasts her upward; anyone the paint lands on is heavy and slow)','Yellow Burst (paint in every direction; no damage, but it confuses)'];
+/* ---------- looks ---------- */
+const BODY={hair:'#ffe27a',hair2:'#fff7cf',hairS:'long',streak:'#fffbe6',eye:'#4ab8ff',skin:'#f8e0cc',fem:1,stance:'cool',smile:1};
+const mk=(L,o)=>{const N=clone(L);Object.assign(N,BODY);for(const k in(o||{})){if(o[k]===null)delete N[k];else N[k]=o[k];}return N;};
+C.looks=SRC.looks.map(L=>L?mk(L):L);
+C.looks[0]=mk(SRC.looks[0],{trim:PINK,tieC:PINK,cname:undefined});
+C.looks[6]=mk(SRC.looks[0],{outfit:'prism',sl:'long',top:'#f8f8fc',top2:null,sleeve:'#f8f8fc',pants:'#f8f8fc',skirt:null,socks:null,shoe:'#f8f8fc',boots:1,bootTrim:1,glove:'#f8f8fc',acc:'#ff5a8a',acc2:'#4ab8ff',trim:'#ffe14a',stripe:null,pantStripe:null,armband:null,kneepad:null,gown:null,rbw:1,stance:'guard',tieC:null,cuff:null,print:null,emblem:null,hx:[],ex:[],cname:'HERO'});
+for(const L of C.looks){if(L){delete L.req;delete L.alt;delete L.hide;delete L.heroKit;delete L._b;for(const q of['hw','nk','hs','lg'])delete L[q];L.bw=1;L.ww=1;L.lw=1;L.pw=1;}}
+C.look=C.looks[0];
+/* rainbow bands down the arms and legs of the unitard */
+{const db=drawHumanBody;drawHumanBody=function(L,J,S,p){const r=db.apply(this,arguments);if(L.rbw){try{if(!L._rb)L._rb=RB.map(c=>ramp(c));const h=L.h||1,band=(A,B,n,w,o)=>{for(let i=0;i<n;i++){const k=(i+.8)/(n+.6),x=A.x+(B.x-A.x)*k,y=A.y+(B.y-A.y)*k,a=Math.atan2(B.y-A.y,B.x-A.x)+1.571;ell(x,y,w*h,.95*h,a,L._rb[(i+o)%6]);}};
+  band(J.HB,J.KB,3,3,0);band(J.KB,J.AB,3,2.6,3);band(J.HF,J.KF,3,3.1,0);band(J.KF,J.AF,3,2.7,3);band(J.SB,J.EB,2,2.2,0);band(J.EB,J.WB,2,2,2);band(J.SF,J.EF,2,2.3,3);band(J.EF,J.WF,2,2.1,5);}catch(e){}}return r;};}
+/* ---------- normals: each leaves a different colour ---------- */
+const N={
+ jab1:M('jabP1',3,2,7,hit([[20,-36,9]],2.2,1.8,.01,70),{fx:[BLUE,W]}),jab2:M('jabP2',3,2,8,hit([[22,-36,9]],2.2,1.8,.01,70),{fx:[RED,W]}),jab3:M('j3P',4,3,14,hit([[26,-36,11]],4,4,.055,45),{fx:[YEL,W]}),
+ ftilt:M('kickF',6,3,13,hit([[30,-30,11],[16,-30,9]],8,3.4,.06,38),{fx:[RED,W]}),utilt:M('kickUp',5,4,12,hit([[6,-62,12],[8,-44,10]],6.5,3.6,.055,88),{fx:[GRN,W]}),dtilt:M('kickLow',5,3,10,hit([[28,-8,10]],6,3,.04,70),{fx:[BLUE,W]}),
+ dash:M('lunge',6,9,15,hit([[20,-28,14]],8.5,4.2,.06,50),{fx:['#b070ff',W],imp:[[4,5.6,0]]}),
+ fsmash:M('smashH',14,4,24,hit([[38,-36,16],[18,-36,12]],15,3.8,.11,40),{charge:1,face:'atk',fx:[RED,YEL]}),
+ usmash:M('usO',9,5,22,hit([[4,-66,15],[6,-46,12]],13.5,3.9,.104,88),{charge:1,face:'atk',fx:[GRN,W]}),
+ dsmash:M('dsS',8,4,22,[hit([[28,-10,14]],12,3.6,.085,32),hit([[-28,-10,14]],12,3.6,.085,148)],{charge:1,face:'atk',fx:[BLUE,W]}),
+ nair:M('nairK',4,12,10,hit([[0,-30,20]],7,3.4,.05,45),{ll:8,fx:[YEL,W]}),fair:M('fairK',7,4,13,hit([[28,-32,13]],10,3.8,.075,40),{ll:10,fx:[RED,W]}),bair:M('bairK',6,4,12,hit([[-28,-32,13]],9.5,3.8,.09,140),{ll:9,fx:[BLUE,W]}),
+ uair:M('uairK',5,5,11,hit([[4,-60,13]],7,3.4,.06,84),{ll:8,fx:[GRN,W]}),dair:M('dairK',11,5,18,hit([[0,-6,13]],10,3.4,.07,-76),{ll:16,fx:['#b070ff',W]})};
+for(const k in N){N[k].lim='none';C.mv[k]=N[k];}if(C.mv.jab)delete C.mv.jab;
+for(const k in C.mv){const d=C.mv[k];if(!d)continue;delete d.nx;delete d._nx;if(!N[k]&&d.fx)d.fx=[PINK,'#6ae8ff'];}
+/* ---------- specials ---------- */
+if(!EK.msp)EK.msp={init(){},upd(e){try{if(!e.owner||e.owner.gone||e.t>=e.L-1){if(e.end)e.end(e);e.alive=false;return;}e.U(e);}catch(x){E(x);e.alive=false;}},draw(e){try{X.save();e.D(e);X.restore();}catch(x){}}};
+/* B: blue spray */
+BEH.mspray={tick(f,m,I){try{const d=m.d,t=m.t;if(t<d.s||t>d.s+d.a)return;let held=I.B;if(f.ctrl==='cpu'){const q=near(f);held=!!(q&&(q.o.x-f.x)*f.face>0&&q.d<96&&Math.abs(q.o.y-f.y)<40);}
+  if(!held&&t>d.s+10){m.t=d.s+d.a;return;}f.vx*=.8;for(let i=0;i<3;i++)part(f.x+f.face*(14+rnd()*8),f.y-36+rnd()*6-3,f.face*(4.6+rnd()*2.4),(rnd()-.5)*1.4-.2,13,i?BLUE:'#bfe0ff',i?3:2,.05);if(t%8===0)try{sfx('swing');}catch(x){}}catch(x){E(x);}}};
+C.mv.nB=M('cast',6,44,12,hit([[28,-36,10],[48,-36,11],[68,-36,12]],MS.K.spray,.5,0,40,{ri:4}),{beh:'mspray',lim:'none',fx:[BLUE,W],face:'atk'});
+/* Side B: red paint bomb */
+const bomb=(f,far)=>{const e={k:'msp',owner:f,face:f.face,x:f.x+f.face*14,y:f.y-44,vx:f.face*(3.2+far*2.2),vy:-5.4,g:0,oa:1,t:0,life:300,L:80,alive:true,spec:{},hits:{},r:8,proj:1,b:0,
+  boom(e){if(e._d)return;e._d=1;e.alive=false;const q=MS.K.bomb;splat(e.x,e.y,RED,26,4.4);splat(e.x,e.y,'#ff9aa0',8,3);FXL.push({k:'ring',x:e.x,y:e.y,t:0,col:RED,r0:12,life:16});try{sfx('boom');}catch(x){}
+   for(const o of foes(e.owner)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,30))continue;applyHit(o,{dmg:q[0],bkb:q[1],kbg:q[2],ang:60,fx:[RED,W]},o.x>=e.x?1:-1,e.owner,{proj:1});MS.use.bombHit=(MS.use.bombHit||0)+1;}},
+  end(e){e.boom(e);},
+  U(e){e.vy+=.3;e.x+=e.vx;e.y+=e.vy;const fy=floorY(e.x,e.y-e.vy);if(fy!==null&&e.y>=fy-7&&e.vy>0){if(e.b++>=1){e.boom(e);return;}e.y=fy-7;e.vy=-3.6;e.vx*=.7;splat(e.x,fy-2,RED,5,2);}
+   for(const o of foes(e.owner)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,9))continue;e.boom(e);return;}if(e.t%3===0)part(e.x,e.y,0,.3,9,'#ff9aa0',2,.05);},
+  D(e){X.fillStyle='#4a0810';X.beginPath();X.arc(e.x,e.y,8.6,0,7);X.fill();X.fillStyle=RED;X.beginPath();X.arc(e.x,e.y,7,0,7);X.fill();X.fillStyle='#ffb0b6';X.beginPath();X.arc(e.x-2,e.y-2.4,2.6,0,7);X.fill();X.fillStyle=RED;X.beginPath();X.arc(e.x-e.vx*1.2,e.y-e.vy*1.2-5,2.4,0,7);X.fill();}};ENT.push(e);return e;};
+BEH.mbomb={tick(f,m,I){try{if(m.t===m.d.s&&!m.v.th){m.v.th=1;let far=cl(((I.x||0)*f.face+1)/2,0,1);if(f.ctrl==='cpu'){const q=near(f);far=q?cl((q.d-60)/200,0,1):.5;}bomb(f,far);try{sfx('swing');}catch(x){}MS.use.bomb=(MS.use.bomb||0)+1;}}catch(x){E(x);}}};
+C.mv.sB={an:'throwF',s:9,a:2,r:17,hits:[],beh:'mbomb',fx:[RED,W],lim:'none'};
+/* Up B: green launcher */
+BEH.mjump={tick(f,m,I){try{const d=m.d,t=m.t,v=m.v;if(t<d.s)return;if(!v.go){v.go=1;v.h={};f.ground=null;f.vy=-13.4;f.vx=(I.x||0)*2.6;try{sfx('boom');}catch(x){}MS.use.jump=(MS.use.jump||0)+1;v.x0=f.x;v.y0=f.y;splat(f.x,f.y,GRN,22,4);}
+  if(t<=d.s+d.a){f.vx+=((I.x||0)*3-f.vx)*.1;for(let i=0;i<3;i++)part(f.x+(rnd()-.5)*16,f.y-4,(rnd()-.5)*2.4,3+rnd()*3,16,i?GRN:'#b8f4c8',3,.1);
+   for(const o of foes(f)){if(v.h[o.id]||intangible(o)||o.holder)continue;if(Math.abs(o.x-f.x)<34&&o.y>=f.y-14&&o.y<=f.y+110){v.h[o.id]=1;applyHit(o,{dmg:3,bkb:1.6,kbg:0,ang:80,fx:[GRN,W]},o.x>=f.x?1:-1,f,{proj:1});o.qslow=Math.max(o.qslow||0,FR+MS.K.heavy);o._hvy=FR+MS.K.heavy;coat(o,GRN,35);say(o.x,o.y-90,'HEAVY',GRN);MS.use.heavy=(MS.use.heavy||0)+1;}}}}catch(x){E(x);}}};
+C.mv.uB={an:'castUp',s:6,a:14,r:14,hits:[],beh:'mjump',helpless:1,fx:[GRN,W],lim:'none'};
+/* Down B: yellow burst */
+BEH.mburst={tick(f,m,I){try{if(m.t===m.d.s&&!m.v.go){m.v.go=1;for(let i=0;i<28;i++){const a=i/28*6.283,sp=5+rnd()*2.4;part(f.x,f.y-34,Math.cos(a)*sp,Math.sin(a)*sp,16,i%3?YEL:'#fff3a0',3,.04);}FXL.push({k:'ring',x:f.x,y:f.y-34,t:0,col:YEL,r0:20,life:16});try{sfx('pop');}catch(x){}MS.use.burst=(MS.use.burst||0)+1;
+   for(const o of foes(f)){if(intangible(o)||o.holder||!inR(o,f.x,f.y-34,70))continue;o.confT=Math.max(o.confT||0,MS.K.conf);coat(o,YEL,40);say(o.x,o.y-90,'CONFUSED',YEL);splat(o.x,o.y-34,YEL,10,2.4);MS.use.conf=(MS.use.conf||0)+1;}}}catch(x){E(x);}}};
+C.mv.dB={an:'castDown',s:9,a:4,r:18,hits:[],beh:'mburst',fx:[YEL,W],lim:'none'};
+C._aik={nB:'near',sB:'far',dB:'near'};
+/* ---------- paint: it sticks, and it makes her hits hurt more ---------- */
+const PC={'#ff3a4a':1,'#3a8aff':1,'#ffd91a':1,'#3ad06a':1,'#b070ff':1};
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah.apply(this,arguments);try{if(r==='hit'&&a&&a.C===C&&a!==t&&t){const c=(h.fx&&PC[h.fx[0]]&&h.fx[0])||(a.mv&&a.mv.d.fx&&PC[a.mv.d.fx[0]]&&a.mv.d.fx[0])||PINK;coat(t,c,4+(h.dmg||0)*2.4);splat(t.x,t.y-32,c,4+Math.min(8,(h.dmg||0)*.6),2.4);}}catch(e){}return r;};}
+{const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0.apply(this,arguments);try{if(a&&a.C===C&&a!==t&&t&&t._pt)m*=1+MS.K.coat*t._pt.v/100;}catch(e){}return m;};}
+{const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const o of F){if(o.gone)continue;const p=o._pt;if(p){if(o.dead||o.st==='respawn'){o._pt=null;}else{if(FR%5===0)p.v-=1;if(p.v<=0)o._pt=null;else if(FR%11===0)part(o.x+(rnd()-.5)*14,o.y-10-rnd()*40,0,.7,14,p.c,2,.08);}}
+   if(o._hvy){if(o._hvy<=FR||o.dead||o.st==='respawn')o._hvy=0;else{if(!o.ground&&!o.holder&&!(o.hitstun>0)){o.vy+=.2;if(o.vy<-6.4)o.vy=-6.4;}if(FR%7===0)part(o.x+(rnd()-.5)*12,o.y-6,0,.9,12,GRN,2,.1);}}}}catch(e){E(e);}return r;};}
+{const ss=spriteState;spriteState=function(f){const S=ss.apply(this,arguments);try{if(f&&f._pt&&f._pt.v>8&&!S.tint)S.tint=[f._pt.c,.08+.22*f._pt.v/100];}catch(e){}return S;};}
+/* the Finale beam is a rainbow */
+{const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const f of F){if(f.C!==C||f.st!=='fs'||f.dead)continue;const D=typeof FSD!=='undefined'&&FSD.meisei;if(!D)continue;const len=D.len,h=D.h*.8,x0=f.face>0?f.x+18:f.x-18-len,y0=f.y-40-h/2;X.save();X.globalAlpha=.55+Math.sin(FR*.6)*.12;for(let i=0;i<6;i++){X.fillStyle=RB[i];X.fillRect(x0,y0+i*h/6+Math.sin(FR*.5+i)*2,len,h/6+1);}X.globalAlpha=.9;X.fillStyle=W;X.fillRect(x0,f.y-40-3,len,6);X.restore();if(FR%2===0)for(let i=0;i<3;i++)part(x0+rnd()*len,y0+rnd()*h,f.face*4,(rnd()-.5)*2,12,RB[Math.floor(rnd()*6)],3,.05);}}catch(e){}};}
+/* ---------- register ---------- */
+CH.push(C);
+if(typeof GTXT!=='undefined')GTXT.meisei=['Hold B for a stream of blue paint in front of her. Many small hits; let go to stop.','Lobs a ball of red paint. Hold forward to throw it further. It bounces once, then bursts and launches anyone close.','Green paint blasts her high into the air. Anyone beneath her that it lands on is heavy and slow for four seconds: they run slower, jump lower and fall faster.','Yellow paint sprays out of her in every direction. It does no damage, but everyone it touches is confused: their left and right are swapped for a moment.','Masterpiece: a massive rainbow beam of paint down the whole lane, doing enormous damage.'];
+try{if(typeof FSD!=='undefined')FSD.meisei={name:'MASTERPIECE',type:'beam',len:520,h:130,dur:117,tick:3,ri:6,fin:[26,12,.138,35],col:[PINK,YEL],vis:'gen',call:'MASTERPIECE!'};}catch(e){}
+try{if(typeof FSCALL!=='undefined')FSCALL.meisei='MASTERPIECE!';}catch(e){}
+try{if(typeof RANGE!=='undefined')RANGE.meisei=[2,1];}catch(e){}
+try{if(typeof PROPS!=='undefined')PROPS.T.meisei=['rainbow',PINK,'#6ae8ff'];}catch(e){}
 }catch(e){E(e);}
 })();
 
@@ -13526,6 +13624,7 @@ ichigo:['STICKY CHARGE','hold',22,'bomb',0,[3,30,3.6,.03],{st:'bomb',sec:1.1},'S
 bentou:['BAD OMEN','hold',28,'omen',0,[3,60,3.6,.03],{st:'doom',sec:3},'Marks the rival for misfortune. Three seconds later it finds them, wherever they are.'],
 okane:['GOLD STANDARD','slam',36,'gold',0,[12,64,5,.072],{},'Lifts the rival, turns to solid gold, and brings all that weight down on them.'],
 goiru:['STONE FIST','pin',34,'fist',0,[12,-85,5.2,.07],{},'Holds the rival down and brings a stone fist onto them from above. They bounce off the floor.'],
+meisei:['WET PAINT','spin',30,'rainbow',[4,1.4],[7,60,5,.085],{},'Spins the rival through every colour she has, then flings them away dripping.'],
 trunks:['TRUNK SLAM','slam',30,'coil',[2,2],[9,72,5.2,.09],{},'Wraps the rival in his trunk, swings them overhead and slams them into the floor.'],
 aya:['GEODE','hold',34,'geode',[4,1.5],[5,60,5,.065],{},'Crystals close over the rival, then burst outward.'],
 hikari:['LIVE WIRE','hold',32,'arc',[5,1.3],[4,80,5,.06],{chain:5},'Crosses her blades on the rival and runs current through them. It arcs to anyone standing close.'],
@@ -13701,6 +13800,7 @@ ichigo:[['ROBOT ARM','reach','bigfist','The arm on her backpack, at full extensi
 bentou:[['MISFORTUNE','status','orb','Leaves the rival dazed.',{eff:'haze'}],['FORESEEN','blink','star','Knew where you would be.'],['fair','OMEN','wave','orb','A small drifting curse.']],
 okane:[['GOLD FIST','armor','bigfist','Solid gold. Does not flinch.'],['BULLION','armor','comet','Runs as a gold statue.'],['dair','GOLD BRICK','dive','shock','Turns to gold and drops.']],
 goiru:[['WING HAMMER','quake','shock','Both wings into the floor.'],['GARGOYLE RAM','armor','comet','Stone, at speed.'],['dair','STONE DROP','dive','shock','Turns to stone and falls.']],
+meisei:[['BRUSHSTROKE','wave','wave','One sweep of the arm and a wall of red paint.'],['SLIP AND SLIDE','slide','wave','Skates in on her own paint.'],['dair','DRIP','dive','wave','Straight down, trailing violet.']],
 trunks:[['MONSOON','erupt','wave','A burst of water from his trunk at point-blank range.'],['STAMPEDE','rush','gust','Head down, ears back.'],['dair','EARTHSHAKER','dive','shock','Both feet, all of him.']],
 aya:[['CRYSTAL SPIRE','erupt','pillar','A spire of crystal a step ahead.'],['FACET SLIDE','slide','shards','Slides in on crystal.'],['fair','PRISM LANCE','reach','blade','A long blade of crystal.']],
 hikari:[['CROSS CURRENT','late','bolt','Two blades, then the arc between them.',{eff:'para'}],['FLASH STEP','blink','bolt','Is behind you.'],['dair','LIGHTNING ROD','dive','bolt','Blades down.']],
@@ -13941,7 +14041,7 @@ koki:'H splash drip',hana:'P zip spark',tomi:'H shrink -',yoko:'F light mote',ch
 kuragari:'N thread -',mia:' beam spark',shi:'N shadow wisp',takeshi:'P poof ooze',ali:'F light mote',daku:'P flame ember',kongu:'H drop -',hippo:'B poof -',dawson:'N zip -',maya:' light mote',
 sarah:'N shadow wisp',aria:'B leap glint',bryson:'B drop -',conor:'B leap glint',ray:'P zip -',oliver:' leap -',chris:'P drop -',evona:' ice frost',jack:'P flame ember',kal:' zip -',
 kora:'P fly feather',ash:'H rise leaf',moya:'F poof smoke',sato:'B drop -',akio:'S zip static',sata:' beam spark',kitsu:' light glint',uzi:'B rise ooze',ichigo:' beam spark',bentou:' blink wisp',
-okane:'P drop glint',goiru:'H drop dust',trunks:'H drop dust',aya:' rise glint',hikari:'S bolt static',ryo:'H rise dust',suzume:'S thread -',ayame:'F fly leaf',sota:'S zip ember',tiki:' shadow wisp'};
+okane:'P drop glint',goiru:'H drop dust',trunks:'H drop dust',meisei:'N dash wisp',aya:' rise glint',hikari:'S bolt static',ryo:'H rise dust',suzume:'S thread -',ayame:'F fly leaf',sota:'S zip ember',tiki:' shadow wisp'};
 const R={};for(const k in ROW){const a=ROW[k].split(' ');R[k]={w:a[0],e:a[1],a:a[2]==='-'?'':a[2]};}
 A2.R=R;const row=f=>(f&&f.C&&R[f.C.id])||{w:'',e:'poof',a:''};
 const humanoid=f=>!(f.L&&f.L.body)&&!f.formL;
@@ -14619,7 +14719,10 @@ if(typeof CH==='undefined'||typeof SKINS2==='undefined')return;
 const CL={err:null,force:false};window.CHARLOCK=CL;
 /* how each one is earned: test(account) and a progress line. Add new unlockable fighters here. */
 const RULES={trunks:{how:'Play 50 standard matches. Forfeits count; Campaign and Survival do not.',test:a=>(a.vm||0)>=50,prog:a=>Math.min(a.vm||0,50)+' / 50 matches'}};
-CL.RULES=RULES;
+const ROSTER=CH.filter(c=>!c.hidden&&c.looks).map(c=>c.id);CL.ROSTER=ROSTER;
+const wonAs=()=>{const all=SKINS2.all;let n=0;const L=ROSTER.filter(id=>id!=='meisei');for(const id of L)if(all[id]&&all[id].vw>0)n++;return[n,L.length];};
+RULES.meisei={how:'Win a standard match as every other fighter, including the ones you have to unlock.',test:()=>{const w=wonAs();return w[0]>=w[1];},prog:()=>{const w=wonAs();return w[0]+' / '+w[1]+' fighters';}};
+CL.RULES=RULES;CL.wonAs=wonAs;
 const acct=()=>SKINS2.stat('_acct'),save=()=>{try{localStorage.setItem('qc_stats',JSON.stringify(SKINS2.all));}catch(e){}};
 const ciOf=id=>CH.findIndex(c=>c.id===id);
 const open=id=>{if(CL.force)return true;const r=RULES[id];if(!r)return true;const a=acct();if(a.un&&a.un[id])return true;try{return !!r.test(a);}catch(e){return false;}};
@@ -14657,7 +14760,7 @@ CL.check=check;
 let live=false,prevGS='';
 const counts=()=>typeof MODE!=='undefined'&&MODE==='versus'&&typeof F!=='undefined'&&F.some(f=>f&&f.ctrl==='human'&&!(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100));
 const bump=(delay)=>{live=false;const a=acct();a.vm=(a.vm||0)+1;save();check(delay);};
-{const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(GS==='play'&&prevGS!=='play'&&counts())live=true;if(GS==='over'&&prevGS!=='over'&&live)bump(2600);prevGS=GS;}catch(e){}return r;};}
+{const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(GS==='play'&&prevGS!=='play'&&counts())live=true;if(GS==='over'&&prevGS!=='over'&&live){try{for(const f of F){if(!f||f.ctrl!=='human'||(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100))continue;const won=f.place===1||f===winner||(typeof TEAMS_ON==='function'&&TEAMS_ON()&&winner&&f.team===winner.team);if(won&&f.C&&!f.C.hidden){const s=SKINS2.stat(f.C.id);s.vw=(s.vw||0)+1;}}}catch(e){}bump(2600);}prevGS=GS;}catch(e){}return r;};}
 for(const nm of['toSelect','toTitle']){try{const fn0=eval(nm);if(typeof fn0==='function'){const w=function(){try{if(live&&typeof GS!=='undefined'&&GS!=='over')bump(500);live=false;}catch(e){}return fn0.apply(this,arguments);};if(nm==='toSelect')toSelect=w;else toTitle=w;}}catch(e){}}
 /* nobody gets a locked fighter by any other route */
 const LASTOK=[-1,-1,-1,-1];
