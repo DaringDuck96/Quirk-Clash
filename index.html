@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-0448';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-0454';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14158,7 +14158,7 @@ try{const M=CH.find(c=>c.id==='mia');if(M&&M.mv&&M.mv.sB&&typeof EK!=='undefined
   const sb=TW.set;TW.set=function(o){sb(o);TW.mia(!!(o&&o.mia));};}}catch(e){TW.err=String(e);}
 /* TENMETSU: Down B is Blink Storm. Hold to charge, release to blink through every rival in range; the last hit launches. */
 try{const T=CH.find(c=>c.id==='tenmetsu');if(T&&T.mv&&T.mv.dB&&typeof BEH!=='undefined'){const old=T.mv.dB,t0=[T.sp[3],GTXT.tenmetsu[3]],fx=old.fx||['#5ad8ff','#ffffff'];
-  const nw={an:'cast',s:8,a:4,r:24,hits:[],beh:'bstorm',fx,lim:'none',nm:'BLINK STORM'};if(old.hf)nw.hf=old.hf;
+  const nw={an:'cast',s:8,a:4,r:32,hits:[],beh:'bstorm',fx,lim:'none',nm:'BLINK STORM'};if(old.hf)nw.hf=old.hf;
   TW.ten=function(on){TW.tenOn=!!on;T.mv.dB=on?nw:old;try{T.sp[3]=on?'Blink Storm (hold to charge)':t0[0];GTXT.tenmetsu[3]=on?'Hold B to gather aura, then let go: he blinks through every rival in range in a zig-zag, hitting each in turn, and the last hit launches. A tap is two blinks; a full charge is five and reaches further. He is left open afterwards, and if nobody is in range it fizzles.':t0[1];}catch(e){}};
   BEH.bstorm={tick(f,m,I){try{const v=m.v,d=m.d;if(f.ground)f.vx*=.8;
     if(!v.ph){if(m.t===1){v.c=0;v.cT=f.ctrl==='human'?45:8+Math.floor(rnd()*30);}
