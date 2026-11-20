@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1748';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1753';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10624,20 +10624,34 @@ function loadLib(){return new Promise((res,rej)=>{if(window.Peer)return res();co
 /* STUN finds a direct route; the TURN relays (PeerJS's own free ones) carry the connection when a home router or phone network will not allow a direct one */
 const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},{urls:['turn:staticauth.openrelay.metered.ca:80','turn:staticauth.openrelay.metered.ca:443','turn:staticauth.openrelay.metered.ca:443?transport=tcp','turns:staticauth.openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}],sdpSemantics:'unified-plan'};
 /* PeerJS: returns {role:'host', onGuest(cb), close()} or {role:'guest', link, close()} where link = {send, onData, onStream, onClose, sendStream, id} */
-function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{const hid=PREFIX+room;let done=false;
-  const host=new Peer(hid,{config:ICE,debug:1});
-  host.on('open',()=>{if(done)return;done=true;const cbs=[];host.on('connection',c=>{const L=mkLink(c.peer);try{toast('A friend is connecting…');}catch(e){}setTimeout(()=>{if(L._send||L.closed)return;diag(c.peerConnection).then(d=>{try{toast('A friend could not get through ('+d.ice+(d.relay?' r':'')+'). Ask them to reload and try again.');}catch(e){}});},22000);c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};L._call=st=>{try{const call=host.call(c.peer,st);L._mc=call;tuneSender(call);}catch(e){}};cbs.forEach(f=>f(L));});c.on('data',d=>L._data(d));c.on('close',()=>L._close());c.on('error',()=>L._close());});
-    host.on('disconnected',()=>{try{host.reconnect();}catch(e){}});res({role:'host',onGuest:f=>cbs.push(f),close:()=>{try{host.destroy();}catch(e){}}});});
-  host.on('error',err=>{if(done)return;if(err&&err.type==='unavailable-id'){done=true;try{host.destroy();}catch(e){}
-      const me=new Peer(undefined,{config:ICE,debug:1});me.on('error',e2=>{if(e2&&e2.type==='peer-unavailable')L._close('The host is not there any more.');});
-      const L=mkLink(hid);let gc=null;me.on('open',()=>{const c=gc=me.connect(hid,{serialization:'json',reliable:false});c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};res({role:'guest',link:L,close:()=>{try{me.destroy();}catch(e){}}});});c.on('data',d=>L._data(d));c.on('close',()=>L._close('The host left.'));c.on('error',()=>L._close('Connection lost.'));});
-      me.on('call',call=>{L._mc=call;call.answer();call.on('stream',st=>L._stream(st));});
-      setTimeout(()=>{if(L._send)return;diag(gc&&gc.peerConnection).then(d=>{try{me.destroy();}catch(e){}rej(new Error(diagText(d)));});},22000);}
-    else{done=true;rej(new Error(err&&err.type==='browser-incompatible'?noRTC():err&&err.type==='network'||err&&err.type==='server-error'?'Could not reach the connection service. Try again in a moment.':String(err&&err.message||err)));}});
-  setTimeout(()=>{if(!done){done=true;rej(new Error('The connection service did not answer.'));}},15000);}));}
+function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{let settled=false,lastD=null;const SLOTS=4;
+  const fin=(ok,v)=>{if(settled)return;settled=true;if(ok)res(v);else rej(v);};
+  const svc=err=>new Error(err&&err.type==='browser-incompatible'?noRTC():err&&err.type==='network'||err&&err.type==='server-error'||err&&err.type==='socket-error'||err&&err.type==='socket-closed'?'Could not reach the connection service. Try again in a moment.':String(err&&err.message||err));
+  /* a room can be left behind for about a minute when its host reloads or loses the connection. Rather than fail, look in the next copy of the room: whoever arrives first hosts there, and everyone after finds them the same way. */
+  const trySlot=(n,again)=>{if(settled)return;if(n>=SLOTS){fin(false,new Error(lastD?diagText(lastD):'This room is stuck. Pick a different room name, or wait a minute and try again.'));return;}
+    const hid=PREFIX+room+(n?'-'+(n+1):'');let moved=false;let host;try{host=new Peer(hid,{config:ICE,debug:1});}catch(e){fin(false,svc(e));return;}
+    const t0=setTimeout(()=>{if(moved||settled)return;moved=true;try{host.destroy();}catch(e){}fin(false,new Error('The connection service did not answer.'));},15000);
+    host.on('open',()=>{if(moved||settled){try{host.destroy();}catch(e){}return;}moved=true;clearTimeout(t0);const cbs=[];
+      host.on('connection',c=>{const L=mkLink(c.peer);try{toast('A friend is connecting…');}catch(e){}setTimeout(()=>{if(L._send||L.closed)return;diag(c.peerConnection).then(d=>{try{toast('A friend could not get through ('+d.ice+(d.relay?' r':'')+'). Ask them to reload and try again.');}catch(e){}});},22000);
+        c.on('open',()=>{L._send=o=>{try{c.send(o);}catch(e){}};L._call=st=>{try{const call=host.call(c.peer,st);L._mc=call;tuneSender(call);}catch(e){}};cbs.forEach(f=>f(L));});c.on('data',d=>L._data(d));c.on('close',()=>L._close());c.on('error',()=>L._close());});
+      host.on('disconnected',()=>{try{host.reconnect();}catch(e){}});const bye=()=>{try{host.destroy();}catch(e){}};addEventListener('pagehide',bye);
+      NET.slot=n;fin(true,{role:'host',onGuest:f=>cbs.push(f),close:()=>{removeEventListener('pagehide',bye);bye();}});});
+    host.on('error',err=>{if(moved||settled)return;moved=true;clearTimeout(t0);try{host.destroy();}catch(e){}if(err&&err.type==='unavailable-id')guest(hid,n,again);else fin(false,svc(err));});};
+  const guest=(hid,n,again)=>{let me;try{me=new Peer(undefined,{config:ICE,debug:1});}catch(e){fin(false,svc(e));return;}const L=mkLink(hid);let gc=null,opened=false,left=false;
+    const leave=to=>{if(left||opened||settled)return;left=true;try{me.destroy();}catch(e){}to();};
+    me.on('error',e2=>{if(e2&&e2.type==='peer-unavailable'){if(opened)L._close('The host is not there any more.');else leave(()=>again?trySlot(n+1):trySlot(n,true));}});
+    me.on('open',()=>{if(left||settled)return;const c=gc=me.connect(hid,{serialization:'json',reliable:false});
+      c.on('open',()=>{if(left||settled){try{me.destroy();}catch(e){}return;}opened=true;L._send=o=>{try{c.send(o);}catch(e){}};const bye=()=>{try{me.destroy();}catch(e){}};addEventListener('pagehide',bye);NET.slot=n;fin(true,{role:'guest',link:L,close:()=>{removeEventListener('pagehide',bye);bye();}});});
+      c.on('data',d=>L._data(d));c.on('close',()=>L._close('The host left.'));c.on('error',()=>L._close('Connection lost.'));});
+    me.on('call',call=>{L._mc=call;call.answer();call.on('stream',st=>L._stream(st));});
+    /* nobody answering after 8 seconds: this copy of the room is a leftover, move on */
+    setTimeout(()=>{if(opened||left||settled)return;diag(gc&&gc.peerConnection).then(d=>{if(opened||left||settled)return;if(!d.answered)leave(()=>trySlot(n+1));});},8000);
+    setTimeout(()=>{if(opened||left||settled)return;diag(gc&&gc.peerConnection).then(d=>{if(opened||left||settled)return;lastD=d;if(!d.answered)leave(()=>trySlot(n+1));else{left=true;try{me.destroy();}catch(e){}fin(false,new Error(diagText(d)));}});},22000);};
+  trySlot(0,false);}));}
+
 /* what actually happened to a connection attempt, so a failure says something useful */
 async function diag(pc){const d={ice:'none',answered:false,relay:false,direct:false};try{if(!pc)return d;d.ice=pc.iceConnectionState+'/'+pc.connectionState;d.answered=!!pc.remoteDescription;const st=await pc.getStats();st.forEach(r=>{if(r.type==='local-candidate'){if(r.candidateType==='relay')d.relay=true;if(r.candidateType==='srflx'||r.candidateType==='host')d.direct=true;}});}catch(e){}return d;}
-function diagText(d){if(!d.answered)return'The room is marked as taken, but its host did not answer. They may have closed or reloaded the page: the room frees itself about a minute later. Both of you reload, then the host presses Play With Friends first and the guest joins after.';
+function diagText(d){if(!d.answered)return'The room is marked as taken, but its host did not answer. They may have closed or reloaded the page: the room frees itself about a minute later. Wait a minute, or agree on a different room name, and connect again: host first, then everyone else.';
  if(!d.relay)return'The host answered, but no direct route between your two networks worked and the free relay servers could not be reached from here. If you are both on the same Wi-Fi, use the green SAME WI-FI button below. Otherwise try a different network on one side (home wifi instead of mobile data, or a phone hotspot).';
  return'The host answered and a relay was available, but the connection still did not complete. Both of you reload and try once more; if it repeats, tell Claude this code: '+d.ice+(d.direct?' d':'')+(d.relay?' r':'')+'.';}
 /* why this browser cannot do it, in words someone can act on */
