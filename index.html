@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-0408';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-0415';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14130,6 +14130,7 @@ try{
  const n0=ninjaFX;ninjaFX=function(f){const r=n0.apply(this,arguments);try{const m=f&&f.mv;if(m&&m.d&&m.d._ke&&typeof X!=='undefined'&&X&&m.t>=m.d.s-2&&m.t<=m.d.s+m.d.a+8){const u=Math.min(1,(m.t-m.d.s+3)/5),fade=m.t>m.d.s+m.d.a?Math.max(0,1-(m.t-m.d.s-m.d.a)/8):1;X.save();X.globalAlpha=fade;for(let i=0;i<8;i++){const a=i*PI2/8,L=60*u,x0=f.x,y0=f.y-30;for(let j=1;j<=6;j++){const q=j/6;wr(j%2?'#c8c8d8':'#7a7a86',x0+Math.cos(a)*L*q-2,y0+Math.sin(a)*L*.92*q-2,4,4);}wdisc(x0+Math.cos(a)*L,y0+Math.sin(a)*L*.92,4,'#e8e8f0');}X.restore();}}catch(e){}return r;};
  const ai0=aiInput;aiInput=function(f){const I=ai0.apply(this,arguments);try{if(TW.on.yado&&I&&f.C===Y&&f.ground&&!f.mv){for(const o of foes(f)){if(o.st==='dizzy'&&Math.abs(o.x-f.x)<34&&Math.abs(o.y-f.y)<24){f.face=o.x>=f.x?1:-1;I.A=(FR%6)<3;I.x=0;I.y=0;I.B=I.J=I.S=I.G=false;break;}else if(o.st==='dizzy'&&Math.abs(o.x-f.x)<160&&Math.abs(o.y-f.y)<30){I.x=o.x>=f.x?1:-1;I.A=I.B=I.S=I.G=false;break;}}}if(TW.on.ayame&&I&&f.C===A&&f.ground&&!f.mv&&(f._tnT||0)<FR){for(const o of foes(f)){if(Math.abs(o.x-f.x)<34&&Math.abs(o.y-f.y)<30&&rnd()<.05){f._tnT=FR+140;I.B=true;I.x=0;I.y=-1;I.A=I.J=I.S=I.G=false;break;}}}}catch(e){}return I;};
 }catch(e){TW.err=String(e);}
+try{if(TW.set)TW.set({yado:1,kichi:1,ayame:1});}catch(e){TW.err=String(e);}
 })();
 
 </script>
