@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1758';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1759';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -10622,7 +10622,7 @@ const hashRoom=()=>{const m=/room=([A-Za-z0-9]+)/.exec(location.hash||'');return
 /* =============================================================== transport =============================================================== */
 function loadLib(){return new Promise((res,rej)=>{if(window.Peer)return res();const s=document.createElement('script');s.src=LIB;s.onload=()=>window.Peer?res():rej(new Error('PeerJS did not load'));s.onerror=()=>rej(new Error('Could not reach the connection service (are you offline, or is this page sandboxed?)'));document.head.appendChild(s);});}
 /* STUN finds a direct route; the TURN relays (PeerJS's own free ones) carry the connection when a home router or phone network will not allow a direct one */
-const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},{urls:['turn:staticauth.openrelay.metered.ca:80','turn:staticauth.openrelay.metered.ca:443','turn:staticauth.openrelay.metered.ca:443?transport=tcp','turns:staticauth.openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}],sdpSemantics:'unified-plan'};
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']},{urls:'stun:stun.cloudflare.com:3478'},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'},{urls:['turn:staticauth.openrelay.metered.ca:80','turn:staticauth.openrelay.metered.ca:443','turn:staticauth.openrelay.metered.ca:443?transport=tcp','turns:staticauth.openrelay.metered.ca:443?transport=tcp'],username:'openrelayproject',credential:'openrelayproject'}],sdpSemantics:'unified-plan'};window.__ICE=ICE;
 /* PeerJS: returns {role:'host', onGuest(cb), close()} or {role:'guest', link, close()} where link = {send, onData, onStream, onClose, sendStream, id} */
 function peerTransport(room){return loadLib().then(()=>new Promise((res,rej)=>{let settled=false,lastD=null;const SLOTS=4;
   const fin=(ok,v)=>{if(settled)return;settled=true;if(ok)res(v);else rej(v);};
@@ -15590,7 +15590,7 @@ if(typeof refreshSel==='function'){const r0=refreshSel;refreshSel=function(){con
 const HUB='pu-quirk-clash-v1-whoison',PR={on:true,role:'',names:[],n:0,ok:false,err:''};window.PRESENCE=PR;
 try{if(localStorage.getItem('qc_presence')==='off')PR.on=false;}catch(e){}
 const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}]};
-const clean=s=>String(s||'').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,18)||'Player';
+PR.ICE=ICE;const clean=s=>String(s||'').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,18)||'Player';
 const myName=()=>{try{const p=typeof PROFILES!=='undefined'&&PROFILES.current&&PROFILES.current();return clean(p&&p.name);}catch(e){return'Player';}};
 let P=null,peer=null,hubConn=null,members=null,timer=null,beat=null,gen=0,sent='';
 const stop=()=>{gen++;clearTimeout(timer);clearInterval(beat);try{peer&&peer.destroy();}catch(e){}peer=null;hubConn=null;members=null;PR.role='';PR.ok=false;PR.names=[];PR.n=0;draw();};
@@ -15658,6 +15658,16 @@ setInterval(()=>{try{const panel=document.getElementById('netpanel');
    b.onclick=async()=>{b.disabled=true;if(await LAN.enable(600000)){b.firstChild.textContent='SAME WI-FI MODE: ON';try{toast('Same Wi-Fi mode on. Ask your friend to reload and join again.');}catch(e){}}b.disabled=false;};s2.parentNode.insertBefore(b,s2.nextSibling);}}
  const chip=document.getElementById('netchip');if(chip&&!chip.hidden&&typeof NET!=='undefined'&&NET.role==='host'&&!chip.querySelector('#lanC')){const b=document.createElement('button');b.id='lanC';b.textContent=LAN.on?'SAME WI-FI: ON':'SAME WI-FI FIX';b.title='A friend on the same Wi-Fi cannot join? Tap, allow the microphone (nothing is recorded), then have them reload and join again.';
   b.onclick=async()=>{if(await LAN.enable(600000)){b.textContent='SAME WI-FI: ON';try{toast('Same Wi-Fi mode on. Ask your friend to reload and join again.');}catch(e){}}};const stop=[...chip.querySelectorAll('button')].pop();chip.insertBefore(b,stop||null);}}catch(e){LAN.err=String(e);}},600);
+})();
+/* turnfix.js — a relay that works. When two devices cannot reach each other directly (same Wi-Fi with a router that keeps devices apart, campus or office networks, mobile data), the connection has to go through a relay.
+   The Open Relay Project's free relay takes time-limited credentials signed with its published secret; the game had been sending it a plain password, which it rejects, so no relay was ever available. This signs them properly. */
+(function(){
+const TF={ok:false,err:'',user:''};window.TURNFIX=TF;const HOST='staticauth.openrelay.metered.ca',SECRET='openrelayprojectsecret';
+async function sign(){const enc=new TextEncoder(),user=String(Math.floor(Date.now()/1000)+86400);const key=await crypto.subtle.importKey('raw',enc.encode(SECRET),{name:'HMAC',hash:'SHA-1'},false,['sign']);const sig=new Uint8Array(await crypto.subtle.sign('HMAC',key,enc.encode(user)));let b='';for(const v of sig)b+=String.fromCharCode(v);return{username:user,credential:btoa(b)};}
+TF.sign=sign;
+async function apply(){try{const c=await sign(),entry={urls:['turn:'+HOST+':80','turn:'+HOST+':443','turn:'+HOST+':80?transport=tcp','turn:'+HOST+':443?transport=tcp','turns:'+HOST+':443?transport=tcp'],username:c.username,credential:c.credential};
+  for(const I of[window.__ICE,window.PRESENCE&&window.PRESENCE.ICE]){if(!I||!I.iceServers)continue;I.iceServers=I.iceServers.filter(s=>!JSON.stringify(s.urls).includes('openrelay'));I.iceServers.push(entry);}TF.ok=true;TF.user=c.username;}catch(e){TF.err=String(e);}}
+TF.apply=apply;apply();setInterval(apply,30*60*1000);
 })();
 
 </script>
