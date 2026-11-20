@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1348';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1411';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -13121,7 +13121,7 @@ const N={
  sanshou:{T:'trans',ib:{armor:12,gloves:12,amp:12},col:C('#9ad88a','#5a5650'),dur:720,sec:12,d:'No attack at all. For twelve seconds his plating thickens: he takes far less, hits harder, and weak hits no longer move him.'},
  kairi:{T:'global',at:20,dmg:13,eff:'para',long:200,kb:1,col:C('#ff8ac8','#e8f4ff'),dur:70,d:'Her bloom reaches the whole screen. Everyone is paralysed for over three seconds. It will not finish anyone by itself.'},
  kichi:{name:'THOUSAND LINKS',type:'zone',r:300,dur:70,tick:1.6,ri:9,pull:1,fin:[19,10.6,.128,70],col:C('#c8ccd8','#ffffff'),vis:'gen',d:'Chains catch everyone within a huge radius and drag them all the way to him before the slam.'},
- tamashi:{T:'summon',n:5,spd:3.6,r:18,ri:40,tick:3,kb:3.4,kg:.02,unit:'puppet',pop:1,fin:[10,7,.08,70],col:C('#c88aff','#7a5230'),dur:480,d:'Five marionettes walk the stage for eight seconds, hitting whoever they reach, and burst when the strings are cut.'},
+ tamashi:{T:'grab',spd:9,win:18,hold:48,ri:8,tick:4.5,up:1,fin:[18,10.6,.12,270],call:'DRAGON AND BLADE!',col:C('#e02030','#16161c'),dur:110,d:'The dragon seizes one rival and carries them into the sky while her katana makes pass after pass, then throws them straight down.'},
  akemi:{T:'time',col:C('#7ae0ff','#ffffff'),dur:250,d:'Everything stops but her for four seconds. Every hit she lands in that time arrives at once when the clock restarts.'},
  taru:{T:'column',n:4,every:20,tele:20,lead:5,r:18,tick:9,effs:['burn','stick','stun','root'],cols:['#ff6a1a','#3ab8ff','#b8864a','#5ad06a'],fin:[0,9.5,.1,86],col:C('#ff6a1a','#5ad06a'),dur:130,d:'Fire, water, rock and vine in turn, each a pillar under every rival: one burns, one soaks and slows, one stuns, one roots.'},
  sai:{T:'rain',shape:'blade',every:3,r:18,tick:4,kb:2,kg:.01,fall:10,col:C('#e8ecf4','#8a94a8'),dur:260,d:'Blades fall across the whole stage for four seconds. Each is weak; there are a great many, and he can fight while they fall.'},
@@ -13356,7 +13356,7 @@ riku:['FLEA CIRCUS','hold',36,'flea',[7,1.1],[4,80,4.6,.055],{},'Shrinks and ric
 sanshou:['IRON PRESS','slam',46,'quake',0,[14,60,5,.075],{},'The slowest throw in the school and the hardest. He lifts the rival over his head and drops his full weight on them.'],
 kairi:['TENTACLE WRAP','hug',36,'tent',[4,1.3],[3,70,3.4,.03,'para'],{},'Her hair wraps the rival and stings four times. They leave paralysed.'],
 kichi:['BALL AND CHAIN','vspin',38,'chain',0,[11,-75,5,.065],{n:1.5},'Wraps the rival in chain, swings them overhead and brings them down on the floor.'],
-tamashi:['STRINGS ATTACHED','lift',34,'strings',[2,2],[3,60,3,.02],{h:16,st:'walk',sec:.9},'Strings the rival up like a puppet, then walks them away from her for a moment: off the stage, if the edge is close.'],
+tamashi:['BLADE DROP','pin',30,'cuts',[5,1.2],[7,78,5.2,.088],{},'The suit pins the rival to the floor and her katana comes down on them from above, point first.'],
 akemi:['FAST FORWARD','hold',24,'speed',[9,1],[3,45,5,.06],{},'Nine hits in less than half a second.'],
 taru:['FOUR ELEMENTS','hold',40,'elem',[4,2.4],[3,65,5,.06],{},'One hit from each limb: fire, water, stone and vine.'],
 sai:['DOGPILE','pin',36,'clones',[4,2],[3,70,5,.06],{},'Three copies of him pile on.'],
@@ -13530,7 +13530,7 @@ riku:[['GROWTH PUNCH','grow','bigfist','Starts the punch tiny and finishes it fu
 sanshou:[['IRON HAMMER','armor','bigfist','Does not flinch. Does not hurry.'],['WRECKING BALL','armor','comet','Three hundred pounds of iron at a jog.'],['dair','ANVIL','dive','shock','Stops moving and falls.']],
 kairi:[['STING LASH','status','whip','A long tentacle of hair. Paralyses.',{eff:'para',reach:1}],['DRIFT','slide','whip','Glides in low with her tentacles trailing.'],['nair','BLOOM','float','fan','Spreads her tentacles and hangs in the air, stinging.']],
 kichi:[['CHAIN WHIP','reach','whip','One of the longest smashes in the school: weak except at the tip.'],['DRAG LINE','pull','whip','Hooks rivals toward him as he runs in.'],['fair','CHAIN HOOK','spike','whip','Swings a chain over and down.']],
-tamashi:[['FURNITURE','wave','orb','Throws the nearest heavy object a short way.'],['RUG PULL','slide','shock','Yanks the floor out from under the rival.'],['dair','PIANO','shot','orb','Drops something heavy.',{vx:0,vy:5.5}]],
+tamashi:[['GUIDED CUT','reach','blade','The blade leaves her hand to finish the cut.'],['IRON RUSH','rush','blade','The suit throws her straight through the rival.'],['dair','FALLING EDGE','dive','blade','Blade first, straight down.']],
 akemi:[['FAST FORWARD FIST','rush','comet','Speeds herself up mid-punch and crosses a third of the stage.'],['BLUR','drill','wheel','Five hits before you see one.'],['fair','SKIP FRAME','blink','star','Skips the distance between her and the rival.']],
 taru:[['EMBER STRAIGHT','late','burst','Right arm: a punch, then the fire.',{eff:'burn'}],['STONE HEEL','quake','shock','Left leg: a stamp that sends a tremor both ways.'],['dair','VINE SNARE','status','whip','Right leg: vines that root whoever they catch.',{eff:'root'}]],
 sai:[['TIMES FIVE','drill','clones','One punch, duplicated five times.'],['SPLIT','twin','clones','A copy peels off and hits behind him.'],['fair','KNIFE FAN','wave','fan','One knife thrown, five arriving.']],
@@ -13822,7 +13822,7 @@ const G=window.GFX2||null;
 /* walk style, entrance, aura — one row per fighter */
 const ROW={kimiko:' ice frost',keanu:'P splash drip',bara:'P fly feather',tori:'F blink wisp',minato:'B drop -',oro:'N shadow ooze',gomi:'P flame ember',kouji:' light mote',emi:' fly feather',soran:'S blink spark',
 ryuko:'H drop static',shiki:'H drop ember',zabu:'S zip -',marina:' splash bubble',uchuu:'F blink mote',shuko:' poof dust',torabi:'P poof smoke',suze:'B fly ooze',tatsuya:' poof glint',riku:'B grow -',
-sanshou:'H drop -',kairi:'F splash bubble',kichi:'P drop -',tamashi:'F thread wisp',akemi:'S zip spark',taru:'H flame ember',sai:'S blink -',tenmetsu:'S blink spark',yado:'B leap ooze',hari:'P zip -',
+sanshou:'H drop -',kairi:'F splash bubble',kichi:'P drop -',tamashi:'N thread wisp',akemi:'S zip spark',taru:'H flame ember',sai:'S blink -',tenmetsu:'S blink spark',yado:'B leap ooze',hari:'P zip -',
 toguchi:' portal mote',pitto:'B leap -',maho:' blink mote',raion:'P leap -',tsuki:' splash drip',rei:' zip -',tai:' light mote',hatsuko:'N shadow wisp',ginko:'P light ember',makiko:'F poof zzz',
 koki:'H splash drip',hana:'P zip spark',tomi:'H shrink -',yoko:'F light mote',chiyoki:'B poof -',yurei:'F shadow wisp',ivan:'H drop -',bisu:'B leap -',kurai:'N fly feather',homura:'H rise ember',
 kuragari:'N thread -',mia:' beam spark',shi:'N shadow wisp',takeshi:'P poof ooze',ali:'F light mote',daku:'P flame ember',kongu:'H drop -',hippo:'B poof -',dawson:'N zip -',maya:' light mote',
@@ -14203,6 +14203,123 @@ try{const R=CH.find(c=>c.id==='riku'),M=CH.find(c=>c.id==='minato');if(R&&M){
      if(hitH){om._armHit=m;const hh=Object.assign({},hitH);delete hh.eff;const r=applyHit(f,hh,o.x<=f.x?1:-1,o,{});if(r==='hit'){TW.armHit=(TW.armHit||0)+1;FXL.push({k:'txt',s:'ARM!',x:(x0+x1)/2,y:y0-30,t:0,life:26,col:'#ffd860'});}break;}}}}catch(e){TW.err=String(e);}return s9.apply(this,arguments);};
 }}catch(e){TW.err=String(e);}
 try{if(TW.set)TW.set({yado:1,kichi:1,ayame:1,mia:1,ten:1});}catch(e){TW.err=String(e);}
+})();
+/* tamashi.js — Tamashi rebuilt. She pilots two things by remote control: a black-and-red robotic suit that folds into a human-sized dragon, and a katana that hunts on its own. */
+(function(){
+if(typeof CH==='undefined'||typeof BEAST==='undefined'||typeof EK==='undefined')return;
+const C=CH.find(c=>c.id==='tamashi');if(!C)return;
+const TM={err:null,use:{}};window.TAMASHI=TM;const E=e=>{TM.err=TM.err||String(e&&e.stack||e).slice(0,400);};
+try{
+const RED='#e02030',BLK='#16161c',FX=[RED,'#ff9a80'],W='#ffffff',cl=(v,a,b)=>v<a?a:v>b?b:v;
+const NORM=['jab1','jab2','jab3','jab','ftilt','utilt','dtilt','dash','fsmash','usmash','dsmash','nair','fair','bair','uair','dair'];
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const inR=(o,x,y,r)=>{const R=hurtR(o),cx=cl(x,R[0],R[0]+R[2]),cy=cl(y,R[1],R[1]+R[3]);return Math.hypot(x-cx,y-cy)<=r;};
+const say=(f,s)=>FXL.push({k:'txt2',s,x:f.x,y:f.y-84,t:0,life:44,col:RED});
+/* ---------- looks: the suit, and a sword in every costume ---------- */
+C.col=RED;C.kit.fx=FX;
+for(const L of C.looks){if(!L)continue;const ex=(L.ex||[]).slice();if(!ex.includes('katana'))ex.push('katana');L.ex=ex;L.wpn='katana';L.wlen=24;L.stance='weapon';delete L.R;delete L._r;}
+{const H=C.looks.find(L=>L.cname==='HERO');if(H){Object.assign(H,{outfit:'jacketS',sl:'long',top:BLK,top2:'#22222c',sleeve:BLK,pants:'#121218',shoe:'#0c0c12',acc:RED,trim:RED,glove:RED,boots:1,bootTrim:1,kneepad:1,pauldron:1,pauldC:RED,armband:1,stripe:1,pantStripe:1,cuff:true,ctA:BLK,ctB:'#8a1018',emblem:null});
+  const hx=(H.hx||[]).slice();if(!hx.includes('visor'))hx.push('visor');H.hx=hx;H.visorC='#ff3040';delete H.R;delete H._r;}}
+const NOSW=new Map();const noSword=L=>{let N=NOSW.get(L);if(!N){N={};for(const k in L){if(k==='R'||k==='_r'||k[0]==='_')continue;N[k]=L[k];}N.ex=(L.ex||[]).filter(x=>x!=='katana');delete N.wpn;N.stance='guard';if(L.od)N.od=L.od;NOSW.set(L,N);}return N;};
+/* ---------- the dragon: the same plates, rearranged ---------- */
+BEASTLOOK.dragon={body:'dragon',size:1.1};FORMBOX.dragon=[42,40];
+BEAST.dragon=function(L,S,p){const t=S.t,run=Math.abs(S.vx)>.6&&!S.air,air=S.air,ph=t*(run?.55:0),atk=S.face==='atk',hurt=S.face==='hurt'||S.face==='dizzy';
+ const K=ramp('#111118'),KB=rampB('#111118'),K2=ramp('#20202c'),R=ramp(RED),RD=ramp('#8a1018'),Y=ramp('#ffc040'),WH=ramp('#f2f2f6');
+ const bob=(run?Math.sin(ph*2)*1.2:Math.sin(t*.1)*.6)+(p.py||0)*.4+(air?Math.sin(t*.3)*1.5:0),by=-24+bob;
+ const foot=(x,o,st,lift)=>air?{x:x+(o>2?5:-4),y:-6}:run?{x:x+Math.sin(ph+o)*st,y:-Math.max(0,Math.cos(ph+o))*lift}:{x,y:0};
+ const leg=(hx,hy,f,a,b,r0,r1,P,sign)=>{const q=ik(hx,hy,f.x,f.y,a,b,sign),kn=q[0],ft=q[1];capsule(hx,hy,r0,kn.x,kn.y,(r0+r1)/2,P);capsule(kn.x,kn.y,(r0+r1)/2,ft.x,ft.y,r1,P);return[kn,ft];};
+ const flap=air?Math.sin(t*.45):run?Math.sin(ph)*.25-.5:-.75+Math.sin(t*.08)*.06;
+ const wing=(ox,oy,P,M2,sc)=>{const a=-1.9+flap*.7,l1=17*sc,l2=22*sc,ex=ox+Math.cos(a)*l1,ey=oy+Math.sin(a)*l1,a2=a-1+flap*.5,tx=ex+Math.cos(a2)*l2,ty=ey+Math.sin(a2)*l2;
+  poly([ox,oy,ex,ey,tx,ty,ex-9*sc,ey+(13+flap*5)*sc,ox-13*sc,oy+(7+flap*4)*sc],M2,'g');capsule(ox,oy,2.2,ex,ey,1.7,P);capsule(ex,ey,1.7,tx,ty,.9,P);capsule(ex,ey,1.3,ex-9*sc,ey+(13+flap*5)*sc,.7,P);};
+ /* tail with a blade on the end */
+ let px=-13,py=by+1;for(let i=0;i<7;i++){const u=i/6,nx=-15-i*4.6,ny=by+1-u*4+Math.sin(t*.18+i*.7)*(1+u*2.4);capsule(px,py,4.2-u*2.6,nx,ny,3.8-u*2.6,i%2?K2:K);px=nx;py=ny;}
+ poly([px+1,py-2.6,px-9,py-1,px+1,py+2.6],R,'g');S.tailTip={x:px-9,y:py-1};
+ wing(1,by-6,KB,RD,.9);
+ for(const[x,o]of[[-11,0],[9,1.6]]){const f=foot(x,o,7,5);leg(x,by+4,f,12,12,3.4,2.2,KB,x<0?1:-1);capsule(f.x,f.y-1,2.2,f.x+4,f.y-.6,1.8,KB);}
+ ell(-2,by,15.5,8,-.05,K);ell(9,by-2,9,8.8,0,K);ell(1,by+3.4,10.5,3.4,0,RD);
+ for(let i=0;i<6;i++){const x=-14+i*5;poly([x-2,by-6.6,x-.6,by-11.4-(i%2),x+2.2,by-6.2],R,'g');}
+ for(const[x,o]of[[-7,3.1],[13,4.7]]){const f=foot(x,o,7,5),q=leg(x,by+4,f,12,12,3.8,2.5,K,x<0?1:-1);ell(q[0].x,q[0].y,2.3,2.3,0,R);capsule(f.x,f.y-1,2.5,f.x+4.6,f.y-.6,2,K);for(let k=0;k<3;k++)sp(f.x+3+k*1.4,f.y+.4,WH[3]);}
+ /* neck and head */
+ const open=atk?(S.mk==='nB'?5.2:(((t>>1))%3===0?4.6:1.6)):hurt?1.4:(Math.sin(t*.07)>.8?1.6:0),sw=Math.sin(t*.11)*1.2,nx0=13,ny0=by-6,hx=24,hy=by-20+sw;
+ capsule(nx0,ny0,5,18,by-13+sw*.5,4.3,K);capsule(18,by-13+sw*.5,4.3,hx,hy,3.9,K2);for(let i=0;i<3;i++)poly([14+i*3,by-10-i*3.4+sw*.3,12.6+i*3,by-14.6-i*3.4+sw*.3,16.6+i*3,by-12-i*3.4+sw*.3],R,'g');
+ ell(hx,hy,6,4.8,-.1,K);capsule(hx+3,hy,3.5,hx+10.5,hy+.6-open*.22,2.4,K);capsule(hx+3,hy+2.6,2.3,hx+9.6,hy+3+open*.9,1.7,K2);
+ if(open>1){poly([hx+4,hy+2,hx+10.4,hy+1.4-open*.2,hx+9.6,hy+3+open*.8],S.mk==='nB'?Y:RD,'g');for(let k=0;k<3;k++){sp(hx+6+k*1.5,hy+1.6,WH[4]);sp(hx+6+k*1.5,hy+2.8+open*.6,WH[4]);}}
+ poly([hx-2,hy-3.6,hx-10,hy-9.6,hx-.4,hy-1],R,'g');poly([hx-3,hy-1.4,hx-9,hy-3.6,hx-2.4,hy+1],RD,'g');
+ poly([hx+1.4,hy-2.6,hx+6.4,hy-2,hx+2,hy-.6],Y,'g');sp(hx+3,hy-1.8,WH[5]);
+ wing(4,by-7,K,R,1.05);
+ S.mouth={x:hx+11,y:hy+2};S.hand=S.mouth;};
+{const ss=spriteState;spriteState=function(f){const S=ss.apply(this,arguments);try{if(f&&f.mv&&f.form==='dragon')S.mk=f.mv.k;}catch(e){}return S;};}
+/* ---------- the katana: thrown, it hunts on its own; press B again to call it home ---------- */
+const katOut=f=>!!(f&&f._kat&&f._kat.alive);
+EK.tkat={init(){},upd(e){try{const f=e.owner;if(!f||f.gone||f.dead||f.st==='respawn'||e.t>330){e.alive=false;return;}
+  const sp0=Math.hypot(e.vx,e.vy)||1;let ang=Math.atan2(e.vy,e.vx),tx,ty,turn,spd;
+  if(!e.rc&&(e.t>170||e.nh>=TM.K.nh||e.x<BLAST.l+40||e.x>BLAST.r-40||e.y<BLAST.t+30||e.y>BLAST.b-40))e.rc=1;
+  let tg=null;if(!e.rc){let bd=1e9;for(const o of foes(f)){if(intangible(o)||o.holder)continue;const d=Math.hypot(o.x-e.x,o.y-30-e.y)+((e.hitT[o.id]||0)>FR?140:0);if(d<bd){bd=d;tg=o;}}}
+  if(e.rc){tx=f.x;ty=f.y-34;turn=.3;spd=Math.min(8.4,sp0+.5);}else if(tg){tx=tg.x;ty=tg.y-30;turn=e.t<10?.03:.1;spd=Math.min(6,sp0+.25);}else{tx=e.x+Math.cos(ang)*50;ty=e.y+Math.sin(ang)*50;turn=0;spd=sp0;}
+  let da=Math.atan2(ty-e.y,tx-e.x)-ang;while(da>Math.PI)da-=Math.PI*2;while(da<-Math.PI)da+=Math.PI*2;ang+=cl(da,-turn,turn);e.vx=Math.cos(ang)*spd;e.vy=Math.sin(ang)*spd;e.x+=e.vx;e.y+=e.vy;e.ang=ang;
+  if(e.rc&&Math.hypot(f.x-e.x,f.y-34-e.y)<18){e.alive=false;FXL.push({k:'ring',x:f.x,y:f.y-34,t:0,col:RED,r0:6,life:12});try{sfx('pop');}catch(x){}return;}
+  for(const o of foes(f)){if(intangible(o)||o.holder||(e.hitT[o.id]||0)>FR||!inR(o,e.x,e.y,10))continue;e.hitT[o.id]=FR+(e.rc?70:38);
+   const r=applyHit(o,e.rc?{dmg:TM.K.back,bkb:3.8,kbg:.06,ang:50,fx:FX}:{dmg:TM.K.kat,bkb:3.4,kbg:.05,ang:48,fx:FX},Math.sign(e.vx)||1,f,{proj:1});if(r==='hit'){e.nh++;TM.use.katHit=(TM.use.katHit||0)+1;}else if(r==='shield')e.rc=1;}
+  if(e.t%2===0)part(e.x-e.vx,e.y-e.vy,0,0,10,e.t%4?RED:'#ffb0a0',2,0);}catch(x){E(x);e.alive=false;}},
+ draw(e){try{X.save();X.translate(e.x,e.y);X.rotate((e.ang||0)+Math.sin(e.t*.9)*.18);X.fillStyle='#0c0c12';X.fillRect(-16,-3,34,6);X.fillStyle='#e8e8f0';X.beginPath();X.moveTo(-6,-2);X.lineTo(13,-2);X.lineTo(17,0);X.lineTo(13,2);X.lineTo(-6,2);X.closePath();X.fill();X.fillStyle=RED;X.fillRect(-6,1,19,1);X.fillStyle='#16161c';X.fillRect(-15,-2,8,4);X.fillStyle=RED;X.fillRect(-8,-4,2,8);X.restore();}catch(x){}}};
+TM.K={kat:6,back:5,drM:1.08,drK:1,run:.2,nh:2,atk:1.12,kb:1.05,def:.94};C.atkM=TM.K.atk;C.kbM=TM.K.kb;C.defKb=TM.K.def;
+const throwKat=f=>{const e={k:'tkat',owner:f,face:f.face,x:f.x+f.face*18,y:f.y-38,vx:f.face*4.6,vy:-.6,g:0,oa:1,t:0,life:400,alive:true,spec:{},hits:{},hitT:{},nh:0,rc:0,r:9,fx:FX};ENT.push(e);f._kat=e;try{sfx('swing');}catch(x){}TM.use.kat=(TM.use.kat||0)+1;};
+BEH.tkat={tick(f,m,I){try{if(m.t===m.d.s){if(katOut(f)){f._kat.rc=1;FXL.push({k:'txt',s:'RETURN',x:f.x,y:f.y-80,t:0,life:26,col:RED});}else throwKat(f);}}catch(x){E(x);}}};
+/* ---------- moves ---------- */
+/* every costume fights with the sword now */
+if(C.hmv)for(const k of NORM)if(C.hmv[k])C.mv[k]=C.hmv[k];
+C.heroNote='';C.heroDisjoint=1;C.disjoint=1;
+const SW={jab1:'jabS1',jab2:'jabS2',jab3:'j3S',jab:'jabS1',ftilt:'slashF',utilt:'slashUp',dtilt:'slashLow',dash:'slashF',nair:'spinW',fair:'fairS',bair:'bairS',uair:'uairS',dair:'dairS',fsmash:'smashT',usmash:'slashUp',dsmash:'slashLow'};
+const PU={jab1:['jabP1','hF'],jab2:['jabP2','hB'],jab3:['j3P','hF'],jab:['jabP1','hF'],ftilt:['punch','hF'],utilt:['uppercut','hF'],dtilt:['kickLow','fF'],dash:['shoulder','hF'],nair:['nairK','fF'],fair:['fairP','hF'],bair:['bairK','fF'],uair:['uairP','hF'],dair:['dairK','fF'],fsmash:['smashH','hF'],usmash:['usO','hF'],dsmash:['sweep','fF']};
+for(const k of NORM){const d=C.mv[k];if(!d)continue;if(SW[k]){d.an=SW[k];d.lim='w';delete d.ph;delete d.mo;}for(const h of(d.hits||[]))if(h.qk&&h.qk.k==='pull')delete h.qk;if(typeof d.qn==='string')d.qn=d.qn.replace(/Drags the rival back in instead of sending them away\.? ?/,'');}
+const PUNCH={},DRG={};
+for(const k of NORM){const d=C.mv[k];if(!d||!d.hits||!d.hits.length)continue;const b0=d.hits[0].b[0];if(d.spawn){delete d.spawn;delete d._rg;if(typeof d.qn==='string')d.qn=d.qn.replace(/ ?Also throws a short bolt of the ability\.( Lobbed in an arc\.)?/,'');}
+ PUNCH[k]=Object.assign({},d,{s:Math.max(2,d.s-1),hits:d.hits.map(h=>Object.assign({},h,{dmg:h.dmg*.85,b:h.b.map(q=>[q[0]*.62,q[1],q[2]*.9])})),vfx:null,nx:undefined,_nx:0,nm:undefined,qn:undefined,sweet:undefined,an:(PU[k]||[d.an])[0],lim:(PU[k]||[0,'hF'])[1]});
+ DRG[k]=Object.assign({},d,{s:Math.max(2,d.s-1),hits:d.hits.map(h=>Object.assign({},h,{dmg:h.dmg*TM.K.drM,kbg:h.kbg*TM.K.drK,b:h.b.map(q=>[q[0]*.86,Math.max(q[1],-44)*.8,q[2]*1.12])})),vfx:{k:'H',el:'beast',sub:'fang',x:b0[0]*.86,y:Math.max(b0[1],-44)*.8,r:b0[2]+3},nx:undefined,_nx:0,nm:undefined,qn:undefined,sweet:undefined,ph:undefined,an:k==='usmash'||k==='utilt'||k==='uair'?'uppercut':k==='dair'||k==='dsmash'||k==='dtilt'?'sweep':'punch',lim:'none'});}
+const shift=()=>M('roar',7,3,9,null,{fx:FX,lim:'none',onStart(f){if(f.C!==C)return;const to=f.form==='dragon'?null:'dragon';f.form=to;f.S=null;say(f,to?'DRAGON!':'SUIT.');try{sfx('power');}catch(x){}burst(f.x,f.y-24,24,[RED,'#16161c','#ff9a80'],3.2,24);FXL.push({k:'ring',x:f.x,y:f.y-24,t:0,col:RED,r0:10,life:20});TM.use.shift=(TM.use.shift||0)+1;}});
+C.mv.nB={an:'cast',s:9,a:2,r:13,hits:[],beh:'tkat',fx:FX,lim:'none'};
+C.mv.sB=M('shoulder',8,12,16,hit([[14,-34,15]],10,5,.072,40),{beh:'dash',bp:{spd:6.2,f0:8,f1:20,air:'float',armor:1},fx:FX,lim:'none'});
+C.mv.uB=M('float',4,36,12,hit([[0,-28,19]],2,2.4,.01,80,{ri:6}),{finisher:hit([[0,-32,21]],5,5,.07,80),beh:'fly',bp:{dur:36,spd:4.8},helpless:1,fx:FX,lim:'none'});
+C.mv.dB=shift();
+C.fmv={dragon:Object.assign(DRG,{
+ nB:M('roar',8,26,14,hit([[30,-22,13],[52,-22,15]],1.6,.8,0,35,{ri:4,eff:'burn'}),{finisher:hit([[46,-22,20]],4.5,4.8,.074,40,{eff:'burn'}),fx:FX,lim:'none'}),
+ sB:M('dive',6,14,15,hit([[20,-22,16]],11,4.8,.07,38),{beh:'dash',bp:{spd:7.6,f0:6,f1:20,air:'float'},fx:FX,lim:'none'}),
+ uB:M('float',4,60,12,hit([[0,-22,20]],1.6,2,.01,80,{ri:8}),{beh:'fly',bp:{dur:60,spd:4.3},helpless:1,fx:FX,lim:'none'}),
+ dB:shift()})};
+for(const T2 of[C.mv,C.hmv||{},PUNCH])for(const k in T2){const d=T2[k];if(d&&d.fx)d.fx=FX;}
+/* unarmed while the sword is away */
+{const rd=resolveDef;resolveDef=function(f,key){try{if(f&&f.C===C&&!f.form&&!(f.copyT>0)&&PUNCH[key]&&katOut(f))return{d:PUNCH[key],mc:-1};}catch(e){}return rd.apply(this,arguments);};}
+/* her strikes are steel now, not strings */
+if(typeof NEWFX!=='undefined'&&NEWFX.puppet){const p0=NEWFX.puppet;NEWFX.puppet=function(sub,x,y,d,pr,fx2,f,R,T){if(f&&f.C===C&&!(f.copyT>0)){try{if(NEWFX.cut)return NEWFX.cut(sub,x,y,d,pr,FX,f,R,T);}catch(e){}return;}return p0.apply(this,arguments);};}
+const PB=['blade','#e8e8f0',RED],PF=['fist',RED,'#ff9a80'],PJ=['jaws',RED,'#ffc040'];try{if(typeof PROPS!=='undefined')PROPS.T.tamashi=PB;}catch(e){}
+/* ---------- upkeep: forms, looks, the dragon's pace, fire ---------- */
+{const mt=modeTick;modeTick=function(){mt.apply(this,arguments);try{if(typeof GS==='undefined')return;for(const f of F){if(f.C!==C||f.gone)continue;
+   if(f.dead||f.st==='respawn'){f.form=null;f.formL=null;if(f._kat)f._kat.alive=false;continue;}
+   if(f.st==='fs'&&f.form!=='dragon'){f.form='dragon';f.S=null;}
+   const want=f.form==='dragon'?BEASTLOOK.dragon:(f.mv&&f.mv.k==='uB'&&f.st==='move')?BEASTLOOK.dragon:katOut(f)?noSword(f.L):null;if(f.formL!==want&&!(f.copyT>0)){f.formL=want;f.S=null;}
+   try{if(typeof PROPS!=='undefined')PROPS.T.tamashi=f.form==='dragon'?PJ:katOut(f)?PF:PB;}catch(e){}
+   if(f.form==='dragon'){if(f.ground&&(f.st==='run'||f.st==='walk'))f.x+=f.vx*TM.K.run;
+    const m=f.mv;if(m&&m.k==='nB'&&f.st==='move'&&m.t>=m.d.s&&m.t<=m.d.s+m.d.a){for(let i=0;i<3;i++)part(f.x+f.face*(22+Math.random()*6),f.y-24+Math.random()*4-2,f.face*(2.6+Math.random()*2.2),(Math.random()-.5)*1.3,13,['#ffe060','#ffb030',RED][i],3,-.01);}}}}catch(e){E(e);}};}
+/* ---------- the CPU ---------- */
+{const a0=aiInput;aiInput=function(f){const I=a0.apply(this,arguments);try{if(I&&f.C===C&&!f.mv&&!f.item&&!(f.copyT>0)&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')&&(f._tmT||0)<FR){let o=null,bd=1e9;for(const q of foes(f)){if(intangible(q))continue;const d=Math.hypot(q.x-f.x,q.y-f.y);if(d<bd){bd=d;o=q;}}
+   if(o){const dir=o.x>=f.x?1:-1,dy=Math.abs(o.y-f.y),B=(x,y)=>{f._tmT=FR+40;I.B=true;I.A=I.J=I.S=I.G=false;I.x=x;I.y=y;},r=rnd(),A=TM.AI;
+    if(!f.form){if(!katOut(f)&&bd>70&&bd<420&&r<A.thr){f.face=dir;B(0,0);}else if(f.ground&&((katOut(f)&&r<A.toD1)||(bd<120&&r<A.toD2)))B(0,1);}
+    else{if(bd<64&&dy<30&&(o.x-f.x)*f.face>0&&r<A.fire)B(0,0);else if(f.ground&&bd>260&&!katOut(f)&&r<A.toS)B(0,1);}}}}catch(e){}return I;};}
+TM.AI={thr:.09,toD1:.06,toD2:.02,fire:.14,toS:.012};
+/* ---------- words ---------- */
+C.d='Controls inanimate objects from a distance. She pilots a black-and-red robotic suit that folds into a human-sized dragon, and a katana that hunts on its own.';
+C.na='Normals: long katana cuts, the blade guided a little way off her hand. With the sword thrown she fights with shorter suit punches. As the dragon: bites, claws and tail, faster and harder but shorter, and a bigger body to hit.';
+C.role='Two-form puppeteer';C.tip='Throw the katana, turn dragon, and attack from both sides at once.';C.weak='Light. Unarmed while the sword is away, and the dragon is a wide target.';
+C.sp=['Homing Katana (as the dragon: Fire Breath)','Puppet Lunge (as the dragon: Wing Charge)','Dragon Ascent (as the dragon: Flight)','Transform (suit to dragon, or back)'];
+if(typeof GTXT!=='undefined'&&GTXT.tamashi){const G=GTXT.tamashi;
+ G[0]='Suit: throws her katana, which curves after the nearest rival and keeps hunting. Press B again to call it home; it cuts anyone on the way back. She is unarmed until it returns. Dragon: a cone of fire held in front of her, ending in a burst.';
+ G[1]='Suit: the suit drags her forward in an armoured rush. Dragon: a low flying tackle.';
+ G[2]='Suit: the suit snaps into its dragon shape for a moment and flies her upward. Steer it. Dragon: a longer, freer flight.';
+ G[3]='Folds the suit into a human-sized dragon, or back. No limit and no cooldown. A thrown katana keeps hunting while she is the dragon.';
+ if(G[4]!==undefined)G[4]='The dragon seizes one rival and carries them into the sky while her katana makes pass after pass, then throws them straight down.';}
+if(typeof C.trait==='string')C.trait=C.trait.replace('Objects fight for her.','Her suit and her sword fight for her.').replace('tilts drag rivals in; smashes daze.','smashes daze.');
+if(C.feel){C.feel.good='attacking from two sides at once';C.feel.plan='Throw the katana, then close in as the dragon while it harries them.';C.feel.beat='Catch her while the sword is away: her punches are short. The dragon is a wide target.';}
+}catch(e){E(e);}
 })();
 /* overdrive.js — the OVERDRIVE costume: every fighter's hero uniform pushed to the limit. Earned with 300 KOs as that fighter. */
 (function(){
