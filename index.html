@@ -10593,7 +10593,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1119-2247';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-0334';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -14067,6 +14067,21 @@ try{const n0=ninjaFX;ninjaFX=function(f){const r=n0.apply(this,arguments);try{if
 /* the CPU is told when each new move is worth pressing */
 const AIW={makiko:(f,o,d)=>o.st==='dizzy'||d<170,akemi:(f,o,d)=>d<40,suzume:(f,o,d)=>d>50&&d<170&&Math.abs(o.y-f.y)<26,sato:(f,o,d)=>d>40&&d<130&&Math.abs(o.y-f.y)<24,oliver:(f,o,d)=>d>90,toguchi:(f,o,d)=>d>50&&d<270,evona:(f,o,d)=>d>30&&d<170&&Math.abs(o.y-f.y)<30,tiki:(f,o,d)=>d<80,hana:(f,o,d)=>d<44&&Math.abs(o.y-f.y)<24,keanu:(f,o,d)=>d<40||(Math.abs(o.x-f.x)<28&&o.y<f.y&&f.y-o.y<130)};
 try{const a0=aiInput;aiInput=function(f){const I=a0.apply(this,arguments);try{const id=f&&f.C&&f.C.id,W2=AIW[id],M=MV[id];if(I&&W2&&M&&!f.mv&&!f.item&&!(f.copyT>0)&&(f.st==='idle'||f.st==='walk'||f.st==='run'||f.st==='air')&&(f._nsT||0)<FR&&!(f.cd&&f.cd[M.k]>0)){const o=near(f,500);if(o){const d=Math.hypot(o.x-f.x,o.y-f.y);if(W2(f,o,d)&&rnd()<.12){f._nsT=FR+50;const dir=o.x>=f.x?1:-1;I.B=true;I.A=false;I.J=false;I.S=false;I.G=false;if(M.k==='nB'){I.x=0;I.y=0;f.face=dir;}else if(M.k==='sB'){I.x=dir;I.y=0;}else if(M.k==='dB'){I.x=0;I.y=1;}}}}}catch(e){}return I;};}catch(e){E(e);}
+})();
+
+/* tweaks.js — fighter changes asked for by name. */
+(function(){
+if(typeof CH==='undefined'||typeof dmgMod!=='function')return;
+const TW={err:null};window.TWEAKS=TW;
+/* DAKU: hound attacks do 20% more, and Brimstone leaves a lingering burn (1% a second for 3 seconds, does not stack) */
+try{const d0=dmgMod;dmgMod=function(a,t,h,o){let m=d0.apply(this,arguments);try{if(a&&a.C&&a.C.id==='daku'&&a.form==='hound'&&a!==t)m*=1.2;}catch(e){}return m;};
+ const s1=startMove;startMove=function(f,k){try{if(f&&f.C&&f.C.id==='daku'&&k==='nB'&&f.form!=='hound')f._brim=FR;}catch(e){}return s1.apply(this,arguments);};
+ const a0=applyHit;applyHit=function(t,h,dirX,a,o){const r=a0.apply(this,arguments);try{if(r==='hit'&&a&&a!==t&&a.C&&a.C.id==='daku'&&o&&o.proj&&a._brim&&FR-a._brim<110)t._lg={t:FR+180,n:FR+60,by:a};}catch(e){}return r;};
+ const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const f of F){const g=f._lg;if(!g)continue;if(f.dead||f.gone||f.st==='respawn'||FR>g.t+1){f._lg=null;continue;}
+    if(FR%7===0)part(f.x+(Math.random()-.5)*16,f.y-14-Math.random()*30,(Math.random()-.5)*.4,-.9,16,Math.random()<.5?'#ff4a1a':'#ffb030',2,0);
+    if(FR>=g.n){g.n=FR+60;f.dmg+=1;if(g.by)g.by.dealt=(g.by.dealt||0)+1;f.flash=2;FXL.push({k:'txt',s:'1',x:f.x+8,y:f.y-70,t:0,life:22,col:'#ff8020'});}}}catch(e){TW.err=String(e);}return r;};
+ if(typeof GTXT!=='undefined'&&GTXT.daku){GTXT.daku[0]=GTXT.daku[0].replace('throws a ball of hellfire that bursts and burns.','throws a ball of hellfire that bursts and burns, and the embers linger: 1% a second for three more seconds. It does not stack.');GTXT.daku[3]=GTXT.daku[3].replace('with every hit burning,','with every hit burning and doing a fifth more damage,');}
+}catch(e){TW.err=String(e);}
 })();
 
 </script>
