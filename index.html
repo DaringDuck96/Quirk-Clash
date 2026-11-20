@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-1737';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1120-1744';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -15568,6 +15568,61 @@ let T=0;const later=()=>{clearTimeout(T);T=setTimeout(fit,90);};window.NAMEFIT=f
 addEventListener('resize',later);
 if(typeof refreshSel==='function'){const r0=refreshSel;refreshSel=function(){const r=r0.apply(this,arguments);later();return r;};}
 (function wait(){const ro=document.getElementById('roster');if(!ro||!ro.querySelector('.card')){setTimeout(wait,200);return;}try{new ResizeObserver(later).observe(ro);}catch(e){}later();try{document.fonts&&document.fonts.ready.then(()=>{ro.querySelectorAll('.card span:not(.bd)').forEach(s=>s._nf='');later();});}catch(e){}})();
+})();
+/* presence.js — WHO IS ON. The title screen shows how many people have the game open right now and the names they play under, whether or not you are playing together.
+   No server of our own: the first player to arrive holds a well-known meeting point on the same free PeerJS broker online play uses, everyone else checks in with it, and it hands the list round.
+   If that player leaves, one of the others takes the meeting point over. Only the profile name is shared, and it can be switched off. */
+(function(){
+const HUB='pu-quirk-clash-v1-whoison',PR={on:true,role:'',names:[],n:0,ok:false,err:''};window.PRESENCE=PR;
+try{if(localStorage.getItem('qc_presence')==='off')PR.on=false;}catch(e){}
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}]};
+const clean=s=>String(s||'').replace(/[\u0000-\u001f<>]/g,'').trim().slice(0,18)||'Player';
+const myName=()=>{try{const p=typeof PROFILES!=='undefined'&&PROFILES.current&&PROFILES.current();return clean(p&&p.name);}catch(e){return'Player';}};
+let P=null,peer=null,hubConn=null,members=null,timer=null,beat=null,gen=0,sent='';
+const stop=()=>{gen++;clearTimeout(timer);clearInterval(beat);try{peer&&peer.destroy();}catch(e){}peer=null;hubConn=null;members=null;PR.role='';PR.ok=false;PR.names=[];PR.n=0;draw();};
+const again=(ms)=>{const g=gen;clearTimeout(timer);timer=setTimeout(()=>{if(g===gen)join();},ms);};
+/* ---- everyone starts as a visitor: call the meeting point ---- */
+function join(){if(!PR.on||!P)return;const g=++gen;try{peer&&peer.destroy();}catch(e){}clearInterval(beat);members=null;hubConn=null;PR.role='joining';
+ let me;try{me=peer=new P(undefined,{config:ICE,debug:0});}catch(e){PR.err=String(e);again(20000);return;}
+ let opened=false;const fail=setTimeout(()=>{if(g===gen&&!opened)host();},9000);
+ me.on('open',()=>{if(g!==gen)return;const c=hubConn=me.connect(HUB,{serialization:'json',reliable:true});
+  c.on('open',()=>{if(g!==gen)return;opened=true;clearTimeout(fail);PR.role='visitor';PR.ok=true;sent='';const hi=()=>{try{const n=myName();c.send({t:'hi',name:n});sent=n;}catch(e){}};hi();beat=setInterval(()=>{if(g===gen)hi();},15000);});
+  c.on('data',d=>{if(g!==gen||!d||d.t!=='list'||!Array.isArray(d.names))return;PR.names=d.names.slice(0,200).map(clean);PR.n=PR.names.length;draw();});
+  const gone=()=>{if(g!==gen)return;clearTimeout(fail);PR.ok=false;clearInterval(beat);setTimeout(()=>{if(g===gen)host();},300+Math.random()*2500);};c.on('close',gone);c.on('error',gone);});
+ me.on('error',e=>{if(g!==gen)return;clearTimeout(fail);if(e&&e.type==='peer-unavailable'){host();return;}PR.err=String(e&&e.type||e);PR.ok=false;draw();again(15000+Math.random()*10000);});
+ me.on('disconnected',()=>{try{me.reconnect();}catch(e){}});}
+/* ---- nobody is holding the meeting point: hold it ---- */
+function host(){if(!PR.on||!P)return;const g=++gen;try{peer&&peer.destroy();}catch(e){}clearInterval(beat);hubConn=null;PR.role='claiming';
+ let h;try{h=peer=new P(HUB,{config:ICE,debug:0});}catch(e){again(20000);return;}
+ h.on('open',()=>{if(g!==gen)return;PR.role='hub';PR.ok=true;members=new Map();const tell=()=>{if(g!==gen||!members)return;const now=Date.now();for(const[c,m]of members){if(now-m.t>50000){members.delete(c);try{c.close();}catch(e){}}}
+   const names=[myName()].concat([...members.values()].filter(m=>m.name).map(m=>m.name));PR.names=names;PR.n=names.length;const msg={t:'list',names};for(const c of members.keys()){try{c.send(msg);}catch(e){}}draw();};
+  h.on('connection',c=>{if(g!==gen||!members)return;if(members.size>=150){try{c.close();}catch(e){}return;}members.set(c,{name:'',t:Date.now()});
+   c.on('data',d=>{const m=members&&members.get(c);if(!m||!d||d.t!=='hi')return;const n=clean(d.name),ch=m.name!==n;m.name=n;m.t=Date.now();if(ch)tell();});
+   const bye=()=>{if(members&&members.delete(c))tell();};c.on('close',bye);c.on('error',bye);});
+  tell();beat=setInterval(tell,10000);});
+ h.on('error',e=>{if(g!==gen)return;if(e&&e.type==='unavailable-id'){again(400+Math.random()*1200);return;}PR.err=String(e&&e.type||e);PR.ok=false;draw();again(15000+Math.random()*10000);});
+ h.on('disconnected',()=>{try{h.reconnect();}catch(e){}});}
+/* ---- the panel on the title screen ---- */
+const st=document.createElement('style');st.textContent='#whoison{position:fixed;right:14px;bottom:14px;z-index:40;width:min(250px,44vw);max-height:46vh;display:flex;flex-direction:column;padding:10px 12px;border:2px solid #2fd060;border-radius:12px;background:rgba(10,12,22,.9);color:#fff;font-family:Rubik,system-ui,sans-serif;box-shadow:0 6px 0 rgba(0,0,0,.4)}#whoison[hidden]{display:none}'
+ +'#whoison h4{margin:0;display:flex;align-items:center;gap:7px;font:900 13px/1.1 Rubik,system-ui,sans-serif;letter-spacing:2px;color:#8affae}#whoison h4 i{width:9px;height:9px;border-radius:50%;background:#2fd060;box-shadow:0 0 8px #2fd060;flex:none}#whoison.off h4{color:#b8b8c8}#whoison.off h4 i{background:#666;box-shadow:none}#whoison.off{border-color:#55556a}'
+ +'#whoison ul{list-style:none;margin:8px 0 0;padding:0;overflow:auto;font:600 13px/1.5 Rubik,system-ui,sans-serif}#whoison li{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#whoison li.me{color:#ffd400}#whoison p{margin:6px 0 0;font:500 11px/1.35 Rubik,system-ui,sans-serif;color:#b8b8c8}'
+ +'#whoison button{margin-top:8px;align-self:flex-start;padding:4px 9px;font:800 10px/1 Rubik,system-ui,sans-serif;letter-spacing:1px;border:1px solid #55556a;border-radius:7px;background:#1c1c2a;color:#d8d8e8;cursor:pointer}@media(max-height:520px){#whoison{max-height:38vh;padding:7px 9px}#whoison ul{font-size:11px}}';document.head.appendChild(st);
+let box=null;
+function draw(){try{if(!box){box=document.createElement('div');box.id='whoison';box.hidden=true;box.setAttribute('aria-live','polite');document.body.appendChild(box);}
+ const key=[PR.on,PR.ok,PR.role,PR.names.join('|'),myName(),!!P].join('~');if(box._k===key)return;box._k=key;box.innerHTML='';box.classList.toggle('off',!PR.on||!PR.ok);
+ const h=document.createElement('h4');h.appendChild(document.createElement('i'));const tx=document.createElement('span');h.appendChild(tx);box.appendChild(h);
+ if(!PR.on){tx.textContent='ONLINE LIST OFF';const p=document.createElement('p');p.textContent='Your name is hidden from other players, and theirs from you.';box.appendChild(p);}
+ else if(!P){tx.textContent='ONLINE LIST UNAVAILABLE';}
+ else if(!PR.ok){tx.textContent='LOOKING FOR PLAYERS…';const p=document.createElement('p');p.textContent='If this stays, the connection service cannot be reached from here.';box.appendChild(p);}
+ else{tx.textContent=PR.n+(PR.n===1?' PLAYER':' PLAYERS')+' ONLINE NOW';const ul=document.createElement('ul'),me=myName();let mine=false;const show=PR.names.slice(0,40);for(const n of show){const li=document.createElement('li');li.textContent=n;if(!mine&&n===me){mine=true;li.className='me';li.textContent=n+' (you)';}ul.appendChild(li);}
+  if(PR.names.length>show.length){const li=document.createElement('li');li.textContent='and '+(PR.names.length-show.length)+' more';ul.appendChild(li);}box.appendChild(ul);
+  if(PR.n===1){const p=document.createElement('p');p.textContent='Nobody else has the game open right now.';box.appendChild(p);}}
+ const b=document.createElement('button');b.textContent=PR.on?'HIDE ME':'SHOW WHO IS ONLINE';b.onclick=()=>{PR.on=!PR.on;try{localStorage.setItem('qc_presence',PR.on?'on':'off');}catch(e){}if(PR.on)join();else stop();draw();};box.appendChild(b);}catch(e){PR.err=String(e);}}
+setInterval(()=>{try{if(!box)draw();const t=document.getElementById('title'),po=document.getElementById('profov');const vis=t&&!t.hidden&&t.offsetParent!==null&&!(po&&!po.hidden&&po.style.display!=='none'&&po.offsetParent!==null);box.hidden=!vis;if(vis)draw();
+  /* a changed profile name goes out on the next check-in */
+  if(PR.role==='visitor'&&hubConn&&sent&&sent!==myName()){try{const n=myName();hubConn.send({t:'hi',name:n});sent=n;}catch(e){}}}catch(e){}},700);
+PR.start=function(Ctor){P=Ctor||window.Peer||null;draw();if(P&&PR.on)join();};PR.stop=stop;PR._host=host;
+setTimeout(()=>{try{if(!new URLSearchParams(location.search).has('nopresence'))PR.start();}catch(e){}},2500);
 })();
 
 </script>
