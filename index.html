@@ -2816,7 +2816,7 @@ function update(f,I){
       else{const ax=Math.abs(I.x);
         if(f.rootT>0){f.vx*=.6;f.st='idle';}
         else if(I.y>.6&&f.C.crawl&&ax>.25){f.st='crouch';f.vx+=(Math.sign(I.x)*f.C.crawl-f.vx)*.3;f.face=Math.sign(I.x);}
-        else if(ax>.25){const dir=Math.sign(I.x),kept=s2==='run'&&ax>.6,flk=ax>.72&&FR-(f.nxT===undefined?-99:f.nxT)<=6,run=f.ctrl==='cpu'?ax>.78:(kept||flk);if(run&&(s2!=='run'||dir!==Math.sign(f.vx))){f.runT=FR;f.vx=dir*S.run*(S.dash||.75)*sm*stick;dust(f.x,f.y,3);}f.st=run?'run':'walk';const tv=dir*(run?S.run:S.walk*clamp((ax-.22)/.62,.3,1))*sm*stick;f.vx+=(tv-f.vx)*(run?(S.acc||.3):Math.min(.4,(S.acc||.3)*.85));f.face=Math.sign(I.x);}
+        else if(ax>.25){const dir=Math.sign(I.x),kept=(s2==='run'||((s2==='land'||s2==='idle')&&Math.abs(f.vx)>1.5&&Math.sign(f.vx)===dir))&&ax>.6,flk=ax>.72&&FR-(f.nxT===undefined?-99:f.nxT)<=6,run=f.ctrl==='cpu'?ax>.78:(kept||flk);if(run&&(s2!=='run'||dir!==Math.sign(f.vx))){f.runT=FR;f.vx=dir*S.run*(S.dash||.75)*sm*stick;dust(f.x,f.y,3);}f.st=run?'run':'walk';const tv=dir*(run?S.run:S.walk*clamp((ax-.22)/.62,.3,1))*sm*stick;f.vx+=(tv-f.vx)*(run?(S.acc||.3):Math.min(.4,(S.acc||.3)*.85));f.face=Math.sign(I.x);}
         else if(I.y>.6){f.st='crouch';f.vx*=.7;}
         else{f.st='idle';f.vx*=(S.trac||.75);if(Math.abs(f.vx)<.05)f.vx=0;}}}
     else{const helpless=s2==='helpless';if(!helpless&&s2!=='air')f.st='air';
@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1121-0223';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0251';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -15962,6 +15962,84 @@ const localHuman=f=>!!(f&&f.ctrl==='human'&&!(typeof PADMAP!=='undefined'&&PADMA
 const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(typeof GS!=='undefined'&&GS==='play'&&typeof MODE!=='undefined'&&MODE!=='training'){for(const f of F){if(!f)continue;
   if(f.st==='dizzy'&&f.sbrk){if(!f._sbk){f._sbk=1;if(localHuman(f)){const q=acct();q.sb=(q.sb||0)+1;save();if(q.sb>=5&&!(q.un&&q.un.bastard))try{CHARLOCK.check(1500);}catch(e){}}}}
   else if(f._sbk)f._sbk=0;}}}catch(e){}return r;};
+})();
+/* smooth.js — smoother animation and movement.
+   1. Poses blend into each other instead of snapping (idle, walk, run, jump, land, crouch, shield, and in and out of attacks).
+      Attacks blend fast so they still hit their strike pose on the first active frame; getting hit snaps, so hits still read.
+   2. Phones and tablets repaint fighters every frame when the device is quick enough (before, they always ran at half rate).
+   3. Running momentum carries into jumps and through landings instead of being braked away. */
+(function(){
+if(typeof drawFighter!=='function'||typeof exaggerate!=='function'||typeof lerpPose!=='function')return;
+const SM={err:null,on:true};window.SMOOTH=SM;const E=e=>{SM.err=SM.err||String(e&&e.stack||e).slice(0,300);};
+const isArr=Array.isArray;
+let DF=null;
+{const df=drawFighter;drawFighter=function(f){const k=DF;DF=f;try{return df.apply(this,arguments);}finally{DF=k;}};}
+const rate=f=>{const st=f.st,m=f.mv;
+  if(st==='hit'||st==='dizzy'||st==='down'||st==='respawn'||st==='held'||st==='ledge')return 1;
+  if(m){const d=m.d;if(m.t>=d.s-1&&m.t<=d.s+d.a)return .82;return .62;}
+  if(st==='land'||st==='jsq')return .55;
+  if(st==='shield'||st==='shieldstun'||st==='roll'||st==='spot'||st==='airdodge'||st==='tech')return .6;
+  return .4;};
+{const ex=exaggerate;exaggerate=function(p,f){const o=ex.apply(this,arguments);if(!SM.on||!f||f!==DF||f.dead||f.gone)return o;
+  try{const prev=f._sp,now=performance.now();
+    if(!prev||prev.lie!==o.lie||f.st==='respawn'||now-(f._spT||0)>120||(f.ix0!==undefined&&Math.hypot(f.x-f.ix0,f.y-f.iy0)>60)){f._sp=o;f._spT=now;return o;}
+    let k=rate(f);if(k>=1){f._sp=o;f._spT=now;return o;}
+    const dt=Math.min(50,Math.max(4,(typeof RDT!=='undefined'&&RDT)||16.7));k=1-Math.pow(1-k,dt/16.7);
+    const b=lerpPose(prev,o,k),r=Object.assign({},o);
+    for(const key in b){const v=b[key];if(v===undefined||(typeof v==='number'&&!isFinite(v)))continue;if(isArr(v)&&!(isFinite(v[0])&&isFinite(v[1])))continue;r[key]=v;}
+    r.rot=o.rot;r.lie=o.lie;r.sq=(prev.sq||1)+((o.sq||1)-(prev.sq||1))*k;
+    if(o.wa!==undefined&&prev.wa!==undefined&&Math.abs(o.wa-prev.wa)>2.2)r.wa=o.wa;
+    f._sp=r;f._spT=now;return r;}catch(e){E(e);return o;}};}
+
+/* phones and tablets: repaint every frame when the device keeps up */
+try{if(typeof GFX60!=='undefined'&&!GFX60&&typeof paintSprite==='function'){const ps=paintSprite;let n=0,tot=0;
+  paintSprite=function(){const t=performance.now();const r=ps.apply(this,arguments);if(n<240){tot+=performance.now()-t;n++;if(n===240&&tot/n<1.6){GFX60=true;SM.up=1;}}return r;};}}catch(e){E(e);}
+
+/* momentum: keep more speed through jumpsquat and normal landings */
+/* dash attacks slide with the run's momentum; grabbing out of a run is a dash grab: it slides and reaches further */
+const runSp=f=>(f.C.st&&f.C.st.run)||3.8;
+if(typeof update==='function'){const up0=update;update=function(f,I){const st=f.st,vx=f.vx,m0=f.mv;let boost=0;
+  try{if(f.st==='grab'&&f._dg&&f.stT<=9){boost=14;f.C.grabR=(f.C.grabR||26)+boost;}}catch(e){}
+  let r;try{r=up0.apply(this,arguments);}finally{if(boost)f.C.grabR-=boost;}
+  try{if(f.hl>0)return r;
+    const m=f.mv;
+    if(m&&m.k==='dash'&&f.ground&&!m.d.beh){const d=m.d;
+      if(m!==m0||m.v._dv===undefined){const base=Math.max(Math.abs(vx),runSp(f)*.8);m.v._dv=f.face*Math.min(base,runSp(f)*1.15);}
+      if(Math.abs(f.vx)>Math.abs(m.v._dv)+.2&&Math.sign(f.vx)===Math.sign(m.v._dv))m.v._dv=f.vx;   /* a built-in lunge wins */
+      f.vx=m.v._dv;m.v._dv*=m.t<=d.s+d.a?.975:.86;}
+    if(st==='run'&&f.st==='grab'&&Math.abs(vx)>1.5){f._dg=1;f.vx=vx*.9;}
+    else if(f.st==='grab'&&f._dg){if(f.stT<=12)f.vx=vx*.9;}
+    if(f.st!=='grab')f._dg=0;}catch(e){E(e);}return r;};}
+/* nobody's standing grab is shorter than this */
+try{for(const C of CH){if(C&&C.grabR!==undefined&&C.grabR<22)C.grabR=22;}}catch(e){}
+if(typeof update==='function'){const up=update;update=function(f,I){const st=f.st,vx=f.vx;const r=up.apply(this,arguments);
+  try{if(f.mv==null&&(st==='jsq'||(st==='land'&&f.landLen<=4))&&(f.st===st||f.st==='air')&&vx){
+      /* the base game multiplies by .75 here; give back most of it */
+      if(f.st===st)f.vx=vx*.93;
+      else if(st==='jsq'&&f.st==='air'){const A=(f.C.st&&f.C.st.air)||2.8;f.vx=Math.max(-A,Math.min(A,vx*.95+((I&&I.x)||0)*.8));}}}catch(e){E(e);}return r;};}
+})();
+/* torabi2.js — Torabi can always get his ingredients back.
+   1. Down-B always works: if Quackpot is away, Torabi calls him and keeps holding the pose while the duck runs over, then cooks as normal.
+   2. The pantry also refills on its own: one ingredient every 4 seconds he goes without using a special.
+   3. Losing a stock restocks everything. */
+(function(){
+if(typeof BEH==='undefined'||!BEH.cook||typeof CH==='undefined')return;
+const TB={err:null};window.TORABI2=TB;const MAX=(typeof ING_MAX!=='undefined'?ING_MAX:6);
+const txt=(f,s,c)=>FXL.push({k:'txt',s,x:f.x,y:f.y-78,t:0,life:40,col:c||'#ffd060'});
+const near=f=>{const dk=f.duck;return !!dk&&Math.abs(dk.x-f.x)<48&&Math.abs(dk.y-f.y)<44;};
+const st0=BEH.cook.start,tk0=BEH.cook.tick;
+BEH.cook.start=function(f,m){try{if(near(f))return st0.apply(this,arguments);m.v.near=false;m.v.wait=1;if(f.duck)f.duck.call=140;txt(f,'QUACKPOT! HERE!','#9ad8ff');try{sfx('pop');}catch(e){}}catch(e){TB.err=String(e);}};
+BEH.cook.tick=function(f,m){try{if(m.v.wait){const held=f.ctrl==='cpu'||f.ctrl==='dummy'?true:!!(f.I&&f.I.B);m.v.w=(m.v.w||0)+1;if(f.duck)f.duck.call=Math.max(f.duck.call||0,20);
+    if(near(f)){m.v.wait=0;m.v.near=true;m.t=m.d.s;return;}
+    if(!held||m.v.w>90){m.v.wait=0;m.t=m.d.s+m.d.a;return;}
+    m.t=Math.min(m.t,m.d.s);return;}}catch(e){TB.err=String(e);}
+  return tk0.apply(this,arguments);};
+const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(typeof GS==='undefined'||GS!=='play')return r;for(const f of F){if(!f||!f.hero||!f.C||f.C.id!=='torabi'||f.gone)continue;
+  if(f.st==='respawn'){if(f.ing!==MAX)f.ing=MAX;continue;}
+  if(f.dead||f.ing===undefined||f.ing>=MAX)continue;
+  const busy=f.mv&&(f.mv.k==='nB'||f.mv.k==='sB'||f.mv.k==='dB');if(busy){f._ingT=FR;continue;}
+  if(FR-(f._ingT||0)>=240){f._ingT=FR;f.ing=Math.min(MAX,f.ing+1);if(typeof part==='function')for(let i=0;i<4;i++)part(f.x+(Math.random()*16-8),f.y-84,0,-.6,18,'#ffd060',2,0);}}}catch(e){TB.err=String(e);}return r;};
+try{const C=CH.find(c=>c.id==='torabi');if(C&&C.heroNote)C.heroNote=C.heroNote.replace('Away from Quackpot, Down-B calls the duck over.','Away from Quackpot, hold Down-B and he calls the duck over and starts cooking as soon as it arrives. The pantry also refills on its own, one ingredient every 4 seconds without a special, and fully when he loses a stock.');}catch(e){}
 })();
 
 </script>
