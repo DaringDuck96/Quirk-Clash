@@ -3484,7 +3484,7 @@ function drawFX(e){if(e.k==='spark'){const l=(e.big?14:9)-e.t;if(l<=0)return;wl(
 function camUpdate(){const pts=F.filter(f=>!f.dead&&!f.gone);if(!pts.length)return;let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
   for(const f of pts){x0=Math.min(x0,f.x);x1=Math.max(x1,f.x);y0=Math.min(y0,f.y-50);y1=Math.max(y1,f.y);}
   x0-=120;x1+=120;y0-=70;y1=Math.max(y1,STAGE.main.y)+60;const s=STAGE.main;x0=Math.min(x0,s.x+s.w/2-200);x1=Math.max(x1,s.x+s.w/2+200);
-  const z=clamp(Math.min(WW/(x1-x0),WH/(y1-y0))*1.05,.78,1.55);CAM.z+=(z-CAM.z)*.05;CAM.x+=((x0+x1)/2-CAM.x)*.08;CAM.y+=((y0+y1)/2-CAM.y)*.08;
+  const z=clamp(Math.min(WW/(x1-x0),WH/(y1-y0))*.96,.7,1.42);CAM.z+=(z-CAM.z)*.05;CAM.x+=((x0+x1)/2-CAM.x)*.08;CAM.y+=((y0+y1)/2-CAM.y)*.08;
   const vw=WW/CAM.z,vh=WH/CAM.z;CAM.x=clamp(CAM.x,CAMB.x0+vw/2,CAMB.x1-vw/2);CAM.y=clamp(CAM.y,CAMB.y0+vh/2,CAMB.y1-vh/2);}
 
 const STARS=[];for(let i=0;i<140;i++)STARS.push({x:rnd()*1280,y:rnd()*560,p:rnd()*6.28,s:.02+rnd()*.05,b:rnd()<.12});
@@ -4440,7 +4440,7 @@ let STI=0,STGD=STAGES[0];const STC={};
 let STFORM='normal';
 function stageGeom(i){const D=STGD,m=STAGE.main;m.x=D.main.x;m.w=D.main.w;STAGE.plats.length=0;D.plats.forEach(p=>STAGE.plats.push(Object.assign({},p,{bx:p.x,by:p.y,dx:0,dy:0})));STAGE.temp.length=0;
   LEDGES[0].x=m.x;LEDGES[1].x=m.x+m.w;LEDGES.forEach(l=>{l.y=m.y;l.occ=null;});
-  BLAST.l=m.x-280;BLAST.r=m.x+m.w+280;BLAST.t=-190;BLAST.b=490;CAMB.x0=BLAST.l+20;CAMB.x1=BLAST.r-20;CAMB.y0=-170;CAMB.y1=470;}
+  BLAST.l=m.x-315;BLAST.r=m.x+m.w+315;BLAST.t=-215;BLAST.b=515;CAMB.x0=BLAST.l+20;CAMB.x1=BLAST.r-20;CAMB.y0=-195;CAMB.y1=495;}
 function setStage(i){STI=i;const B0=STAGES[i],fm=B0.hidden?'normal':STFORM,cxm=B0.main.x+B0.main.w/2;STGD=fm==='normal'?B0:Object.assign({},B0,{mech:null,grav:1,plats:fm==='omega'?[]:[{x:cxm-190,y:172,w:112},{x:cxm+78,y:172,w:112},{x:cxm-60,y:98,w:120}]});stageGeom(i);SKY=mkSky(STGD);LIGHT=mkLt(STGD);OUTCOL=STGD.sky?[.06,.04,.1,1]:[.047,.031,.11,1];WX.length=0;hazReset();
   if(GL_OK){const ck=i+':'+fm;let c=STC[ck];if(!c){ST3={};const s=STGD.build(),b=STGD.bg();c=STC[ck]={s,b,S:ST3};}STAGE3=c.s;BG3=c.b;ST3=c.S;}}
 /* moving platforms (simulation) */
@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1121-0324';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0334';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16079,7 +16079,7 @@ addEventListener('keydown',e=>{try{if(e.code!=='Escape'&&e.code!=='Backspace')re
    (The camera framing is changed in apply.py: it sits a little further back.) */
 (function(){
 const RK={err:null,n:0};window.REACHKB=RK;
-if(typeof kbMod==='function'){const k0=kbMod;kbMod=function(a,t,h,o){let m=k0.apply(this,arguments);try{if(t&&!(o&&o.force)){const p=t.dmg||0,u=Math.min(1,Math.max(0,(p-20)/120)),s=u*u*(3-2*u);m*=.76+.24*s+.03*Math.min(1,Math.max(0,(p-140)/60));}}catch(e){}return m;};}
+if(typeof kbMod==='function'){const k0=kbMod;kbMod=function(a,t,h,o){let m=k0.apply(this,arguments);try{if(t&&!(o&&o.force)){const p=t.dmg||0,u=Math.min(1,Math.max(0,(p-20)/120)),s=u*u*(3-2*u);m*=.76+.24*s+.08*Math.min(1,Math.max(0,(p-110)/70));}}catch(e){}return m;};}
 try{const KEYS=['ftilt','dtilt','dsmash'],EXT=9,SKIP=new Set(['twine']);
   for(const C of CH){if(!C||!C.mv||SKIP.has(C.id))continue;for(const T of[C.mv,C.hmv,C.fmv]){if(!T)continue;for(const k of KEYS){const d=T[k];if(!d||!d.hits||!d.hits.length||d._rk||d.beh)continue;d._rk=1;
     for(const h of d.hits){if(h.grab||!h.b||!h.b.length)continue;let far=null;for(const q of h.b)if(!far||Math.abs(q[0])>Math.abs(far[0]))far=q;if(!far||Math.abs(far[0])<6||Math.abs(far[0])>72)continue;
@@ -16112,6 +16112,21 @@ const all=()=>{for(const C of CH){if(!C||!C.looks)continue;for(const L of C.look
 all();setTimeout(all,0);setTimeout(all,1500);
 /* costumes made later (or changed at runtime) are checked as they are used */
 if(typeof lookOf==='function'){const lo=lookOf;lookOf=function(f){const L=lo.apply(this,arguments);try{fix(L);}catch(e){}return L;};}
+})();
+/* upb.js — stronger up specials, Smash-style.
+   Every up special now rises at least about 2.6 body heights, the middle of the cast gets a lift toward 3, and the ones already at 3+ are unchanged.
+   The rise of each move is scaled (so gliders still glide and teleports still teleport), and the up specials that barely moved sideways now drift with the stick. */
+(function(){
+if(typeof update!=='function'||typeof CH==='undefined')return;
+const UB={err:null};window.UPB=UB;
+const R={"kimiko": 1.424, "keanu": 1.453, "bara": 2.01, "tori": 1.567, "oro": 1.643, "gomi": 1.601, "kouji": 1.648, "soran": 1.118, "ryuko": 1.359, "shiki": 2.227, "zabu": 1.275, "uchuu": 1.23, "shuko": 1.652, "torabi": 1.558, "tatsuya": 1.945, "riku": 1.281, "sanshou": 1.57, "kairi": 1.064, "kichi": 1.869, "akemi": 1.284, "taru": 1.719, "sai": 1.458, "tenmetsu": 1.36, "hari": 1.786, "toguchi": 1.766, "pitto": 1.264, "maho": 1.684, "raion": 2.305, "tsuki": 1.303, "rei": 1.296, "tai": 1.433, "hatsuko": 1.153, "makiko": 1.293, "koki": 1.303, "hana": 1.346, "tomi": 1.513, "yoko": 1.148, "chiyoki": 1.213, "yurei": 1.236, "ivan": 1.196, "kurai": 1.036, "homura": 1.535, "kuragari": 1.496, "mia": 1.574, "shi": 1.287, "takeshi": 1.142, "ali": 1.114, "daku": 1.514, "kongu": 1.886, "hippo": 1.333, "dawson": 1.205, "maya": 1.47, "sarah": 1.115, "aria": 1.69, "bryson": 1.554, "ray": 1.455, "oliver": 1.314, "chris": 1.515, "evona": 1.412, "jack": 1.421, "kal": 1.577, "kora": 1.232, "ash": 3.414, "moya": 1.629, "sato": 1.107, "sata": 1.195, "kitsu": 1.258, "uzi": 1.359, "ichigo": 1.35, "bentou": 1.164, "okane": 1.515, "goiru": 1.129, "aya": 1.359, "hikari": 1.369, "ryo": 1.421, "suzume": 1.443, "ayame": 1.076, "sota": 1.036, "tiki": 1.4, "trunks": 1.591, "hazmat": 1.254, "twine": 1.127, "chuckles": 1.6, "bastard": 1.315},DRIFT=new Set(["keanu", "gomi", "shiki", "torabi", "sanshou", "taru", "raion", "tai", "koki", "tomi", "homura", "chris", "ryo", "sota"]);
+const up0=update;update=function(f,I){const y0=f.y,m0=f.mv,inUB=!!(m0&&m0.k==='uB');const r0=up0.apply(this,arguments);
+  try{if(!inUB||f.hl>0||!f.C)return r0;const id=f.C.id;if(f.form||f.copyT>0)return r0;
+    const r=R[id];
+    if(r&&f.y<y0&&(f.mv===m0||!f.mv)){const m=STAGE.main;const under=m&&f.x>m.x-4&&f.x<m.x+m.w+4&&f.y>m.y;
+      if(!under){let ny=f.y-(y0-f.y)*(r-1);if(typeof BLAST!=='undefined')ny=Math.max(ny,BLAST.t+40);f.y=ny;}}
+    if(DRIFT.has(id)&&f.mv===m0&&!f.ground&&I){const x=I.x||0;if(Math.abs(x)>.3){f.vx+=x*.16;const cap=2.4;if(f.vx>cap)f.vx=cap;if(f.vx<-cap)f.vx=-cap;}}
+  }catch(e){UB.err=String(e);}return r0;};
 })();
 
 </script>
