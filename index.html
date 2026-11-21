@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1121-0441';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0517';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16467,7 +16467,7 @@ if(typeof intangible==='function'){const it=intangible;intangible=function(f){
   let J=I,st=f.st,keepL=null;const vx0=f.vx,face0=f.face,mv0=f.mv;
   try{
     /* 3 SDI */
-    if(f.hl>0){if(f.st==='hit'&&f._hsH!==undefined&&FR-f._hsH<30&&human(f)){
+    if(f.hl>0){if(f.st==='hit'&&f._hsH!==undefined&&FR-f._hsH<30){
         const mg=Math.hypot(I.x||0,I.y||0);
         if(mg>.72&&(f._sdiM<=.5)&&(f._sdiN||0)<4){const k=3.6/mg;f.x+=(I.x||0)*k;if(!f.ground){const ny=f.y+(I.y||0)*k;const m=STAGE.main;if(!(f.y<=m.y&&ny>m.y&&f.x>m.x&&f.x<m.x+m.w))f.y=ny;}f._sdiN=(f._sdiN||0)+1;cnt('sdi');}
         f._sdiM=mg;}
@@ -16479,7 +16479,7 @@ if(typeof intangible==='function'){const it=intangible;intangible=function(f){
       if((I.sP&&!f.adUsed&&el>=32)||(I.aP&&el>=36)){keepL=[f.lx,f.ly];f.hitstun=0;f.tumble=false;f.st='air';st='air';cnt('hscancel');}}
 
     /* 1 skid turn + pivot (humans) */
-    if(human(f)&&f.ground&&!f.mv){
+    if(f.ground&&!f.mv){
       if(st==='run'&&ax>.6&&Math.sign(I.x)!==f.face&&FR-(f.runT||-99)>10&&!f._skid){
         f._skid=8;f._skD=Math.sign(I.x);f.face=f._skD;cnt('skid');try{dust(f.x,f.y,4);}catch(e){}}
       if(f._skid>0&&(st==='run'||st==='walk'||st==='idle')){
@@ -16533,6 +16533,57 @@ function RM_(){return typeof RM!=='undefined'&&RM;}
       X.save();X.globalCompositeOperation='lighter';const g=X.createRadialGradient(f.x,cy,4,f.x,cy,r);g.addColorStop(0,'rgba(255,60,30,0)');g.addColorStop(.6,'rgba(255,60,30,'+(.10+.16*k)*pu+')');g.addColorStop(1,'rgba(255,60,30,0)');
       X.fillStyle=g;X.beginPath();X.ellipse(f.x,cy,r*.72,r*1.15,0,0,Math.PI*2);X.fill();X.restore();}};
   if(typeof drawFighter==='function'){const ff=drawFighter;drawFighter=function(f){const r=ff.apply(this,arguments);try{draw(f);}catch(e){E(e);}return r;};}}
+})();
+
+/* cpufeel.js — CPUs use the Smash-feel techniques too, through the same inputs a player presses.
+   Chance and sharpness scale with CPU level (1 = rarely, 9 = almost always):
+   skid turns + pivot tilts, dash-dance feints, SDI in hitlag, hitstun cancels, B-reverses,
+   up smash out of shield, shield drops onto rivals below, wall techs (ground techs were already in). */
+(function(){
+if(typeof aiInput!=='function')return;
+const CF={err:null,n:{}};window.CPUFEEL=CF;const E=e=>{CF.err=CF.err||String(e&&e.stack||e).slice(0,300);};
+const cnt=k=>{CF.n[k]=(CF.n[k]||0)+1;};
+const lv=f=>(clamp(f.lvl||1,1,9)-1)/8;
+const foe=f=>{let b=null,bd=1e9;for(const o of F){if(o===f||o.dead||o.gone||(f.team!==undefined&&o.team===f.team))continue;const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<bd){bd=d;b=o;}}return b;};
+const free=(f,k)=>!(f.pi&&f.pi[k]);   /* button was up last frame, so pressing now registers */
+const roll=(f,key,p)=>{const k='_cf'+key;if(f[k]===FR)return f[k+'v'];f[k]=FR;return f[k+'v']=rnd()<p;};
+{const ai=aiInput;aiInput=function(f){const r=ai.apply(this,arguments)||{};
+  try{if(!f||f.dead||f.gone||GS!=='play')return r;const t=lv(f),o=foe(f);if(!o)return r;
+    const dx=o.x-f.x,adx=Math.abs(dx),dy=o.y-f.y,M=STAGE.main;
+
+    /* SDI: during hitlag, flick the stick (toward stage centre, upward when off stage) */
+    if(f.hl>0&&f.st==='hit'){r.x=0;r.y=0;r.A=r.B=r.J=r.S=r.G=0;
+      if(f._cfSdiF!==f._hsH){f._cfSdiF=f._hsH;f._cfSdi=rnd()<.15+.75*t;}
+      if(f._cfSdi&&(FR&1)){const cx=Math.sign(M.x+M.w/2-f.x)||1,off=f.x<M.x||f.x>M.x+M.w;r.x=cx*(off?.75:1);r.y=off?-.7:0;cnt('sdi');}
+      return r;}
+
+    /* hitstun cancel: attack a nearby rival, or air-dodge one who is mid-attack */
+    if(f.st==='hit'&&!f.ground&&f.hitstun>0&&(f._hs0||0)>=38&&f._hsF!==undefined){const el=FR-f._hsF;
+      if(el>=32&&roll(f,'hsc',(.03+.12*t))){
+        if(o.mv&&adx<100&&Math.abs(dy)<100&&o.mv.t<o.mv.d.s+o.mv.d.a&&free(f,'S')){r.S=1;r.x=0;r.y=0;cnt('hscAD');}
+        else if(el>=36&&adx<100&&Math.abs(dy)<90&&free(f,'A')){r.A=1;r.x=Math.abs(dy)>adx?0:Math.sign(dx)*.9;r.y=Math.abs(dy)>adx?Math.sign(dy):0;cnt('hscAtk');}}}
+
+    /* wall tech: press shield as you're driven into the stage wall */
+    if(f.st==='hit'&&!f.ground&&f.y>M.y+6&&f.y-52<M.y+96){const nearL=Math.abs(f.x-(M.x-7))<26&&f.lx>1,nearR=Math.abs(f.x-(M.x+M.w+7))<26&&f.lx<-1;
+      if((nearL||nearR)&&free(f,'S')&&roll(f,'wt',.05+.6*t)){r.S=1;cnt('wtTry');}}
+
+    /* skid turn -> pivot tilt (or pivot smash at high level) when the rival is in front */
+    if(f._skid>0&&f.ground&&!f.mv){const front=Math.sign(dx)===f._skD;
+      if(front&&adx<62&&Math.abs(dy)<30&&free(f,'A')&&roll(f,'pv',.08+.5*t)){r.A=1;r.x=f._skD*(t>.6&&o.dmg>90?1:.7);r.y=0;if(t>.6&&o.dmg>90)r.sm=1;cnt('pivot');}}
+
+    /* dash-dance feint at mid range */
+    if(f.ground&&f.st==='run'&&!f.mv&&FR-(f.runT||-99)<=6&&adx>80&&adx<170&&Math.sign(dx)===f.face&&!f._cfDD&&rnd()<.02*t){f._cfDD=FR+5;cnt('dd');}
+    if(f._cfDD){if(FR<=f._cfDD&&f.ground&&!f.mv){r.x=-f.face*1;r.A=r.B=0;}else f._cfDD=0;}
+
+    /* B-reverse: special started facing away from the rival */
+    if(f.mv&&(f.mv.k==='nB'||f.mv.k==='sB')&&f.mv.t>=1&&f.mv.t<=2&&!f.mv.v._br&&f.mv.v._f0!==undefined&&Math.sign(dx)!==f.mv.v._f0&&adx>14&&roll(f,'br',.1+.8*t)){r.x=-f.mv.v._f0;r.y=0;cnt('brev');}
+
+    /* out of shield */
+    if(f.st==='shield'&&f.ground){
+      const above=dy<-24&&dy>-90&&adx<34,punish=o.mv&&o.ground&&adx<44&&Math.abs(dy)<20&&o.mv.t>o.mv.d.s+o.mv.d.a;
+      if((above||punish)&&free(f,'A')&&roll(f,'oos',.06+.5*t)){r.A=1;r.y=-1;r.x=0;r.S=1;cnt('oosUS');}
+      else if(f.ground!==M&&!f.ground.solid&&dy>30&&adx<80&&roll(f,'drop',.03+.4*t)){r.S=1;r.x=Math.sign(dx||1)*.5;r.y=.8;cnt('shDrop');}}
+  }catch(e){E(e);}return r;};}
 })();
 
 </script>
