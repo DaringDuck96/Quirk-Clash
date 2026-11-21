@@ -2816,7 +2816,7 @@ function update(f,I){
       else{const ax=Math.abs(I.x);
         if(f.rootT>0){f.vx*=.6;f.st='idle';}
         else if(I.y>.6&&f.C.crawl&&ax>.25){f.st='crouch';f.vx+=(Math.sign(I.x)*f.C.crawl-f.vx)*.3;f.face=Math.sign(I.x);}
-        else if(ax>.25){const run=ax>.78;if(run&&s2!=='run'){f.runT=FR;if(I.flX){f.vx=Math.sign(I.x)*S.run*(S.dash||.75)*sm*stick;dust(f.x,f.y,3);}}f.st=run?'run':'walk';const tv=Math.sign(I.x)*(run?S.run:S.walk*clamp((ax-.2)/.5,.35,1))*sm*stick;f.vx+=(tv-f.vx)*(run?(S.acc||.3):Math.min(.4,(S.acc||.3)*.85));f.face=Math.sign(I.x);}
+        else if(ax>.25){const dir=Math.sign(I.x),kept=s2==='run'&&ax>.6,flk=ax>.72&&FR-(f.nxT===undefined?-99:f.nxT)<=6,run=f.ctrl==='cpu'?ax>.78:(kept||flk);if(run&&(s2!=='run'||dir!==Math.sign(f.vx))){f.runT=FR;f.vx=dir*S.run*(S.dash||.75)*sm*stick;dust(f.x,f.y,3);}f.st=run?'run':'walk';const tv=dir*(run?S.run:S.walk*clamp((ax-.22)/.62,.3,1))*sm*stick;f.vx+=(tv-f.vx)*(run?(S.acc||.3):Math.min(.4,(S.acc||.3)*.85));f.face=Math.sign(I.x);}
         else if(I.y>.6){f.st='crouch';f.vx*=.7;}
         else{f.st='idle';f.vx*=(S.trac||.75);if(Math.abs(f.vx)<.05)f.vx=0;}}}
     else{const helpless=s2==='helpless';if(!helpless&&s2!=='air')f.st='air';
@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1121-0006';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0223';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
