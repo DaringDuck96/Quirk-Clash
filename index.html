@@ -2861,7 +2861,7 @@ function touchDown(f,s,tvy){
   else if(f.st==='move'){const d=f.mv.d;if(d.ll){const ac=f.mv.t<d.s-1||f.mv.t>d.s+d.a+Math.ceil(d.r*.45);f.mv=null;f.st='land';f.stT=0;f.landLen=ac?4:d.ll;}else if(['uB','nB','sB','dB'].includes(f.mv.k)&&!/dash|sink|cgrab/.test(d.beh||'')&&(d.helpless||d.beh==='fly'||d.beh==='leapUp')){f.mv=null;f.st='land';f.stT=0;f.landLen=10;}}
   else if(f.st==='helpless'||f.st==='glide'){f.st='land';f.stT=0;f.landLen=14;}
   else if(f.st==='airdodge'){f.st='land';f.stT=0;f.landLen=f.adDir?10:4;}
-  else if(f.st==='air'||f.st==='dizzy'){if(f.st==='air'){f.st='land';f.stT=0;f.landLen=3;}}}
+  else if(f.st==='air'||f.st==='dizzy'){if(f.st==='air'){f.st='land';f.stT=0;f.landLen=2;}}}
 function respawn(f){f.kd=false;f.wj=0;f.copyT=0;f.hazeT=0;f.paraT=0;f.x=WW/2+(f.id?24:-24);f.y=40;f.vx=f.vy=f.lx=f.ly=0;f.dmg=0;f.st='respawn';f.stT=0;f.mv=null;f.hitstun=0;f.frozen=0;f.dot=null;f.buff=null;f.stickT=f.rootT=0;f.jumps=f.C.st.aj;f.ground=null;f.inv=0;f.shp=f.C.shMax||50;f.invis=false;f.cosmo=f.cosmo||0;}
 function ko(f){if(f.dead||f.gone)return;if(typeof koSave==='function'&&koSave(f))return;releaseHolds(f);if(f.ledge)leaveLedge(f);
   const vw=WW/CAM.z,vh=WH/CAM.z,ex=clamp(f.x,CAM.x-vw/2+6,CAM.x+vw/2-6),ey=clamp(f.y-26,CAM.y-vh/2+6,CAM.y+vh/2-6);FXL.push({k:'ko',x:ex,y:ey,t:0,col:f.col,a:Math.atan2(CAM.y-ey,CAM.x-ex)});sfx('ko');if(!RM)shakeA=12;flashA=8;
@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1121-0307';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0324';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -15974,16 +15974,18 @@ const SM={err:null,on:true};window.SMOOTH=SM;const E=e=>{SM.err=SM.err||String(e
 const isArr=Array.isArray;
 let DF=null;
 {const df=drawFighter;drawFighter=function(f){const k=DF;DF=f;try{return df.apply(this,arguments);}finally{DF=k;}};}
+const LOCO=new Set(['idle','walk','run','crouch']);
 const rate=f=>{const st=f.st,m=f.mv;
   if(st==='hit'||st==='dizzy'||st==='down'||st==='respawn'||st==='held'||st==='ledge')return 1;
-  if(m){const d=m.d;if(m.t>=d.s-1&&m.t<=d.s+d.a)return .82;return .62;}
-  if(st==='land'||st==='jsq')return .55;
-  if(st==='shield'||st==='shieldstun'||st==='roll'||st==='spot'||st==='airdodge'||st==='tech')return .6;
-  return .4;};
+  if(m){const d=m.d;if(m.t>=d.s-1)return 1;return .82;}          /* attacks: snap on, so the input reads instantly */
+  if(st==='jsq'||st==='airdodge'||st==='roll'||st==='spot'||st==='shield')return .82;
+  if(st==='land'||st==='shieldstun'||st==='tech')return .65;
+  if(st==='air')return .5;
+  return .42;};
 {const ex=exaggerate;exaggerate=function(p,f){const o=ex.apply(this,arguments);if(!SM.on||!f||f!==DF||f.dead||f.gone)return o;
   try{const prev=f._sp,now=performance.now();
     if(!prev||prev.lie!==o.lie||f.st==='respawn'||now-(f._spT||0)>120||(f.ix0!==undefined&&Math.hypot(f.x-f.ix0,f.y-f.iy0)>60)){f._sp=o;f._spT=now;return o;}
-    let k=rate(f);if(k>=1){f._sp=o;f._spT=now;return o;}
+    let k=rate(f);const sk=f.st+(f.mv?f.mv.k:'');if(sk!==f._spK){const was=f._spK;f._spK=sk;if(!(LOCO.has(f.st)&&was&&LOCO.has(was.replace(/[A-Z].*$/,''))))k=Math.max(k,.85);}if(k>=1){f._sp=o;f._spT=now;return o;}
     const dt=Math.min(50,Math.max(4,(typeof RDT!=='undefined'&&RDT)||16.7));k=1-Math.pow(1-k,dt/16.7);
     const b=lerpPose(prev,o,k),r=Object.assign({},o);
     for(const key in b){const v=b[key];if(v===undefined||(typeof v==='number'&&!isFinite(v)))continue;if(isArr(v)&&!(isFinite(v[0])&&isFinite(v[1])))continue;r[key]=v;}
@@ -15994,6 +15996,11 @@ const rate=f=>{const st=f.st,m=f.mv;
 /* phones and tablets: repaint every frame when the device keeps up */
 try{if(typeof GFX60!=='undefined'&&!GFX60&&typeof paintSprite==='function'){const ps=paintSprite;let n=0,tot=0;
   paintSprite=function(){const t=performance.now();const r=ps.apply(this,arguments);if(n<240){tot+=performance.now()-t;n++;if(n===240&&tot/n<1.6){GFX60=true;SM.up=1;}}return r;};}}catch(e){E(e);}
+
+/* snappier aerials: a fifth less landing lag on every aerial (never under 4 frames) */
+try{for(const C of CH){for(const T of[C&&C.mv,C&&C.hmv,C&&C.fmv]){if(!T)continue;for(const k of['nair','fair','bair','uair','dair','zair']){const d=T[k];if(d&&d.ll&&!d._llS){d._llS=1;d.ll=Math.max(4,Math.round(d.ll*.8));}}}}}catch(e){}
+/* Smash timing: every jumpsquat is 3 frames */
+try{for(const C of CH){if(C&&C.st&&(C.st.jsq||3)>3)C.st.jsq=3;}}catch(e){}
 
 /* momentum: keep more speed through jumpsquat and normal landings */
 /* dash attacks slide with the run's momentum; grabbing out of a run is a dash grab: it slides and reaches further */
@@ -16089,6 +16096,22 @@ const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const f o
 /* nothing comes out while reloading */
 const sm=startMove;startMove=function(f,key){try{if(f&&f.C===C&&key==='nB'&&f._qReload>FR)return false;}catch(e){}return sm.apply(this,arguments);};
 try{if(typeof GTXT!=='undefined'&&GTXT.bara&&GTXT.bara[0])GTXT.bara[0]+=' After five throws in a row he needs a second and a half to reload.';}catch(e){}
+})();
+/* looksfix2.js — no hair through helmets, masks or hoods.
+   Full helmets, full masks and ninja hoods hide the hair entirely; spiky hair under a cap or hat is cut short so it does not stick up through it; a raised hood hides spiky, messy and short cuts that would poke through it. */
+(function(){
+if(typeof CH==='undefined')return;
+const LF={n:0};window.LOOKSFIX2=LF;
+const COVER=['helm','fullmask','spartan','ninjahood'],HOODCUT=new Set(['spiky','messy','split','short']);
+const fix=L=>{if(!L||L._lf2||!L.hairS)return;const hx=(L.hx||[]).concat(L.ex||[]);let strip=false;
+  if(hx.some(x=>COVER.includes(x)))strip=true;
+  else if(hx.includes('hoodup')&&HOODCUT.has(L.hairS))strip=true;
+  if(!strip&&L.hairS==='spiky'&&hx.some(x=>x==='cap'||x==='tophat'||x==='officer')){L._lf2=1;L._hairWas=L.hairS;L.hairS='short';L._r=0;LF.n++;return;}
+  if(strip){L._lf2=1;L._hairWas=L.hairS;delete L.hairS;delete L.hairV;L._r=0;LF.n++;}};
+const all=()=>{for(const C of CH){if(!C||!C.looks)continue;for(const L of C.looks)fix(L);if(C.look)fix(C.look);}};
+all();setTimeout(all,0);setTimeout(all,1500);
+/* costumes made later (or changed at runtime) are checked as they are used */
+if(typeof lookOf==='function'){const lo=lookOf;lookOf=function(f){const L=lo.apply(this,arguments);try{fix(L);}catch(e){}return L;};}
 })();
 
 </script>
