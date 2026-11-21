@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1121-0413';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0422';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -12382,9 +12382,9 @@ const S=CH.find(c=>c.id==='tomi');const C=clone(S);
 Object.assign(C,{id:'bastard',n:'BASTARD MAN',sn:'BASTARD',card:'BASTARD MAN',q:'Siphon',ty:'Emitter',col:GOLD,aura:null,
  pas:null,impact:null,sig:null,sigT:null,heroLook:1,_nocd:false,atkM:1,kbM:1,defKb:1,
  d:'A businessman in a sharp suit, a fedora and a bandit mask, who never puts his briefcase down. Every hit he takes goes on the books, and he always collects.',
- na:'Normals: punches, kicks and a lot of briefcase. All three smash attacks are briefcase swings. SIPHON: half the damage he takes goes into his Ledger; at half full or more his hits land harder and his own damage slowly heals.',
+ na:'Normals: punches, kicks and a lot of briefcase. All three smash attacks are briefcase swings. SIPHON: all the damage he takes goes into his Ledger; at half full or more his hits land harder and his own damage slowly heals.',
  role:'Counter-puncher',tip:'Let them hit you, then make them pay. Fill the Ledger, swing the briefcase, and Cash Out when you have room to breathe.',weak:'He needs to be hit to get going. Rush him early, before the Ledger fills, and do not feed his counter.',
- trait:'SIPHON — half of all damage he takes goes into his Ledger. With the Ledger at half or more, his hits do 12% more and his damage ticks down slowly. The Ledger drains if nobody hits him for a while, and empties when he loses a stock.',
+ trait:'SIPHON — all of the damage he takes goes into his Ledger. With the Ledger at half or more, his hits do 12% more and his damage ticks down slowly. The Ledger drains if nobody hits him for a while, and empties when he loses a stock.',
  rng:2,pwr:1.02,grabR:28,shMax:50,style:'even',tauntT:'NOTHING PERSONAL.',taunt2T:'PUT IT ON MY TAB.',taunt3T:'LET\'S TALK NUMBERS.',persona:'calm',
  qa:['FINE PRINT','hype',{},10,'Straightens his tie: his next hit does more.']});
 for(const k of['hmv','fmv','heroNote','heroDisjoint','disjoint','gim','shR','cargo','iron','ironMv','armorSmash','hover','crystals','noSig'])delete C[k];
@@ -12487,7 +12487,7 @@ C.sp=['Write-Off (a counter: the hit goes into his Ledger, and a close attacker 
 {const ah=applyHit;applyHit=function(t,h,dirX,a,o){o=o||{};
   /* Write-Off */
   try{if(mine(t)&&t.mv&&t.mv.k==='nB'&&!t.mv.v.rip&&t.mv.t>=4&&t.mv.t<=30&&!o.force&&a&&a!==t&&!h.grab&&!t.dead&&!(typeof intangible==='function'&&intangible(t))&&!(a.team!==undefined&&a.team===t.team)){
-    const amt=Math.max(1,(h.dmg||0)*(o.cm||1));addL(t,amt);use('writeoff');try{sfx('counter');}catch(x){}
+    const amt=Math.max(1,(h.dmg||0)*(o.cm||1));addL(t,amt*2);use('writeoff');try{sfx('counter');}catch(x){}
     say(t.x,t.y-84,'WRITTEN OFF',GOLD,36);burst(t.x+t.face*14,t.y-36,16,[GOLD,W,'#f4ecd8'],2.6,22);
     if(!o.proj&&Math.abs(a.x-t.x)<110&&Math.abs(a.y-t.y)<90){t.face=a.x>=t.x?1:-1;t.inv=Math.max(t.inv||0,10);a.hl=Math.max(a.hl||0,6);
       const dm=cl(amt*1.3+3,7,26);t.mv={k:'nB',d:RIP(Math.round(dm*10)/10),t:0,hit:{},charging:false,chargeT:0,v:{rip:1},trail:[]};t.st='move';use('interest');}
@@ -12495,7 +12495,7 @@ C.sp=['Write-Off (a counter: the hit goes into his Ledger, and a close attacker 
   const pre=t?t.dmg:0,cash=!!(mine(t)&&t.mv&&t.mv.k==='dB'&&(t.mv.v.c||0)>0),up=!!(mine(t)&&t.mv&&t.mv.k==='uB');
   const r=ah.apply(this,arguments);
   try{const got=(t?t.dmg:0)-pre;
-    if(mine(t)&&got>0&&a!==t){addL(t,got*.5);
+    if(mine(t)&&got>0&&a!==t){addL(t,got*1.0);
       if(cash&&r==='hit'){addL(t,-10);say(t.x,t.y-80,'DROPPED IT',GREEN,30);for(let i=0;i<10;i++)part(t.x,t.y-40,(rnd()-.5)*4,-2-rnd()*2,30,GREEN,2,.18);use('dropped');}
       if(up&&r==='armor'){t.vy=Math.max(-13,Math.min(t.vy,0)-3.2);say(t.x,t.y-80,'BAD PRESS!',GOLD,26);use('boost');}}
     if(a&&mine(a)&&a!==t&&r==='hit'&&got>0&&a.mv){
@@ -16147,7 +16147,7 @@ const up0=update;update=function(f,I){const y0=f.y,m0=f.mv,inUB=!!(m0&&m0.k==='u
    CONOR plays like a dinosaur-style all-rounder: armored flutter jump, sticky tongue (no swallowing), marshmallow roll,
      MEGA MARSHMALLOW thrown upward, and a marshmallow ground-pound.
    KOKI plays like a crocodile king: belly armor on his heavy hitters, a TOP HAT he throws like a boomerang, a spinning-fin
-     recovery, a belly counter, a lunging bite (no cannon).
+     recovery, a belly counter, a chomping bite and the Land Shark dive (no cannon).
    MAKIKO plays like a psychic: a charged dream orb, a reflecting swirl, a teleport and a gaze that sleeps rivals who face her (sleep is shorter).
    RAION plays like a pro-wrestling cat: spinning lariat, rope-whip command grab, cross chop recovery, and a revenge counter
      that powers up his next hit. */
@@ -16184,11 +16184,11 @@ if(CO){const fx=['#ffffff','#ffb6d8'],MM='#fff8f2',MMS='#f0d8e0',PK='#ff6a9a';
   bair:m('bairP',8,12,14,hit([[-24,-22,13]],2.4,1.4,0,60,{ri:4}),{finisher:hit([[-26,-22,14]],4.5,4,.06,140),ll:9,nm:'BACK KICKS'}),
   uair:m('uairK',5,4,12,hit([[4,-56,13]],8,3.5,.065,84),{ll:7,nm:'FLIP KICK'}),
   dair:m('dairD',8,26,14,hit([[0,-4,12]],1.7,1.2,0,-60,{ri:4}),{finisher:hit([[0,-2,14]],4,4,.05,-70),ll:12,nm:'FLUTTER STOMP'}),
-  nB:m('cast',8,4,20,hit([[62,-30,8],[46,-30,7],[30,-30,7]],6,2.4,.02,40,{qk:{k:'pull',v:1.6}}),{nm:'STICKY TONGUE',face:'atk'}),
+  nB:m('throwF',10,1,20,null,{nm:'LUCKY COIN',face:'atk'}),
   sB:m('spin',8,36,16,hit([[0,-16,16]],7,4.2,.05,45,{ri:12}),{beh:'dash',bp:{spd:5.6,f0:8,f1:44,air:'float',jumpCancel:1},nm:'MARSHMALLOW ROLL'}),
   uB:m('throwU',10,1,18,null,{nm:'MEGA MARSHMALLOW'}),
   dB:m('castDown',6,40,20,null,{beh:'cbomb',nm:'MARSHMALLOW BOMB'})});
- CO._aik={nB:'mid',sB:'far',dB:'near'};
+ CO._aik={nB:'far',sB:'far',dB:'near'};
  /* ground pound */
  BEH.cbomb={tick(f,m2,I){try{const d=m2.d,v=m2.v;if(m2.t<d.s)return;
    if(!v.ph){v.ph=1;if(f.ground){f.vy=-6.6;f.ground=null;}else v.ph=2;use('bomb');}
@@ -16215,16 +16215,25 @@ if(CO){const fx=['#ffffff','#ffb6d8'],MM='#fff8f2',MMS='#f0d8e0',PK='#ff6a9a';
      try{sfx('swing');}catch(x){}}
   }catch(e){E(e);}return r;};
  if(typeof armored==='function'){const ar=armored;armored=function(f){return (f&&f.C===CO&&f._flut>FR&&!f.ground)||ar.apply(this,arguments);};}
- {const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah.apply(this,arguments);try{if(r==='hit'&&a&&mine(a,CO)&&a.mv&&a.mv.k==='nB'&&t&&!t.dead){const dir=Math.sign(a.x-t.x)||-a.face;t.lx=dir*Math.min(4.6,Math.abs(a.x-t.x)*.07+1.2);t.ly=-1.2;t.hitstun=Math.max(t.hitstun||0,18);use('lick');}}catch(e){E(e);}return r;};}
+ /* Lucky Coin: a gold coin thrown like a boomerang. It flies out (angle it up or down), turns, and curves back to him; on the way back it pulls rivals a little toward him. One at a time. */
+ {const up2=update;update=function(f,I){const r=up2.apply(this,arguments);try{if(!mine(f,CO))return r;if(f.st==='respawn'||f.dead)f._coin=false;const mv=f.mv;
+   if(mv&&mv.k==='nB'&&mv.t===mv.d.s&&!mv.v.th){mv.v.th=1;if(f._coin){say(f.x,f.y-80,'OUT OF LUCK','#ffe14a',24);return r;}f._coin=true;use('coin');const iy=(I&&I.y)||0,ang=iy<-.4?-.45:iy>.4?.45:0;
+     ent(f,{x:f.x+f.face*14,y:f.y-30,vx:Math.cos(ang)*f.face*7.6,vy:Math.sin(ang)*7.6,L:180,r:8,ph:0,U(e){const o0=e.owner;if(!o0||o0.dead||o0.gone){e.alive=false;if(o0)o0._coin=false;return;}e.rot=(e.rot||0)+.5;
+        if(e.ph===0){e.vx*=.955;e.vy*=.955;if(Math.hypot(e.vx,e.vy)<1.2||e.t>34){e.ph=1;e.hits={};}}
+        else{const dx=o0.x-e.x,dy=(o0.y-30)-e.y,l=Math.hypot(dx,dy)||1,sp=Math.min(8,1.5+e.t*.08);e.vx+=(dx/l*sp-e.vx)*.25;e.vy+=(dy/l*sp-e.vy)*.25;if(l<16){o0._coin=false;e.alive=false;return;}}
+        e.x+=e.vx;e.y+=e.vy;if(e.t%3===0)part(e.x,e.y,0,0,10,'#ffe14a',2,0);
+        for(const o of foes(o0)){if(e.hits[o.id]||intangible(o)||o.holder)continue;if(inR(o,e.x,e.y,e.r+2)){e.hits[o.id]=1;if(e.ph===0)applyHit(o,{dmg:7,bkb:3.4,kbg:.04,ang:40,fx:['#ffe14a',W]},Math.sign(e.vx)||1,o0,{proj:1});else{applyHit(o,{dmg:3,bkb:2.6,kbg:.01,ang:60,fx:['#ffe14a',W]},Math.sign(e.vx)||1,o0,{proj:1});o.lx=Math.sign(o0.x-o.x)*2.4;}use('coinHit');}}},
+       end(e){if(e.owner)e.owner._coin=false;},
+       D(e){const w=Math.abs(Math.cos(e.rot||0))*6.5+1.5;X.fillStyle='#5a3a08';X.beginPath();X.ellipse(e.x,e.y,w+1.4,7.6,0,0,7);X.fill();X.fillStyle='#ffd23a';X.beginPath();X.ellipse(e.x,e.y,w,6.4,0,0,7);X.fill();X.fillStyle='#fff4b0';X.fillRect(e.x-1,e.y-4,2,5);}});
+     try{sfx('swing');}catch(x){}}}catch(e){E(e);}return r;};}
  /* draw the tongue and the roll */
  const df=drawFighter;drawFighter=function(f){const mv=f&&f.mv;let roll=false;try{roll=mine(f,CO)&&mv&&mv.k==='sB'&&mv.t>=mv.d.bp.f0&&mv.t<=mv.d.bp.f1&&!f.invis;}catch(e){}
   if(roll){try{const p=IP(f),x=p.x,y=p.y-16,R=17,a=(mv.t*.35)*f.face;X.save();X.translate(x,y);X.rotate(a);X.fillStyle='#3a2a34';X.beginPath();X.ellipse(0,0,R+2,R+2,0,0,7);X.fill();X.fillStyle=MM;X.beginPath();X.ellipse(0,0,R,R,0,0,7);X.fill();X.strokeStyle=MMS;X.lineWidth=3;X.beginPath();X.arc(0,0,R*.62,0,2.2);X.stroke();X.fillStyle=PK;X.fillRect(-2,-R+3,4,4);X.restore();}catch(e){E(e);}return;}
   const r=df.apply(this,arguments);
-  try{if(mine(f,CO)&&mv&&mv.k==='nB'&&!f.invis){const d=mv.d,t=mv.t;if(t>=d.s-2&&t<=d.s+d.a+4){const p=IP(f),k=t<d.s?(t-d.s+3)/3:t<=d.s+d.a?1:Math.max(0,1-(t-d.s-d.a)/4),x0=p.x+f.face*8,y0=p.y-30,x1=x0+f.face*58*k;
-     X.lineCap='round';X.strokeStyle='#5a1a2a';X.lineWidth=5;X.beginPath();X.moveTo(x0,y0);X.lineTo(x1,y0+Math.sin(t)*.8);X.stroke();X.strokeStyle=PK;X.lineWidth=3;X.beginPath();X.moveTo(x0,y0);X.lineTo(x1,y0+Math.sin(t)*.8);X.stroke();X.fillStyle=PK;X.beginPath();X.arc(x1,y0,3.6,0,7);X.fill();}}}catch(e){E(e);}return r;};
- CO.sp=['Sticky Tongue (a long lick that hits and pulls the rival in; he never swallows anyone)','Marshmallow Roll (curls up inside a giant marshmallow and rolls; jump to hop out)','Mega Marshmallow (throws a huge marshmallow up in an arc; aim with the stick; the first throw in the air also lifts him)','Marshmallow Bomb (hops up and slams down; marshmallow bursts out both sides)'];
- setGT('conor',['A long, sticky lick straight ahead. It hits and pulls the rival in toward him. He never swallows anyone.','Curls up inside a giant marshmallow and rolls forward, bowling through rivals. Press Jump to hop out early.','Throws a massive marshmallow up in an arc. Lean the stick to aim it. It sticks to whoever it hits and slows them, and bursts where it lands. The first throw in the air also gives him a little lift.','Hops up and slams straight down. Whoever is under him is spiked, and marshmallow bursts out on both sides when he lands. In the air he drops at once.']);
- CO.trait='FLUTTER — his double jump is a slow, long flutter that small hits cannot interrupt. Sticky Tongue pulls rivals in, Mega Marshmallow slows them, and Marshmallow Bomb punishes anyone underneath.';
+  try{}catch(e){}return r;};
+ CO.sp=['Lucky Coin (throws a gold coin like a boomerang; it curves back and tugs rivals toward him)','Marshmallow Roll (curls up inside a giant marshmallow and rolls; jump to hop out)','Mega Marshmallow (throws a huge marshmallow up in an arc; aim with the stick; the first throw in the air also lifts him)','Marshmallow Bomb (hops up and slams down; marshmallow bursts out both sides)'];
+ setGT('conor',['Throws a gold coin like a boomerang. Lean up or down to angle it. It flies out, turns and curves back to him, hitting on both trips; on the way back it tugs rivals toward him. One coin at a time.','Curls up inside a giant marshmallow and rolls forward, bowling through rivals. Press Jump to hop out early.','Throws a massive marshmallow up in an arc. Lean the stick to aim it. It sticks to whoever it hits and slows them, and bursts where it lands. The first throw in the air also gives him a little lift.','Hops up and slams straight down. Whoever is under him is spiked, and marshmallow bursts out on both sides when he lands. In the air he drops at once.']);
+ CO.trait='FLUTTER — his double jump is a slow, long flutter that small hits cannot interrupt. Lucky Coin comes back like a boomerang, Mega Marshmallow slows them, and Marshmallow Bomb punishes anyone underneath.';
  CO.na='Normals: kicks and headbutts. His forward air is a heavy headbutt that spikes, his down air is a flurry of flutter stomps that slows his fall, and his back air is a string of kicks.';
  CO.tip='Flutter jump through attacks to get back, lick rivals in, and fill the stage with marshmallow.';
 }
@@ -16234,20 +16243,25 @@ const KO=cid('koki');
 if(KO){const fx=['#7a8aaa','#ffffff'],HAT='#16161c',BAND='#c82838';
  const m=(an,s,a,r,h,o)=>M(an,s,a,r,h,Object.assign({lim:'none',fx},o||{}));
  const armor=(d,to)=>{if(!d)return d;d.bp=Object.assign({},d.bp||{},{armor:1,f0:1,f1:to||d.s});return d;};
+ const LAND=Object.assign({},KO.mv.sB,{nm:'LAND SHARK'});
  for(const T of[KO.mv,KO.hmv]){if(!T)continue;for(const k of['fsmash','usmash','dsmash','ftilt'])if(T[k]&&!T[k].beh)armor(T[k]);}
  setMv(KO,{
   dash:armor(m('dive',8,8,22,hit([[16,-12,18]],12,4.4,.07,45),{imp:[[4,5.2,-3.6]],nm:'BELLY FLOP'})),
   fair:m('fairK',12,4,20,hit([[26,-26,14]],13,3.6,.08,-65),{ll:14,nm:'DROPKICK'}),
-  nB:armor(m('lunge',12,4,26,hit([[32,-42,15],[16,-42,12]],15,4.6,.085,40),{imp:[[8,4.4,0]],nm:'JAWS',face:'atk'}),12),
+  nB:m('lunge',9,10,22,null,{beh:'kchomp',imp:[[4,3.6,0]],nm:'CHOMP',face:'atk'}),
   sB:m('throwF',12,1,22,null,{nm:'TOP HAT TOSS'}),
   uB:m('castUp',6,56,14,null,{beh:'kprop',helpless:1,nm:'FIN SPINNER'}),
-  dB:m('counter',4,24,24,null,{beh:'kgut',nm:'GUT CHECK'})});
- KO._aik={nB:'near',sB:'far',dB:'near'};
- BEH.kgut={tick(f,m2){f.vx*=.7;}};
- {const ah=applyHit;applyHit=function(t,h,dirX,a,o){o=o||{};try{if(mine(t,KO)&&t.mv&&t.mv.k==='dB'&&t.mv.t>=4&&t.mv.t<=28&&!o.force&&a&&a!==t&&!h.grab&&!(a.team!==undefined&&a.team===t.team)&&!(typeof intangible==='function'&&intangible(t))){
-    const dm=Math.max(1,(h.dmg||0)*(o.cm||1));burst(t.x+t.face*10,t.y-30,16,['#9aa8c0',W],2.4,18);try{sfx('counter');}catch(x){}use('gut');
-    if(o.proj){say(t.x,t.y-86,'BOUNCED!','#c8d8f0',30);return 'counter';}
-    t.face=a.x>=t.x?1:-1;t.inv=Math.max(t.inv||0,10);say(t.x,t.y-86,'GUT CHECK!','#c8d8f0',34);ah(a,{dmg:Math.max(10,dm*1.4),bkb:5.4,kbg:.08,ang:40,fx},t.face,t,{force:1});t.mv=null;t.st='land';t.stT=0;t.landLen=12;return 'counter';}}catch(e){E(e);}return ah.apply(this,arguments);};}
+  dB:LAND});
+ KO._aik={nB:'near',sB:'far'};
+ /* Chomp: grabs whatever is in front in his jaws (shields do not help), chews, then spits them out. Projectiles in front get eaten and heal him a little. */
+ BEH.kchomp={tick(f,m2,I){try{const d=m2.d,v=m2.v;
+   if(!v.held&&m2.t>=d.s&&m2.t<d.s+d.a){
+     for(const e of ENT){if(!e.alive||e.owner===f||!e.proj)continue;if(Math.abs(e.x-(f.x+f.face*24))<26&&Math.abs(e.y-(f.y-40))<28){e.alive=false;f.dmg=Math.max(0,f.dmg-2);say(f.x,f.y-90,'GULP','#9ad8ff',24);burst(e.x,e.y,8,['#9aa8c0',W],1.8,12);use('gulp');}}
+     for(const o of foes(f)){if(intangible(o)||o.holder||o.st==='ledge')continue;const R=hurtR(o),bx=f.face>0?f.x+6:f.x-6-40,box=[bx,f.y-60,40,58];
+       if(R[0]<box[0]+box[2]&&R[0]+R[2]>box[0]&&R[1]<box[1]+box[3]&&R[1]+R[3]>box[1]){releaseHolds(o);v.held=o;v.ht=0;o.holder=f;o.st='held';o.mv=null;try{sfx('grab');}catch(x){}use('chomp');break;}}}
+   if(!v.held)return;const o=v.held;v.ht++;m2.t=Math.min(m2.t,d.s+d.a-1);f.vx*=.5;o.x=f.x+f.face*22;o.y=f.y-4;o.vx=o.vy=o.lx=o.ly=0;o.st='held';
+   if(v.ht%11===0&&v.ht<=44){o.dmg=Math.min(999,o.dmg+2.4);f.dealt=(f.dealt||0)+2.4;o.flash=4;burst(o.x,o.y-30,6,['#ffffff','#ff5a5a'],1.4,12);say(o.x,o.y-80,'CHOMP','#ffffff',18);try{sfx('hit');}catch(x){}}
+   if(v.ht>=50||o.dead){o.holder=null;v.held=null;if(!o.dead){o.st='air';applyHit(o,{dmg:4,bkb:4.8,kbg:.06,ang:40,fx},f.face,f,{force:1});}f.mv=null;f.st='land';f.stT=0;f.landLen=12;}}catch(x){E(x);}}};
  BEH.kprop={tick(f,m2,I){try{const d=m2.d;if(m2.t<d.s||m2.t>=d.s+d.a)return;f.ground=null;f.vy=-2.9;f.vx+=(((I&&I.x)||0)*2.4-f.vx)*.15;if(Math.abs((I&&I.x)||0)>.3)f.face=Math.sign(I.x);
    if(m2.t%7===0){for(const o of foes(f)){if(intangible(o)||o.holder)continue;if(inR(o,f.x,f.y-78,18))applyHit(o,{dmg:2.2,bkb:2.4,kbg:.01,ang:80,fx},o.x>=f.x?1:-1,f,{});}}
    if(m2.t%4===0)part(f.x+(rnd()*20-10),f.y-70,0,-.4,10,'#d8e8ff',2,0);}catch(x){E(x);}}};
@@ -16272,9 +16286,12 @@ if(KO){const fx=['#7a8aaa','#ffffff'],HAT='#16161c',BAND='#c82838';
   }catch(e){E(e);}return r;};
  const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(mine(f,KO)&&f.mv&&f.mv.k==='uB'&&!f.invis){const mv=f.mv,d=mv.d;if(mv.t>=d.s&&mv.t<d.s+d.a){const p=IP(f),x=p.x,y=p.y-86,a=mv.t*.7;
      X.fillStyle='#0c0820';X.fillRect(x-2,y,4,10);for(let i=0;i<3;i++){const q=a+i*2.094,c=Math.cos(q);X.fillStyle=i===0?'#9aa8c0':'#7a8aaa';X.beginPath();X.ellipse(x+c*9,y,Math.abs(c)*10+2,3.2,0,0,7);X.fill();}}}}catch(e){E(e);}return r;};
- KO.sp=['Jaws (a lunging bite; armored on the way in)','Top Hat Toss (throws his top hat like a boomerang; it hits going out and coming back)','Fin Spinner (spins up slowly and steers; hits anyone above)','Gut Check (a belly counter: melee is punished, projectiles bounce off)'];
- setGT('koki',['Lunges in with an enormous bite. Small hits do not stop him on the way in.','Throws his top hat like a boomerang. It flies out, slows, turns and comes back to his head, hitting on both trips. Lean up or down to angle it. He cannot throw it again until it is back.','Spins a fin over his head like a propeller and rises slowly. Steer left and right; anyone above him is chopped. He cannot act afterwards until he lands.','Puffs out his belly. A melee hit on it is punished with a heavy counter; projectiles bounce off.']);
- KO.trait='BELLY ARMOR — his smash attacks, forward tilt, dash attack and Jaws shrug off small hits while they wind up. He wears a top hat and throws it like a boomerang.';
+ {const df2=drawFighter;drawFighter=function(f){const r=df2.apply(this,arguments);try{if(mine(f,KO)&&f.mv&&f.mv.k==='dB'&&f.mv.d.beh==='sink'){const mv=f.mv,d=mv.d;if(mv.t>=d.s&&mv.t<d.s+d.a){const p=IP(f),x=Math.round(p.x),y=Math.round(p.y),w=Math.sin(mv.t*.4)*1.5;
+   X.fillStyle='#0c0820';X.beginPath();X.moveTo(x-f.face*12,y);X.lineTo(x+f.face*3+w,y-22);X.lineTo(x+f.face*9,y);X.closePath();X.fill();X.fillStyle='#7a8aaa';X.beginPath();X.moveTo(x-f.face*9,y-1);X.lineTo(x+f.face*3+w,y-19);X.lineTo(x+f.face*7,y-1);X.closePath();X.fill();
+   if(mv.t%3===0)part(x-f.face*10,y-2,-f.face*.8,-.6,12,'#c8d8f0',2,.05);}}}catch(e){E(e);}return r;};}
+ KO.sp=['Chomp (grabs a rival in his jaws, chews, and spits them out; eats projectiles)','Top Hat Toss (throws his top hat like a boomerang; it hits going out and coming back)','Fin Spinner (spins up slowly and steers; hits anyone above)','Land Shark (dives into the floor, swims under it and bursts out)'];
+ setGT('koki',['Lunges forward with his jaws open. Whoever he catches is chewed four times and spat out, shields or not. Projectiles in front of him get eaten, and heal him a little.','Throws his top hat like a boomerang. It flies out, slows, turns and comes back to his head, hitting on both trips. Lean up or down to angle it. He cannot throw it again until it is back.','Spins a fin over his head like a propeller and rises slowly. Steer left and right; anyone above him is chopped. He cannot act afterwards until he lands.','Dives into the floor and swims along under it, a fin cutting the surface, then bursts out with a bite.']);
+ KO.trait='BELLY ARMOR — his smash attacks, forward tilt and dash attack shrug off small hits while they wind up. He wears a top hat and throws it like a boomerang.';
  KO.na='Normals: heavy, slow and armored. His dash attack is a belly flop, his forward air a dropkick that spikes, and every smash attack has belly armor during the wind-up.';
 }
 
@@ -16352,6 +16369,8 @@ if(MK){const fx=['#c8a8ff','#ffb8e0'],PU='#9a7aff',PI2='#ffb8e0';
 }
 }catch(e){E(e);}
 /* recoveries rebuilt here are no longer scaled by upb.js */
+/* Moya: his fog bank covers twice the width */
+try{const MO=cid('moya');if(MO)for(const T of[MO.mv,MO.hmv]){const d=T&&T.dB;if(d&&d.spawn&&!d._fog2){d._fog2=1;d.spawn=d.spawn.map(q=>[q[0],q[1]&&q[1].sh==='fogc'?Object.assign({},q[1],{r:(q[1].r||42)*2}):q[1]]);}}}catch(e){E(e);}
 try{if(window.UPB_R){for(const id of['conor','koki','raion','makiko'])delete window.UPB_R[id];}}catch(e){}
 })();
 /* bigfont.js — the controls on the pause screen and the Roster & Moves guide are much larger and easier to read. */
