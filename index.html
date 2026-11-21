@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1120-2243';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0006';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -12347,6 +12347,182 @@ const UNI={outfit:'blazer',sl:'long',top:'#a9adb8',top2:'#9ea2ad',sleeve:'#a9adb
 }catch(e){E(e);}
 })();
 
+/* bastard.js — BASTARD MAN: a crooked businessman in a suit, fedora and bandit mask who never puts down his briefcase.
+   Ability SIPHON: half of the damage he takes goes into his LEDGER (the gold bar under his feet).
+   With the Ledger at half or more, his hits land harder and his own damage slowly ticks back down.
+   Smash attacks are all briefcase swings. Every special takes damage and returns it, or turns it into healing. */
+(function(){
+if(typeof CH==='undefined'||typeof M!=='function'||typeof hit!=='function'||CH.find(c=>c.id==='bastard'))return;
+const BM={err:null,use:{}};window.BASTARD=BM;const E=e=>{BM.err=BM.err||String(e&&e.stack||e).slice(0,400);};
+try{
+const clone=v=>{if(Array.isArray(v))return v.map(clone);if(v&&typeof v==='object'){const o={};for(const k in v){if(k==='R'||k==='_r')continue;o[k]=clone(v[k]);}return o;}return v;};
+const W='#ffffff',GOLD='#e8c040',GOLD2='#fff4c0',GREEN='#6ad86a',cl=(v,a,b)=>v<a?a:v>b?b:v;
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const say=(x,y,s,c,life)=>FXL.push({k:'txt',s,x,y,t:0,life:life||34,col:c||W});
+const use=k=>{BM.use[k]=(BM.use[k]||0)+1;};
+const fx=[GOLD,GOLD2];
+
+/* ---------- the fighter: built on a standard male frame ---------- */
+const S=CH.find(c=>c.id==='tomi');const C=clone(S);
+Object.assign(C,{id:'bastard',n:'BASTARD MAN',sn:'BASTARD',card:'BASTARD MAN',q:'Siphon',ty:'Emitter',col:GOLD,aura:null,
+ pas:null,impact:null,sig:null,sigT:null,heroLook:1,_nocd:false,atkM:1,kbM:1,defKb:1,
+ d:'A businessman in a sharp suit, a fedora and a bandit mask, who never puts his briefcase down. Every hit he takes goes on the books, and he always collects.',
+ na:'Normals: punches, kicks and a lot of briefcase. All three smash attacks are briefcase swings. SIPHON: half the damage he takes goes into his Ledger; at half full or more his hits land harder and his own damage slowly heals.',
+ role:'Counter-puncher',tip:'Let them hit you, then make them pay. Fill the Ledger, swing the briefcase, and Cash Out when you have room to breathe.',weak:'He needs to be hit to get going. Rush him early, before the Ledger fills, and do not feed his counter.',
+ trait:'SIPHON — half of all damage he takes goes into his Ledger. With the Ledger at half or more, his hits do 12% more and his damage ticks down slowly. The Ledger drains if nobody hits him for a while, and empties when he loses a stock.',
+ rng:2,pwr:1.02,grabR:28,shMax:50,style:'even',tauntT:'NOTHING PERSONAL.',taunt2T:'PUT IT ON MY TAB.',taunt3T:'LET\'S TALK NUMBERS.',persona:'calm',
+ qa:['FINE PRINT','hype',{},10,'Straightens his tie: his next hit does more.']});
+for(const k of['hmv','fmv','heroNote','heroDisjoint','disjoint','gim','shR','cargo','iron','ironMv','armorSmash','hover','crystals','noSig'])delete C[k];
+C.st=Object.assign({},S.st,{w:1.02,walk:1.75,run:3.8,air:2.7,jump:-9.4,sj:-5.9,dj:-8.9,g:.4,fall:5.1,ff:7.8,aj:1,acc:.27,trac:.8,dash:.72,jsq:3,aacc:.16});
+C.kit={st:'brawler',fx,el:'gold',pow:1.02,reach:1};
+C.hurt=[15,62];
+
+/* normals: m(anim, startup, active, recovery, hits, opts) */
+const m=(an,s,a,r,h,o)=>M(an,s,a,r,h,Object.assign({lim:'none',fx},o||{}));
+const N={
+ jab1:m('jabP1',3,2,7,hit([[22,-38,9]],2.5,1.8,.01,70)),jab2:m('jabP2',3,2,8,hit([[24,-38,9]],2.5,1.8,.01,70)),
+ jab3:m('j3P',4,3,15,hit([[26,-34,12]],4.6,4.2,.055,45),{nm:'SHOULDER BUMP'}),
+ ftilt:m('kickF',6,3,14,hit([[32,-32,11],[16,-32,9]],8.5,3.4,.064,38),{nm:'WINGTIP'}),
+ utilt:m('utO',5,4,13,hit([[6,-70,12],[8,-50,10]],7,3.6,.058,88),{nm:'HAT TRICK'}),
+ dtilt:m('kickLow',5,3,10,hit([[30,-8,10]],6.5,3,.042,70),{nm:'SHOE SHINE'}),
+ dash:m('lunge',7,8,17,hit([[28,-18,14],[12,-18,11]],9.5,4.2,.064,50),{imp:[[5,6.6,0]],nm:'COLD CALL'}),
+ /* the three briefcase smashes */
+ fsmash:m('slashF',15,4,26,hit([[44,-38,16],[26,-40,12]],17,3.9,.108,40),{charge:1,face:'atk',nm:'HOSTILE TAKEOVER'}),
+ usmash:m('slashUp',10,5,24,hit([[10,-80,16],[14,-56,12]],15,3.9,.1,88),{charge:1,face:'atk',nm:'QUARTERLY REPORT'}),
+ dsmash:m('dsS',9,4,24,[hit([[32,-10,14]],13,3.6,.088,30),hit([[-32,-10,14]],13,3.6,.088,150)],{charge:1,face:'atk',nm:'DOWNSIZING'}),
+ /* aerials: most of them are the case as well */
+ nair:m('spinW',5,10,11,hit([[0,-34,22]],8,3.4,.05,45),{ll:8,nm:'TURNOVER'}),
+ fair:m('fairS',9,4,15,hit([[30,-30,14]],11,3.4,.07,-50),{ll:11,nm:'GAVEL'}),
+ bair:m('bairS',7,4,13,hit([[-30,-32,14]],11,3.8,.086,140),{ll:9,nm:'BACKHANDER'}),
+ uair:m('uairS',5,5,12,hit([[4,-66,14]],7.5,3.4,.06,84),{ll:8,nm:'TIP OF THE HAT'}),
+ dair:m('dairSt',12,5,19,hit([[0,-4,14]],11,3.4,.07,-78),{ll:16,nm:'DEAD WEIGHT'})};
+for(const k in N)C.mv[k]=N[k];if(C.mv.jab)delete C.mv.jab;
+for(const k in C.mv){const d=C.mv[k];if(!d)continue;delete d.nx;delete d._nx;if(!N[k]&&d.fx)d.fx=fx;}
+
+/* ---------- looks: every costume carries the briefcase; the hero suit adds fedora and mask ---------- */
+const SKIN='#e8c4a4';
+const body={skin:SKIN,eye:'#2a2018',hair:'#2a2220',hair2:'#3a302a',hairS:'short',bw:1.05,size:1.04,stance:'weapon',bmCase:1};
+const mk=(L,o)=>{const N2=clone(L);Object.assign(N2,body);for(const k in(o||{})){if(o[k]===null)delete N2[k];else N2[k]=o[k];}return N2;};
+const UNI={outfit:'blazer',sl:'long',top:'#a9adb8',top2:'#9ea2ad',sleeve:'#a9adb8',cuff:true,pants:'#1e2430',shoe:'#3a2418',ex:[],trim:GOLD,tieC:GOLD};
+const HERO={cname:'HERO',outfit:'blazer',sl:'long',top:'#2c2e36',top2:'#24262d',sleeve:'#2c2e36',cuff:true,pants:'#26282f',shoe:'#141012',boots:null,
+ trim:'#f2f0ea',tieC:GOLD,acc:GOLD,glove:null,print:null,emblem:null,ex:[],hx:['eyemask'],maskC:'#121216',fedora:'#1a1a20',fedBand:GOLD,pantStripe:null,armband:null,bracelet:null};
+C.looks=S.looks.map(L=>L?mk(L):L);C.looks[0]=mk(S.looks[0],Object.assign({cname:undefined},UNI));C.looks[6]=mk(S.looks[0],HERO);
+for(const L of C.looks)if(L){delete L.req;delete L.alt;delete L.hide;delete L.heroKit;}
+C.look=C.looks[0];
+
+/* fedora on the head */
+{const dh=drawHead;drawHead=function(L,J,S2){const r=dh.apply(this,arguments);if(L&&L.fedora){try{const H=J.Hd,h=L.h,b=ramp(L.fedora),bd=ramp(L.fedBand||GOLD);
+   polyH(H,h,[-6.2,-7.6,-5.4,-13.6,-2,-14.2,-.4,-13.0,1.4,-14.2,4.4,-13.4,5.2,-7.8],b,'g');
+   polyH(H,h,[-6.1,-9.8,5.0,-10.0,5.1,-8.0,-6.2,-7.8],bd,'g',0);
+   polyH(H,h,[-9.6,-7.2,-6,-8.4,6,-8.6,9.6,-7.0,9.4,-5.8,5.6,-7.0,-6,-6.8,-9.2,-6.0],b,'g');
+   lineH(H,h,-5,-13.2,-2.2,-13.8,b[4]);lineH(H,h,-.4,-12.8,-.4,-11.2,b[1]);lineH(H,h,-8.8,-6.6,8.8,-6.6,b[1]);
+  }catch(e){E(e);}}return r;};}
+
+/* the briefcase, painted into the sprite at his front hand */
+const CASE={b:ramp('#6a4226'),k:ramp('#1a100a'),g:ramp(GOLD)},CASEG={b:ramp('#e0b440'),k:ramp('#4a3410'),g:ramp('#fff4c0')};
+function fillRot(cx,cy,ux,uy,hw,hd,c){const vx=-uy,vy=ux;for(let a=-hw;a<=hw;a+=.5)for(let b=-hd;b<=hd;b+=.5)sp(cx+ux*b+vx*a,cy+uy*b+vy*a,c);}
+{const db=drawHumanBody;drawHumanBody=function(L,J,S2,p){const r=db.apply(this,arguments);if(L&&(L.bmCase||(S2&&S2.bm))){try{
+   const h=L.h||1,Wr=J.WF,El=J.EF;let ux=0,uy=1;
+   if(S2&&S2.bmSw){const dx=Wr.x-El.x,dy=Wr.y-El.y,l=Math.hypot(dx,dy)||1;ux=dx/l;uy=dy/l;}
+   const P=L.shiny?CASEG:CASE,hw=6.4*h,hd=4.4*h,off=2.6*h+hd,cx=Wr.x+ux*off,cy=Wr.y+uy*off;
+   fillRot(cx,cy,ux,uy,hw+1,hd+1,P.k[1]);fillRot(cx,cy,ux,uy,hw,hd,P.b[3]);
+   fillRot(cx+ux*hd*.55,cy+uy*hd*.55,ux,uy,hw,hd*.35,P.b[2]);          /* shade on the far side */
+   fillRot(cx-ux*(hd-.6*h),cy-uy*(hd-.6*h),ux,uy,hw-.5,.4,P.b[5]);      /* bright top edge */
+   const vx=-uy,vy=ux;for(const s of[-1,1]){const lx=cx-ux*(hd-1.4*h)+vx*s*hw*.62,ly=cy-uy*(hd-1.4*h)+vy*s*hw*.62;sp(lx,ly,P.g[4]);sp(lx+ux*.8,ly+uy*.8,P.g[2]);}
+   /* the handle between his hand and the case */
+   for(const s of[-1.4,0,1.4])sp(Wr.x+ux*1.4*h+vx*s*h,Wr.y+uy*1.4*h+vy*s*h,P.k[2]);
+  }catch(e){E(e);}}return r;};}
+
+/* ---------- the Ledger ---------- */
+const mine=f=>f&&f.C===C&&!f.form&&!(f.copyT>0);
+const LG=f=>f.ldg||0;
+const addL=(f,v)=>{const was=LG(f);f.ldg=cl(was+v,0,100);if(was<50&&f.ldg>=50){say(f.x,f.y-92,'SIPHON',GOLD,44);burst(f.x,f.y-34,14,[GOLD,GOLD2,W],2.2,18);use('siphonOn');}if(v>0)f._ldgT=FR;};
+BM.addL=addL;BM.LG=LG;
+
+/* weapon moves: the case swings with his arm */
+const SW={fsmash:1,usmash:1,dsmash:1,nair:1,fair:1,bair:1,dair:1,dash:1,sB:1,nB:1,jab3:1};
+{const ss=spriteState;spriteState=function(f){const S2=ss.apply(this,arguments);try{if(f&&f.C===C){S2.bm=1;S2.bmSw=!!(f.mv&&SW[f.mv.k]);if(LG(f)>=50&&!S2.aura)S2.aura=GOLD;}}catch(e){}return S2;};}
+
+/* his hits are stronger while the Ledger is half full */
+{const d0=dmgMod;dmgMod=function(a,t,h,o){let v=d0.apply(this,arguments);try{if(a&&mine(a)&&a!==t&&LG(a)>=50)v*=1.12;}catch(e){}return v;};}
+
+/* ---------- specials ---------- */
+/* Write-Off (neutral B): raise the case; the first hit in the window is absorbed into the Ledger, and a close attacker gets it back with interest */
+BEH.bmWrite={tick(f,m,I){f.vx*=.75;if(!f.ground)f.vy=Math.min(f.vy,1.2);}};
+C.mv.nB=M('counter',4,26,18,null,{beh:'bmWrite',fx,lim:'none',face:'atk',nm:'WRITE-OFF'});
+const RIP=dm=>M('slashF',2,4,16,hit([[34,-38,17],[16,-38,12]],dm,4.6,.08,40),{fx,lim:'none',face:'atk',nm:'WITH INTEREST'});
+/* Repossession (side B): a lunge with the case; whatever it deals comes off his own damage */
+C.mv.sB=M('lunge',11,5,22,hit([[34,-36,14],[18,-36,11]],9,4.4,.062,40),{fx,lim:'none',face:'atk',imp:[[3,7,0]],nm:'REPOSSESSION'});
+/* Golden Parachute (up B): springs up; hits under heavy blows are shrugged off and push him higher, then the case opens into a parachute */
+C.mv.uB=M('castUp',5,10,16,hit([[0,-66,16]],5,4.4,.05,84),{beh:'leapUp',bp:{vy:-10.8,vx:1.6,glide:1,armor:1,f0:1,f1:20},helpless:1,fx,lim:'none',nm:'GOLDEN PARACHUTE'});
+/* Cash Out (down B): count bills; the Ledger turns into healing for as long as B is held */
+BEH.bmCash={tick(f,m,I){try{const d=m.d,v=m.v;if(m.t<d.s||v.done)return;f.vx*=.6;
+  const cpu=f.ctrl==='cpu'||f.ctrl==='dummy';let held=cpu?(v.c||0)<(v.goal||(v.goal=60+Math.floor(rnd()*120))):!!(I&&I.B);
+  if(cpu){const q=foes(f).some(o=>Math.abs(o.x-f.x)<110&&Math.abs(o.y-f.y)<80);if(q)held=false;}
+  if(held&&LG(f)>=2&&f.dmg>0&&(v.c||0)<360){v.c=(v.c||0)+1;m.t=d.s;
+    if(v.c%6===0){addL(f,-2);f.dmg=Math.max(0,f.dmg-1);v.h=(v.h||0)+1;use('cash');}
+    if(v.c%3===0)part(f.x+f.face*(10+rnd()*8),f.y-40,(rnd()-.5)*1.4,-1.6-rnd(),22,rnd()<.7?GREEN:'#d8f4c8',2,.08);
+    if(v.c%30===0&&v.h)say(f.x,f.y-86,'-'+v.h+'%',GREEN,26);return;}
+  v.done=1;if((v.c||0)<6&&LG(f)<2)say(f.x,f.y-86,'INSUFFICIENT FUNDS',GOLD,40);}catch(x){E(x);}}};
+C.mv.dB=M('cast',8,1,16,null,{beh:'bmCash',fx,lim:'none',nm:'CASH OUT'});
+C._aik={nB:'near',sB:'mid',dB:'self'};
+C.sp=['Write-Off (a counter: the hit goes into his Ledger, and a close attacker gets it back with interest)','Repossession (a lunging briefcase strike: the damage it deals comes off his own)','Golden Parachute (springs up, shrugs off hits on the way and rises higher for them, then floats down)','Cash Out (hold B to turn the Ledger into healing)'];
+
+/* the hit layer: absorb, steal, boost, drop the money */
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){o=o||{};
+  /* Write-Off */
+  try{if(mine(t)&&t.mv&&t.mv.k==='nB'&&!t.mv.v.rip&&t.mv.t>=4&&t.mv.t<=30&&!o.force&&a&&a!==t&&!h.grab&&!t.dead&&!(typeof intangible==='function'&&intangible(t))&&!(a.team!==undefined&&a.team===t.team)){
+    const amt=Math.max(1,(h.dmg||0)*(o.cm||1));addL(t,amt);use('writeoff');try{sfx('counter');}catch(x){}
+    say(t.x,t.y-84,'WRITTEN OFF',GOLD,36);burst(t.x+t.face*14,t.y-36,16,[GOLD,W,'#f4ecd8'],2.6,22);
+    if(!o.proj&&Math.abs(a.x-t.x)<110&&Math.abs(a.y-t.y)<90){t.face=a.x>=t.x?1:-1;t.inv=Math.max(t.inv||0,10);a.hl=Math.max(a.hl||0,6);
+      const dm=cl(amt*1.3+3,7,26);t.mv={k:'nB',d:RIP(Math.round(dm*10)/10),t:0,hit:{},charging:false,chargeT:0,v:{rip:1},trail:[]};t.st='move';use('interest');}
+    return 'counter';}}catch(e){E(e);}
+  const pre=t?t.dmg:0,cash=!!(mine(t)&&t.mv&&t.mv.k==='dB'&&(t.mv.v.c||0)>0),up=!!(mine(t)&&t.mv&&t.mv.k==='uB');
+  const r=ah.apply(this,arguments);
+  try{const got=(t?t.dmg:0)-pre;
+    if(mine(t)&&got>0&&a!==t){addL(t,got*.5);
+      if(cash&&r==='hit'){addL(t,-10);say(t.x,t.y-80,'DROPPED IT',GREEN,30);for(let i=0;i<10;i++)part(t.x,t.y-40,(rnd()-.5)*4,-2-rnd()*2,30,GREEN,2,.18);use('dropped');}
+      if(up&&r==='armor'){t.vy=Math.max(-13,Math.min(t.vy,0)-3.2);say(t.x,t.y-80,'BAD PRESS!',GOLD,26);use('boost');}}
+    if(a&&mine(a)&&a!==t&&r==='hit'&&got>0&&a.mv){
+      if(a.mv.k==='sB'&&!a.mv.v.st){a.mv.v.st=1;const k=.5+.5*LG(a)/100,take=Math.min(a.dmg,got*k);a.dmg=Math.max(0,a.dmg-take);addL(a,-Math.min(LG(a),15));
+        say(a.x,a.y-86,'REPOSSESSED -'+Math.round(take)+'%',GREEN,40);burst(t.x,t.y-34,10,[GREEN,GOLD],2,18);use('repo');}
+      if(/smash/.test(a.mv.k)||a.mv.v.rip){const n=a.mv.k==='fsmash'?14:8;for(let i=0;i<n;i++)part(t.x,t.y-36,(rnd()-.5)*5,-1-rnd()*3,34,rnd()<.6?'#f4f0e4':'#d8d0bc',3,.12);if(a.mv.k==='fsmash'&&a.mv.chargeT>=50&&!a.mv._pop){a.mv._pop=1;say(t.x,t.y-70,'CLICK',GOLD,24);}}}
+  }catch(e){E(e);}
+  return r;};}
+
+/* the Ledger over time: passive healing at half or more, a slow drain when nobody hits him, emptied on a lost stock */
+{const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(typeof GS==='undefined'||GS!=='play')return r;for(const f of F){if(!mine(f)||f.dead||f.gone)continue;
+   if(f.st==='respawn'){f.ldg=0;continue;}
+   const L=LG(f);if(L<=0)continue;
+   if(L>=50&&FR%45===0&&f.dmg>0){f.dmg=Math.max(0,f.dmg-.5);f.ldg=Math.max(0,f.ldg-1);if(FR%135===0)part(f.x,f.y-60,0,-.8,24,GREEN,2,0);}
+   if(FR-(f._ldgT||0)>240&&FR%30===0)f.ldg=Math.max(0,f.ldg-1);
+   if(f.mv&&f.mv.k==='dsmash'&&f.mv.t===f.mv.d.s){burst(f.x+30,f.y-2,8,['#d8d0c0','#f4f0e4'],2,14);burst(f.x-30,f.y-2,8,['#d8d0c0','#f4f0e4'],2,14);}}}catch(e){E(e);}return r;};}
+/* draw the Ledger bar under his feet, and the parachute when it is open */
+{const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(mine(f)&&!f.dead&&!f.gone&&!f.invis&&f.st!=='respawn'){const ip=(typeof interpPos==='function')?interpPos(f):f,x=Math.round(ip.x),y=Math.round(ip.y);
+   const L=LG(f),w=30,full=L>=50;wr('#0c0820',x-w/2-1,y+3,w+2,5);wr('#3a3020',x-w/2,y+4,w,3);if(L>0)wr(full&&FR%20<10?GOLD2:GOLD,x-w/2,y+4,Math.max(1,Math.round(w*L/100)),3);wr('#0c0820',x,y+3,1,5);
+   if(f.st==='glide'||(f.mv&&f.mv.k==='uB'&&f.mv.t>=f.mv.d.s+f.mv.d.a)){const cy=y-96,R=22;X.fillStyle='#0c0820';X.beginPath();X.arc(x,cy+2,R+2,Math.PI,0);X.fill();
+     for(let i=0;i<4;i++){X.fillStyle=i%2?GOLD:'#a87818';X.beginPath();X.moveTo(x,cy+2);X.arc(x,cy+2,R,Math.PI+i*Math.PI/4,Math.PI+(i+1)*Math.PI/4);X.closePath();X.fill();}
+     X.strokeStyle='#e8e0c8';X.lineWidth=1;for(const s of[-1,-.35,.35,1]){X.beginPath();X.moveTo(x+s*R*.95,cy+2);X.lineTo(x+f.face*8,y-46);X.stroke();}}}}catch(e){E(e);X.globalAlpha=1;}return r;};}
+
+/* CPU: cash out when the Ledger is fat and nobody is close */
+{const a0=aiInput;aiInput=function(f){const I=a0.apply(this,arguments);try{if(I&&mine(f)&&!f.mv&&f.ground&&LG(f)>=30&&f.dmg>20){const q=foes(f).every(o=>Math.hypot(o.x-f.x,o.y-f.y)>180);if(q&&rnd()<.04){I.B=true;I.x=0;I.y=1;I.A=I.J=I.S=I.G=false;}}}catch(e){}return I;};}
+
+/* ---------- register ---------- */
+CH.push(C);
+const gt=['Raises the briefcase like a shield. The first hit that lands on it does no damage and goes straight into his Ledger, and if the attacker is close he swings back with interest. Projectiles are absorbed too.',
+ 'A lunging briefcase strike. The damage it deals comes off his own damage: half of it with an empty Ledger, all of it with a full one. It spends some of the Ledger.',
+ 'Springs upward. On the way up, hits that are not too heavy do not stop him: they go into the Ledger and push him higher. Then the briefcase opens into a little gold parachute and he floats down.',
+ 'Hold B to count the money. Every tenth of a second the Ledger turns into healing. Getting hit stops it and he drops some of it.',
+ 'Liquidation: lunges, seizes one rival, and lays into them with the briefcase before the last blow.'];
+try{GTXT[C.id]=gt;}catch(e){}
+try{FSD[C.id]=Object.assign(clone(FSD.kongu||{}),{name:'LIQUIDATION',col:fx,call:'YOU\'RE FIRED!'});}catch(e){}
+try{FSCALL[C.id]='YOU\'RE FIRED!';}catch(e){}
+try{RANGE[C.id]=[2,1.05];}catch(e){}
+try{PROPS.T[C.id]=['case',GOLD,null,null,'smash'];}catch(e){}
+BM.C=C;
+}catch(e){E(e);}
+})();
+
 /* skins.js — costumes are earned. Every fighter starts with their Hero costume. The rest unlock per player profile:
    Uniform (1 campaign fight), Villain (5 matches), Beach (10), Prom (15), Greyscale (20), the older themed outfits (KOs / damage), Ninja (Survival wave 5). */
 (function(){
@@ -13805,6 +13981,7 @@ goiru:['STONE FIST','pin',34,'fist',0,[12,-85,5.2,.07],{},'Holds the rival down 
 meisei:['WET PAINT','spin',30,'rainbow',[4,1.4],[7,60,5,.085],{},'Spins the rival through every colour she has, then flings them away dripping.'],
 hazmat:['CONTAMINATE','hug',32,'slime',[5,1.4],[5,65,4.6,.07,'poison'],{},'Pulls the rival into himself and holds them under, then spits them out poisoned.'],
 twine:['CAT\'S CRADLE','wrap',32,'webline',[4,1.2],[8,62,5,.085],{},'Winds the rival up in her own arms, spins them like a bobbin and lets go.'],
+bastard:['PAPERWORK','pin',34,'coin',[4,1.4],[4,64,4.6,.05],{tickHeal:1},'Pins the rival under a pile of paperwork and stamps it four times. Every stamp pays him back a little.'],
 chuckles:['GAG','shake',30,'haha',[4,1.5],[7,58,5,.085],{},'Grabs them by the collar and laughs in their face until they fly off.'],
 trunks:['TRUNK SLAM','slam',30,'coil',[2,2],[9,72,5.2,.09],{},'Wraps the rival in his trunk, swings them overhead and slams them into the floor.'],
 aya:['GEODE','hold',34,'geode',[4,1.5],[5,60,5,.065],{},'Crystals close over the rival, then burst outward.'],
@@ -14225,7 +14402,7 @@ koki:'H splash drip',hana:'P zip spark',tomi:'H shrink -',yoko:'F light mote',ch
 kuragari:'N thread -',mia:' beam spark',shi:'N shadow wisp',takeshi:'P poof ooze',ali:'F light mote',daku:'P flame ember',kongu:'H drop -',hippo:'B poof -',dawson:'N zip -',maya:' light mote',
 sarah:'N shadow wisp',aria:'B leap glint',bryson:'B drop -',conor:'B leap glint',ray:'P zip -',oliver:' leap -',chris:'P drop -',evona:' ice frost',jack:'P flame ember',kal:' zip -',
 kora:'P fly feather',ash:'H rise leaf',moya:'F poof smoke',sato:'B drop -',akio:'S zip static',sata:' beam spark',kitsu:' light glint',uzi:'B rise ooze',ichigo:' beam spark',bentou:' blink wisp',
-okane:'P drop glint',goiru:'H drop dust',trunks:'H drop dust',hazmat:'H rise wisp',twine:'N thread wisp',chuckles:'N dash wisp',meisei:'N dash wisp',aya:' rise glint',hikari:'S bolt static',ryo:'H rise dust',suzume:'S thread -',ayame:'F fly leaf',sota:'S zip ember',tiki:' shadow wisp'};
+okane:'P drop glint',goiru:'H drop dust',trunks:'H drop dust',hazmat:'H rise wisp',twine:'N thread wisp',chuckles:'N dash wisp',bastard:'P drop glint',meisei:'N dash wisp',aya:' rise glint',hikari:'S bolt static',ryo:'H rise dust',suzume:'S thread -',ayame:'F fly leaf',sota:'S zip ember',tiki:' shadow wisp'};
 const R={};for(const k in ROW){const a=ROW[k].split(' ');R[k]={w:a[0],e:a[1],a:a[2]==='-'?'':a[2]};}
 A2.R=R;const row=f=>(f&&f.C&&R[f.C.id])||{w:'',e:'poof',a:''};
 const humanoid=f=>!(f.L&&f.L.body)&&!f.formL;
@@ -15618,7 +15795,7 @@ TF.apply=apply;apply();setInterval(apply,30*60*1000);
    2. Up tilts and up smashes reach down far enough to hit someone standing right next to you, as in Smash.
    3. Ryuko: the dinosaur's hurtbox covers her head as well as her body, her down tilt sweeps the front as well as the back, and her jab comes out 2 frames sooner. */
 (function(){
-const NH={"kimiko":56,"keanu":62,"bara":69,"tori":60,"minato":60,"oro":56,"gomi":62,"kouji":61,"emi":58,"soran":60,"ryuko":58,"shiki":67,"zabu":44,"marina":56,"uchuu":64,"shuko":63,"torabi":63,"suze":57,"tatsuya":55,"riku":62,"sanshou":71,"kairi":61,"kichi":61,"tamashi":59,"akemi":64,"taru":62,"sai":58,"tenmetsu":60,"yado":50,"hari":64,"toguchi":58,"pitto":62,"maho":60,"raion":73,"tsuki":60,"rei":55,"tai":60,"hatsuko":57,"ginko":63,"makiko":65,"koki":73,"hana":55,"tomi":61,"yoko":62,"chiyoki":60,"yurei":60,"ivan":62,"bisu":55,"kurai":67,"homura":62,"kuragari":57,"mia":58,"shi":61,"takeshi":62,"ali":61,"daku":55,"kongu":77,"hippo":62,"dawson":60,"maya":58,"sarah":58,"aria":59,"bryson":60,"conor":44,"ray":60,"oliver":61,"chris":60,"evona":58,"jack":61,"kal":61,"kora":58,"ash":70,"moya":65,"sato":61,"akio":48,"sata":59,"kitsu":59,"uzi":58,"ichigo":60,"bentou":47,"okane":60,"goiru":73,"aya":58,"hikari":58,"ryo":61,"suzume":61,"ayame":61,"sota":67,"tiki":60,"trunks":88,"meisei":58,"hazmat":65,"twine":62,"chuckles":69};const HF={n:0,up:[]};window.HITFIX=HF;
+const NH={"bastard":62,"kimiko":56,"keanu":62,"bara":69,"tori":60,"minato":60,"oro":56,"gomi":62,"kouji":61,"emi":58,"soran":60,"ryuko":58,"shiki":67,"zabu":44,"marina":56,"uchuu":64,"shuko":63,"torabi":63,"suze":57,"tatsuya":55,"riku":62,"sanshou":71,"kairi":61,"kichi":61,"tamashi":59,"akemi":64,"taru":62,"sai":58,"tenmetsu":60,"yado":50,"hari":64,"toguchi":58,"pitto":62,"maho":60,"raion":73,"tsuki":60,"rei":55,"tai":60,"hatsuko":57,"ginko":63,"makiko":65,"koki":73,"hana":55,"tomi":61,"yoko":62,"chiyoki":60,"yurei":60,"ivan":62,"bisu":55,"kurai":67,"homura":62,"kuragari":57,"mia":58,"shi":61,"takeshi":62,"ali":61,"daku":55,"kongu":77,"hippo":62,"dawson":60,"maya":58,"sarah":58,"aria":59,"bryson":60,"conor":44,"ray":60,"oliver":61,"chris":60,"evona":58,"jack":61,"kal":61,"kora":58,"ash":70,"moya":65,"sato":61,"akio":48,"sata":59,"kitsu":59,"uzi":58,"ichigo":60,"bentou":47,"okane":60,"goiru":73,"aya":58,"hikari":58,"ryo":61,"suzume":61,"ayame":61,"sota":67,"tiki":60,"trunks":88,"meisei":58,"hazmat":65,"twine":62,"chuckles":69};const HF={n:0,up:[]};window.HITFIX=HF;
 for(const C of CH){const h=NH[C.id];if(!h)continue;const hb=(C.hurt||[16,52]).slice();if(h>hb[1]){hb[1]=h;C.hurt=hb;HF.n++;}}
 {const R=CH.find(c=>c.id==='ryuko');if(R){R.hurt=[60,(R.hurt||[34,58])[1]];
   const tables=[R.mv,R.hmv].filter(Boolean);for(const T of tables){const d=T.dtilt;if(d&&d.hits&&d.hits[0]&&!d._hf){d._hf=1;const b=d.hits[0].b,q=b[0];if(q&&q[0]<0)d.hits[0].b=b.concat([[-q[0]*.8,q[1],q[2]*.9]]);}
@@ -15775,6 +15952,16 @@ try{if(C.sp)C.sp[0]='Yarn Punch (a long arm punch; press up or down as she winds
   if(typeof GTXT!=='undefined'&&GTXT.twine&&GTXT.twine[0])GTXT.twine[0]=GTXT.twine[0].replace('Hold up as you throw it to angle it upward, or down in the air to angle it down.','Press up as she winds up to aim it upward, or down in the air to aim it down.');
   if(C.trait)C.trait=C.trait.replace('Angle any long punch with up or down.','Aim any long punch with up or down as she winds up.');
   if(C.na)C.na=C.na.replace('Hold up or down as you throw one to angle it.','Press up or down as she winds up to aim it.');}catch(e){E(e);}
+})();
+/* bastlock.js — Bastard Man is earned: have your own shield broken 5 times in matches (Training does not count). */
+(function(){
+if(typeof CHARLOCK==='undefined'||!CHARLOCK.RULES||typeof SKINS2==='undefined')return;
+const acct=()=>SKINS2.stat('_acct'),save=()=>{try{localStorage.setItem('qc_stats',JSON.stringify(SKINS2.all));}catch(e){}};
+CHARLOCK.RULES.bastard={how:'Have your own shield broken 5 times in matches. Training does not count.',test:a=>(a.sb||0)>=5,prog:a=>Math.min(a.sb||0,5)+' / 5 shield breaks'};
+const localHuman=f=>!!(f&&f.ctrl==='human'&&!(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100));
+const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(typeof GS!=='undefined'&&GS==='play'&&typeof MODE!=='undefined'&&MODE!=='training'){for(const f of F){if(!f)continue;
+  if(f.st==='dizzy'&&f.sbrk){if(!f._sbk){f._sbk=1;if(localHuman(f)){const q=acct();q.sb=(q.sb||0)+1;save();if(q.sb>=5&&!(q.un&&q.un.bastard))try{CHARLOCK.check(1500);}catch(e){}}}}
+  else if(f._sbk)f._sbk=0;}}}catch(e){}return r;};
 })();
 
 </script>
