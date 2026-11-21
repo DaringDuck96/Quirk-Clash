@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1121-0334';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0353';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16119,7 +16119,7 @@ if(typeof lookOf==='function'){const lo=lookOf;lookOf=function(f){const L=lo.app
 (function(){
 if(typeof update!=='function'||typeof CH==='undefined')return;
 const UB={err:null};window.UPB=UB;
-const R={"kimiko": 1.424, "keanu": 1.453, "bara": 2.01, "tori": 1.567, "oro": 1.643, "gomi": 1.601, "kouji": 1.648, "soran": 1.118, "ryuko": 1.359, "shiki": 2.227, "zabu": 1.275, "uchuu": 1.23, "shuko": 1.652, "torabi": 1.558, "tatsuya": 1.945, "riku": 1.281, "sanshou": 1.57, "kairi": 1.064, "kichi": 1.869, "akemi": 1.284, "taru": 1.719, "sai": 1.458, "tenmetsu": 1.36, "hari": 1.786, "toguchi": 1.766, "pitto": 1.264, "maho": 1.684, "raion": 2.305, "tsuki": 1.303, "rei": 1.296, "tai": 1.433, "hatsuko": 1.153, "makiko": 1.293, "koki": 1.303, "hana": 1.346, "tomi": 1.513, "yoko": 1.148, "chiyoki": 1.213, "yurei": 1.236, "ivan": 1.196, "kurai": 1.036, "homura": 1.535, "kuragari": 1.496, "mia": 1.574, "shi": 1.287, "takeshi": 1.142, "ali": 1.114, "daku": 1.514, "kongu": 1.886, "hippo": 1.333, "dawson": 1.205, "maya": 1.47, "sarah": 1.115, "aria": 1.69, "bryson": 1.554, "ray": 1.455, "oliver": 1.314, "chris": 1.515, "evona": 1.412, "jack": 1.421, "kal": 1.577, "kora": 1.232, "ash": 3.414, "moya": 1.629, "sato": 1.107, "sata": 1.195, "kitsu": 1.258, "uzi": 1.359, "ichigo": 1.35, "bentou": 1.164, "okane": 1.515, "goiru": 1.129, "aya": 1.359, "hikari": 1.369, "ryo": 1.421, "suzume": 1.443, "ayame": 1.076, "sota": 1.036, "tiki": 1.4, "trunks": 1.591, "hazmat": 1.254, "twine": 1.127, "chuckles": 1.6, "bastard": 1.315},DRIFT=new Set(["keanu", "gomi", "shiki", "torabi", "sanshou", "taru", "raion", "tai", "koki", "tomi", "homura", "chris", "ryo", "sota"]);
+const R=window.UPB_R={"kimiko": 1.424, "keanu": 1.453, "bara": 2.01, "tori": 1.567, "oro": 1.643, "gomi": 1.601, "kouji": 1.648, "soran": 1.118, "ryuko": 1.359, "shiki": 2.227, "zabu": 1.275, "uchuu": 1.23, "shuko": 1.652, "torabi": 1.558, "tatsuya": 1.945, "riku": 1.281, "sanshou": 1.57, "kairi": 1.064, "kichi": 1.869, "akemi": 1.284, "taru": 1.719, "sai": 1.458, "tenmetsu": 1.36, "hari": 1.786, "toguchi": 1.766, "pitto": 1.264, "maho": 1.684, "raion": 2.305, "tsuki": 1.303, "rei": 1.296, "tai": 1.433, "hatsuko": 1.153, "makiko": 1.293, "koki": 1.303, "hana": 1.346, "tomi": 1.513, "yoko": 1.148, "chiyoki": 1.213, "yurei": 1.236, "ivan": 1.196, "kurai": 1.036, "homura": 1.535, "kuragari": 1.496, "mia": 1.574, "shi": 1.287, "takeshi": 1.142, "ali": 1.114, "daku": 1.514, "kongu": 1.886, "hippo": 1.333, "dawson": 1.205, "maya": 1.47, "sarah": 1.115, "aria": 1.69, "bryson": 1.554, "ray": 1.455, "oliver": 1.314, "chris": 1.515, "evona": 1.412, "jack": 1.421, "kal": 1.577, "kora": 1.232, "ash": 3.414, "moya": 1.629, "sato": 1.107, "sata": 1.195, "kitsu": 1.258, "uzi": 1.359, "ichigo": 1.35, "bentou": 1.164, "okane": 1.515, "goiru": 1.129, "aya": 1.359, "hikari": 1.369, "ryo": 1.421, "suzume": 1.443, "ayame": 1.076, "sota": 1.036, "tiki": 1.4, "trunks": 1.591, "hazmat": 1.254, "twine": 1.127, "chuckles": 1.6, "bastard": 1.315},DRIFT=new Set(["keanu", "gomi", "shiki", "torabi", "sanshou", "taru", "raion", "tai", "koki", "tomi", "homura", "chris", "ryo", "sota"]);
 const up0=update;update=function(f,I){const y0=f.y,m0=f.mv,inUB=!!(m0&&m0.k==='uB');const r0=up0.apply(this,arguments);
   try{if(!inUB||f.hl>0||!f.C)return r0;const id=f.C.id;if(f.form||f.copyT>0)return r0;
     const r=R[id];
@@ -16127,6 +16127,217 @@ const up0=update;update=function(f,I){const y0=f.y,m0=f.mv,inUB=!!(m0&&m0.k==='u
       if(!under){let ny=f.y-(y0-f.y)*(r-1);if(typeof BLAST!=='undefined')ny=Math.max(ny,BLAST.t+40);f.y=ny;}}
     if(DRIFT.has(id)&&f.mv===m0&&!f.ground&&I){const x=I.x||0;if(Math.abs(x)>.3){f.vx+=x*.16;const cap=2.4;if(f.vx>cap)f.vx=cap;if(f.vx<-cap)f.vx=-cap;}}
   }catch(e){UB.err=String(e);}return r0;};
+})();
+/* reworks.js — three movesets rebuilt.
+   CONOR plays like a dinosaur-style all-rounder: armored flutter jump, sticky tongue (no swallowing), marshmallow roll,
+     MEGA MARSHMALLOW thrown upward, and a marshmallow ground-pound.
+   KOKI plays like a crocodile king: belly armor on his heavy hitters, a TOP HAT he throws like a boomerang, a spinning-fin
+     recovery, a belly counter, a lunging bite (no cannon).
+   MAKIKO plays like a psychic: a charged dream orb, a reflecting swirl, a teleport and a gaze that sleeps rivals who face her (sleep is shorter).
+   RAION plays like a pro-wrestling cat: spinning lariat, rope-whip command grab, cross chop recovery, and a revenge counter
+     that powers up his next hit. */
+(function(){
+if(typeof CH==='undefined'||typeof M!=='function'||typeof hit!=='function')return;
+const RW={err:null,use:{}};window.REWORKS=RW;const E=e=>{RW.err=RW.err||String(e&&e.stack||e).slice(0,400);};
+const use=k=>{RW.use[k]=(RW.use[k]||0)+1;};
+const cl=(v,a,b)=>v<a?a:v>b?b:v,W='#ffffff';
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const inR=(o,x,y,r)=>{const R=hurtR(o),cx=cl(x,R[0],R[0]+R[2]),cy=cl(y,R[1],R[1]+R[3]);return Math.hypot(x-cx,y-cy)<=r;};
+const say=(x,y,s,c,l)=>FXL.push({k:'txt',s,x,y,t:0,life:l||34,col:c||W});
+const ent=(f,o)=>{const e=Object.assign({k:'t3',owner:f,face:f.face,x:f.x,y:f.y,vx:0,vy:0,g:0,oa:1,t:0,life:400,L:100,alive:true,spec:{},hits:{},r:6,proj:1},o);ENT.push(e);return e;};
+const IP=f=>(typeof interpPos==='function')?interpPos(f):f;
+const cid=id=>CH.find(c=>c.id===id);
+const setMv=(C,o)=>{for(const T of[C.mv,C.hmv]){if(!T)continue;for(const k in o)T[k]=o[k];}};
+const setGT=(id,a)=>{try{if(typeof GTXT!=='undefined'){const g=GTXT[id]||(GTXT[id]=[]);for(let i=0;i<a.length;i++)if(a[i])g[i]=a[i];}}catch(e){}};
+const mine=(f,C)=>f&&f.C===C&&!f.form&&!(f.copyT>0);
+try{
+/* ===================================== CONOR ===================================== */
+const CO=cid('conor');
+if(CO){const fx=['#ffffff','#ffb6d8'],MM='#fff8f2',MMS='#f0d8e0',PK='#ff6a9a';
+ const m=(an,s,a,r,h,o)=>M(an,s,a,r,h,Object.assign({lim:'none',fx},o||{}));
+ setMv(CO,{
+  jab1:m('jabK1',3,2,7,hit([[20,-22,9]],2.6,1.8,.01,70)),jab2:m('jabK2',3,2,8,hit([[22,-22,9]],2.6,1.8,.01,70)),jab3:m('kickF',4,3,16,hit([[26,-24,11]],4.6,4,.055,40)),
+  ftilt:m('kickF',6,3,14,hit([[30,-20,11],[16,-20,9]],8,3.4,.065,38),{nm:'KICK'}),
+  utilt:m('kickUp',5,5,13,hit([[6,-50,13],[8,-32,10]],6.5,3.6,.06,88),{nm:'FLIP UP'}),
+  dtilt:m('kickLow',5,3,11,hit([[26,-6,10]],6,3,.045,70),{nm:'SHIN KICK'}),
+  dash:m('lunge',7,6,18,hit([[22,-24,14]],9,4.3,.06,45),{imp:[[5,5.4,0]],nm:'HEADLONG'}),
+  fsmash:m('smashH',14,4,26,hit([[30,-28,15],[16,-28,12]],16,3.8,.104,38),{charge:1,face:'atk',nm:'HEADBUTT'}),
+  usmash:m('usHead',9,5,23,hit([[4,-48,15],[6,-32,11]],14,3.9,.1,88),{charge:1,face:'atk',nm:'SKY HEADBUTT'}),
+  dsmash:m('dsK',8,4,23,[hit([[28,-8,13]],12,3.6,.088,32),hit([[-28,-8,13]],12,3.6,.088,148)],{charge:1,face:'atk',nm:'SWEEP KICKS'}),
+  nair:m('nairK',3,14,10,hit([[8,-24,15]],8,3.4,.05,45),{ll:6,nm:'FLYING KICK'}),
+  fair:m('fairH',14,4,20,hit([[22,-24,14]],13,3.6,.08,-70),{ll:12,nm:'HEADBUTT DROP'}),
+  bair:m('bairP',8,12,14,hit([[-24,-22,13]],2.4,1.4,0,60,{ri:4}),{finisher:hit([[-26,-22,14]],4.5,4,.06,140),ll:9,nm:'BACK KICKS'}),
+  uair:m('uairK',5,4,12,hit([[4,-56,13]],8,3.5,.065,84),{ll:7,nm:'FLIP KICK'}),
+  dair:m('dairD',8,26,14,hit([[0,-4,12]],1.7,1.2,0,-60,{ri:4}),{finisher:hit([[0,-2,14]],4,4,.05,-70),ll:12,nm:'FLUTTER STOMP'}),
+  nB:m('cast',8,4,20,hit([[62,-30,8],[46,-30,7],[30,-30,7]],6,2.4,.02,40,{qk:{k:'pull',v:1.6}}),{nm:'STICKY TONGUE',face:'atk'}),
+  sB:m('spin',8,36,16,hit([[0,-16,16]],7,4.2,.05,45,{ri:12}),{beh:'dash',bp:{spd:5.6,f0:8,f1:44,air:'float',jumpCancel:1},nm:'MARSHMALLOW ROLL'}),
+  uB:m('throwU',10,1,18,null,{nm:'MEGA MARSHMALLOW'}),
+  dB:m('castDown',6,40,20,null,{beh:'cbomb',nm:'MARSHMALLOW BOMB'})});
+ CO._aik={nB:'mid',sB:'far',dB:'near'};
+ /* ground pound */
+ BEH.cbomb={tick(f,m2,I){try{const d=m2.d,v=m2.v;if(m2.t<d.s)return;
+   if(!v.ph){v.ph=1;if(f.ground){f.vy=-6.6;f.ground=null;}else v.ph=2;use('bomb');}
+   if(v.ph===1&&m2.t>=d.s+9)v.ph=2;
+   if(v.ph===2){f.vy=9.5;f.vx*=.6;for(const o of foes(f)){if(v.hit&&v.hit[o.id])continue;if(intangible(o)||o.holder)continue;if(inR(o,f.x,f.y-12,15)){(v.hit=v.hit||{})[o.id]=1;applyHit(o,{dmg:9,bkb:3.8,kbg:.05,ang:-60,fx},f.face,f,{});}}
+     if(f.ground){v.ph=3;burst(f.x,f.y-4,18,[MM,MMS,PK],2.6,20);for(const s of[-1,1]){for(let i=0;i<5;i++)part(f.x+s*(8+i*7),f.y-4,s*1.2,-1.4-i*.2,24,i%2?MM:PK,3,.1);}
+       for(const o of foes(f)){if(intangible(o)||o.holder)continue;if(Math.abs(o.x-f.x)<50&&Math.abs(o.y-f.y)<34)applyHit(o,{dmg:8,bkb:4.6,kbg:.06,ang:60,fx},o.x>=f.x?1:-1,f,{});}
+       try{sfx('boom');}catch(e){}f.mv=null;f.st='land';f.stT=0;f.landLen=16;return;}
+     m2.t=Math.min(m2.t,d.s+d.a-2);}}catch(x){E(x);}}};
+ /* tongue, marshmallow throw, flutter jump, slow flutter stomp */
+ const up=update;update=function(f,I){const was={g:!!f.ground,j:f.jumps,st:f.st};const r=up.apply(this,arguments);
+  try{if(!mine(f,CO)||f.hl>0)return r;const mv=f.mv;
+   if(f.ground)f._mmLift=0;
+   if(!f.ground&&!was.g&&typeof was.j==='number'&&f.jumps<was.j&&f.vy<0&&!mv){f._flut=FR+30;f.vy=Math.max(f.vy,(f.C.st.dj||-9)*.55);use('flutter');}
+   if(f._flut>FR&&!f.ground&&!mv&&f.st==='air'){f.vy-=.34;if(f.vy<(f.C.st.dj||-9)*.95)f.vy=(f.C.st.dj||-9)*.95;if(FR%3===0)part(f.x-f.face*4,f.y-6,-f.vx*.2,.6,12,PK,2,0);}
+   if(mv&&mv.k==='dair'&&mv.t<mv.d.s+mv.d.a&&!f.ground)f.vy=Math.min(f.vy,1.3);
+   if(mv&&mv.k==='uB'&&mv.t===mv.d.s&&!mv.v.th){mv.v.th=1;use('mega');const ix=(I&&I.x)||0;
+     if(!f.ground&&!f._mmLift){f._mmLift=1;f.vy=Math.min(f.vy,-5.6);}
+     ent(f,{x:f.x+f.face*6,y:f.y-44,vx:f.face*2.6+ix*2.2,vy:-6.6,L:140,r:15,U(e){e.vy+=.26;e.x+=e.vx;e.y+=e.vy;e.rot=(e.rot||0)+.12*Math.sign(e.vx||1);
+        for(const o of foes(e.owner)){if(e.hits[o.id]||intangible(o)||o.holder)continue;if(inR(o,e.x,e.y,e.r)){e.hits[o.id]=1;applyHit(o,{dmg:10,bkb:4.4,kbg:.055,ang:60,eff:'stick',fx},Math.sign(e.vx)||1,e.owner,{proj:1});burst(e.x,e.y,16,[MM,MMS,PK],2.4,18);e.alive=false;use('megaHit');return;}}
+        let gy=null;try{for(const s of surfaces()){if(e.x>=s.x&&e.x<=s.x+s.w&&e.y+e.r>=s.y&&e.y-e.vy+e.r<=s.y+2){gy=s.y;break;}}}catch(x){}
+        if(gy!==null||e.y>BLAST.b){if(gy!==null){burst(e.x,gy-4,20,[MM,MMS,PK],2.8,22);for(const o of foes(e.owner)){if(!intangible(o)&&!o.holder&&Math.abs(o.x-e.x)<34&&Math.abs(o.y-gy)<30&&!e.hits[o.id])applyHit(o,{dmg:6,bkb:4,kbg:.04,ang:70,eff:'stick',fx},o.x>=e.x?1:-1,e.owner,{proj:1});}}e.alive=false;}},
+       D(e){const R=e.r;X.translate(e.x,e.y);X.rotate(e.rot||0);X.fillStyle='#3a2a34';X.beginPath();X.ellipse(0,0,R+1.6,R*.86+1.6,0,0,7);X.fill();X.fillStyle=MM;X.beginPath();X.ellipse(0,0,R,R*.86,0,0,7);X.fill();X.fillStyle=MMS;X.beginPath();X.ellipse(0,R*.3,R*.9,R*.45,0,0,3.15);X.fill();X.fillStyle='#ffffff';X.beginPath();X.ellipse(-R*.35,-R*.35,R*.3,R*.2,-.5,0,7);X.fill();}});
+     try{sfx('swing');}catch(x){}}
+  }catch(e){E(e);}return r;};
+ if(typeof armored==='function'){const ar=armored;armored=function(f){return (f&&f.C===CO&&f._flut>FR&&!f.ground)||ar.apply(this,arguments);};}
+ {const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah.apply(this,arguments);try{if(r==='hit'&&a&&mine(a,CO)&&a.mv&&a.mv.k==='nB'&&t&&!t.dead){const dir=Math.sign(a.x-t.x)||-a.face;t.lx=dir*Math.min(4.6,Math.abs(a.x-t.x)*.07+1.2);t.ly=-1.2;t.hitstun=Math.max(t.hitstun||0,18);use('lick');}}catch(e){E(e);}return r;};}
+ /* draw the tongue and the roll */
+ const df=drawFighter;drawFighter=function(f){const mv=f&&f.mv;let roll=false;try{roll=mine(f,CO)&&mv&&mv.k==='sB'&&mv.t>=mv.d.bp.f0&&mv.t<=mv.d.bp.f1&&!f.invis;}catch(e){}
+  if(roll){try{const p=IP(f),x=p.x,y=p.y-16,R=17,a=(mv.t*.35)*f.face;X.save();X.translate(x,y);X.rotate(a);X.fillStyle='#3a2a34';X.beginPath();X.ellipse(0,0,R+2,R+2,0,0,7);X.fill();X.fillStyle=MM;X.beginPath();X.ellipse(0,0,R,R,0,0,7);X.fill();X.strokeStyle=MMS;X.lineWidth=3;X.beginPath();X.arc(0,0,R*.62,0,2.2);X.stroke();X.fillStyle=PK;X.fillRect(-2,-R+3,4,4);X.restore();}catch(e){E(e);}return;}
+  const r=df.apply(this,arguments);
+  try{if(mine(f,CO)&&mv&&mv.k==='nB'&&!f.invis){const d=mv.d,t=mv.t;if(t>=d.s-2&&t<=d.s+d.a+4){const p=IP(f),k=t<d.s?(t-d.s+3)/3:t<=d.s+d.a?1:Math.max(0,1-(t-d.s-d.a)/4),x0=p.x+f.face*8,y0=p.y-30,x1=x0+f.face*58*k;
+     X.lineCap='round';X.strokeStyle='#5a1a2a';X.lineWidth=5;X.beginPath();X.moveTo(x0,y0);X.lineTo(x1,y0+Math.sin(t)*.8);X.stroke();X.strokeStyle=PK;X.lineWidth=3;X.beginPath();X.moveTo(x0,y0);X.lineTo(x1,y0+Math.sin(t)*.8);X.stroke();X.fillStyle=PK;X.beginPath();X.arc(x1,y0,3.6,0,7);X.fill();}}}catch(e){E(e);}return r;};
+ CO.sp=['Sticky Tongue (a long lick that hits and pulls the rival in; he never swallows anyone)','Marshmallow Roll (curls up inside a giant marshmallow and rolls; jump to hop out)','Mega Marshmallow (throws a huge marshmallow up in an arc; aim with the stick; the first throw in the air also lifts him)','Marshmallow Bomb (hops up and slams down; marshmallow bursts out both sides)'];
+ setGT('conor',['A long, sticky lick straight ahead. It hits and pulls the rival in toward him. He never swallows anyone.','Curls up inside a giant marshmallow and rolls forward, bowling through rivals. Press Jump to hop out early.','Throws a massive marshmallow up in an arc. Lean the stick to aim it. It sticks to whoever it hits and slows them, and bursts where it lands. The first throw in the air also gives him a little lift.','Hops up and slams straight down. Whoever is under him is spiked, and marshmallow bursts out on both sides when he lands. In the air he drops at once.']);
+ CO.trait='FLUTTER — his double jump is a slow, long flutter that small hits cannot interrupt. Sticky Tongue pulls rivals in, Mega Marshmallow slows them, and Marshmallow Bomb punishes anyone underneath.';
+ CO.na='Normals: kicks and headbutts. His forward air is a heavy headbutt that spikes, his down air is a flurry of flutter stomps that slows his fall, and his back air is a string of kicks.';
+ CO.tip='Flutter jump through attacks to get back, lick rivals in, and fill the stage with marshmallow.';
+}
+
+/* ===================================== KOKI ===================================== */
+const KO=cid('koki');
+if(KO){const fx=['#7a8aaa','#ffffff'],HAT='#16161c',BAND='#c82838';
+ const m=(an,s,a,r,h,o)=>M(an,s,a,r,h,Object.assign({lim:'none',fx},o||{}));
+ const armor=(d,to)=>{if(!d)return d;d.bp=Object.assign({},d.bp||{},{armor:1,f0:1,f1:to||d.s});return d;};
+ for(const T of[KO.mv,KO.hmv]){if(!T)continue;for(const k of['fsmash','usmash','dsmash','ftilt'])if(T[k]&&!T[k].beh)armor(T[k]);}
+ setMv(KO,{
+  dash:armor(m('dive',8,8,22,hit([[16,-12,18]],12,4.4,.07,45),{imp:[[4,5.2,-3.6]],nm:'BELLY FLOP'})),
+  fair:m('fairK',12,4,20,hit([[26,-26,14]],13,3.6,.08,-65),{ll:14,nm:'DROPKICK'}),
+  nB:armor(m('lunge',12,4,26,hit([[32,-42,15],[16,-42,12]],15,4.6,.085,40),{imp:[[8,4.4,0]],nm:'JAWS',face:'atk'}),12),
+  sB:m('throwF',12,1,22,null,{nm:'TOP HAT TOSS'}),
+  uB:m('castUp',6,56,14,null,{beh:'kprop',helpless:1,nm:'FIN SPINNER'}),
+  dB:m('counter',4,24,24,null,{beh:'kgut',nm:'GUT CHECK'})});
+ KO._aik={nB:'near',sB:'far',dB:'near'};
+ BEH.kgut={tick(f,m2){f.vx*=.7;}};
+ {const ah=applyHit;applyHit=function(t,h,dirX,a,o){o=o||{};try{if(mine(t,KO)&&t.mv&&t.mv.k==='dB'&&t.mv.t>=4&&t.mv.t<=28&&!o.force&&a&&a!==t&&!h.grab&&!(a.team!==undefined&&a.team===t.team)&&!(typeof intangible==='function'&&intangible(t))){
+    const dm=Math.max(1,(h.dmg||0)*(o.cm||1));burst(t.x+t.face*10,t.y-30,16,['#9aa8c0',W],2.4,18);try{sfx('counter');}catch(x){}use('gut');
+    if(o.proj){say(t.x,t.y-86,'BOUNCED!','#c8d8f0',30);return 'counter';}
+    t.face=a.x>=t.x?1:-1;t.inv=Math.max(t.inv||0,10);say(t.x,t.y-86,'GUT CHECK!','#c8d8f0',34);ah(a,{dmg:Math.max(10,dm*1.4),bkb:5.4,kbg:.08,ang:40,fx},t.face,t,{force:1});t.mv=null;t.st='land';t.stT=0;t.landLen=12;return 'counter';}}catch(e){E(e);}return ah.apply(this,arguments);};}
+ BEH.kprop={tick(f,m2,I){try{const d=m2.d;if(m2.t<d.s||m2.t>=d.s+d.a)return;f.ground=null;f.vy=-2.9;f.vx+=(((I&&I.x)||0)*2.4-f.vx)*.15;if(Math.abs((I&&I.x)||0)>.3)f.face=Math.sign(I.x);
+   if(m2.t%7===0){for(const o of foes(f)){if(intangible(o)||o.holder)continue;if(inR(o,f.x,f.y-78,18))applyHit(o,{dmg:2.2,bkb:2.4,kbg:.01,ang:80,fx},o.x>=f.x?1:-1,f,{});}}
+   if(m2.t%4===0)part(f.x+(rnd()*20-10),f.y-70,0,-.4,10,'#d8e8ff',2,0);}catch(x){E(x);}}};
+ /* the hat: worn on every costume, thrown like a boomerang */
+ for(const L of KO.looks||[])if(L)L.kokiHat=1;
+ const dh=drawHead;drawHead=function(L,J,S2){const r=dh.apply(this,arguments);if(L&&L.kokiHat&&!(S2&&S2.noHat)){try{const H=J.Hd,h=L.h*(L.head==='shark'?1.18:1),b=ramp(HAT),bd=ramp(BAND);
+   polyH(H,h,[-4.6,-9,-4.2,-19.5,3.4,-20.2,3.6,-9.6],b,'g');polyH(H,h,[-4.5,-12.2,3.5,-12.8,3.6,-10.6,-4.6,-10.2],bd,'g',0);polyH(H,h,[-8,-9.4,7.2,-10.4,7.4,-8.6,-7.8,-7.6],b,'g');lineH(H,h,-3.8,-19,2.8,-19.6,b[4]);}catch(e){E(e);}}return r;};
+ const ss=spriteState;spriteState=function(f){const S2=ss.apply(this,arguments);try{if(f&&f.C===KO&&f._hatOut)S2.noHat=1;}catch(e){}return S2;};
+ const sm=startMove;startMove=function(f,key){try{if(mine(f,KO)&&key==='sB'&&f._hatOut){if(FR-(f._nhT||-99)>40){f._nhT=FR;say(f.x,f.y-88,'NO HAT!','#c8c8d8');}return false;}}catch(e){}return sm.apply(this,arguments);};
+ const drawHat=(x,y,a)=>{X.save();X.translate(x,y);X.rotate(a);X.fillStyle='#0c0820';X.fillRect(-11,1,22,4);X.fillRect(-7,-12,14,14);X.fillStyle=HAT;X.fillRect(-10,2,20,2.4);X.fillRect(-6,-11,12,13);X.fillStyle=BAND;X.fillRect(-6,-2.6,12,2.6);X.fillStyle='#4a4a58';X.fillRect(-5,-10,2,8);X.restore();};
+ const up=update;update=function(f,I){const r=up.apply(this,arguments);
+  try{if(!mine(f,KO))return r;if(f.st==='respawn'||f.dead)f._hatOut=false;const mv=f.mv;
+   if(mv&&mv.k==='sB'&&mv.t===mv.d.s&&!mv.v.th&&!f._hatOut){mv.v.th=1;f._hatOut=true;use('hat');const iy=(I&&I.y)||0;
+     ent(f,{x:f.x+f.face*16,y:f.y-46,vx:f.face*7.4,vy:iy<-.4?-2.2:iy>.4?2.2:0,L:200,r:11,ph:0,U(e){const o0=e.owner;if(!o0||o0.dead||o0.gone){e.alive=false;if(o0)o0._hatOut=false;return;}e.rot=(e.rot||0)+.45;
+        if(e.ph===0){e.vx-=Math.sign(e.vx||1)*.24*(e.face>0?1:1);e.vy*=.96;if(Math.sign(e.vx)!==e.face||e.t>40){e.ph=1;e.hits={};}}
+        else{const tx=o0.x,ty=o0.y-46,dx=tx-e.x,dy=ty-e.y,l=Math.hypot(dx,dy)||1,sp=Math.min(7.4,2+e.t*.06);e.vx=dx/l*sp;e.vy=dy/l*sp;if(l<20){o0._hatOut=false;e.alive=false;say(o0.x,o0.y-90,'CAUGHT','#d8d8e8',22);return;}}
+        e.x+=e.vx;e.y+=e.vy;
+        for(const o of foes(o0)){if(e.hits[o.id]||intangible(o)||o.holder)continue;if(inR(o,e.x,e.y,e.r)){e.hits[o.id]=1;applyHit(o,e.ph===0?{dmg:8,bkb:4,kbg:.05,ang:40,fx}:{dmg:6,bkb:3.6,kbg:.045,ang:40,fx},Math.sign(e.vx)||1,o0,{proj:1});use('hatHit');}}},
+       end(e){if(e.owner)e.owner._hatOut=false;},
+       D(e){drawHat(e.x,e.y,e.rot||0);}});
+     try{sfx('swing');}catch(x){}}
+  }catch(e){E(e);}return r;};
+ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(mine(f,KO)&&f.mv&&f.mv.k==='uB'&&!f.invis){const mv=f.mv,d=mv.d;if(mv.t>=d.s&&mv.t<d.s+d.a){const p=IP(f),x=p.x,y=p.y-86,a=mv.t*.7;
+     X.fillStyle='#0c0820';X.fillRect(x-2,y,4,10);for(let i=0;i<3;i++){const q=a+i*2.094,c=Math.cos(q);X.fillStyle=i===0?'#9aa8c0':'#7a8aaa';X.beginPath();X.ellipse(x+c*9,y,Math.abs(c)*10+2,3.2,0,0,7);X.fill();}}}}catch(e){E(e);}return r;};
+ KO.sp=['Jaws (a lunging bite; armored on the way in)','Top Hat Toss (throws his top hat like a boomerang; it hits going out and coming back)','Fin Spinner (spins up slowly and steers; hits anyone above)','Gut Check (a belly counter: melee is punished, projectiles bounce off)'];
+ setGT('koki',['Lunges in with an enormous bite. Small hits do not stop him on the way in.','Throws his top hat like a boomerang. It flies out, slows, turns and comes back to his head, hitting on both trips. Lean up or down to angle it. He cannot throw it again until it is back.','Spins a fin over his head like a propeller and rises slowly. Steer left and right; anyone above him is chopped. He cannot act afterwards until he lands.','Puffs out his belly. A melee hit on it is punished with a heavy counter; projectiles bounce off.']);
+ KO.trait='BELLY ARMOR — his smash attacks, forward tilt, dash attack and Jaws shrug off small hits while they wind up. He wears a top hat and throws it like a boomerang.';
+ KO.na='Normals: heavy, slow and armored. His dash attack is a belly flop, his forward air a dropkick that spikes, and every smash attack has belly armor during the wind-up.';
+}
+
+/* ===================================== RAION ===================================== */
+const RA=cid('raion');
+if(RA){const fx=['#ff6a2a','#ffd060'],ROPE='#e83838';
+ const m=(an,s,a,r,h,o)=>M(an,s,a,r,h,Object.assign({lim:'none',fx},o||{}));
+ setMv(RA,{
+  nB:m('spin',7,28,22,hit([[22,-36,16],[-22,-36,16]],2.2,1.2,0,60,{ri:5}),{finisher:hit([[24,-36,18],[-24,-36,18]],9,5,.08,40),nm:'DARKEST LARIAT',face:'atk'}),
+  sB:m('lunge',8,8,24,null,{beh:'awhip',imp:[[4,4.6,0]],nm:'ALOLAN WHIP',face:'atk'}),
+  uB:m('castUp',8,36,24,null,{beh:'xchop',helpless:1,nm:'CROSS CHOP'}),
+  dB:m('counter',4,24,22,null,{beh:'rvng',nm:'REVENGE'})});
+ RA._aik={nB:'near',sB:'near',dB:'near'};
+ BEH.rvng={tick(f){f.vx*=.7;}};
+ BEH.xchop={tick(f,m2,I){try{const d=m2.d,v=m2.v,t=m2.t;if(t===d.s){f.vy=-11.8;f.ground=null;f.vx=((I&&I.x)||0)*1.4;use('xchop');}
+   if(t===d.s+20){f.vy=7.4;f.vx=f.face*4.4;v.dive=1;}
+   if(v.dive&&!v.hit){for(const o of foes(f)){if(intangible(o)||o.holder)continue;if(inR(o,f.x+f.face*12,f.y-26,17)){v.hit=1;applyHit(o,{dmg:11,bkb:4.8,kbg:.07,ang:50,fx},f.face,f,{});burst(o.x,o.y-30,14,fx,2.4,18);use('xchopHit');break;}}}
+   if(t<d.s+20&&t>=d.s&&!v.rh){for(const o of foes(f)){if(intangible(o)||o.holder)continue;if(inR(o,f.x,f.y-52,14)){v.rh=1;applyHit(o,{dmg:5,bkb:4,kbg:.03,ang:80,fx},f.face,f,{});break;}}}
+   if(v.dive&&f.ground){f.mv=null;f.st='land';f.stT=0;f.landLen=18;burst(f.x,f.y-2,12,fx,2.2,16);}}catch(x){E(x);}}};
+ BEH.awhip={tick(f,m2,I){try{const d=m2.d,v=m2.v,t=m2.t;
+   if(!v.held&&t>=d.s&&t<d.s+d.a){for(const o of foes(f)){if(intangible(o)||o.holder||o.st==='ledge')continue;const R=hurtR(o),bx=f.face>0?f.x+6:f.x-6-38,box=[bx,f.y-50,38,48];
+       if(R[0]<box[0]+box[2]&&R[0]+R[2]>box[0]&&R[1]<box[1]+box[3]&&R[1]+R[3]>box[1]){releaseHolds(o);v.held=o;v.ht=0;o.holder=f;o.st='held';o.mv=null;try{sfx('grab');}catch(x){}use('whip');break;}}}
+   if(!v.held)return;const o=v.held;v.ht++;m2.t=Math.min(m2.t,d.s+d.a-1);f.vx*=.6;
+   if(v.ht<10){o.x=f.x+f.face*20;o.y=f.y;o.vx=o.vy=o.lx=o.ly=0;return;}
+   if(v.ht===10){o.holder=null;o.st='hit';o.hitstun=60;o.ground=f.ground;o.lx=f.face*7.2;o.ly=0;o.vx=0;o.vy=0;o.dmg=Math.min(999,o.dmg+3);v.rx=f.x+f.face*120;v.dir=f.face;}
+   if(v.ht>10&&!v.back){if((o.x-v.rx)*v.dir>=0||v.ht>34){v.back=1;v.bx=o.x;o.lx=-v.dir*7.2;o.ly=0;o.hitstun=40;burst(o.x,o.y-30,8,[ROPE,W],1.8,12);try{sfx('pop');}catch(x){}}else{o.lx=v.dir*7.2;o.ly=0;o.hitstun=Math.max(o.hitstun,20);}}
+   if(v.back){if(I&&I.bP&&!v.press&&v.ht<70)v.press=v.ht;
+     const near=Math.abs(o.x-f.x)<38;if(near||v.ht>80){const perfect=v.press&&Math.abs(o.x-f.x)<120;applyHit(o,{dmg:perfect?15:11,bkb:perfect?5.6:5,kbg:perfect?.09:.075,ang:42,fx},f.face,f,{force:1});say(o.x,o.y-80,perfect?'PERFECT LARIAT!':'LARIAT!',perfect?'#ffd060':'#ff8a5a',36);use(perfect?'perfect':'lariat');v.held=null;f.mv=null;f.st='land';f.stT=0;f.landLen=14;}}}catch(x){E(x);}}};
+ /* lariat steering, revenge counter, revenge power */
+ const up=update;update=function(f,I){const r=up.apply(this,arguments);try{if(mine(f,RA)&&f.mv&&f.mv.k==='nB'&&f.mv.t>=f.mv.d.s&&f.hl<=0){const x=(I&&I.x)||0;f.vx+=(x*2.2-f.vx)*.2;if(!f.ground)f.vy=Math.min(f.vy,1.6);}if(mine(f,RA)&&f._revT&&FR>f._revT){f._rev=0;f._revT=0;}}catch(e){E(e);}return r;};
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){o=o||{};
+  try{if(mine(t,RA)&&t.mv&&t.mv.k==='dB'&&t.mv.t>=4&&t.mv.t<=28&&!o.force&&a&&a!==t&&!h.grab&&!(a.team!==undefined&&a.team===t.team)&&!(typeof intangible==='function'&&intangible(t))){
+    const dm=Math.max(1,(h.dmg||0)*(o.cm||1));t._rev=Math.min(1.6,(t._rev||1)+dm*.025+.12);t._revT=FR+600;say(t.x,t.y-86,'REVENGE x'+t._rev.toFixed(2),'#ff6a2a',40);burst(t.x,t.y-34,18,fx,2.6,20);try{sfx('counter');}catch(x){}use('revenge');
+    if(!o.proj&&Math.abs(a.x-t.x)<100){t.face=a.x>=t.x?1:-1;t.inv=Math.max(t.inv||0,10);ah(a,{dmg:Math.max(9,dm*1.2),bkb:5,kbg:.07,ang:40,fx},t.face,t,{force:1});}
+    t.mv=null;t.st='land';t.stT=0;t.landLen=10;return 'counter';}}catch(e){E(e);}
+  const pre=t?t.dmg:0,rev=a&&mine(a,RA)&&a!==t&&a._rev>1?a._rev:0;
+  const r=ah.apply(this,arguments);
+  try{if(rev&&r==='hit'&&t.dmg>pre){a._rev=0;a._revT=0;say(t.x,t.y-70,'PAYBACK!','#ff6a2a',30);}}catch(e){}
+  return r;};
+ const d0=dmgMod;dmgMod=function(a,t,h,o){let v=d0.apply(this,arguments);try{if(a&&mine(a,RA)&&a!==t&&a._rev>1&&FR<=(a._revT||0))v*=a._rev;}catch(e){}return v;};
+ const ss=spriteState;spriteState=function(f){const S2=ss.apply(this,arguments);try{if(f&&f.C===RA&&f._rev>1&&!S2.aura)S2.aura='#ff6a2a';}catch(e){}return S2;};
+ const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(mine(f,RA)&&f.mv&&f.mv.k==='sB'&&f.mv.v.rx!==undefined&&!f.mv.v.done){const v=f.mv.v,x=v.rx+v.dir*14,y=IP(f).y;X.fillStyle='#3a2a24';X.fillRect(x-2,y-56,4,56);for(let i=0;i<3;i++){X.fillStyle=ROPE;X.fillRect(x-v.dir*30,y-18-i*14,30,2);}}}catch(e){E(e);}return r;};
+ RA.sp=['Darkest Lariat (spins with both arms out; steer it; hits many times)','Alolan Whip (grabs, whips the rival into the ropes and lariats them on the way back; press B as they return for a perfect lariat)','Cross Chop (leaps up, then dives diagonally down with a chop)','Revenge (a counter: whatever hits it powers up his next hit, up to 60% more)'];
+ setGT('raion',['Spins with both arms out, hitting many times before a big finish. Steer it left and right; in the air it slows his fall.','Grabs the rival in front of him and whips them into a set of ropes. They bounce back and he meets them with a lariat. Press B as they come back for a perfect lariat that hits much harder.','Leaps straight up, then dives diagonally down with a chop. He cannot act afterwards until he lands.','A counter. Melee hits are struck back, and anything that hits it powers up his next attack: up to 60% more damage for ten seconds.']);
+ RA.trait='REVENGE — taking a hit on his counter powers up his next attack. A heavyweight wrestler: slow, powerful, and devastating up close.';
+ RA.na='Normals: claws, kicks and wrestling strikes. Slow and powerful.';
+}
+
+/* ===================================== MAKIKO ===================================== */
+const MK=cid('makiko');
+if(MK){const fx=['#c8a8ff','#ffb8e0'],PU='#9a7aff',PI2='#ffb8e0';
+ const m=(an,s,a,r,h,o)=>M(an,s,a,r,h,Object.assign({lim:'none',fx},o||{}));
+ BEH.mkorb={tick(f,m2,I){try{const d=m2.d,v=m2.v;if(m2.t<d.s||v.done)return;const cpu=f.ctrl==='cpu'||f.ctrl==='dummy';const held=cpu?(v.c||0)<(v.goal||(v.goal=10+Math.floor(rnd()*50))):!!(I&&I.B);
+   if(held&&(v.c||0)<60){v.c=(v.c||0)+1;m2.t=d.s;f.vx*=.8;if(!f.ground)f.vy=Math.min(f.vy,.8);const u=v.c/60;if(v.c%2===0)part(f.x+f.face*16+(rnd()-.5)*(6+u*14),f.y-38+(rnd()-.5)*(6+u*14),0,0,8,rnd()<.5?PU:PI2,2,0);return;}
+   v.done=1;const u=cl((v.c||0)/60,0,1),r=5+u*9,dm=4+u*13;use(u>=1?'orbFull':'orb');
+   ent(f,{x:f.x+f.face*18,y:f.y-38,vx:f.face*(4.8+u*1.2),L:90,r,U(e){e.x+=e.vx;e.y+=Math.sin(e.t*.25)*.6;for(const o of foes(e.owner)){if(intangible(o)||o.holder||!inR(o,e.x,e.y,e.r))continue;applyHit(o,{dmg:dm,bkb:3.2+u*1.8,kbg:.03+u*.06,ang:40,fx},Math.sign(e.vx)||1,e.owner,{proj:1});burst(e.x,e.y,10+u*10,[PU,PI2,W],2.4,16);e.alive=false;use('orbHit');return;}if(e.t%2===0)part(e.x-e.vx,e.y+(rnd()-.5)*e.r,0,0,10,rnd()<.5?PU:PI2,2,0);},
+     D(e){X.fillStyle='#2a1a4a';X.beginPath();X.arc(e.x,e.y,e.r+1.6,0,7);X.fill();X.fillStyle=PU;X.beginPath();X.arc(e.x,e.y,e.r,0,7);X.fill();X.fillStyle=PI2;X.beginPath();X.arc(e.x-e.r*.2,e.y-e.r*.2,e.r*.55,0,7);X.fill();X.fillStyle=W;X.beginPath();X.arc(e.x-e.r*.35,e.y-e.r*.35,e.r*.2,0,7);X.fill();}});try{sfx('swing');}catch(x){}}catch(x){E(x);}}};
+ const mahoUB=(cid('maho')&&cid('maho').mv.uB)?Object.assign({},cid('maho').mv.uB,{fx,nm:'DREAM STEP',bp:{dist:104},hits:[]}):m('float',8,6,14,null,{beh:'teleDir',bp:{dist:104},helpless:1});
+ setMv(MK,{
+  nB:{an:'cast',s:8,a:2,r:16,hits:[],beh:'mkorb',fx,lim:'none',face:'atk',nm:'DREAM ORB'},
+  sB:m('palm',8,10,20,hit([[26,-36,16]],5,4.6,.03,45),{beh:'reflect',bp:{f0:6,f1:20},nm:'DAZE SWIRL',face:'atk'}),
+  uB:mahoUB,
+  dB:m('roar',10,3,24,hit([[34,-46,13],[18,-44,11]],1,1.2,0,40,{eff:'sleep'}),{nm:"SANDMAN'S GAZE",face:'atk'}),
+  nair:m('spin',5,16,12,hit([[0,-32,20]],1.6,1.2,0,60,{ri:4}),{finisher:hit([[0,-32,22]],4,4,.05,45),ll:7,nm:'DREAM SPIN'}),
+  dair:m('dairSt',14,3,20,hit([[0,-4,12]],12,3.6,.075,-82),{ll:14,nm:'NIGHTFALL'})});
+ MK._aik={nB:'far',sB:'near',dB:'near'};
+ MK.sp=["Dream Orb (hold B to grow a ball of dream energy, release to throw it)","Daze Swirl (a swirl in front of her: reflects projectiles and spins rivals around)","Dream Step (teleports in any direction)","Sandman's Gaze (a short stare: a rival facing her falls asleep briefly)"];
+ setGT('makiko',['Hold B to grow a ball of dream energy, then let go to throw it. The longer she holds, the bigger, harder and faster it is. In the air she floats while she charges.','A swirl of dream right in front of her. It sends projectiles back, and any rival it hits is spun round to face the other way.','Vanishes and reappears a short distance away in whichever direction you hold.',"Stares into the rival's eyes. If they are facing her they fall asleep for a moment; if they are facing away, it barely touches them."]);
+ MK.trait='DREAM WALKER — her hits make rivals drowsy, and the fifth in a row puts them to sleep. Sleep she causes is short (never more than a second and a half). Sandman\'s Gaze only works on a rival who is facing her.';
+ /* the gaze only sleeps a rival who is looking at her */
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){try{if(a&&mine(a,MK)&&a.mv&&a.mv.k==='dB'&&h&&h.eff==='sleep'&&t&&((a.x-t.x)*(t.face||1))<=0){h=Object.assign({},h,{eff:undefined,dmg:2});arguments[1]=h;}}catch(e){}
+  const r=ah.apply(this,arguments);try{if(r==='hit'&&a&&mine(a,MK)&&a.mv&&a.mv.k==='sB'&&t&&!t.dead){t.face=-(t.face||1);say(t.x,t.y-80,'DAZED','#c8a8ff',24);}}catch(e){}return r;};
+ /* every sleep she causes is short */
+ const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const t of F){if(!t)continue;if(t.st==='dizzy'&&t.sleepT>0){if(!t._mkS&&t.lastBy&&t.lastBy.C===MK){t._mkS=1;t.dz=Math.min(90,Math.round(t.dz*.6));t.sleepT=t.dz;}}else t._mkS=0;}}catch(e){E(e);}return r;};
+}
+}catch(e){E(e);}
+/* recoveries rebuilt here are no longer scaled by upb.js */
+try{if(window.UPB_R){for(const id of['conor','koki','raion','makiko'])delete window.UPB_R[id];}}catch(e){}
 })();
 
 </script>
