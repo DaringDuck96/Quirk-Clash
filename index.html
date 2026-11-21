@@ -10595,7 +10595,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1121-0251';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1121-0258';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16040,6 +16040,31 @@ const s0=step;step=function(){const r=s0.apply(this,arguments);try{if(typeof GS=
   const busy=f.mv&&(f.mv.k==='nB'||f.mv.k==='sB'||f.mv.k==='dB');if(busy){f._ingT=FR;continue;}
   if(FR-(f._ingT||0)>=240){f._ingT=FR;f.ing=Math.min(MAX,f.ing+1);if(typeof part==='function')for(let i=0;i<4;i++)part(f.x+(Math.random()*16-8),f.y-84,0,-.6,18,'#ffd060',2,0);}}}catch(e){TB.err=String(e);}return r;};
 try{const C=CH.find(c=>c.id==='torabi');if(C&&C.heroNote)C.heroNote=C.heroNote.replace('Away from Quackpot, Down-B calls the duck over.','Away from Quackpot, hold Down-B and he calls the duck over and starts cooking as soon as it arrives. The pantry also refills on its own, one ingredient every 4 seconds without a special, and fully when he loses a stock.');}catch(e){}
+})();
+/* backfix.js — B backs out of every menu, like Smash.
+   B presses the back / close button of whatever is on top: pop-ups and panels first (unlockables, player profile, banners, filters),
+   then the screen's own back button (campaign, arcade, tournament steps). Fighter select, stage select, pause and the guide keep their own B. */
+(function(){
+if(typeof padBack!=='function')return;
+const BK={err:null,last:null};window.BACKFIX=BK;
+const TXT=b=>(b.textContent||b.getAttribute('aria-label')||b.title||'').trim().replace(/\s+/g,' ');
+const BACK=/^(←|‹|«|✕|×|✖)|^(back|close|done|cancel|continue|got it|ok|resume|no thanks|not now)\b/i;
+const vis=el=>{if(!el||el.disabled)return false;if(el.closest('[hidden]'))return false;const r=el.getBoundingClientRect();if(r.width<2||r.height<2||r.bottom<0||r.top>innerHeight)return false;const s=getComputedStyle(el);if(s.visibility==='hidden'||s.display==='none'||+s.opacity<.05)return false;
+  const x=Math.min(innerWidth-1,Math.max(0,r.x+r.width/2)),y=Math.min(innerHeight-1,Math.max(0,r.y+r.height/2));const t=document.elementFromPoint(x,y);return !!t&&(el===t||el.contains(t)||t.contains(el));};
+const z=el=>{let best=0;for(let e=el;e&&e!==document.body;e=e.parentElement){const s=getComputedStyle(e);const v=parseInt(s.zIndex,10);if(!isNaN(v)&&s.position!=='static')best=Math.max(best,v);}return best;};
+const OWN=new Set(['select','stage','pause','guide','play']);const KOWN=new Set(['select','stage','pause','guide','play']);
+const inScreen=b=>!!b.closest('#select,#stagesel,#game,#hud');
+function find(onlyOverlays){const L=[...document.querySelectorAll('button,[role=button],a.btn,.btn,.close,.x')].filter(b=>BACK.test(TXT(b))&&!/quit|forfeit|delete|reset/i.test(TXT(b)));
+  let best=null,bz=-1;for(const b of L){if(onlyOverlays&&inScreen(b))continue;if(!vis(b))continue;const zz=z(b);if(zz>=bz){bz=zz;best=b;}}return best;}
+const pb=padBack;padBack=function(n,scr){try{
+  /* a pop-up or panel on top of anything */
+  const ov=find(true);
+  if(ov&&(!OWN.has(scr)||z(ov)>0)){BK.last=TXT(ov);if(typeof CLICKER!=='undefined')CLICKER=n;try{ov.click();}finally{if(typeof CLICKER!=='undefined')CLICKER=-1;}try{sfx('pop');}catch(e){}return;}
+  }catch(e){BK.err=String(e);}
+  return pb.apply(this,arguments);};
+/* keyboard: Escape and Backspace do the same in menus */
+addEventListener('keydown',e=>{try{if(e.code!=='Escape'&&e.code!=='Backspace')return;const a=document.activeElement;if(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.isContentEditable))return;
+  if(typeof running!=='undefined'&&running)return;const scr=typeof curScreen==='function'?curScreen():'title';if(KOWN.has(scr))return;padBack(0,scr);e.preventDefault();}catch(x){}},false);
 })();
 
 </script>
