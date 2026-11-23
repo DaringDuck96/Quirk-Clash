@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-2244';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-2300';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18479,6 +18479,59 @@ if(AY){const CR='#c8a0ff';
       else if(g&&Math.abs(g.x-f.x)<44&&Math.hypot(o.x-g.x,o.y-g.y)<70&&r<.2+.3*t){if(f.face!==Math.sign(g.x-f.x))I.x=Math.sign(g.x-f.x)*.3;else{I.A=1;I.B=0;I.x=0;I.y=0;cnt('aiShatter');}}}}catch(e){E(e);}return I;};}
 
 if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&!f.dead&&!f.gone&&typeof X!=='undefined'&&X)for(const fn of draws)fn(f);}catch(e){E(e);try{X.globalAlpha=1;}catch(x){}}return r;};}
+})();
+
+/* anims.js — dedicated poses for the reworked moves that were borrowing the nearest stock pose.
+   W = wind-up pose, H = hit pose, E = end pose (body offsets and hand / foot targets, as in the stock ANIM table). */
+(function(){
+if(typeof ANIM==='undefined')return;const AN={err:null,set:[]};window.ANIMS2=AN;
+Object.assign(ANIM,{
+  /* Kongu (the gorilla kit) */
+  kClapF:{W:{aF:[-4,-52],aB:[-16,-50],tl:-.18,py:1},H:{aF:[38,-35],aB:[36,-37],tl:.2,px:3,py:1},E:{aF:[32,-36],aB:[30,-37],tl:.15},lim:'hF'},
+  kClapUp:{W:{aF:[20,-28],aB:[-18,-28],py:5,tl:.05},H:{aF:[3,-78],aB:[-1,-78],py:-3,tl:-.06},lim:'hF'},
+  kSlapBoth:{W:{aF:[8,-46],aB:[-8,-46],py:3},H:{aF:[30,-8],aB:[-30,-8],py:9,tl:0,lF:[10,-1.5],lB:[-10,-1.5]},lim:'hF',lim2:'hB'},
+  kAxeAir:{W:{aF:[-2,-76],aB:[-8,-74],tl:-.32,lF:[6,-14],lB:[-6,-12]},H:{aF:[26,-16],aB:[22,-18],tl:.6,px:3,lF:[8,-10],lB:[-6,-8]},lim:'hF'},
+  kArmArc:{W:{aF:[20,-22],aB:[-6,-36],tl:.15},H:{aF:[-6,-78],aB:[-8,-38],tl:-.25,py:-1},lim:'hF'},
+  kStomp:{W:{lF:[8,-24],lB:[-4,-24],aF:[10,-50],aB:[-10,-50],py:-4},H:{lF:[5,6],lB:[-3,6],aF:[16,-46],aB:[-16,-46],py:-6},lim:'fF',lim2:'fB'},
+  kSpinArms:{W:{aF:[10,-42],aB:[-10,-42]},H:{aF:[32,-40],aB:[-32,-40],lF:[8,-8],lB:[-8,-8]},lim:'hF',lim2:'hB'},
+  kSlide:{W:{tl:.3,py:2},H:{tl:-.55,py:12,lF:[26,-4],lB:[20,-2],aF:[-12,-30],aB:[-16,-32]},lim:'fF'},
+  kLowSlap:{W:{aF:[8,-36],py:4,tl:.2},H:{aF:[30,-4],aB:[-6,-30],py:10,tl:.55},lim:'hF'},
+  /* Hari */
+  hHarpoon:{W:{aF:[-14,-40],aB:[8,-38],tl:-.2,lF:[8,-1.5],lB:[-10,-1.5]},H:{aF:[34,-36],aB:[-12,-34],tl:.38,px:6,lF:[16,-1.5],lB:[-12,-1.5]},E:{aF:[24,-36],tl:.25,px:4},lim:'hF'},
+  hPiston:{W:{aF:[-20,-36],aB:[-14,-34],tl:-.3,px:-3,lF:[10,-1.5],lB:[-12,-1.5]},H:{aF:[36,-36],aB:[30,-36],tl:.5,px:7,lF:[18,-1.5],lB:[-14,-1.5]},lim:'hF'},
+  hPlant:{W:{aF:[8,-74],aB:[2,-72],tl:-.15,py:-1},H:{aF:[24,-4],aB:[18,-6],py:7,tl:.45},lim:'hF'},
+  /* Sata */
+  sBlade:{W:{aF:[-14,-30],aB:[6,-40],tl:-.22,lF:[8,-1.5],lB:[-10,-1.5]},H:{aF:[36,-36],aB:[-10,-34],tl:.48,px:8,lF:[18,-1.5],lB:[-16,-1.5]},E:{aF:[28,-36],tl:.3,px:6},lim:'hF'},
+  sSwarm:{W:{aF:[4,-30],aB:[2,-28],py:3,tl:.1},H:{aF:[20,-52],aB:[16,-48],tl:-.1,hd:-.1},lim:'none'},
+  /* Kurai */
+  oStare:{W:{tl:.2,hd:.25,aF:[6,-40],aB:[-6,-40]},H:{tl:.1,hd:-.2,aF:[20,-54],aB:[-22,-54],py:-1},lim:'none'},
+  oTalon:{W:{lF:[6,-22],lB:[-2,-22],tl:-.2,aF:[10,-52],aB:[-12,-52]},H:{lF:[16,4],lB:[12,6],tl:-.62,py:-6,aF:[-14,-54],aB:[-20,-50]},lim:'fF'},
+  /* Kal */
+  pSense:{W:{aF:[5,-58],aB:[-4,-36],hd:-.12,tl:-.05},H:{aF:[32,-30],aB:[-10,-34],tl:.32,px:3,hd:.05},lim:'w'},
+  /* Chuckles */
+  cJoke:{W:{aF:[6,-54],aB:[-2,-40],tl:.1},H:{hd:-.45,tl:-.38,aF:[12,-52],aB:[-12,-46],py:1},lim:'none'},
+  /* Zabu */
+  zPounce:{W:{py:9,tl:.45,aF:[10,-24],aB:[4,-24]},H:{aF:[22,-42],aB:[18,-44],lF:[-8,-12],lB:[-14,-10],tl:.75,py:-3},lim:'hF'},
+  /* Tori / Sai palms that reach in */
+  tHeart:{W:{aF:[-8,-38],aB:[6,-40],tl:-.12},H:{aF:[26,-36],aB:[-8,-34],tl:.32,px:4},lim:'hF'},
+  sCatch:{W:{aF:[6,-40],tl:-.05},H:{aF:[24,-42],aB:[20,-30],tl:.18,px:2},lim:'hF'}});
+const C=id=>CH.find(c=>c.id===id);
+const set=(id,k,an,T)=>{const Cx=C(id);if(!Cx)return;const M=T?Cx[T]:Cx.mv;const d=M&&M[k];if(!d||!ANIM[an])return;d.an=an;const lm=ANIM[an].lim;if(lm&&d.lim!=='none')d.lim=lm;if(d.ph)delete d.ph;if(d.pw)delete d.pw;if(d.mo)delete d.mo;AN.set.push(id+'.'+k);};
+/* Kongu */
+set('kongu','fsmash','kClapF');set('kongu','usmash','kClapUp');set('kongu','dsmash','kSlapBoth');set('kongu','fair','kAxeAir');set('kongu','utilt','kArmArc');
+set('kongu','dair','kStomp');set('kongu','nair','kSpinArms');set('kongu','dash','kSlide');set('kongu','dtilt','kLowSlap');
+/* Hari */
+set('hari','sB','hHarpoon');set('hari','nB','hPiston');set('hari','dB','hPlant');
+/* Sata */
+set('sata','sB','sBlade');set('sata','nB','sSwarm');
+/* Kurai */
+set('kurai','nB','oStare');set('kurai','dB','oTalon');
+/* Kal */
+set('kal','dB','pSense');
+/* Chuckles, Zabu */
+set('chuckles','dB','cJoke');set('zabu','dB','zPounce');
+/* Tori, Sai */
+set('tori','nB','tHeart');set('sai','sB','sCatch');set('sai','sB','sCatch','hmv');
 })();
 
 </script>

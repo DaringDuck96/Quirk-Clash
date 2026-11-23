@@ -93,3 +93,4 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Homura's Magma Glob bounces along the floor like a fireball, leaving its pool where it stops
 - [x] Soran & Hakegatsu: one brother on screen at a time (Down-B swaps); the other appears only for relay specials; no echoes, no splitting
 - [x] Counters replaced: Chuckles Bad Joke, Zabu Piggyback, Aya Geode
+- [x] Animation polish: own poses for 23 reworked moves (Kongu's claps, slaps, stomp, spin; Hari's harpoon, piston, fence plant; Sata's blade and swarm; Kurai's stare and talon dive; Kal, Chuckles, Zabu, Tori, Sai)
