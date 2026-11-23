@@ -6198,7 +6198,7 @@ function aiInput(f){const I={x:0,y:0,A:0,B:0,J:0,S:0,G:0};const o=opp(f),L=clamp
   if(f.st==='hold'){const toward=f.x<WW/2?-1:1;if(f.holdT>6+rnd()*14){if(o&&o.dmg>100&&rnd()<.5)I.y=-1;else if(rnd()<.25)I.y=1;else I.x=L>=5?toward:(rnd()<.5?1:-1);}else if(rnd()<.3)tap('A');return I;}
   if(f.st==='down'){if(f.stT>12+rnd()*(44-L*4)){const r=rnd();if(r<.35)tap('A');else if(r<.7)I.x=rnd()<.5?1:-1;else tap('J');}return I;}
   if(f.st==='dizzy'){if(rnd()<.3+.7*t9)tap(['A','B','J'][fl(rnd()*3)]);return I;}
-  if(f.st==='hit'||f.st==='held'){if(rnd()<t9*1.1)I.x=f.x<WW/2?1:-1;if(f.st==='hit'&&f.vy+f.ly>2&&f.y>g.y-40&&rnd()<.07*(L-1))tap('S');return I;}
+  if(f.st==='hit'||f.st==='held'){if(rnd()<t9*1.1)I.x=f.x<WW/2?1:-1;if(f.st==='hit'&&f.vy+f.ly>2&&f.y>g.y-40&&rnd()<.04+.07*(L-1))tap('S');return I;}
   const offL=f.x<g.x-4,offR=f.x>g.x+g.w+4,below=!f.ground&&f.y>g.y+4;
   if(!f.ground&&(offL||offR||(below&&(f.x<g.x+24||f.x>g.x+g.w-24)))){
     const Lg=(offL||(!offR&&f.x<WW/2))?LEDGES[0]:LEDGES[1];const dirx=Math.sign(Lg.x-f.x)||-Lg.side;I.x=dirx;
@@ -6206,7 +6206,7 @@ function aiInput(f){const I={x:0,y:0,A:0,B:0,J:0,S:0,G:0};const o=opp(f),L=clamp
     if(f.st==='move'&&f.mv.k==='uB'){I.x=dirx;I.y=-.8;if(f.mv.d.beh==='fly'){const dy=Lg.y-f.y;I.y=dy<-4?-1:0.2;I.x=dirx;}return I;}
     if(f.st==='move')return I;
     if(below&&f.x>g.x-8&&f.x<g.x+g.w+8){I.x=f.x<WW/2?-1:1;}
-    const dy=f.y-Lg.y,sure=L>=4||rnd()<.12+L*.12;
+    const dy=f.y-Lg.y,sure=true;
     if(f.vy+f.ly>-.5&&f.jumps>0&&dy>-40&&f.st!=='helpless'){if(sure)jump();}
     else if(f.jumps===0&&f.vy>.3&&!f.upUsed&&dy>-30&&f.st!=='helpless'&&sure){const k=specKind(f,'uB');I.y=-1;I.x=dirx*(k==='teleDir'?.6:.4);if(k==='teleDir'&&dy<60)I.y=-.6;tap('B');}
     return I;}
@@ -6220,14 +6220,14 @@ function aiInput(f){const I={x:0,y:0,A:0,B:0,J:0,S:0,G:0};const o=opp(f),L=clamp
   if(ai.shT>0){ai.shT--;I.S=1;if(o.mv&&o.mv.t>o.mv.d.s+o.mv.d.a&&adx<34&&rnd()<.4*R){ai.shT=0;I.S=1;tap(L>=6&&rnd()<.5?'G':'A');}return I;}
   /* low levels drift, hesitate and stand around */
   if(f.ground){if(ai.idle>0){ai.idle--;if(ai.wx)I.x=ai.wx*.5;edge();return I;}
-    if(L<=5&&rnd()<(6-L)*.004){ai.idle=18+fl(rnd()*(80-L*10));ai.wx=rnd()<.5?0:(rnd()<.5?-1:1);return I;}}
-  if(o.mv&&f.ground&&adx<60&&Math.abs(dy)<44&&o.mv.t<o.mv.d.s&&rnd()<(.02+.24*t9*t9)&&f.shp>18){ai.shT=6+fl(rnd()*10);I.S=1;return I;}
-  if(L>=4)for(const e of ENT){if(e.owner===f||!e.proj)continue;if(Math.abs(e.y-(f.y-30))<24&&Math.abs(e.x-f.x)<60&&Math.sign(e.vx||0)===Math.sign(f.x-e.x)&&rnd()<.03+.17*t9){if(rnd()<.5)jump();else{I.S=1;ai.shT=8;}return I;}}
+    if(false&&rnd()<(6-L)*.004){ai.idle=18+fl(rnd()*(80-L*10));ai.wx=rnd()<.5?0:(rnd()<.5?-1:1);return I;}}
+  if(o.mv&&f.ground&&adx<60&&Math.abs(dy)<44&&o.mv.t<o.mv.d.s&&rnd()<(.05+.2*t9)&&f.shp>18){ai.shT=6+fl(rnd()*10);I.S=1;return I;}
+  for(const e of ENT){if(e.owner===f||!e.proj)continue;if(Math.abs(e.y-(f.y-30))<24&&Math.abs(e.x-f.x)<60&&Math.sign(e.vx||0)===Math.sign(f.x-e.x)&&rnd()<.03+.17*t9){if(rnd()<.5)jump();else{I.S=1;ai.shT=8;}return I;}}
   if(f.fsm>=100&&adx<170&&Math.abs(dy)<90&&rnd()<.08*R+.01){I.x=0;I.y=0;tap('B');return I;}
   const nk=specKind(f,'nB'),sk=specKind(f,'sB'),dk=specKind(f,'dB'),zoner=(f.C.rng||0)>=3;
   if(!f.ground){
     if(adx<46&&Math.abs(dy)<50&&rnd()<.24*R){if(dy<-20)I.y=-1;else if(dy>20)I.y=1;else I.x=facing?f.face:-f.face;tap('A');}
-    else I.x=sd*(L<=2?.6:1);
+    else I.x=sd;
     if(f.vy>0&&dy<-30&&f.jumps>0&&rnd()<.02+.04*t9)jump();
     /* high levels fast-fall to keep the pressure on */
     if(L>=7&&f.vy>1&&dy>24&&adx<60&&rnd()<.2)I.y=1;
@@ -6235,31 +6235,31 @@ function aiInput(f){const I={x:0,y:0,A:0,B:0,J:0,S:0,G:0};const o=opp(f),L=clamp
   if(ai.cool>0)ai.cool--;
   const oOff=(o.x<g.x-6||o.x>g.x+g.w+6)&&!o.ground;
   /* edge-guarding: stand at the ledge and swat or shoot whoever is trying to come back */
-  if(L>=7&&oOff&&o.st!=='ledge'){const ex=o.x<WW/2?g.x+18:g.x+g.w-18,es=o.x<WW/2?-1:1;
+  if(L>=3&&oOff&&o.st!=='ledge'){const ex=o.x<WW/2?g.x+18:g.x+g.w-18,es=o.x<WW/2?-1:1;
     if(Math.abs(f.x-ex)>8)I.x=Math.sign(ex-f.x);else{if(f.face!==es)I.x=es*.4;
       const rx=Math.abs(o.x-f.x),ry=o.y-f.y;
       if(rx<54&&ry>-50&&ry<26&&rnd()<.3){if(ry>4){I.y=1;tap('A');}else{I.x=es;I.sm=rnd()<.5?1:0;tap('A');}}
       else if(nk==='proj'&&Math.abs(ry)<34&&rx<200&&ai.cool<=0&&f.face===es){I.x=0;tap('B');ai.cool=46;}}
     edge();return I;}
   /* a sleeping or dizzy rival is a free hit */
-  if(L>=3&&o.st==='dizzy'&&o.ground&&adx<54&&Math.abs(dy)<36&&rnd()<.15+.5*t9){if(f.C.id==='makiko'&&adx<44){I.y=1;tap('B');}else if(!facing)I.x=sd*.4;else{I.x=sd;I.sm=1;tap('A');}edge();return I;}
+  if(o.st==='dizzy'&&o.ground&&adx<54&&Math.abs(dy)<36&&rnd()<.15+.5*t9){if(f.C.id==='makiko'&&adx<44){I.y=1;tap('B');}else if(!facing)I.x=sd*.4;else{I.x=sd;I.sm=1;tap('A');}edge();return I;}
   /* punish: a rival stuck in the recovery of a missed attack */
-  if(L>=5&&o.mv&&o.ground&&o.mv.t>=o.mv.d.s+o.mv.d.a&&adx<50&&Math.abs(dy)<36&&rnd()<.08+.5*t9*t9){
+  if(o.mv&&o.ground&&o.mv.t>=o.mv.d.s+o.mv.d.a&&adx<50&&Math.abs(dy)<36&&rnd()<.1+.45*t9){
     if(!facing){I.x=sd*.4;}else if(o.dmg>85){I.x=sd;I.sm=1;tap('A');}else if(rnd()<.45)tap('G');else{I.x=sd;tap('A');}edge();return I;}
   /* combo: keep hitting a rival who is still reeling */
-  if(L>=4&&o.hitstun>4&&adx<70&&rnd()<.1+.5*t9){
+  if(o.hitstun>4&&adx<70&&rnd()<.12+.48*t9){
     if(dy<-30){if(adx>20)I.x=sd;if(f.ground&&adx<40){I.y=-1;if(dy<-64)jump();else tap('A');}}
     else if(adx<40&&facing){if(o.dmg>95&&L>=6){I.x=sd;I.sm=1;}else if(rnd()<.5)I.x=sd;tap('A');}else I.x=sd;
     edge();return I;}
-  if(adx>120){I.x=sd*(L<=2?.6:1);
+  if(adx>120){I.x=sd;
     if(zoner&&L>=6&&adx<170&&rnd()<.3)I.x=0;
     if(rnd()<(.012+.03*R)*(zoner?1.8:1)&&facing&&ai.cool<=0){if(nk==='proj'&&Math.abs(dy)<40){I.x=0;tap('B');ai.cool=40;}else if(sk==='proj'||sk==='teleBehind'){I.x=sd;tap('B');ai.cool=60;}}}
-  else if(adx>36){I.x=sd*(L<=2?.6:1);
+  else if(adx>36){I.x=sd;
     if(rnd()<.018*R)jump();
     if(facing&&rnd()<(.01+.03*R)*(zoner?1.5:1)&&ai.cool<=0){if(nk==='proj'&&Math.abs(dy)<30){I.x=0;tap('B');ai.cool=40;}else if(sk==='dash'||sk==='teleBehind'||sk==='cgrab'||sk==='pincer'){I.x=sd;tap('B');ai.cool=50;}else if(f.C.id==='makiko'&&adx<60){I.x=0;tap('B');ai.cool=40;}}
     if(adx<70&&f.st==='run'&&rnd()<.05*R)tap('A');
     /* low levels swing at thin air */
-    if(L<=3&&rnd()<(4-L)*.006){if(rnd()<.5)I.x=0;tap('A');}}
+    }
   else{if(!facing&&adx>4)I.x=sd*.4;
     if(rnd()<.05+.15*R){const r=rnd(),kill=o.dmg>(L>=6?85:120);
       if(dy<-34){I.y=-1;if(o.hitstun>0||rnd()<.4)I.sm=1;tap('A');}
@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1608';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1616';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -17220,6 +17220,89 @@ const rule=(a,h,o)=>{if(!B5.on||!a||!a.C)return null;const R=T[a.C.id];if(!R)ret
 /* tag projectiles with the move that spawned them */
 {const up=update;update=function(f,I){const n0=ENT.length,k=f&&f.mv&&f.mv.k;const r=up.apply(this,arguments);
   try{if(f&&T[f.C&&f.C.id]){for(let i=n0;i<ENT.length;i++){const e=ENT[i];if(e&&e.owner===f&&e._bk===undefined)e._bk=k||(f.mv&&f.mv.k)||null;}}}catch(e){E(e);}return r;};}
+})();
+
+/* brain.js — CPUs of every level play sensibly; level sets reaction speed, consistency and aggression, not whether they act dumb.
+   (apply.py also removes the base AI's deliberate mistakes: standing around, swinging at nothing, half-speed running, failed recoveries,
+    and lowers the level gates on edge-guarding, punishing, combos and shielding.)
+   Adds:  ledge trapping (wait near the ledge, punish the getup), smart ledge options (read where the rival stands),
+          off-stage edge-guard aerials, recovery mix-ups (high/low, early/late, air dodge to stage), and Makiko's sleep setups. */
+(function(){
+if(typeof aiInput!=='function')return;
+const BR={err:null,n:{},on:true};window.BRAIN=BR;const E=e=>{BR.err=BR.err||String(e&&e.stack||e).slice(0,300);};
+const cnt=k=>{BR.n[k]=(BR.n[k]||0)+1;};
+const lvl=f=>(clamp(f.lvl||1,1,9)-1)/8;
+const react=f=>Math.round(3+(1-lvl(f))*14);            /* frames before a CPU responds to what the rival just did: 3 at level 9, 17 at level 1 */
+const ledgeOf=x=>{let b=null,bd=1e9;for(const L of LEDGES){const d=Math.abs(L.x-x);if(d<bd){bd=d;b=L;}}return b;};
+
+{const ai=aiInput;aiInput=function(f){const r=ai.apply(this,arguments)||{};
+  try{if(!BR.on||!f||f.dead||f.gone||GS!=='play'||f.ctrl==='dummy')return r;
+    const o=opp(f);if(!o||o.dead||o.gone)return r;const t=lvl(f),g=STAGE.main,P=f.pi||{};
+    const tap=(I,k)=>{if(!P[k])I[k]=1;};const mem=f.br||(f.br={});
+    const dx=o.x-f.x,dy=o.y-f.y,adx=Math.abs(dx),sd=Math.sign(dx)||1;
+
+    /* ---------- own ledge options: read the rival ---------- */
+    if(f.st==='ledge'){const L=f.ledge;if(!L)return r;
+      if(mem.lw===undefined||mem.lwF!==f.ledgeGrabs){mem.lwF=f.ledgeGrabs;mem.lw=4+Math.floor(rnd()*(10+22*t));}   /* wait a little, but inside the invincibility */
+      if(f.stT<Math.min(mem.lw,26))return {x:0,y:0};
+      const near=Math.abs(o.x-L.x)<70&&o.ground,I={x:0,y:0};const q=rnd();
+      if(near){if(q<.4){tap(I,'J');cnt('lJump');}else if(q<.75){tap(I,'S');cnt('lRoll');}else if(q<.9){tap(I,'A');cnt('lAtk');}else{I.y=1;cnt('lDrop');}}
+      else{if(q<.6){I.x=-L.side;cnt('lClimb');}else if(q<.8){tap(I,'J');cnt('lJump');}else{tap(I,'S');cnt('lRoll');}}
+      mem.lw=undefined;return I;}
+
+    /* ---------- recovery mix-ups ---------- */
+    const off=!f.ground&&(f.x<g.x-4||f.x>g.x+g.w+4);
+    if(off&&f.st!=='hit'&&f.st!=='helpless'&&!f.mv){const L=ledgeOf(f.x),above=f.y<L.y-30,toward=Math.sign(L.x-f.x)||-L.side;
+      if(mem.recT!==f._offSince){mem.recT=f._offSince;mem.high=rnd()<.25+.3*t;mem.late=rnd()<.35+.3*t;}
+      /* close above the stage with a rival waiting at the ledge: drift onto the stage, air dodge in if needed */
+      if(above&&mem.high&&Math.abs(f.x-L.x)<110&&!f.adUsed&&f.vy>0&&Math.abs(o.x-L.x)<60&&rnd()<.2+.5*t){const I={x:toward,y:-.6};tap(I,'S');cnt('recAD');return I;}
+      if(above&&mem.high){r.x=toward;return r;}
+      /* save the double jump when the rival is guarding, so the edge-guard swing whiffs */
+      if(mem.late&&f.jumps>0&&f.y<L.y+40&&Math.abs(o.x-L.x)<70&&r.J&&f.vy<3){r.J=0;cnt('recLate');}
+      return r;}
+
+    if(!f.ground||!o)return r;
+
+    /* ---------- ledge trapping ---------- */
+    if(o.st==='ledge'&&o.ledge){const L=o.ledge,spot=L.x-L.side*(34+10*(1-t)),I={x:0,y:0};
+      if(Math.abs(f.x-spot)>8){I.x=Math.sign(spot-f.x);return I;}
+      if(f.face!==L.side)I.x=L.side*.3;
+      if(rnd()<.02*(1-t))tap(I,'S');cnt('trap');return I;}
+    /* the rival is getting up: punish once we've seen it */
+    if(o.st==='climb'&&adx<80){mem.seen=mem.seen||FR;const ready=FR-mem.seen>=react(f);if(ready&&rnd()<.35+.6*t){const I={x:0,y:0};if(f.face!==sd){I.x=sd*.3;return I;}
+        if(o.stT>=12){if(o.climbK==='roll'){I.x=sd;}else{I.x=sd;if(o.dmg>90&&t>.4)I.sm=1;tap(I,'A');cnt('trapHit');}}return I;}return {x:0,y:0};}
+    else mem.seen=0;
+    /* ledge jump / roll landed near: answer it */
+    if(o.st==='roll'&&adx<70&&rnd()<.2+.5*t){const I={x:0,y:0};const land=o.x+o.rollDir*36;if(Math.abs(land-f.x)>20)I.x=Math.sign(land-f.x);else if(o.stT>16){I.x=Math.sign(o.x-f.x);tap(I,'A');cnt('rollPunish');}return I;}
+
+    /* ---------- off-stage edge-guard aerials ---------- */
+    const oOff=!o.ground&&(o.x<g.x-6||o.x>g.x+g.w+6)&&o.st!=='ledge';
+    if(oOff&&t>=.25&&f.jumps>0&&!f.upUsed&&f.dmg<110&&f.C.st&&(f.C.st.aj||0)>=1){const L=ledgeOf(o.x),dist=Math.abs(o.x-L.x),below=o.y-L.y;
+      if(dist<80&&below>-40&&below<45&&Math.abs(f.x-L.x)<40&&rnd()<.03+.1*t){
+        const I={x:L.side,y:0};tap(I,'J');f._egT=FR;cnt('egJump');return I;}}
+    return r;}catch(e){E(e);return r;}};}
+
+/* follow-through for an edge-guard jump: aerial at the rival, then head home */
+{const ai=aiInput;aiInput=function(f){const r=ai.apply(this,arguments)||{};
+  try{if(!BR.on||!f||f.dead||f.gone||GS!=='play'||f.ctrl==='dummy')return r;
+    if(f._egT&&FR-f._egT<40&&!f.ground&&!f.mv){const o=opp(f);if(o&&!o.dead){const dx=o.x-f.x,dy=o.y-f.y;
+        if(Math.abs(dx)<46&&Math.abs(dy)<44){const I={x:0,y:0};if(dy>18){I.y=1;}else I.x=Math.sign(dx)===f.face?f.face:-f.face;if(!(f.pi&&f.pi.A))I.A=1;f._egT=0;cnt('egHit');return I;}
+        r.x=Math.sign(dx);return r;}}
+    /* track when we went off stage, for the recovery mix-up */
+    const g=STAGE.main,off=!f.ground&&(f.x<g.x-4||f.x>g.x+g.w+4);if(off&&!f._offSince)f._offSince=FR;if(!off)f._offSince=0;
+  }catch(e){E(e);}return r;};}
+
+/* Makiko: Dream Step next to a rival (sleep on arrival), then smash the sleeper; never waste the spiral on someone already asleep */
+{const ai=aiInput;aiInput=function(f){const r=ai.apply(this,arguments)||{};
+  try{if(!BR.on||!f||f.C.id!=='makiko'||f.dead||f.gone||GS!=='play'||f.ctrl==='dummy'||f.form)return r;const o=opp(f);if(!o||o.dead)return r;
+    const t=lvl(f),dx=o.x-f.x,dy=o.y-f.y,adx=Math.abs(dx),P=f.pi||{};
+    const asleep=o.st==='dizzy'&&o.sleepT>0;
+    if(asleep&&f.ground&&!f.mv){const I={x:0,y:0};if(adx>44){I.x=Math.sign(dx);return I;}if(f.face!==Math.sign(dx)){I.x=Math.sign(dx)*.3;return I;}
+      if(dy<-20)I.y=-1;else{I.x=Math.sign(dx);}I.sm=1;if(!P.A)I.A=1;cnt('mkSmash');return I;}
+    if(r.B&&r.y>.5&&asleep){r.B=0;r.y=0;}
+    if(f.ground&&!f.mv&&!asleep&&o.ground&&adx>70&&adx<115&&Math.abs(dy)<30&&!(o.ccT&&FR-o.ccT<240)&&rnd()<.01+.05*t){const I={x:Math.sign(dx)*.9,y:-.45};if(!P.B)I.B=1;cnt('mkStep');return I;}
+    if(f.ground&&!f.mv&&!asleep&&adx<50&&Math.abs(dy)<30&&!(o.ccT&&FR-o.ccT<240)&&rnd()<.01+.04*t){const I={x:0,y:1};if(f.face!==Math.sign(dx))I.x=Math.sign(dx)*.3;else if(!P.B)I.B=1;cnt('mkSpiral');return I;}
+  }catch(e){E(e);}return r;};}
 })();
 
 </script>
