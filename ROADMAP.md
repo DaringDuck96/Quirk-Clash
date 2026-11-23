@@ -24,7 +24,7 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 
 ## Combos
 - [x] Jab 1-2-3 holds the rival (83/83 fighters connect)
-- [ ] Rapid-jab finishers for some fighters
+- [x] Holding A runs the jab string; fast-jab fighters loop a rapid jab and finish on release
 - [x] Up throw at low % leaves the rival airborne and in hitstun for a follow-up (down throws are each fighter's unique throw)
 - [x] Heavy fighters' neutral airs also get a landing hit
 
@@ -33,17 +33,20 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Crouch cancel
 - [x] Initial dash bursts at run speed or faster (traction per fighter was already in)
 
+## Round 3 (done): ledge, shield and grabs, hit-feel
+
 ## Ledge and recovery
-- [ ] Edge-guarding pass: ledge trump (in), 2-frame punish, recovery hitboxes
-- [ ] Ledge getup attack/roll slower and punishable at high %
+- [x] 2-frame punish: ledge invincibility starts 2 frames after the grab (ledge trump was already in)
+- [x] Recovery hitboxes: checked. 64 of 80 up-Bs hit; the rest are teleports or flights (or have their own hit code), which matches Ultimate
+- [x] Ledge climb: last frames punishable, slower from 100%
 
 ## Shield and grabs
-- [ ] Shield stun and pushback scaled with damage
-- [ ] Missed-grab lag; dash and pivot grabs with their own lag
-- [ ] Shield break: stun length and the bounce
+- [x] Shield stun and pushback scale with damage: checked, already in
+- [x] Whiffed grabs cost lag (standing +4, dash +10, pivot +12)
+- [x] Shield break stun shorter at high damage, and you can mash out
 
 ## Graphics and hit-feel
-- [ ] Screen shake scaled by knockback, heavier camera punch on KO hits
-- [ ] Damage % shakes on hit and goes redder as it climbs
-- [ ] Smash-charge flash and pulse
-- [ ] Bigger blast-zone KO burst; occasional star KO and screen KO
+- [x] Screen shake grows with launch speed (KO shake/zoom was already in)
+- [x] Damage % shake and colour: checked, already in
+- [x] Smash charge flashes and glows, with a burst at full charge
+- [x] Star KOs and screen KOs on some top KOs (blast-zone burst was already in)
