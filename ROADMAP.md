@@ -89,3 +89,5 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Okane: flesh normals quick, gold normals slow and unstoppable; Twine: every normal uses her arm tip; Kichi: chain normals with reach (Chain Wheel, Anchor); Sarah: Shadow Swap replaces the duplicate Shadow Step teleport
 - Move-set rework series done (20 fighters). Further reworks to come from playtest feedback.
 - [x] Kongu changed to a move-for-move Donkey Kong kit (normals, aerials, smashes, throws, specials); the baseball kit was removed
+- [x] Gomi, Sarah and Ayame can store a charged Neutral B (Shield or Jump while charging; B fires it)
+- [x] Homura's Magma Glob bounces along the floor like a fireball, leaving its pool where it stops

@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-2206';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-2213';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18335,6 +18335,48 @@ delete KO.mv.jab3;
 try{KO.mv.fair.hits[0].bkb=3.4;KO.mv.dair.hits[0].bkb=3.2;}catch(e){}
 KO.nrm=['Forward air: OVERHEAD SMASH — Both fists down: spikes.','Down air: STOMP — Both feet down: spikes.','Forward throw: CARGO — Hoists the rival on his shoulders to carry them.'];
 KO.na='Normals: Donkey Kong\'s moveset, move for move. Two-hit jab; a chop forward; an arm sweep overhead; a low slap that trips; a two-footed rush; spinning arms in the air; a double-fist overhead smash that spikes; a back kick; a headbutt upward; a stomp that spikes; a forward clap, an overhead clap and slaps on both sides for smashes. He can carry a grabbed rival on his shoulders (hold GRAB and walk). Impact: GROUND POUND — Grounded rivals he hits are popped straight up instead of away.';
+})();
+
+/* charge.js — 1. Gomi, Sarah and Ayame can STORE a charged Neutral B, like a charge shot: while charging, press Shield
+   (or Jump, or a direction to roll / dodge) to keep the charge; B fires it at that strength. A stored charge glows on them.
+   2. Homura's Magma Glob bounces along the floor like a plumber's fireball and leaves its burning pool where it stops. */
+(function(){
+const CS={err:null,n:{}};window.CHARGESTORE=CS;const E=e=>{CS.err=CS.err||String(e&&e.stack||e).slice(0,300);};const cnt=k=>{CS.n[k]=(CS.n[k]||0)+1;};
+const IDS=new Set(['gomi','sarah','ayame']);
+const can=f=>!!f&&!!f.C&&IDS.has(f.C.id)&&!(f.copyT>0);
+const maxOf=d=>(d&&d.chgMax)||40;
+/* while charging: Shield or Jump stores the charge and ends the move */
+{const up=update;update=function(f,I){try{if(can(f)&&f.mv&&f.mv.k==='nB'&&f.mv.d&&f.mv.d.chg&&!f.dead){const m=f.mv,d=m.d;
+      if(m.t>=d.s-2&&m.t<=d.s-1&&(m._ch||0)>=6&&!m._fireStored){const P=I||{};const store=f.ctrl==='cpu'?(m._ch>=maxOf(d)-1&&m._cpuStore):(P.sP||P.jP||P.S&&!(f.pi&&f.pi.S));
+        if(store){f._stored=Math.min(maxOf(d),m._ch);f.mv=null;f.st=f.ground?'idle':'air';burst(f.x+f.face*14,f.y-36,8,[f.C.col||'#ffffff','#ffffff'],1.6,12);try{sfx('pop');}catch(x){}cnt('store');}}}}catch(e){E(e);}
+  return up.apply(this,arguments);};}
+/* B with a stored charge fires it straight away at that strength */
+{const sm=startMove;startMove=function(f,key){const r=sm.apply(this,arguments);try{if(r&&can(f)&&key==='nB'&&f._stored&&f.mv&&f.mv.d&&f.mv.d.chg){const m=f.mv;m._ch=maxOf(m.d);m._chFire=f._stored;m._fireStored=1;m.t=Math.max(m.t,m.d.s-1);f._stored=0;cnt('fireStored');}}catch(e){E(e);}return r;};}
+/* the stored strength, not the full one, sizes the shot */
+{const se=spawnEnt;spawnEnt=function(f,s){const m=f&&f.mv;if(m&&m._chFire!==undefined){const keep=m._ch;m._ch=m._chFire;try{return se.apply(this,arguments);}finally{m._ch=keep;}}return se.apply(this,arguments);};}
+/* a KO clears it */
+{const rs=respawn;respawn=function(f){const r=rs.apply(this,arguments);try{if(f)f._stored=0;}catch(e){}return r;};}
+/* the CPU stores a full charge when the rival is far away, and fires it when they come into range */
+{const ai=aiInput;aiInput=function(f){const I=ai.apply(this,arguments)||{};try{if(!can(f)||f.dead||GS!=='play')return I;const o=typeof opp==='function'?opp(f):null;if(!o)return I;const d=Math.abs(o.x-f.x);
+    if(f.mv&&f.mv.k==='nB'&&f.mv._ch!==undefined&&!f.mv._fireStored&&f.mv._cpuStore===undefined)f.mv._cpuStore=d>260&&rnd()<.6;
+    if(f._stored&&!f.mv&&f.st!=='hit'&&d<240&&Math.abs(o.y-f.y)<60&&rnd()<.08){if(f.face!==Math.sign(o.x-f.x))I.x=Math.sign(o.x-f.x)*.3;else{I.B=1;I.A=0;I.x=0;I.y=0;cnt('cpuFire');}}}catch(e){E(e);}return I;};}
+/* the stored charge glows in their hand */
+if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&f._stored&&!f.dead&&!f.gone&&!f.invis&&typeof X!=='undefined'&&X){const p=(typeof interpPos==='function')?interpPos(f):f,k=f._stored/maxOf(f.C.mv.nB),c=f.C.col||'#ffffff';
+    X.globalAlpha=.35+.25*Math.sin(FR*.25);wdisc(p.x+f.face*10,p.y-32,4+k*5,c);X.globalAlpha=.9;wring(p.x+f.face*10,p.y-32,5+k*5+(FR%8)/3,'#ffffff',1);X.globalAlpha=1;}}catch(e){try{X.globalAlpha=1;}catch(x){}}return r;};}
+/* guide text */
+try{if(typeof GTXT!=='undefined')for(const id of IDS){const G=GTXT[id];if(G&&G[0]&&!/store/i.test(G[0]))G[0]+=' While charging, press Shield or Jump to store the charge; B fires it at that strength. A stored charge glows in their hand.';}}catch(e){}
+
+/* ---------- Homura: the Magma Glob bounces like a fireball ---------- */
+const HO=CH.find(c=>c.id==='homura');
+if(HO&&HO.mv.nB&&HO.mv.nB.spawn&&EK.glob){
+  for(const sp of HO.mv.nB.spawn)if(sp[1]&&sp[1].k==='glob')Object.assign(sp[1],{vx:4.6,vy:1.2,g:.34,life:110,mb:1});
+  const u0=EK.glob.upd;EK.glob.upd=function(e){if(e.spec&&e.spec.mb){const y=surfY(e.x,e.y-6);
+      if(y!==null&&e.y>=y-3&&e.vy>0){e._bn=(e._bn||0)+1;if(e._bn<=4&&e.life>8){e.y=y-3;e.vy=-3.7;for(let i=0;i<3;i++)part(e.x,y,rnd()*2-1,-rnd(),8,i%2?'#ff5a1a':'#ffd040',1,0);cnt('globBounce');return;}}
+      if(e.life<=2&&y!==null&&Math.abs(e.y-y)<30){e.y=y;}}
+    return u0.apply(this,arguments);};
+  try{if(typeof GTXT!=='undefined'&&GTXT.homura)GTXT.homura[0]='Throws a glob of magma that bounces along the floor like a fireball (up to four bounces), burning whoever it hits, and leaves a burning pool where it finally lands (two pools at most). Hold B to charge it: bigger, faster and stronger.';}catch(e){}
+  if(HO.sp)HO.sp[0]='Magma Glob (bounces along the floor; leaves a burning pool)';
+}
 })();
 
 </script>
