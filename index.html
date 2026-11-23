@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1426';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1431';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16872,6 +16872,22 @@ if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f)
     if(f.mv&&f.mv.charging&&!RMo()){const ct=f.mv.chargeT||0;if(ct>=58?FR%6===0:FR%14===0)f.flash=Math.max(f.flash||0,2);if(ct>=58&&!f.mv.v._full){f.mv.v._full=1;try{burst(f.x,f.y-30,10,['#ffffff','#ffe88a'],1.8,14);sfx('tech');}catch(e){}}}
   }catch(e){E(e);}
   return r;};}
+})();
+
+/* notext.js — like Smash Ultimate, fighters don't talk and moves aren't called out.
+   Floating words in a match (move names, shouts, dialogue, "SWEET SPOT!", "TRADE", status words) are no longer drawn.
+   Kept: taunt lines, and everything Captain Blue Hippo says. Mechanics are untouched: the text is still created, only not shown. */
+(function(){
+if(typeof drawFX!=='function'||typeof update!=='function')return;
+const NT={on:true,hid:0,kept:0};window.NOTEXT=NT;
+const TXT=new Set(['txt','txt2']);
+const isTaunt=m=>!!(m&&/^taunt/.test(m.k));
+{const up=update;update=function(f,I){const n0=FXL.length,m0=f&&f.mv;const r=up.apply(this,arguments);
+  try{if(f&&f.C&&FXL.length>n0&&(f.C.id==='hippo'||isTaunt(m0)||isTaunt(f.mv))){for(let i=n0;i<FXL.length;i++){const e=FXL[i];if(e&&TXT.has(e.k))e._keep=1;}}}catch(e){}
+  return r;};}
+{const dfx=drawFX;drawFX=function(e){if(NT.on&&e&&TXT.has(e.k)&&!e._keep&&typeof GS!=='undefined'&&GS!=='menu'){if(e.t===0)NT.hid++;return;}return dfx.apply(this,arguments);};}
+/* victory-screen quotes are dialogue too (the hippo keeps his) */
+if(typeof step==='function'){const st=step;step=function(){const r=st.apply(this,arguments);try{if(NT.on&&GS==='over')for(const f of F){if(f&&f._say&&f.C&&f.C.id!=='hippo'&&!isTaunt(f.mv))f._say=null;}}catch(e){}return r;};}
 })();
 
 </script>
