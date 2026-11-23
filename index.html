@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1431';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1441';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16888,6 +16888,52 @@ const isTaunt=m=>!!(m&&/^taunt/.test(m.k));
 {const dfx=drawFX;drawFX=function(e){if(NT.on&&e&&TXT.has(e.k)&&!e._keep&&typeof GS!=='undefined'&&GS!=='menu'){if(e.t===0)NT.hid++;return;}return dfx.apply(this,arguments);};}
 /* victory-screen quotes are dialogue too (the hippo keeps his) */
 if(typeof step==='function'){const st=step;step=function(){const r=st.apply(this,arguments);try{if(NT.on&&GS==='over')for(const f of F){if(f&&f._say&&f.C&&f.C.id!=='hippo'&&!isTaunt(f.mv))f._say=null;}}catch(e){}return r;};}
+})();
+
+/* ult4.js — Ultimate-feel round 4.
+   1 hitlag shake: the fighter who was hit shakes during the freeze (harder for bigger hits); the attacker trembles slightly
+   2 shield pokes: a hit that touches a body part sticking out of a shrunken (or tilted) shield goes through as a real hit
+   3 match-ending hit: a longer freeze, a darkened background with speed lines behind the fighters, before GAME!
+   (short-hop aerials at 0.85x damage were already in: see PACE) */
+(function(){
+if(typeof update!=='function'||typeof applyHit!=='function')return;
+const U4={err:null,n:{},on:true};window.ULT4=U4;const E=e=>{U4.err=U4.err||String(e&&e.stack||e).slice(0,300);};
+const cnt=k=>{U4.n[k]=(U4.n[k]||0)+1;};
+
+/* 1 hitlag shake (drawing only) */
+if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){
+  if(!U4.on||!f||!(f.hl>0)||f.dead||f.gone||(typeof RM!=='undefined'&&RM))return df.apply(this,arguments);
+  const vic=f.st==='hit'||f.st==='shieldstun'||f.st==='held',h0=f._hl0||f.hl,amp=vic?Math.min(4.5,1.2+h0*.16)*(.35+.65*f.hl/Math.max(1,h0)):.6;
+  const s=(FR&1)?1:-1,dx=s*amp,dy=vic?((FR>>1)&1?.5:-.5)*amp*.4:0;const x=f.x,y=f.y;f.x+=dx;f.y+=dy;
+  try{return df.apply(this,arguments);}finally{f.x=x;f.y=y;}};}
+
+/* 2 shield pokes + 4 short-hop damage */
+const inBubble=(t,x,y,r)=>{const R=shieldR(t),cx=t.x+(t.shx||0),cy=t.y-30+(t.shy||0);return Math.hypot(x-cx,y-cy)<r+R;};
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){o=o||{};
+  try{if(U4.on&&t&&a&&a!==t&&(t.st==='shield'||t.st==='shieldstun')&&!o.proj&&!o.force&&h&&h.b&&h.b.length&&!h.grab&&a.mv&&typeof shieldR==='function'){
+      const R=hurtR(t);let body=false,bub=false;
+      for(const b of h.b){const x=a.x+a.face*b[0],y=a.y+b[1];if(inBubble(t,x,y,b[2]))bub=true;else if(circRect(x,y,b[2],R))body=true;}
+      if(body&&!bub){const st=t.st;t.st='idle';t._poke=FR;let r;try{r=ah.apply(this,arguments);}catch(e){t.st=st;throw e;}if(r!=='hit'&&t.st==='idle')t.st=st;cnt('poke');return r;}}}catch(e){E(e);}
+  const r=ah.apply(this,arguments);
+  try{if(r==='hit'&&t&&t.hl>0)t._hl0=t.hl;if(r==='hit'&&a&&a!==t&&a.hl>0)a._hl0=a.hl;}catch(e){}
+  return r;};}
+
+/* 3 match-ending hit */
+const endsMatch=t=>{if(!t||t.stocks>1||MODE!=='versus')return false;const left=F.filter(x=>!x.gone&&x!==t);if(!left.length)return false;
+  if(typeof TEAMS_ON==='function'&&TEAMS_ON())return left.every(x=>x.team!==t.team)&&new Set(left.map(x=>x.team)).size===1;return left.length===1;};
+if(typeof killCheck==='function'){const kc=killCheck;killCheck=function(t,a,kb,col){const z=ZF.t,zf=ZF.f;ZF.f=null;const r=kc.apply(this,arguments);if(ZF.f===null)ZF.f=zf;
+  try{if(U4.on&&ZF.f===t&&ZF.fin&&ZF.t===ZF.len&&endsMatch(t)&&t._finF!==FR){t._finF=FR;t.hl=Math.max(t.hl||0,40);t._hl0=t.hl;if(a&&a!==t){a.hl=Math.max(a.hl||0,40);a._hl0=a.hl;}
+      ZF.t=ZF.len=Math.max(ZF.len,64);SLOW=Math.max(SLOW,34);U4.fin={t:FR,col:col||'#ffffff',x:t.x,y:t.y-30};cnt('finalHit');}}catch(e){E(e);}return r;};}
+if(typeof stageVeil==='function'){const sv=stageVeil;stageVeil=function(c,W,H){const r=sv.apply(this,arguments);
+  try{const F0=U4.fin;if(U4.on&&F0&&FR-F0.t<70&&GS!=='menu'){const k=FR-F0.t,a=k<4?k/4:k>54?Math.max(0,(70-k)/16):1;c.save();c.setTransform(1,0,0,1,0,0);
+      c.globalAlpha=.72*a;c.fillStyle='#0a1240';c.fillRect(0,0,W,H);
+      /* radial speed lines from the hit point */
+      const cx=W/2,cy=H*.45;c.globalAlpha=.5*a;c.strokeStyle='#bcd4ff';c.lineWidth=Math.max(2,W/400);
+      for(let i=0;i<36;i++){const ang=i/36*Math.PI*2+Math.sin(i*7.3)*.05,r0=Math.min(W,H)*(.28+.12*((i*37)%5)/5),r1=Math.max(W,H);c.beginPath();c.moveTo(cx+Math.cos(ang)*r0,cy+Math.sin(ang)*r0);c.lineTo(cx+Math.cos(ang)*r1,cy+Math.sin(ang)*r1);c.stroke();}
+      c.restore();}else if(F0&&FR-F0.t>=70)U4.fin=null;}catch(e){E(e);}return r;};}
+
+/* clear the hitlag reference once the freeze ends */
+{const up=update;update=function(f,I){const r=up.apply(this,arguments);try{if(f&&f._hl0&&!(f.hl>0))f._hl0=0;}catch(e){}return r;};}
 })();
 
 </script>

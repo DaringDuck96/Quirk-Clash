@@ -50,3 +50,18 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Damage % shake and colour: checked, already in
 - [x] Smash charge flashes and glows, with a burst at full charge
 - [x] Star KOs and screen KOs on some top KOs (blast-zone burst was already in)
+
+## Round 4: Ultimate feel, part 2
+- [x] Hitlag shake: the fighter who was hit shakes through the freeze; the attacker trembles slightly
+- [x] Shield pokes: hits on a body part outside a shrunken or tilted shield go through
+- [x] Match-ending hit: longer freeze, darker background with speed lines before GAME! (final-stock zoom was already in)
+- [x] Short-hop aerials at 0.85x damage: checked, already in
+- [ ] Jump + attack together = short-hop aerial
+- [ ] Shield + attack grabs in every state Ultimate allows (check)
+- [ ] Hit sounds in consistent tiers (light / medium / heavy / KO crunch)
+- [ ] Per-element hit sparks and sounds (slash, burn, shock, freeze)
+- [ ] Smash Ball item, with a meter / ball / both rule
+- [ ] Item throwing in any direction, air drops and catches (check what's there)
+- [ ] Training: launch trajectory line after a hit
+- [ ] Training: frame advantage on hit and on shield
+- [ ] Training: half and quarter speed
