@@ -74,3 +74,7 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [ ] Controls settings: button remapping, tap jump on/off, right stick tilts or smashes (tilts by default), shield options (check what exists)
 - [x] Gameplay trailer: the World Premiere trailer (204 s, cut to the theme song)
 - [ ] Tune the recent feel changes from playtest feedback (hit sounds, shake, launch speed, edge stops)
+
+## Ryuko rework
+- [x] Starts every stock in her wheelchair with a Bowser Jr.-style gadget kit (cannon, kart dash, rocket chair with exploding booster pack, chair armour); Down-B swaps to ULTRA MECHA DINO and back
+- [x] Wheelchair sprite, a matching chair look for every costume, and two new costumes (RACER, INVENTOR)
