@@ -3,7 +3,7 @@
 Saved list of everything we want to make the game feel more like Smash Ultimate.
 `[x]` = done, `[~]` = partly there, `[ ]` = to do.
 
-## Round 1 (in progress)
+## Round 1 (done)
 - [x] Limb hurtboxes (already in), weapons and weapon props now never hittable (disjoint)
 - [x] 1v1 damage x1.2 when exactly two fighters remain; aim for KOs around 140%
 - [x] Multi-hits hold the target to the finisher; down airs get a landing hit
@@ -11,24 +11,27 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Up-B snaps to the ledge while still rising; landing helpless / out of up-B has real lag
 - [x] Footstools pin grounded rivals and spike airborne ones (footstool itself was already in); grab mash-out (pummel was already in); teetering and walking stops at edges
 
+## Round 2 (done): hitboxes, knockback, combos, movement
+
 ## Hitboxes and hurtboxes
-- [~] Trades and clanks: clanking exists for grounded moves; check true trades (both connect on the same frame)
-- [ ] More sweet/sour spots (tip or core) on smashes, some aerials and tilts
-- [ ] Hitbox interpolation so fast swings can't pass through a target between frames
+- [x] True trades: two attacks that meet on the same frame both connect (grounded clanks were already in)
+- [x] Late hits on aerials and smashes (weaker tail of the active frames); weapon tippers on forward tilt and forward smash
+- [x] Swept hitboxes so fast attacks can't pass through a target between frames
 
 ## Knockback and damage
-- [ ] Launch speed: fast start, quick slowdown (explosive hits, same travel)
-- [ ] Re-check stale moves (9-move queue exists) against Ultimate values
+- [x] Launch speed: 25% faster start, harder slowdown, same travel
+- [x] Stale moves: checked, already uses Ultimate's 9-slot values
 
 ## Combos
-- [ ] Jab 1-2-3 always connects at low %; rapid-jab finishers for some fighters
-- [ ] Combo-throw angles (weak low-angle down/up throws)
-- [ ] Landing hitboxes on more aerials for fighters who'd have them
+- [x] Jab 1-2-3 holds the rival (83/83 fighters connect)
+- [ ] Rapid-jab finishers for some fighters
+- [x] Up throw at low % leaves the rival airborne and in hitstun for a follow-up (down throws are each fighter's unique throw)
+- [x] Heavy fighters' neutral airs also get a landing hit
 
 ## Movement
-- [ ] Directional air dodge with landing lag (check what's there)
-- [ ] Crouch cancel (less knockback while crouching at low %)
-- [ ] Faster initial dash than full run; traction differs per fighter
+- [x] Directional air dodge with landing lag: checked, already in
+- [x] Crouch cancel
+- [x] Initial dash bursts at run speed or faster (traction per fighter was already in)
 
 ## Ledge and recovery
 - [ ] Edge-guarding pass: ledge trump (in), 2-frame punish, recovery hitboxes

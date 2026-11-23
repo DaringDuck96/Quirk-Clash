@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1406';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1416';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16611,7 +16611,7 @@ if(typeof dmgMod==='function'){const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm
 else{window.dmgMod=function(){return U.on&&duel()?1.2:1;};}
 
 /* KO timing: from 70% up, launches grow (up to +KBX at 140%+) so stocks end nearer Ultimate's ~140% */
-U.KBX=.14;
+U.KBX=.18;
 if(typeof kbMod==='function'){const km=kbMod;kbMod=function(a,t,h,o){let m=km.apply(this,arguments);try{if(U.on&&t){const q=clamp((t.dmg-70)/70,0,1),s=q*q*(3-2*q);m*=1+U.KBX*s;}}catch(e){E(e);}return m;};}
 /* applyHit: multi-hit hold, directional sparks */
 {const ah=applyHit;applyHit=function(t,h,dirX,a,o){o=o||{};const r=ah.apply(this,arguments);
@@ -16667,7 +16667,7 @@ if(typeof touchDown==='function'){const td=touchDown;touchDown=function(f,s,tvy)
       if(st==='helpless'){f.landLen=Math.max(f.landLen,24);cnt('hlLag');}
       else if(st==='move'&&m&&m.k==='uB'&&f.landLen===10){f.landLen=20;cnt('hlLag');}
       /* 3 landing hit: down air */
-      if(st==='move'&&m&&m.k==='dair'&&m.t>=m.d.s-1&&!m.d.beh&&m.d.hits&&m.d.hits.length){const h0=m.d.hits[0];
+      if(st==='move'&&m&&(m.k==='dair'||(m.k==='nair'&&((f.C.st&&f.C.st.w)||1)>=1.35))&&m.t>=m.d.s-1&&!m.d.beh&&m.d.hits&&m.d.hits.length){const h0=m.d.hits[0];
         const h={dmg:clamp(Math.round((h0.dmg||6)*.35),2,5),bkb:3.2,kbg:.04,ang:62,fx:h0.fx};
         for(const o of F){if(o===f||o.dead||o.gone||intangible(o)||(f.team!==undefined&&o.team===f.team))continue;if(circRect(f.x,f.y-8,22,hurtR(o))){applyHit(o,h,Math.sign(o.x-f.x)||f.face,f,{});cnt('landHit');}}
         FXL.push({k:'ring',x:f.x,y:f.y-4,t:0,col:'#ffffff',r0:8,life:10});try{dust(f.x,f.y,6);}catch(e){}}}}catch(e){E(e);}return r;};}
@@ -16704,6 +16704,81 @@ if(typeof poseOf==='function'&&typeof mergeP==='function'){const po=poseOf;poseO
 
 /* CPUs mash too */
 if(typeof aiInput==='function'){const ai=aiInput;aiInput=function(f){const r=ai.apply(this,arguments)||{};try{if(f&&f.st==='held'){const t=(clamp(f.lvl||1,1,9)-1)/8;if(rnd()<.2+.6*t){r.A=(FR&2)?1:0;r.J=(FR&2)?0:1;}}}catch(e){E(e);}return r;};}
+})();
+
+/* ult2.js — Ultimate-feel round 2: hitboxes, knockback, combos, movement.
+   Hitboxes:  true trades (two attacks that meet on the same frame both connect);
+              swept hitboxes (a fast swing can't skip past a target between frames);
+              late hits (the tail of an aerial's or smash's active frames is weaker); weapon tippers on forward tilt / forward smash.
+   Knockback: launches start ~25% faster and slow down harder (same distance, more snap); crouch cancel (crouching takes 15% less knockback, light hits don't lift you).
+   Combos:    jab 1 and 2 hold the rival in place for the next jab; up throw at low % leaves the rival close and in hitstun long enough to follow up;
+              heavy fighters' neutral airs get a landing hit too (in ult.js).
+   Movement:  the first frames of a dash burst at full run speed or a bit more, so dash-dancing covers ground. */
+(function(){
+if(typeof combat!=='function'||typeof applyHit!=='function')return;
+const U2={err:null,n:{},on:true};window.ULT2=U2;const E=e=>{U2.err=U2.err||String(e&&e.stack||e).slice(0,300);};
+const cnt=k=>{U2.n[k]=(U2.n[k]||0)+1;};
+const WK=new Set(['dagger','blade','whip','chain','pan','saw','mace','case','pillow','talisman']);
+const KIND=C=>(typeof PROPS!=='undefined'&&PROPS.T&&PROPS.T[C.id])?PROPS.T[C.id][0]:null;
+const LATEK=/^(nair|fair|bair|uair|dair|fsmash|usmash|dsmash)$/;
+
+/* weapon tippers */
+try{let n=0;for(const C of CH){if(!C||!C.mv)continue;const wpn=(C.look&&C.look.wpn)||WK.has(KIND(C));if(!wpn)continue;for(const k of['ftilt','fsmash']){const d=C.mv[k];if(d&&d.hits&&d.hits.length&&!d.beh&&!d.sweet&&!d.hits.some(h=>h.ri)){d.sweet='tip';n++;}}}U2.tips=n;}catch(e){E(e);}
+
+/* late hits: weaker, in damage and launch */
+const late=(a,h,o)=>{if(!U2.on||!a||!a.mv||(o&&(o.proj||o.force)))return false;const m=a.mv,d=m.d;if(!LATEK.test(m.k)||!h||h.ri||h.f0!==undefined||d.beh||(d.a||0)<4)return false;if(d.hits.indexOf(h)<0)return false;return m.t>d.s+Math.ceil(d.a*.5)-1;};
+if(typeof dmgMod==='function'){const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(late(a,h,o)){m*=.8;if(a.mv.v._lt!==FR){a.mv.v._lt=FR;cnt('late');}}}catch(e){E(e);}return m;};}
+if(typeof kbMod==='function'){const km=kbMod;kbMod=function(a,t,h,o){let m=km.apply(this,arguments);try{if(late(a,h,o))m*=.9;if(U2.on&&t&&t.st==='crouch'&&t.ground){m*=.85;}}catch(e){E(e);}return m;};}
+
+/* applyHit: launch snap, crouch cancel, jab hold, up-throw combos */
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){o=o||{};const crouch=!!(t&&t.st==='crouch'&&t.ground),pre=t?t.dmg:0;
+  const r=ah.apply(this,arguments);
+  try{if(!U2.on||r!=='hit'||!t||t.st!=='hit')return r;
+    const m=a&&a!==t?a.mv:null,k=m?m.k:'';
+    const sp=Math.hypot(t.lx||0,t.ly||0);
+    if(crouch&&sp<4.2){t.ly=0;t.lx*=.6;t.hitstun=Math.max(4,Math.round(t.hitstun*.67));cnt('cc');}
+    if(m&&!o.proj&&(k==='jab1'||k==='jab2')&&t.dmg<110){const b=m.d.hits[0]&&m.d.hits[0].b[0],reach=b?Math.abs(b[0])+b[2]*.5:30;
+      t.ly=0;t.lx=a.face*.7;if(t.ground)t.vy=0;t.hitstun=Math.max(t.hitstun,16);t.tumble=false;
+      const want=a.x+a.face*Math.max(16,reach*.62);if(Math.abs(t.x-a.x)>reach*.85)t.x+=(want-t.x)*.6;cnt('jab');}
+    else if(m&&k==='uthrow'&&pre<55){t.lx*=.5;t.ly=Math.min(t.ly,-5.2);t.ground=null;const d=m.d,rem=Math.max(0,d.s+d.a+d.r-m.t);t.hitstun=Math.max(t.hitstun,rem+20);cnt('uthrow');}
+    else if(!(h&&h.ri)&&sp>2&&!t.frozen){t.lx*=1.25;t.ly*=1.25;t._lb=1;}
+  }catch(e){E(e);}return r;};}
+
+/* combat: trades + swept hitboxes */
+const wpos=(f,b,x,y,face)=>[x+face*b[0],y+b[1],b[2]];
+{const cb=combat;combat=function(){
+  let snap=null;
+  try{if(U2.on){snap=[];for(const f of F){if(f.dead||f.gone||f.hl>0||!f.mv)continue;const hbs=hitboxes(f);if(hbs.length)snap.push({f,m:f.mv,hbs,x:f.x,y:f.y,face:f.face});}}}catch(e){E(e);snap=null;}
+  const r=cb.apply(this,arguments);
+  try{if(!U2.on)return r;
+    /* trades */
+    if(snap)for(const s of snap){const f=s.f,t=f.lastBy;if(f.lastHurt!==FR||!t||t===f||t.dead||t.gone||f.mv===s.m)continue;if(intangible(t))continue;
+      if(Object.keys(s.m.hit).some(k=>k.startsWith(t.id+':')))continue;const R=hurtR(t);let hit=null;
+      for(const[h,i]of s.hbs){for(const b of h.b){const p=wpos(f,b,s.x,s.y,s.face);if(circRect(p[0],p[1],p[2],R)){hit=[h,i];break;}}if(hit)break;}
+      if(hit){s.m.hit[t.id+':'+hit[1]]=s.m.t;const res=applyHit(t,hit[0],s.face,f,{});if(res==='hit'){cnt('trade');try{FXL.push({k:'txt',s:'TRADE',x:(f.x+t.x)/2,y:Math.min(f.y,t.y)-80,t:0,life:30,col:'#ffffff'});}catch(e){}}}}
+    /* swept hitboxes */
+    for(const a of F){if(a.dead||a.gone||a.hl>0||!a.mv){if(a)a._hbP=null;continue;}const m=a.mv,hbs=hitboxes(a);if(!hbs.length){a._hbP=null;continue;}
+      const P=a._hbP,cur={};
+      for(const[h,i]of hbs){cur[i]=h.b.map(b=>wpos(a,b,a.x,a.y,a.face));}
+      if(P&&P.m===m&&P.t===m.t-1){
+        for(const t of F){if(t===a||t.dead||t.gone||intangible(t)||t.holder||(a.team!==undefined&&a.team===t.team))continue;const R=hurtR(t);
+          for(const[h,i]of hbs){const key=t.id+':'+i;if(m.hit[key]!==undefined||!P.p[i])continue;let hit=false;
+            for(let j=0;j<cur[i].length&&!hit;j++){const c=cur[i][j],q=P.p[i][j];if(!q)continue;const dx=c[0]-q[0],dy=c[1]-q[1],L=Math.hypot(dx,dy);if(L<c[2]*.8)continue;
+              const n=Math.min(6,Math.ceil(L/(c[2]*.7)));for(let s=1;s<n;s++){const u=s/n;if(circRect(q[0]+dx*u,q[1]+dy*u,c[2],R)){hit=true;break;}}}
+            if(!hit)continue;m.hit[key]=m.t;const cm=m.chargeT?1+.4*m.chargeT/60:1;const res=applyHit(t,h,a.face,a,{cm});cnt('swept');
+            if(!h.ri)Object.keys(m.hit).forEach(k=>{if(k.startsWith(t.id+':'))m.hit[k]=m.t;});break;}
+          if(a.mv!==m)break;}}
+      a._hbP=a.mv===m?{m,t:m.t,p:cur}:null;}
+  }catch(e){E(e);}return r;};}
+
+/* update: launch decay, initial dash burst */
+{const up=update;update=function(f,I){const r=up.apply(this,arguments);
+  try{if(!U2.on||!f||!f.C||f.dead||f.gone)return r;
+    if(f._lb){if(f.hl>0){}else if((f.lx||f.ly)&&f.st==='hit'){const sp=Math.hypot(f.lx,f.ly),ns=Math.max(0,sp-.236);if(ns<=0){f.lx=f.ly=0;f._lb=0;}else{f.lx*=ns/sp;f.ly*=ns/sp;}}else f._lb=0;}
+    const S=f.C.st;
+    if(f.st==='run'&&f.runT===FR&&S)f._dsm=clamp(Math.abs(f.vx)/(S.run*(S.dash||.75)),0,1);
+    if(f.st==='run'&&f.ground&&!f.mv&&FR-(f.runT||-99)<=8&&S){const tv=S.run*clamp((S.dash||.75)+.45,1,1.25)*(f._dsm===undefined?1:f._dsm);if(Math.abs(f.vx)<tv*.98&&Math.sign(f.vx||f.face)===f.face){f.vx=f.face*tv;}}
+  }catch(e){E(e);}return r;};}
 })();
 
 </script>
