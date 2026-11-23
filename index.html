@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1505';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1510';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16876,7 +16876,7 @@ if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f)
 
 /* notext.js — like Smash Ultimate, fighters don't talk and moves aren't called out.
    Floating words in a match (move names, shouts, dialogue, "SWEET SPOT!", "TRADE", status words) are no longer drawn.
-   Kept: taunt lines, and everything Captain Blue Hippo says. Mechanics are untouched: the text is still created, only not shown. */
+   Kept: taunt lines, everything Captain Blue Hippo says, and symbol-only status pop-ups (stack pips, zzz, meter bars). Mechanics are untouched: the text is still created, only not shown. */
 (function(){
 if(typeof drawFX!=='function'||typeof update!=='function')return;
 const NT={on:true,hid:0,kept:0};window.NOTEXT=NT;
@@ -16885,7 +16885,11 @@ const isTaunt=m=>!!(m&&/^taunt/.test(m.k));
 {const up=update;update=function(f,I){const n0=FXL.length,m0=f&&f.mv;const r=up.apply(this,arguments);
   try{if(f&&f.C&&FXL.length>n0&&(f.C.id==='hippo'||isTaunt(m0)||isTaunt(f.mv))){for(let i=n0;i<FXL.length;i++){const e=FXL[i];if(e&&TXT.has(e.k))e._keep=1;}}}catch(e){}
   return r;};}
-{const dfx=drawFX;drawFX=function(e){if(NT.on&&e&&TXT.has(e.k)&&!e._keep&&typeof GS!=='undefined'&&GS!=='menu'){if(e.t===0)NT.hid++;return;}return dfx.apply(this,arguments);};}
+/* symbol-only pop-ups (stack pips, zzz, meter bars) are status icons, not words: keep them */
+const ICON=s=>!/[A-Za-y]/.test(String(s));
+/* a few worded status pop-ups become icons instead of vanishing: ready / not ready / reloading */
+const SUB=s=>{s=String(s);if(/READY/.test(s)&&!/NOT/.test(s))return '▼';if(/NOT YET|RELOADING|SPENT|EMPTY|COOLDOWN/.test(s))return '✕';return null;};
+{const dfx=drawFX;drawFX=function(e){if(NT.on&&e&&TXT.has(e.k)&&!e._keep&&!ICON(e.s)&&e._sub===undefined){const q=SUB(e.s);e._sub=q;if(q){e._s0=e.s;e.s=q;}}if(NT.on&&e&&TXT.has(e.k)&&!e._keep&&!ICON(e.s)&&typeof GS!=='undefined'&&GS!=='menu'){if(e.t===0)NT.hid++;return;}return dfx.apply(this,arguments);};}
 /* victory-screen quotes are dialogue too (the hippo keeps his) */
 if(typeof step==='function'){const st=step;step=function(){const r=st.apply(this,arguments);try{if(NT.on&&GS==='over')for(const f of F){if(f&&f._say&&f.C&&f.C.id!=='hippo'&&!isTaunt(f.mv))f._say=null;}}catch(e){}return r;};}
 })();
