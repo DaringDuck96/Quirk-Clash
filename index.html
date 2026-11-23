@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1546';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1604';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16148,7 +16148,7 @@ const up0=update;update=function(f,I){const y0=f.y,m0=f.mv,inUB=!!(m0&&m0.k==='u
      MEGA MARSHMALLOW thrown upward, and a marshmallow ground-pound.
    KOKI plays like a crocodile king: belly armor on his heavy hitters, a TOP HAT he throws like a boomerang, a spinning-fin
      recovery, a belly counter, a chomping bite and the Land Shark dive (no cannon).
-   MAKIKO plays like a psychic: a charged dream orb, a reflecting swirl, a teleport and a gaze that sleeps rivals who face her (sleep is shorter).
+   MAKIKO plays like a psychic: a charged dream orb, a reflecting swirl, a teleport and a sleep spiral; her hits punish sleeping rivals.
    RAION plays like a pro-wrestling cat: spinning lariat, rope-whip command grab, cross chop recovery, and a revenge counter
      that powers up his next hit. */
 (function(){
@@ -16354,18 +16354,30 @@ if(MK){const fx=['#c8a8ff','#ffb8e0'],PU='#9a7aff',PI2='#ffb8e0';
   nB:{an:'cast',s:8,a:2,r:16,hits:[],beh:'mkorb',fx,lim:'none',face:'atk',nm:'DREAM ORB'},
   sB:m('palm',8,10,20,hit([[26,-36,16]],5,4.6,.03,45),{beh:'reflect',bp:{f0:6,f1:20},nm:'DAZE SWIRL',face:'atk'}),
   uB:mahoUB,
-  dB:m('roar',10,3,24,hit([[34,-46,13],[18,-44,11]],1,1.2,0,40,{eff:'sleep'}),{nm:"SANDMAN'S GAZE",face:'atk'}),
+  dB:m('cast',10,8,22,hit([[30,-36,20],[52,-36,18]],2,1.6,0,40,{eff:'sleep'}),{nm:'SANDMAN SPIRAL',face:'atk'}),
   nair:m('spin',5,16,12,hit([[0,-32,20]],1.6,1.2,0,60,{ri:4}),{finisher:hit([[0,-32,22]],4,4,.05,45),ll:7,nm:'DREAM SPIN'}),
   dair:m('dairSt',14,3,20,hit([[0,-4,12]],12,3.6,.075,-82),{ll:14,nm:'NIGHTFALL'})});
  MK._aik={nB:'far',sB:'near',dB:'near'};
- MK.sp=["Dream Orb (hold B to grow a ball of dream energy, release to throw it)","Daze Swirl (a swirl in front of her: reflects projectiles and spins rivals around)","Dream Step (teleports in any direction)","Sandman's Gaze (a short stare: a rival facing her falls asleep briefly)"];
- setGT('makiko',['Hold B to grow a ball of dream energy, then let go to throw it. The longer she holds, the bigger, harder and faster it is. In the air she floats while she charges.','A swirl of dream right in front of her. It sends projectiles back, and any rival it hits is spun round to face the other way.','Vanishes and reappears a short distance away in whichever direction you hold.',"Stares into the rival's eyes. If they are facing her they fall asleep for a moment; if they are facing away, it barely touches them."]);
- MK.trait='DREAM WALKER — her hits make rivals drowsy, and the fifth in a row puts them to sleep. Sleep she causes is short (never more than a second and a half). Sandman\'s Gaze only works on a rival who is facing her.';
- /* the gaze only sleeps a rival who is looking at her */
- const ah=applyHit;applyHit=function(t,h,dirX,a,o){try{if(a&&mine(a,MK)&&a.mv&&a.mv.k==='dB'&&h&&h.eff==='sleep'&&t&&((a.x-t.x)*(t.face||1))<=0){h=Object.assign({},h,{eff:undefined,dmg:2});arguments[1]=h;}}catch(e){}
-  const r=ah.apply(this,arguments);try{if(r==='hit'&&a&&mine(a,MK)&&a.mv&&a.mv.k==='sB'&&t&&!t.dead){t.face=-(t.face||1);say(t.x,t.y-80,'DAZED','#c8a8ff',24);}}catch(e){}return r;};
+ MK.sp=["Dream Orb (hold B to grow a ball of dream energy, release to throw it)","Daze Swirl (a swirl in front of her: reflects projectiles and spins rivals around)","Dream Step (teleports in any direction)","Sandman Spiral (a hypnotic spiral in front of her that puts rivals to sleep)"];
+ setGT('makiko',['Hold B to grow a ball of dream energy, then let go to throw it. The longer she holds, the bigger, harder and faster it is. In the air she floats while she charges.','A swirl of dream right in front of her. It sends projectiles back, and any rival it hits is spun round to face the other way.','Vanishes and reappears a short distance away in whichever direction you hold.','Spins a hypnotic spiral right in front of her. Whoever it catches falls asleep, as long as a stun lasts. Her attacks hit sleeping rivals harder.']);
+ MK.trait='DREAM WALKER — her hits make rivals drowsy, and the fifth in a row puts them to sleep. Sleep she causes is short (never more than a second and a half). Sandman Spiral puts anyone it catches to sleep, and her attacks hit sleeping rivals harder.';
+ /* Sandman Spiral: sleep lasts as long as a stun (70 frames); it is not shortened like her other sleeps */
+ const ah=applyHit;applyHit=function(t,h,dirX,a,o){
+  const r=ah.apply(this,arguments);try{if(r==='hit'&&a&&mine(a,MK)&&a.mv&&a.mv.k==='dB'&&t&&t.st==='dizzy'&&t.sleepT>0){t.dz=70;t.sleepT=70;t._mkS=1;}}catch(e){}try{if(r==='hit'&&a&&mine(a,MK)&&a.mv&&a.mv.k==='sB'&&t&&!t.dead){t.face=-(t.face||1);say(t.x,t.y-80,'DAZED','#c8a8ff',24);}}catch(e){}return r;};
  /* every sleep she causes is short */
  const s0=step;step=function(){const r=s0.apply(this,arguments);try{for(const t of F){if(!t)continue;if(t.st==='dizzy'&&t.sleepT>0){if(!t._mkS&&t.lastBy&&t.lastBy.C===MK){t._mkS=1;t.dz=Math.min(90,Math.round(t.dz*.6));t.sleepT=t.dz;}}else t._mkS=0;}}catch(e){E(e);}return r;};
+/* forward smash no longer puts rivals to sleep (sleep cut its knockback almost in half); up smash is a real finisher */
+ for(const T of[MK.mv,MK.hmv]){if(!T)continue;const fs=T.fsmash;if(fs&&fs.hits)for(const h of fs.hits)if(h.eff==='sleep')delete h.eff;
+   const us=T.usmash;if(us&&us.hits&&!us._b6){us._b6=1;for(const h of us.hits){h.dmg=Math.max(h.dmg,14);h.kbg=(h.kbg||0)*1.25;}}}
+ /* her attacks hit sleeping rivals harder: +20% damage, +25% knockback (the hit wakes them, as usual) */
+ const asleep=t=>t&&t.st==='dizzy'&&t.sleepT>0;
+ {const d0=dmgMod;dmgMod=function(a,t,h,o){let v=d0.apply(this,arguments);try{if(a&&mine(a,MK)&&a!==t&&asleep(t)){v*=1.2;use('sleepHit');}}catch(e){}return v;};}
+ {const k0=kbMod;kbMod=function(a,t,h,o){let v=k0.apply(this,arguments);try{if(a&&mine(a,MK)&&a!==t&&asleep(t))v*=1.25;}catch(e){}return v;};}
+ /* the spiral */
+ {const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const f of F){if(!mine(f,MK)||f.dead||f.gone||!f.mv||f.mv.k!=='dB')continue;const m2=f.mv,d=m2.d,t=m2.t-d.s+2;if(t<0||t>d.a+8)continue;
+   const p=t/(d.a+8),cx=f.x+f.face*40,cy=f.y-36,R=8+26*Math.min(1,t/6),al=t>d.a?1-(t-d.a)/8:1;X.save();X.lineCap='round';
+   for(let k=0;k<2;k++){X.strokeStyle=k?PI2:PU;X.lineWidth=3-k;X.globalAlpha=.85*al;X.beginPath();for(let i=0;i<=60;i++){const u=i/60,a=u*Math.PI*5+m2.t*.35*f.face+k*Math.PI,r=R*u;const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r*.8;i?X.lineTo(x,y):X.moveTo(x,y);}X.stroke();}
+   X.globalAlpha=.3*al;X.fillStyle=PI2;X.beginPath();X.arc(cx,cy,R*.35,0,7);X.fill();X.restore();}}catch(e){try{X.restore();}catch(x){}}};}
 }
 }catch(e){E(e);}
 /* recoveries rebuilt here are no longer scaled by upb.js */
@@ -17187,6 +17199,8 @@ const T={
   keanu:{fsmash:{kb:1.08}},
   hazmat:{fsmash:{kb:1.08}}};
 B5.table=T;
+/* Hazmat: forward smash launches sideways (40 degrees instead of 86) so it can KO off the side, and comes out faster (13 frames, was 16) */
+try{const H=CH.find(c=>c.id==='hazmat');if(H)for(const M of[H.mv,H.hmv]){const d=M&&M.fsmash;if(!d||d._b5)continue;d._b5=1;d.s=Math.min(d.s,13);if(d.hits&&d.hits[0])d.hits[0].ang=40;}}catch(e){E(e);}
 const rule=(a,h,o)=>{if(!B5.on||!a||!a.C)return null;const R=T[a.C.id];if(!R)return null;let k=null;
   if(o&&o.proj){k=h&&h._bk;}else k=a.mv&&a.mv.k;return k&&R[k]||null;};
 {const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{const r=rule(a,h,o);if(r&&r.dm){m*=r.dm;B5.n[a.C.id]=(B5.n[a.C.id]||0)+1;}}catch(e){E(e);}return m;};}
