@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1621';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1631';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -17326,7 +17326,7 @@ function pump(){if(showing||!Q.length)return;if(busy()){setTimeout(pump,700);ret
  +'#skban canvas{width:min(240px,34vw);height:auto;image-rendering:pixelated;flex:none;filter:drop-shadow(0 6px 0 rgba(0,0,0,.5))}#skban h3{margin:0;font:900 15px/1 Rubik,system-ui,sans-serif;letter-spacing:4px;color:#c88aff}#skban h2{margin:6px 0 2px;font:900 clamp(30px,6vw,54px)/1 Rubik,system-ui,sans-serif;letter-spacing:2px;text-shadow:0 4px 0 #000}'
  +'#skban .ab{font:800 18px/1.2 Rubik,system-ui,sans-serif;color:#ffd400;letter-spacing:3px;margin-bottom:10px}#skban p{margin:6px 0;font:500 14px/1.45 Rubik,system-ui,sans-serif;color:#e8e4f4}#skban p b{color:#c88aff}#skban button{margin-top:14px;padding:11px 26px;font:900 15px/1 Rubik,system-ui,sans-serif;letter-spacing:2px;border:0;border-radius:10px;background:#c88aff;color:#16121e;cursor:pointer}'
  +'#skban i{position:absolute;top:-20px;width:9px;height:16px;animation:skfall linear infinite}@keyframes skpop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}@keyframes skfall{to{transform:translateY(110vh) rotate(720deg)}}@media(max-width:640px){#skban .bx{flex-direction:column;text-align:center;gap:10px;padding:18px}}';document.head.appendChild(st);}
-const HOW={m:n=>'Played '+n+' matches as them',ko:n=>'Scored '+n+' KOs with them',dmg:n=>'Dealt '+n+'% damage with them',c:()=>'Played a campaign fight with them',sv:n=>'Reached wave '+n+' in Survival with them',d:n=>'Took '+n+' KOs with them'};
+const HOW={adDmg:n=>'Dealt '+n.toLocaleString('en-US')+'% damage with them, in any mode',m:n=>'Played '+n+' matches as them',ko:n=>'Scored '+n+' KOs with them',dmg:n=>'Dealt '+n+'% damage with them',c:()=>'Played a campaign fight with them',sv:n=>'Reached wave '+n+' in Survival with them',d:n=>'Took '+n+' KOs with them'};
 function show(id,i){const ci=CH.findIndex(c=>c.id===id),C=CH[ci],L=C&&C.looks&&C.looks[i];if(!L){pump();return;}
   let ov=document.getElementById('skban');if(!ov){ov=document.createElement('div');ov.id='skban';document.body.appendChild(ov);}ov.innerHTML='';showing=true;
   const cols=['#c88aff','#ffd400','#5ab8ff','#ff8ad0','#ffffff'];for(let k=0;k<40;k++){const c=document.createElement('i');c.style.left=(Math.random()*100)+'%';c.style.background=cols[k%cols.length];c.style.animationDuration=(2.2+Math.random()*2.6)+'s';c.style.animationDelay=(-Math.random()*4)+'s';ov.appendChild(c);}
@@ -17347,6 +17347,99 @@ SB.scan=scan;SB.pump=pump;SB.show=show;SB.queue=Q;
 let prev='';
 if(typeof step==='function'){const st=step;step=function(){const r=st.apply(this,arguments);try{if(GS==='over'&&prev!=='over'){setTimeout(()=>{scan();pump();},3200);}prev=GS;}catch(e){E(e);}return r;};}
 for(const nm of['toSelect','toTitle']){try{const fn0=window[nm]||eval(nm);if(typeof fn0==='function'){const w=function(){const r=fn0.apply(this,arguments);try{setTimeout(()=>{scan();pump();},600);}catch(e){}return r;};if(nm==='toSelect')toSelect=w;else toTitle=w;}}catch(e){}}
+})();
+
+/* adyn.js — the ANCIENT DYNASTIES costume for every fighter: historical Japanese and Chinese warriors (samurai, ronin, shinobi,
+   kunoichi, warrior monks, onna-musha, generals, wuxia swordsmen, Shaolin monks, ashigaru, imperial guards, steppe archers).
+   Unlocked by dealing 12,345% damage in total with that fighter, in any mode (counted live, hit by hit).
+   Every fighter's version is different: the style is chosen per fighter and the colours come from the fighter's own colour. */
+(function(){
+if(typeof CH==='undefined'||typeof SKINS2==='undefined')return;
+const AD={err:null,n:0,styles:{},dupes:0};window.ADYN=AD;const E=e=>{AD.err=AD.err||String(e&&e.stack||e).slice(0,300);};
+/* ---------- colour helpers ---------- */
+const hx2=c=>{c=String(c||'#888').replace('#','');if(c.length===3)c=c.split('').map(x=>x+x).join('');const n=parseInt(c,16);return[(n>>16&255)/255,(n>>8&255)/255,(n&255)/255];};
+const toHsl=c=>{const[r,g,b]=hx2(c),mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let h=0,s=0;if(mx!==mn){const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h/=6;}return[h,s,l];};
+const hsl=(h,s,l)=>{h=((h%1)+1)%1;s=Math.max(0,Math.min(1,s));l=Math.max(0,Math.min(1,l));const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q,f=t=>{t=((t%1)+1)%1;return t<1/6?p+(q-p)*6*t:t<.5?q:t<2/3?p+(q-p)*(2/3-t)*6:p;};
+  return'#'+[f(h+1/3),f(h),f(h-1/3)].map(v=>Math.round(v*255).toString(16).padStart(2,'0')).join('');};
+const METAL=['#d8b040','#c8ccd8','#c87a3a','#e8d8a0'];          /* gold, silver, bronze, pale gold */
+const LAC=['#8a1a1a','#16161c','#2a2a4a','#5a1a2a','#1e3a2e','#3a2a1a'];  /* lacquer: vermilion-black range */
+const ROBE=['#e8e0d0','#2a3a5a','#4a4a54','#6a3a2a','#3a4a3a','#d8c8a8','#5a2a4a','#1e2a3a'];
+/* ---------- the twelve styles ---------- */
+const MALE=['samurai','ronin','shinobi','general','monk','ashigaru','wuxia','shaolin','guard','archer'];
+const FEM=['onna','kunoichi','wuxia','ronin','general','shinobi','monk','archer','shaolin','samurai'];
+const KEEP=['skin','eye','hair','hair2','hairS','streak','h','bw','ww','lw','pw','_b','hw','nk','hs','lg','stance','fem','head','body','wpn','tailC','wingC','ears','eyeS','brow','freck','lash','lip','beardC','hx','ex','cname'];
+function base(B0){const o={};for(const k of KEEP)if(B0[k]!==undefined)o[k]=B0[k];o.hx=(B0.hx||[]).filter(x=>['horns','glasses','beard','antenna'].includes(x));o.ex=(B0.ex||[]).filter(x=>['tail','wings','beewings','stingers','scorptail','peacock','snake'].includes(x));return o;}
+const PLAIN={glove:null,boots:null,bootTrim:null,kneepad:null,pauldron:null,armband:null,stripe:null,pantStripe:null,cuff:null,buckles:null,chain:null,fur:null,emblem:null,tieC:null,print:null,headphones:null,handfx:null,top2:null,trim:null,skirt:null,socks:null,gown:null,gownTrim:null,shorts:null,tie:null,tails:null};
+function make(C,B0,style,k){const [h0,s0]=toHsl(C.col||'#b070ff'),fem=!!B0.fem,human=!B0.head&&!B0.body;
+  const v=k%4,mt=METAL[(k+Math.floor(h0*7))%METAL.length],lac=LAC[(k*5+Math.floor(h0*11))%LAC.length];
+  const main=hsl(h0,.45+.2*(v%2),.28+.05*v),dark=hsl(h0,.25,.12+.03*(v%3)),light=hsl(h0,.25,.82),acc=hsl(h0,Math.max(.6,s0),.5),robe=ROBE[(k*3+v)%ROBE.length];
+  const o=Object.assign({},PLAIN,base(B0));o.hx=o.hx.slice();o.ex=o.ex.slice();const add=(arr,x)=>{if(!o[arr].includes(x))o[arr].push(x);};
+  const hakama=c=>{o.pants=c;},hair=s=>{if(human&&o.hairS)o.hairS=s;};
+  switch(style){
+  case 'samurai':Object.assign(o,{outfit:'armor',sl:'long',top:v%2?lac:main,sleeve:dark,pauldron:1,pauldC:v%2?main:lac,trim:mt,glove:dark,shoe:dark,boots:1,acc:mt});hakama(dark);
+    if(human){add('hx','kabuto');o.kabC=v%2?lac:main;o.kabT=mt;o.hairS=null;}add('ex','katana');break;
+  case 'ronin':Object.assign(o,{outfit:'wrap',sl:'long',top:robe,sleeve:robe,acc:v%2?mt:dark,shoe:'#6a5034'});hakama(hsl(h0,.18,.22+.04*v));
+    if(human){add('hx','kasa');o.kasaC=['#c8a868','#a88a58','#d8c088','#8a7048'][v];if(o.hairS&&/spiky|messy|split|tall|afro|mohawk/.test(o.hairS))o.hairS='short';}add('ex','katana');break;
+  case 'shinobi':Object.assign(o,{outfit:'ninja',sl:'long',top:dark,sleeve:dark,pants:hsl(h0,.2,.1),shoe:'#101018',glove:'#101018',acc:acc,boots:1});
+    if(human){add('hx','ninjahood');o.hoodC=dark;}add('ex','scarf');o.scarfC=acc;add('ex','katana');break;
+  case 'kunoichi':Object.assign(o,{outfit:'ninja',sl:'long',top:main,sleeve:dark,pants:dark,shoe:'#101018',glove:dark,acc:acc,boots:1});
+    if(human){add('hx','band');o.bandC=acc;o.bandT=acc;}add('ex','scarf');o.scarfC=mt;break;
+  case 'onna':Object.assign(o,{outfit:'armor',sl:'long',top:'#f0e8dc',sleeve:'#f0e8dc',pauldron:1,pauldC:lac,trim:mt,glove:lac,shoe:dark,acc:lac});hakama(v%2?'#8a1a1a':main);
+    if(human){add('hx','band');o.bandC='#f4f4f8';o.bandT=acc;}add('ex','katana');break;
+  case 'general':Object.assign(o,{outfit:'plate',sl:'long',top:main,acc:mt,sleeve:dark,pants:dark,shoe:dark,trim:mt,kneepad:1,boots:1,glove:mt});
+    if(human){add('hx','kabuto');o.kabC=mt;o.kabT='#c8283a';o.noCrest=1;o.hairS=null;}add('ex','cape');o.capeC=v%2?'#a8202c':acc;o.capeT=mt;break;
+  case 'monk':{const rb=['#e8e4dc','#d8c8a0','#5a5a64','#3a2a20','#c8b8d8','#a8b8a0'][(k*2+v)%6];Object.assign(o,{outfit:'wrap',sl:'long',top:rb,sleeve:rb,acc:acc,shoe:'#2a2a32'});hakama(['#3a3a44','#2a2a32','#5a4a3a'][k%3]);}
+    if(human){add('hx','hoodup');o.hoodC=[o.top,'#2a2a32','#f0ece4',dark][(k+v)%4];}add('ex','mantle');o.mantleC=acc;break;
+  case 'wuxia':{const lt=hsl(h0+(k%3-1)*.08,.2+.1*(k%2),.78+.04*(v%2));Object.assign(o,{outfit:'wrap',sl:'long',top:lt,sleeve:lt,acc:acc,shoe:'#2a2a32',trim:METAL[k%4]});}hakama(v%2?light:hsl(h0,.3,.6));
+    if(human){add('hx','band');o.bandC=acc;o.bandT=acc;}add('ex','scarf');o.scarfC=light;add('ex','katana');break;
+  case 'shaolin':{const rb=['#e8902a','#c8402a','#d8a030','#8a8a94','#b85a2a'][(k+v)%5],sash=hsl(h0,.65,.45);Object.assign(o,{outfit:fem?'wrap':'vest',sl:fem?'long':'none',top:rb,sleeve:fem?rb:o.skin,acc:sash,pants:hsl(toHsl(rb)[0],.6,.45),shoe:'#3a2a1a',glove:null});
+    if(!fem&&human&&k%2===0)o.hairS=null;add('ex','scarf');o.scarfC=sash;if(human&&fem){add('hx','band');o.bandC=sash;o.bandT=sash;}break;}
+  case 'ashigaru':Object.assign(o,{outfit:'tunic',sl:'long',top:lac,sleeve:dark,acc:mt,pants:dark,shoe:'#3a2a1a',kneepad:1,glove:dark});
+    if(human){add('hx','kasa');o.kasaC=lac;o.kasaT=mt;o.jingasa=1;if(o.hairS&&/spiky|messy|split|tall|afro|mohawk/.test(o.hairS))o.hairS='short';}add('ex','quiver');break;
+  case 'guard':Object.assign(o,{outfit:'coat',sl:'long',top:lac,sleeve:lac,acc:mt,pants:dark,shoe:dark,trim:mt,boots:1,glove:dark});
+    if(human){add('hx','helm');o.helmC=dark;o.visorC=acc;}add('ex','cape');o.capeC=dark;o.capeT=acc;break;
+  case 'archer':Object.assign(o,{outfit:'coat',sl:'long',top:hsl(h0+.05,.3,.3),sleeve:hsl(h0+.05,.3,.3),acc:mt,pants:'#3a2a1e',shoe:'#2a1e14',boots:1,fur:1,trim:'#e8d8b8'});
+    if(human){add('hx','furhat');o.furC=['#6a4a2e','#e8e0d0','#3a2a20','#8a6a48'][v];o.furB=hsl(h0,.45,.3);if(o.hairS&&/spiky|messy|split|tall|afro|mohawk/.test(o.hairS))o.hairS='short';}add('ex','quiver');break;}
+  if(B0.body==='dino'){Object.assign(o,{dP:lac,dM:mt,dD:dark,spk:1.4});}
+  o.cname='ANCIENT DYNASTIES';o.req={t:'adDmg',n:12345};o.adStyle=style;return o;}
+/* ---------- build one per fighter, all different ---------- */
+try{const seen=new Set();let mi=0,fi=0;
+  for(const C of CH){if(!C||!C.looks||!C.look||C.looks.some(L=>L.cname==='ANCIENT DYNASTIES'))continue;const B0=C.look,fem=!!B0.fem;
+    const list=fem?FEM:MALE,idx=fem?fi++:mi++;let style=list[idx%list.length],k=Math.floor(idx/list.length),L=null;
+    for(let tries=0;tries<12;tries++){L=make(C,B0,style,k+tries);const key=[style,L.top,L.sleeve,L.acc,L.trim,L.pants,L.kabC,L.kasaC,L.hoodC,L.capeC,L.scarfC,L.bandC,L.furC,L.helmC,L.mantleC].join('|');
+      if(!seen.has(key)){seen.add(key);break;}AD.dupes++;}
+    C.looks.push(L);AD.n++;AD.styles[style]=(AD.styles[style]||0)+1;}}catch(e){E(e);}
+
+/* ---------- headgear: kabuto (samurai helmet) and kasa (straw hat / lacquered jingasa) ---------- */
+if(typeof drawHead==='function'&&typeof polyH==='function'&&typeof ramp==='function'){const dh=drawHead;drawHead=function(L,J,S){const r=dh.apply(this,arguments);
+  try{const hx=L.hx||[];if(!hx.length||L.head)return r;const H=J.Hd,h=L.h||1;
+    if(hx.includes('kabuto')){const k=ramp(L.kabC||'#2a2a32'),g=ramp(L.kabT||'#d8b040');
+      polyH(H,h,[-8.8,-1.5,-12.6,3.2,-11.2,4.6,-6,1.2,-7.2,-2],k,'g');                                  /* neck guard flaring back */
+      polyH(H,h,[-8.8,-2,-9,-7.6,-6.4,-11.2,-1,-12.8,4.4,-12,8.2,-8.6,8.8,-3.4,-8.8,-3],k,{cx:H.x-1,cy:H.y-7,r:9*h}); /* bowl */
+      for(let i=0;i<3;i++)lineH(H,h,-8.4+i*.6,-4-i*2.6,8.2-i*1.4,-4-i*2.4,k[1]);                    /* lames */
+      polyH(H,h,[3,-3.6,10.6,-2.8,9.6,-1.4,3,-2.2],k,'g');lineH(H,h,3,-3.4,10.4,-2.6,g[3]);              /* visor brim */
+      if(!L.noCrest){polyH(H,h,[3.4,-10.8,1.2,-21,2.6,-21.4,5,-11.4],g,'g');polyH(H,h,[5,-11,10.4,-19.6,11.4,-18.8,6.6,-10.4],g,'g');ell(H.x+4.4*h,H.y-11.4*h,1.4*h,1.4*h,0,g,0);}
+      else{polyH(H,h,[-1,-12.6,-2.6,-17.6,.6,-17.2,1.4,-12.8],ramp(L.kabT||'#c8283a'),'g');}}
+    if(hx.includes('furhat')){const f=ramp(L.furC||'#6a4a2e'),bd=ramp(L.furB||'#3a2a5a');
+      polyH(H,h,[-8.6,-3.4,-9.4,-8.6,-5.6,-12.8,.6,-13.8,6.4,-11.6,9.2,-6.6,9,-3.4],f,{cx:H.x,cy:H.y-8,r:9*h});
+      polyH(H,h,[-9.4,-5.6,9.6,-5.2,9.6,-2.8,-9.4,-3.2],bd,'g');lineH(H,h,-9,-5.2,9.2,-4.8,bd[3]);
+      polyH(H,h,[-8.6,-6,-13,-1,-12,1,-7.6,-3.6],f,'g');for(let i=0;i<4;i++)lineH(H,h,-6+i*3.6,-12+Math.abs(i-1.5)*.6,-5.4+i*3.6,-10.4,f[1]);}
+    if(hx.includes('kasa')){const k=ramp(L.kasaC||'#c8a868'),j=!!L.jingasa;
+      if(j){polyH(H,h,[-13,-5.6,-6,-10.6,0,-12.4,7,-10.6,14,-5.6,12,-4.4,-11,-4.4],k,'g');lineH(H,h,-11,-5,12,-5,k[1]);if(L.kasaT){const t=ramp(L.kasaT);ell(H.x+.6*h,H.y-11.6*h,1.6*h,1.2*h,0,t,0);}}
+      else{polyH(H,h,[-15.6,-5.2,-2,-15.6,1,-16.4,16.4,-5.2,14,-3.8,-13.6,-3.8],k,'g');for(let i=1;i<4;i++)lineH(H,h,-.6,-16-0,-15+i*7.4,-4.4,k[1]);lineH(H,h,-13.6,-4,14,-4,k[0]);
+        lineH(H,h,4,-4,5.4,5,ramp('#e8e0d0')[2]);}}}catch(e){E(e);}return r;};}
+
+/* ---------- the damage counter: every % a local player deals with a fighter, in any mode ---------- */
+const isLocalHuman=f=>f&&f.ctrl==='human'&&!(typeof PADMAP!=='undefined'&&PADMAP[f.id]>=100);
+let dirty=0;
+if(typeof applyHit==='function'){const ah=applyHit;applyHit=function(t,h,dirX,a,o){const pre=t?t.dmg:0;const r=ah.apply(this,arguments);
+  try{if(r==='hit'&&a&&a!==t&&isLocalHuman(a)&&a.C&&!a.C.hidden){const d=Math.max(0,(t.dmg||0)-pre);if(d>0){const s=SKINS2.stat(a.C.id);s.adDmg=(s.adDmg||0)+d;dirty++;}}}catch(e){E(e);}return r;};}
+if(typeof step==='function'){const st=step;let prev='';step=function(){const r=st.apply(this,arguments);try{if(dirty&&(FR%600===0||(GS==='over'&&prev!=='over'))){dirty=0;try{localStorage.setItem('qc_stats',JSON.stringify(SKINS2.all));}catch(e){}}
+    /* training never ends with GAME!: check for the new costume every ten seconds there */
+    if(MODE==='training'&&FR%600===300&&window.SKINBAN){SKINBAN.scan();}prev=GS;}catch(e){E(e);}return r;};}
+/* "how to unlock" text */
+{const nd=SKINS2.need;SKINS2.need=function(C,L){try{if(L&&L.req&&L.req.t==='adDmg'){const s=SKINS2.stat(C.id),k=Math.max(0,Math.ceil(L.req.n-(s.adDmg||0)));return k.toLocaleString('en-US')+'% more damage (any mode)';}}catch(e){}return nd.apply(this,arguments);};}
+if(window.SKINBAN){/* banner wording */}
 })();
 
 </script>
