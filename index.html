@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-2113';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-2127';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18105,6 +18105,148 @@ if(SH){const GR='#9aff9a';
 }
 
 if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&!f.dead&&!f.gone&&!f.invis&&typeof X!=='undefined'&&X)for(const fn of draws)fn(f);}catch(e){E(e);try{X.globalAlpha=1;}catch(x){}}return r;};}
+})();
+
+/* rework4.js — third batch of move-set reworks:
+   Kal (Premonition replaces Focus), Sata (a nanite kit of her own instead of a borrowed one),
+   Kongu (a baseball-cap gorilla with a baseball kit), Sai (Copy Catch: catches a shot and sends back two). */
+(function(){
+const RW={err:null,n:{}};window.REWORK4=RW;const E=e=>{RW.err=RW.err||String(e&&e.stack||e).slice(0,400);};const cnt=k=>{RW.n[k]=(RW.n[k]||0)+1;};
+const C=id=>CH.find(c=>c.id===id);const KA=C('kal'),SA=C('sata'),KO=C('kongu'),SI=C('sai');
+const foesOf=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&!(typeof TEAMS_ON==='function'&&TEAMS_ON()&&o.team===f.team));
+const IP=f=>(typeof interpPos==='function'?interpPos(f):f);
+const intg=o=>typeof intangible==='function'&&intangible(o);
+const rebuild=(Cx,k,o,T)=>{const M0=(T?Cx[T]:Cx.mv);if(!M0)return null;const old=M0[k]||{};const d=Object.assign({},old,o);for(const q in o)if(o[q]===undefined)delete d[q];if(!d.hits||!d.hits.length){delete d.sweet;delete d.finisher;}M0[k]=d;return d;};
+const ov=(R,x0,y0,x1,y1)=>R[0]<Math.max(x0,x1)&&R[0]+R[2]>Math.min(x0,x1)&&R[1]<Math.max(y0,y1)&&R[1]+R[3]>Math.min(y0,y1);
+const cpu=f=>f.ctrl==='cpu';
+const holdB=(f,m,I,max,goal)=>{const v=m.v;v.c=v.c||0;const held=cpu(f)?v.c<(v.goal!==undefined?v.goal:(v.goal=goal())):!!I.B;if(held&&v.c<max){v.c++;m.t--;return true;}return false;};
+const nearest=f=>{let b=null,bd=1e9;for(const o of foesOf(f)){const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<bd){bd=d;b=o;}}return b;};
+const draws=[];const onDraw=fn=>draws.push(fn);
+const GT=(id,i,s)=>{try{if(typeof GTXT!=='undefined'){const G=GTXT[id]||(GTXT[id]=[]);G[i]=s;}}catch(e){}};
+
+/* =================== KAL: PREMONITION replaces Focus =================== */
+if(KA){const GN='#a0ff40';
+  rebuild(KA,'dB',{an:'slashF',beh:'kaPrem',hits:[],s:10,a:1,r:18,cd:100,spawn:undefined});
+  BEH.kaPrem={tick(f,m){if(m.t!==m.d.s)return;const o=nearest(f);let px=f.x+f.face*90,py=f.y;
+    if(o){const lead=Math.max(-150,Math.min(150,(o.vx||0)*26));px=o.x+lead;const y=surfY(px,o.y-8);py=o.ground&&y!==null?y:o.y;}
+    for(const e of ENT)if(e.k==='kalprem'&&e.owner===f)e.alive=false;
+    ENT.push({k:'kalprem',owner:f,face:f.face,t:0,alive:true,life:30,x:px,y:py,vx:f.face*.0001,vy:0,g:0,r:22,dmg:9,bkb:4.2,kbg:.06,ang:45,ri:0,hits:{},fx:[GN,'#ffffff'],act:[22,25]});
+    try{sfx('zap');}catch(e){}cnt('prem');}};
+  EK.kalprem={hitY:e=>e.y-30,onHit(e,t){const f=e.owner;if(f)f.dsT=(f.dsT===undefined?FR-480:f.dsT)-180;burst(t.x,t.y-30,14,[GN,'#ffffff'],2.6,16);cnt('premHit');},
+    draw(e){const k=Math.min(1,e.t/22);if(e.t<22){X.globalAlpha=.25+.45*k;wl(GN,e.x-16,e.y-48+k*4,e.x+16,e.y-12-k*4,1);wring(e.x,e.y-30,8+12*(1-k),GN,1);X.globalAlpha=1;}
+      else if(e.t<28){const u=(e.t-22)/6;wl('#ffffff',e.x-24+u*6,e.y-54,e.x+24-u*6,e.y-6,3);wl(GN,e.x-24+u*6,e.y-52,e.x+24-u*6,e.y-8,1);}}};
+  KA.sp[3]='Premonition (cuts where the rival is about to be)';
+  GT('kal',3,'He sees where the nearest rival is going and cuts the spot they are about to reach: the cut lands a moment later. Catch them mid-attack and Foresight adds its 30%. If it lands, Danger Sense comes back three seconds sooner.');
+  if(typeof KA.na==='string')KA.na=KA.na.replace('His ability is purely defensive','Down-B, Premonition, cuts where the nearest rival is about to be. Danger Sense is defensive');
+}
+
+/* =================== SATA: a nanite kit =================== */
+if(SA){const CY='#7ae0ff',DK='#1e3a4a';
+  /* the old Cannon / Ordnance / Repulsor switching belonged to the old kit: keep every special instantly available */
+  {const sm=startMove;startMove=function(f,key){try{if(f&&f.C===SA){const g=key==='nB'?'C':(key==='sB'||key==='dB')?'O':key==='uB'?'R':null;if(g)f._cfg=g;}}catch(e){}return sm.apply(this,arguments);};}
+  if(typeof hudMeterOf==='function'){const h0=hudMeterOf;hudMeterOf=function(f){try{if(f&&f.C===SA)return null;}catch(e){}return h0.apply(this,arguments);};}
+  /* Neutral B: NANITE SWARM — a slow cloud that hunts the nearest rival, latches on, eats away a little, then bursts */
+  rebuild(SA,'nB',{an:'cast',beh:'saSwarm',hits:[],s:12,a:1,r:20,spawn:undefined,charge:undefined,cd:undefined});
+  BEH.saSwarm={tick(f,m){if(m.t!==m.d.s)return;for(const e of ENT)if(e.k==='nswarm'&&e.owner===f)e.alive=false;
+    ENT.push({k:'nswarm',owner:f,face:f.face,t:0,alive:true,life:220,x:f.x+f.face*22,y:f.y-34,vx:f.face*2.6,vy:0,g:0,r:12,dmg:0,hits:{},proj:true,oa:1});try{sfx('zap');}catch(e){}cnt('swarm');}};
+  EK.nswarm={upd(e){const f=e.owner;if(!f||f.dead||f.gone){e.alive=false;return;}
+    if(e.on){const o=e.on;if(o.dead||o.gone||o.st==='respawn'){e.alive=false;return;}e.x=o.x;e.y=o.y-30;e.tk=(e.tk||0)+1;
+      if(e.tk%12===0&&e.tk<=60){applyHit(o,{dmg:1.5,bkb:.6,kbg:0,ang:80,fx:[CY,'#ffffff']},f.face,f,{force:1});cnt('swarmTick');}
+      if(e.tk>=66){applyHit(o,{dmg:4,bkb:4,kbg:.05,ang:60,fx:[CY,'#ffffff']},o.x>=f.x?1:-1,f,{force:1});burst(e.x,e.y,16,[CY,'#ffffff',DK],2.6,18);e.alive=false;cnt('swarmBurst');}return;}
+    let tg=null,bd=1e9;for(const o of foesOf(f)){if(intg(o))continue;const d=Math.hypot(o.x-e.x,o.y-30-e.y);if(d<bd){bd=d;tg=o;}}
+    if(tg){const dx=tg.x-e.x,dy=tg.y-30-e.y,l=Math.hypot(dx,dy)||1;e.vx+=(dx/l*2.8-e.vx)*.06;e.vy+=(dy/l*2.8-e.vy)*.06;if(l<16){e.on=tg;e.life=Math.max(e.life,80);burst(e.x,e.y,8,[CY,'#ffffff'],1.6,12);cnt('swarmLatch');}}
+    e.x+=e.vx;e.y+=e.vy;},
+    draw(e){for(let i=0;i<9;i++){const a=FR*.2+i*.7,r=(e.on?13:8)+Math.sin(FR*.3+i)*2;wr(i%3?CY:'#ffffff',e.x+Math.cos(a)*r-1,e.y+Math.sin(a*1.3)*r*.8-1,2,2);}}};
+  /* Side B: NANITE BLADE — her arm re-forms into a long blade for one lunging cut */
+  rebuild(SA,'sB',{an:'slashF',beh:'dash',bp:{spd:5,f0:8,f1:13},hits:[{b:[[36,-34,12],[20,-34,10]],dmg:11,bkb:4.2,kbg:.07,ang:40}],s:8,a:5,r:18,spawn:undefined,lim:'none',cd:undefined});
+  onDraw(f=>{if(f.C!==SA||!f.mv)return;const m=f.mv,d=m.d,p=IP(f);if(m.k==='sB'&&m.t>=d.s-2&&m.t<=d.s+d.a+3){const L=m.t<d.s?20:44;wl(DK,p.x+f.face*8,p.y-34,p.x+f.face*L,p.y-34,4);wl(CY,p.x+f.face*8,p.y-35,p.x+f.face*L,p.y-35,1);wtri(CY,p.x+f.face*L,p.y-37,p.x+f.face*L,p.y-31,p.x+f.face*(L+6),p.y-34);}});
+  /* Up B: REFORM — she comes apart into a nanite cloud, streams in the held direction through anything, and re-forms with a burst */
+  rebuild(SA,'uB',{an:'float',beh:'saReform',hits:[],s:5,a:16,r:16,helpless:1,spawn:undefined,bp:undefined});
+  BEH.saReform={tick(f,m,I){const d=m.d,v=m.v;if(m.t<d.s){f.vx*=.7;f.vy=Math.min(f.vy,0);return;}
+    if(!v.dir){let x=I.x||0,y=I.y||0;if(Math.hypot(x,y)<.3){x=0;y=-1;}const l=Math.hypot(x,y);v.dir=[x/l,y/l];if(v.dir[1]>.3)v.dir=[v.dir[0],.3];f.ground=null;cnt('reform');}
+    if(m.t<d.s+d.a-1){f.invis=true;f.inv=Math.max(f.inv||0,2);f.vx=v.dir[0]*8.2;f.vy=v.dir[1]*8.2;if(m.t%2===0)burst(f.x,f.y-28,3,[CY,'#ffffff'],1.2,10);
+      for(const o of foesOf(f)){if(intg(o))continue;const hn=v.h||(v.h={});if((hn[o.id]||0)>=3||FR-(v['t'+o.id]||-99)<4)continue;const R=hurtR(o);if(ov(R,f.x-14,f.y-44,f.x+14,f.y-10)){hn[o.id]=(hn[o.id]||0)+1;v['t'+o.id]=FR;applyHit(o,{dmg:1.5,bkb:1,kbg:0,ang:80,fx:[CY,'#ffffff']},f.face,f,{force:1});}}}
+    else if(!v.done){v.done=1;f.invis=false;f.vx*=.3;f.vy=Math.min(f.vy,-1);burst(f.x,f.y-28,18,[CY,'#ffffff',DK],2.8,18);try{sfx('pop');}catch(e){}
+      for(const o of foesOf(f)){if(intg(o))continue;if(Math.hypot(o.x-f.x,o.y-f.y)<34)applyHit(o,{dmg:6,bkb:4.4,kbg:.06,ang:80,fx:[CY,'#ffffff']},o.x>=f.x?1:-1,f,{force:1});}}}};
+  {const up=update;update=function(f,I){const r=up.apply(this,arguments);try{if(f&&f.C===SA&&f.invis&&!(f.mv&&f.mv.k==='uB'))f.invis=false;}catch(e){}return r;};}
+  onDraw(f=>{if(f.C!==SA||!f.mv||f.mv.k!=='uB'||!f.invis)return;const p=IP(f);for(let i=0;i<14;i++){const a=FR*.35+i*.45,r=6+((i*7)%9);wr(i%3?CY:'#ffffff',p.x+Math.cos(a)*r-1,p.y-28+Math.sin(a*1.2)*r-1,2,2);}});
+  /* Down B: NANITE TRAP — a puddle of nanites on the floor: rivals in it are slowed and nibbled. One at a time. */
+  rebuild(SA,'dB',{an:'castDown',beh:'saTrap',hits:[],s:10,a:1,r:18,spawn:undefined,cd:90});
+  BEH.saTrap={tick(f,m){if(m.t!==m.d.s)return;for(const e of ENT)if(e.k==='ntrap'&&e.owner===f)e.alive=false;
+    ENT.push({k:'ntrap',owner:f,face:f.face,t:0,alive:true,life:330,x:f.x+f.face*14,y:f.y,vx:0,vy:f.ground?0:3,g:f.ground?0:.5,r:0,dmg:0,hits:{},landed:!!f.ground});try{sfx('pop');}catch(e){}cnt('trap');}};
+  EK.ntrap={upd(e){if(!e.landed){const y=surfY(e.x,e.y-6);if(y!==null&&e.y>=y-2){e.y=y;e.vy=0;e.g=0;e.landed=true;}return;}
+    const f=e.owner;if(!f)return;for(const o of foesOf(f)){if(intg(o)||!o.ground)continue;if(Math.abs(o.x-e.x)<34&&Math.abs(o.y-e.y)<6){o.x-=(o.vx||0)*.45;const k='nt'+o.id;if(e.t-(e[k]||-99)>=30){e[k]=e.t;applyHit(o,{dmg:1,bkb:.3,kbg:0,ang:90,fx:[CY,'#ffffff']},0,f,{force:1});cnt('trapTick');}}}},
+    draw(e){if(e.life<40&&e.t%4<2)return;const w=Math.min(34,e.t*4);wr(DK,e.x-w,e.y-2,w*2,3);for(let i=0;i<8;i++){const x=e.x-w+((i*13+FR)%(w*2||1));wr(i%2?CY:'#ffffff',x,e.y-3-((FR+i*5)%6<3?1:0),2,1);}}};
+  SA.sp=['Nanite Swarm (hunts, latches on, bursts)','Nanite Blade (a lunging arm-blade cut)','Reform (streams through anything as a cloud)','Nanite Trap (a slowing puddle)'];
+  SA.tip='Send a swarm, cut in with the blade, and fight around a trap. Reform gets her home.';
+  if(typeof SA.trait==='string')SA.trait=SA.trait.replace(/CONFIGURATIONS:[^]*$/,'NANITES: every special is her own body: a swarm, a blade, a cloud, a trap.');
+  GT('sata',0,'Sends a cloud of nanites that drifts after the nearest rival. When it reaches them it latches on, eats away 1.5% five times, then bursts. One swarm at a time.');
+  GT('sata',1,'Her arm re-forms into a long blade for one fast lunging cut.');
+  GT('sata',2,'She comes apart into a cloud of nanites and streams in the held direction, straight through attacks and rivals (nicking them on the way), then re-forms with a burst.');
+  GT('sata',3,'Spills a puddle of nanites at her feet for five and a half seconds. Rivals standing in it are slowed and lose 1% every half second. One at a time.');
+}
+
+/* =================== KONGU: a baseball kit for the gorilla in the cap =================== */
+if(KO){const BAT='#c89058',BALL='#f4f0e8',RD='#d8303a';
+  /* Neutral B: FASTBALL — hold to wind up, let go to pitch. Longer wind-up, faster and harder. */
+  rebuild(KO,'nB',{an:'punch',beh:'koPitch',hits:[],s:12,a:1,r:20,spawn:undefined,cd:undefined});
+  BEH.koPitch={tick(f,m,I){const d=m.d,v=m.v;if(f.ground)f.vx*=.75;else f.vy=Math.min(f.vy,2.4);
+    if(m.t===d.s-1&&!v.fired){if(holdB(f,m,I,45,()=>Math.floor(rnd()*46)))return;}
+    if(m.t===d.s&&!v.fired){v.fired=1;const k=Math.min(1,(v.c||0)/45);for(const e of ENT)if(e.k==='kball'&&e.owner===f)e.alive=false;
+      spawnEnt(f,{k:'kball',dx:26,dy:-40,vx:5.5+5.5*k,vy:-1.2+k*.9,g:.08-.06*k,r:6,life:120,dmg:7+8*k,bkb:3.6+1.4*k,kbg:.05+.03*k,ang:35});try{sfx('swing');}catch(e){}cnt('pitch');}}};
+  EK.kball={upd(e){const y=surfY(e.x,e.y-6);if(y!==null&&e.y>=y-4&&e.vy>0){e.vy=-Math.abs(e.vy)*.55;e.vx*=.8;e.dmg*=.6;if(Math.abs(e.vy)<.6)e.alive=false;}if(e.t%2===0)part(e.x-Math.sign(e.vx)*5,e.y,0,0,8,'#ffffff',1,0);},
+    draw(e){wdisc(e.x,e.y,e.r,'#c8c0b0');wdisc(e.x,e.y,e.r-1,BALL);const a=e.t*.5;wl(RD,e.x+Math.cos(a)*3,e.y-4,e.x+Math.cos(a)*3,e.y+4,1);}};
+  try{PROJ.add('kball');}catch(e){}
+  /* Side B: SLIDE — a feet-first slide into the rival's legs: it pops them up and ducks under shots. In the air it is a dropkick. */
+  rebuild(KO,'sB',{an:'dashF',beh:'dash',bp:{spd:7,f0:6,f1:22,air:'grav'},hits:[{b:[[18,-8,13]],dmg:9,bkb:4.4,kbg:.05,ang:80}],s:6,a:16,r:18,lim:'none',cd:undefined});
+  {const ah=applyHit;applyHit=function(t,h,dirX,a,o){try{if(t&&t.C===KO&&t.mv&&t.mv.k==='sB'&&t.ground&&o&&o.proj&&h&&h.y!==undefined&&h.y<t.y-24){cnt('slideUnder');return 'miss';}}catch(e){}return ah.apply(this,arguments);};}
+  /* Up B: BAT COPTER — spins the bat overhead like a rotor: a slow, steerable climb that keeps hitting above */
+  rebuild(KO,'uB',{an:'uairP',beh:'koCopter',hits:[{b:[[0,-62,20]],dmg:1.6,bkb:1.5,kbg:0,ang:88,ri:5}],finisher:{b:[[0,-64,22]],dmg:5,bkb:5,kbg:.06,ang:85},s:6,a:44,r:20,helpless:1,spawn:undefined,bp:undefined});
+  BEH.koCopter={tick(f,m,I){const d=m.d;if(m.t<d.s){f.vx*=.8;return;}if(m.t<d.s+d.a){f.ground=null;f.vy=-3.1+(m.t-d.s)*.025;f.vx+=((I.x||0)*2.6-f.vx)*.12;}}};
+  /* Down B: HOME RUN SWING — a slow, huge bat swing. The far end of the bat is a home run; it also bats projectiles back as line drives. */
+  rebuild(KO,'dB',{an:'smashH',beh:'koSwing',hits:[{b:[[46,-34,13],[28,-36,11]],dmg:17,bkb:4.6,kbg:.1,ang:38}],s:22,a:4,r:30,spawn:undefined,charge:undefined,cd:undefined,face:'atk'});
+  BEH.koSwing={tick(f,m){const d=m.d;if(f.ground)f.vx*=.7;if(m.t>=d.s-2&&m.t<=d.s+d.a){for(const e of ENT){if(!e.alive||!e.proj||e.owner===f||e._bat===f)continue;if(Math.abs(e.x-(f.x+f.face*36))<34&&Math.abs(e.y-(f.y-34))<30){e._bat=f;e.owner=f;e.vx=f.face*Math.max(8,Math.abs(e.vx)*1.6);e.vy=-.4;e.face=f.face;e.dmg*=1.4;e.hits={};e.life=Math.max(e.life,50);burst(e.x,e.y,10,['#ffffff',BAT],2,14);try{sfx('hit');}catch(x){}cnt('lineDrive');}}}}};
+  {const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(a&&a.C===KO&&a.mv&&a.mv.k==='dB'&&!(o&&o.proj)&&t&&Math.abs(t.x-a.x)>34){m*=1.35;if(a.mv.hrT!==FR){a.mv.hrT=FR;burst(t.x,t.y-30,18,['#ffffff','#ffe060',RD],3.2,20);cnt('homeRun');}}}catch(e){E(e);}return m;};}
+  {const km=kbMod;kbMod=function(a,t,h,o){let m=km.apply(this,arguments);try{if(a&&a.C===KO&&a.mv&&a.mv.k==='dB'&&!(o&&o.proj)&&t&&Math.abs(t.x-a.x)>34)m*=1.15;}catch(e){}return m;};}
+  const bat=(p,f,ang,len)=>{const x0=p.x+f.face*6,y0=p.y-38,x1=x0+Math.cos(ang)*len*f.face,y1=y0+Math.sin(ang)*len;wl('#5a3a20',x0,y0,x1,y1,4);wl(BAT,x0,y0-1,x1,y1-1,2);wdisc(x1,y1,3,BAT);};
+  onDraw(f=>{if(f.C!==KO||!f.mv)return;const m=f.mv,d=m.d,p=IP(f);
+    if(m.k==='dB'){const u=m.t<d.s?-2.4+.3*Math.min(1,m.t/d.s):m.t<=d.s+d.a?-1+1.6*Math.min(1,(m.t-d.s+1)/(d.a+1)):.8;bat(p,f,u,46);}
+    if(m.k==='uB'&&m.t>=d.s&&m.t<d.s+d.a){const a=FR*.9;for(const s of[0,Math.PI]){const x1=p.x+Math.cos(a+s)*26,y1=p.y-60+Math.sin(a+s)*4;wl('#5a3a20',p.x,p.y-60,x1,y1,4);wl(BAT,p.x,p.y-61,x1,y1-1,2);}}
+    if(m.k==='nB'&&!m.v.fired&&m.t>=d.s-1){X.globalAlpha=.9;wdisc(p.x-f.face*12,p.y-46,5,BALL);X.globalAlpha=1;}});
+  KO.sp=['Fastball (hold to wind up, then pitch)','Slide (pops them up, ducks under shots)','Bat Copter (a slow, steerable climb)','Home Run Swing (bats shots back; the far end is a home run)'];
+  KO.tip='The heaviest fighter. Pitch from range, slide in, and save the Home Run Swing for the finish.';
+  GT('kongu',0,'Hold B to wind up, let go to pitch a baseball. The longer the wind-up, the faster, flatter and harder the pitch. One ball at a time; it bounces when it lands.');
+  GT('kongu',1,'A feet-first slide into the rival\'s legs that pops them up. Shots aimed above his knees pass over him while he slides. In the air it is a dropkick.');
+  GT('kongu',2,'Spins his bat overhead like a rotor and climbs slowly, steering left and right, hitting anyone above again and again.');
+  GT('kongu',3,'A slow, enormous bat swing. Hit them with the far end of the bat for a home run: 35% more damage and a much bigger launch. Any projectile it meets is batted back as a line drive.');
+}
+
+/* =================== SAI: COPY CATCH replaces Double Shot =================== */
+if(SI){const SC='#ffd24a';
+  const def={an:'palm',beh:'siCatch',hits:[{b:[[22,-36,11]],dmg:5,bkb:3.6,kbg:.03,ang:40}],s:6,a:10,r:16,spawn:undefined,cd:45};
+  rebuild(SI,'sB',def);if(SI.hmv&&SI.hmv.sB)rebuild(SI,'sB',def,'hmv');
+  BEH.siCatch={tick(f,m){const d=m.d,v=m.v;if(f.ground)f.vx*=.7;else f.vy=Math.min(f.vy,1.5);if(m.t<d.s||m.t>d.s+d.a)return;
+    for(const e of ENT.slice()){if(!e.alive||!e.proj||e.owner===f||e._sai)continue;if(Math.abs(e.x-(f.x+f.face*22))<30&&Math.abs(e.y-(f.y-34))<30){
+      e._sai=1;e.owner=f;e.vx=f.face*Math.max(5,Math.abs(e.vx||0)*1.15);e.face=f.face;e.dmg*=1.1;e.hits={};e.life=Math.max(e.life,60);if(e.target!==undefined)e.target=nearest(f);
+      const c=Object.assign({},e,{hits:{},y:e.y-12,vy:(e.vy||0)-.6,t:0,_sai:1});ENT.push(c);burst(e.x,e.y,12,[SC,'#ffffff'],2.2,16);try{sfx('zap');}catch(x){}cnt('copyCatch');v.caught=1;}}}};
+  onDraw(f=>{if(f.C!==SI||!f.mv||f.mv.k!=='sB')return;const m=f.mv,d=m.d,p=IP(f);if(m.t>=d.s&&m.t<=d.s+d.a){X.globalAlpha=.5;wring(p.x+f.face*22,p.y-34,14+((m.t-d.s)%4),SC,1);X.globalAlpha=1;}});
+  SI.sp[1]='Copy Catch (catches a shot, sends back two)';
+  GT('sai',1,'Holds out his palm. Any projectile that touches it is copied: the original flies back at the thrower and a duplicate flies with it, both his. With nothing to catch it is a short palm strike. Works in his hero uniform too.');
+}
+
+/* =================== CPUs use the new tools =================== */
+{const ai=aiInput;aiInput=function(f){const I=ai.apply(this,arguments)||{};try{if(!f||f.dead||f.gone||GS!=='play'||f.mv||f.st==='hit')return I;const o=typeof opp==='function'?opp(f):null;if(!o||o.dead)return I;
+    const dx=o.x-f.x,adx=Math.abs(dx),dy=o.y-f.y,t=((f.lvl||5)-1)/8,r=rnd(),cd=k=>f.cds&&f.cds[k]>FR,face=()=>{if(f.face!==Math.sign(dx))I.x=Math.sign(dx)*.3;};
+    const sp=(x,y)=>{I.B=1;I.A=0;I.x=x;I.y=y;};
+    if(f.C===KA){if(f.ground&&adx>90&&adx<280&&!cd('dB')&&r<.01+.02*t){sp(0,1);cnt('aiPrem');}}
+    else if(f.C===SA){if(adx>160&&!ENT.some(e=>e.k==='nswarm'&&e.owner===f)&&r<.012+.02*t){face();sp(0,0);cnt('aiSwarm');}
+      else if(f.ground&&adx<220&&adx>40&&!cd('dB')&&!ENT.some(e=>e.k==='ntrap'&&e.owner===f)&&r<.006){sp(0,1);cnt('aiTrap');}}
+    else if(f.C===KO){if(f.ground&&adx>40&&adx<70&&o.dmg>90&&Math.abs(dy)<30&&r<.04+.06*t){face();if(f.face===Math.sign(dx)){sp(0,1);cnt('aiHomeRun');}}
+      else if(adx>180&&!ENT.some(e=>e.k==='kball'&&e.owner===f)&&r<.01+.02*t){face();sp(0,0);cnt('aiPitch');}}
+    else if(f.C===SI){for(const e of ENT){if(e.alive&&e.proj&&e.owner!==f&&Math.abs(e.y-(f.y-34))<34&&(e.x-f.x)*Math.sign(e.vx||0)<0&&Math.abs(e.x-f.x)<90&&!cd('sB')&&r<.3+.4*t){if(f.face!==Math.sign(e.x-f.x))I.x=Math.sign(e.x-f.x)*.3;else{sp(f.face,0);cnt('aiCatch');}break;}}}}catch(e){E(e);}return I;};}
+
+if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&!f.dead&&!f.gone&&typeof X!=='undefined'&&X)for(const fn of draws)fn(f);}catch(e){E(e);try{X.globalAlpha=1;}catch(x){}}return r;};}
+/* entity world-draw hooks for the new entities need the stock entity painter to know them: EK draw is used directly */
 })();
 
 </script>

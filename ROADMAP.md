@@ -85,4 +85,4 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Tori: Heart Palm (charged, hits through shields), Phase Dash spins rivals round, Emerge buries
 - [x] Sato: every normal a different airbag trick (recoil, trip, bumper, backfire...)
 - [x] Bara normals use feathers (Quill Tip, Ground Quill, Tail Hammer); Chris normals (Body Shot, Low Kick, Bull Rush armour, Stomp, Blood Up); Yurei ghost normals (Grave Hand, Wisp Ring, Over the Shoulder, Haunt); Shi's Death Touch borrows the rival's own Neutral B
-
+- [x] Kal: Premonition replaces Focus; Sata: nanite kit (Swarm, Blade, Reform, Trap) replaces the Samus-style kit; Kongu: baseball kit (Fastball, Slide, Bat Copter, Home Run Swing) replaces the DK-style kit; Sai: Copy Catch replaces Double Shot
