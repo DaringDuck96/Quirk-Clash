@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-2213';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-2232';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18377,6 +18377,36 @@ if(HO&&HO.mv.nB&&HO.mv.nB.spawn&&EK.glob){
   try{if(typeof GTXT!=='undefined'&&GTXT.homura)GTXT.homura[0]='Throws a glob of magma that bounces along the floor like a fireball (up to four bounces), burning whoever it hits, and leaves a burning pool where it finally lands (two pools at most). Hold B to charge it: bigger, faster and stronger.';}catch(e){}
   if(HO.sp)HO.sp[0]='Magma Glob (bounces along the floor; leaves a burning pool)';
 }
+})();
+
+/* duo1.js — Soran & Hakegatsu: one brother on screen at a time (Down-B swaps who fights, like a tag team).
+   The other brother no longer stands beside him or echoes every attack: he only appears for the relay specials
+   (Relay Kunai warp, Relay Pincer, Relay Launch) and leaves again. Brothers are no longer split up by hard hits. */
+(function(){
+if(typeof duoTick!=='function'||typeof drawPartner!=='function')return;
+const D={err:null,n:{},dm:1.12};window.DUO1=D;const E=e=>{D.err=D.err||String(e&&e.stack||e).slice(0,300);};
+const twin=f=>!!(f&&f.C&&f.C.twin);
+{const dt=duoTick;duoTick=function(){try{for(const f of F){if(!twin(f)||!f.pt)continue;const p=f.pt;
+      /* no echo: every new move of the leader counts as already relayed */
+      if(f.mv&&f.mv!==p.lastMv){p.lastMv=f.mv;p.started=true;}
+      /* no splitting */
+      p.sep=true;if(p.off>0){p.off=0;}}}catch(e){E(e);}
+  const r=dt.apply(this,arguments);
+  try{for(const f of F){if(!twin(f)||!f.pt)continue;const p=f.pt;if(p.mv){if(!p._was){p._showT=FR+30;D.n.show=(D.n.show||0)+1;}p._showT=Math.max(p._showT||0,FR+14);}p._was=!!p.mv;}}catch(e){E(e);}return r;};}
+/* the partner is drawn only while he is doing something, fading out after */
+{const dp=drawPartner;drawPartner=function(f){const p=f&&f.pt;if(!p)return;const left=(p._showT||0)-FR;if(left<=0)return;
+  const a=Math.min(1,left/14);let ga=1;try{ga=X.globalAlpha;X.globalAlpha=a;}catch(e){}try{return dp.apply(this,arguments);}finally{try{X.globalAlpha=ga;}catch(e){}}};}
+/* without the echoes he hits a little harder himself */
+{const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(a&&twin(a)&&!(o&&o.proj))m*=D.dm;}catch(e){}return m;};}
+/* words */
+for(const id of['soran','hake']){const C=CH.find(c=>c.id===id);if(!C)continue;
+  C.d='Twin relay brothers who tag in and out. One fights at a time; Down-B swaps who leads, and the other brother jumps in for the relay specials.';
+  C.weak='One brother at a time: pick the right one for the moment, and time your swaps.';
+  C.tip='Soran hits harder, Hakegatsu is tougher. Swap with Down-B; the relay specials call the other brother in.';
+  if(typeof C.na==='string')C.na=C.na.replace(/, and every attack is echoed a beat later by Hakegatsu at his side/,'').replace(/, and every attack is echoed a beat later by Soran at his side/,'');
+  if(typeof C.trait==='string')C.trait=C.trait.replace('Two fighters at once.','One brother on screen at a time; the other joins in for the relay specials.');}
+try{if(typeof GTXT!=='undefined')for(const id of['soran','hake']){const G=GTXT[id];if(!G)continue;if(G[3])G[3]='Tags out: the other brother takes over. Soran hits harder; Hakegatsu is tougher. Damage and stocks are shared.';
+  if(G[0])G[0]=G[0].replace(' Alone, you warp to it yourself.','');if(G[2])G[2]=G[2].replace(' Much shorter when you are split up.','');}}catch(e){}
 })();
 
 </script>

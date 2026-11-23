@@ -91,3 +91,4 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Kongu changed to a move-for-move Donkey Kong kit (normals, aerials, smashes, throws, specials); the baseball kit was removed
 - [x] Gomi, Sarah and Ayame can store a charged Neutral B (Shield or Jump while charging; B fires it)
 - [x] Homura's Magma Glob bounces along the floor like a fireball, leaving its pool where it stops
+- [x] Soran & Hakegatsu: one brother on screen at a time (Down-B swaps); the other appears only for relay specials; no echoes, no splitting
