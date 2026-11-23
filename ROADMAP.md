@@ -78,3 +78,11 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 ## Ryuko rework
 - [x] Starts every stock in her wheelchair with a Bowser Jr.-style gadget kit (cannon, kart dash, rocket chair with exploding booster pack, chair armour); Down-B swaps to ULTRA MECHA DINO and back
 - [x] Wheelchair sprite, a matching chair look for every costume, and two new costumes (RACER, INVENTOR)
+
+## Moveset reworks
+- [x] Hari: charged Piston Lance (tip pins), Harpoon (reel to tip / hook ledge), Pole Vault leaves a stake, Lance Fence
+- [x] Kurai: Owl Eyes mark and Talon Dive command grab replace the glaive spin and the counter
+- [x] Tori: Heart Palm (charged, hits through shields), Phase Dash spins rivals round, Emerge buries
+- [x] Sato: every normal a different airbag trick (recoil, trip, bumper, backfire...)
+- [ ] Next candidates: Kal/Kurai overlap check, Bara and Chris normals, Yurei, Shi
+
