@@ -67,7 +67,7 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Training: 1/2 and 1/4 speed (pause menu)
 
 ## Round 5: next up
-- [~] Balance pass 1 done (Toguchi, Conor, Soran nerfed; Makiko, Bryson, Ali, Sai, Keanu, Hazmat buffed); Makiko, Bryson, Hazmat still low; second pass pending
+- [~] Balance pass 1 done (Toguchi, Conor, Soran nerfed; Bryson, Ali, Sai, Keanu buffed; Makiko got Sandman Spiral and sleep-on-arrival Dream Step, Hazmat a faster sideways forward smash). Still to do: second pass on the other flagged fighters, Bryson, and teaching Makiko's CPU to use her sleep setups
 - [ ] Smarter high-level CPUs: off-stage edge-guarding, covering ledge options, mixed-up recoveries and ledge getups
 - [ ] Classic mode: a themed six-match route per fighter with its own opponents and stages, a boss, and a difficulty setting
 - [ ] Results screen with stats: KOs, falls, self-destructs, damage dealt / taken, longest combo
