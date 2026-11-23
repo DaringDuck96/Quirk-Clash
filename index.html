@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1616';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1621';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -17303,6 +17303,50 @@ const ledgeOf=x=>{let b=null,bd=1e9;for(const L of LEDGES){const d=Math.abs(L.x-
     if(f.ground&&!f.mv&&!asleep&&o.ground&&adx>70&&adx<115&&Math.abs(dy)<30&&!(o.ccT&&FR-o.ccT<240)&&rnd()<.01+.05*t){const I={x:Math.sign(dx)*.9,y:-.45};if(!P.B)I.B=1;cnt('mkStep');return I;}
     if(f.ground&&!f.mv&&!asleep&&adx<50&&Math.abs(dy)<30&&!(o.ccT&&FR-o.ccT<240)&&rnd()<.01+.04*t){const I={x:0,y:1};if(f.face!==Math.sign(dx))I.x=Math.sign(dx)*.3;else if(!P.B)I.B=1;cnt('mkSpiral');return I;}
   }catch(e){E(e);}return r;};}
+})();
+
+/* skinban.js — a banner for every newly earned costume, like the new-fighter banner, with a picture of the costume.
+   Shiny costumes keep their single banner (they all unlock together). Costumes already earned before this update are not announced. */
+(function(){
+if(typeof CH==='undefined'||typeof SKINS2==='undefined'||typeof portrait!=='function')return;
+const SB={err:null,shown:[]};window.SKINBAN=SB;const E=e=>{SB.err=SB.err||String(e&&e.stack||e).slice(0,300);};
+const KEY='qc_skinseen';let SEEN=null;
+try{SEEN=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){SEEN=null;}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(SEEN));}catch(e){}};
+const earnable=(C,L)=>L&&L.req&&!L.hide&&!L.alt&&L.req.t!=='all';
+function current(){const out={};for(const C of CH){if(!C||C.hidden||!C.looks)continue;const got=[];C.looks.forEach((L,i)=>{try{if(earnable(C,L)&&SKINS2.have(C,L))got.push(i);}catch(e){}});out[C.id]=got;}return out;}
+if(!SEEN){SEEN=current();save();}   /* first run: everything already earned counts as seen */
+const Q=[];let showing=false;
+function scan(){try{const now=current();for(const id in now){const old=SEEN[id];if(!old){SEEN[id]=now[id];continue;}   /* a fighter just unlocked: their earned costumes come with them */
+    for(const i of now[id])if(!old.includes(i)){old.push(i);Q.push([id,i]);}}save();}catch(e){E(e);}}
+const busy=()=>{const ids=['clban','stban','shban'];for(const id of ids){const el=document.getElementById(id);if(el&&!el.hidden)return true;}return typeof running!=='undefined'&&running&&typeof GS!=='undefined'&&GS!=='over';};
+function pump(){if(showing||!Q.length)return;if(busy()){setTimeout(pump,700);return;}const[id,i]=Q.shift();show(id,i);}
+{const st=document.createElement('style');st.textContent='#skban{position:fixed;inset:0;z-index:201;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,rgba(40,20,70,.92),rgba(8,6,20,.96));font-family:Rubik,system-ui,sans-serif;color:#fff;overflow:hidden}#skban[hidden]{display:none}'
+ +'#skban .bx{position:relative;display:flex;gap:26px;align-items:center;max-width:min(820px,92vw);padding:26px 30px;border:4px solid #c88aff;border-radius:18px;background:linear-gradient(160deg,#2a2440,#141024);box-shadow:0 0 60px rgba(200,138,255,.45);animation:skpop .5s cubic-bezier(.2,1.5,.4,1)}'
+ +'#skban canvas{width:min(240px,34vw);height:auto;image-rendering:pixelated;flex:none;filter:drop-shadow(0 6px 0 rgba(0,0,0,.5))}#skban h3{margin:0;font:900 15px/1 Rubik,system-ui,sans-serif;letter-spacing:4px;color:#c88aff}#skban h2{margin:6px 0 2px;font:900 clamp(30px,6vw,54px)/1 Rubik,system-ui,sans-serif;letter-spacing:2px;text-shadow:0 4px 0 #000}'
+ +'#skban .ab{font:800 18px/1.2 Rubik,system-ui,sans-serif;color:#ffd400;letter-spacing:3px;margin-bottom:10px}#skban p{margin:6px 0;font:500 14px/1.45 Rubik,system-ui,sans-serif;color:#e8e4f4}#skban p b{color:#c88aff}#skban button{margin-top:14px;padding:11px 26px;font:900 15px/1 Rubik,system-ui,sans-serif;letter-spacing:2px;border:0;border-radius:10px;background:#c88aff;color:#16121e;cursor:pointer}'
+ +'#skban i{position:absolute;top:-20px;width:9px;height:16px;animation:skfall linear infinite}@keyframes skpop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}@keyframes skfall{to{transform:translateY(110vh) rotate(720deg)}}@media(max-width:640px){#skban .bx{flex-direction:column;text-align:center;gap:10px;padding:18px}}';document.head.appendChild(st);}
+const HOW={m:n=>'Played '+n+' matches as them',ko:n=>'Scored '+n+' KOs with them',dmg:n=>'Dealt '+n+'% damage with them',c:()=>'Played a campaign fight with them',sv:n=>'Reached wave '+n+' in Survival with them',d:n=>'Took '+n+' KOs with them'};
+function show(id,i){const ci=CH.findIndex(c=>c.id===id),C=CH[ci],L=C&&C.looks&&C.looks[i];if(!L){pump();return;}
+  let ov=document.getElementById('skban');if(!ov){ov=document.createElement('div');ov.id='skban';document.body.appendChild(ov);}ov.innerHTML='';showing=true;
+  const cols=['#c88aff','#ffd400','#5ab8ff','#ff8ad0','#ffffff'];for(let k=0;k<40;k++){const c=document.createElement('i');c.style.left=(Math.random()*100)+'%';c.style.background=cols[k%cols.length];c.style.animationDuration=(2.2+Math.random()*2.6)+'s';c.style.animationDelay=(-Math.random()*4)+'s';ov.appendChild(c);}
+  const bx=document.createElement('div');bx.className='bx';const cv=document.createElement('canvas');cv.width=240;cv.height=240;try{const src=document.createElement('canvas');src.width=240;src.height=200;portrait(ci,src,'full','win',i);
+    const d=src.getContext('2d').getImageData(0,0,240,200).data;let x0=240,y0=200,x1=0,y1=0;for(let y=0;y<200;y++)for(let x=0;x<240;x++)if(d[(y*240+x)*4+3]>20){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+    const c=cv.getContext('2d');c.imageSmoothingEnabled=false;if(x1>x0){const w=x1-x0+1,h=y1-y0+1,k=Math.min(228/w,228/h);c.drawImage(src,x0,y0,w,h,Math.round((240-w*k)/2),Math.round((240-h*k)/2),w*k,h*k);}else c.drawImage(src,0,0);}catch(e){E(e);}
+  const tx=document.createElement('div');const el=(t,cls,s)=>{const e=document.createElement(t);if(cls)e.className=cls;e.textContent=s;tx.appendChild(e);return e;};
+  el('h3','','NEW COSTUME UNLOCKED');el('h2','',C.n);el('div','ab',(L.cname||'COSTUME '+(i+1)).toUpperCase());
+  const r=L.req;if(r&&HOW[r.t]){const p=el('p','','');p.innerHTML='<b>EARNED</b> ';p.appendChild(document.createTextNode(HOW[r.t](r.n)));}
+  const p2=el('p','','');p2.innerHTML='<b>WEAR IT</b> ';p2.appendChild(document.createTextNode('Pick '+C.n+' on the fighter select screen and change costume (Q / E, or the costume arrows).'));
+  const b=el('button','','CONTINUE');
+  const close=()=>{ov.hidden=true;showing=false;removeEventListener('keydown',key,true);setTimeout(pump,250);};
+  const key=e=>{if(e.code==='Enter'||e.code==='Space'||e.code==='Escape'){e.stopImmediatePropagation();e.preventDefault();close();}};b.onclick=close;addEventListener('keydown',key,true);
+  bx.appendChild(cv);bx.appendChild(tx);ov.appendChild(bx);ov.hidden=false;try{sfx('power');}catch(e){}SB.shown.push(id+':'+(L.cname||i));
+  const t0=performance.now();(function poll(){if(ov.hidden)return;try{if(performance.now()-t0>900)for(const g of navigator.getGamepads?navigator.getGamepads():[]){if(g&&g.buttons&&(g.buttons[0].pressed||g.buttons[1].pressed||(g.buttons[9]&&g.buttons[9].pressed))){close();return;}}}catch(e){}requestAnimationFrame(poll);})();}
+SB.scan=scan;SB.pump=pump;SB.show=show;SB.queue=Q;
+/* look for new costumes when a match ends and when going back to the menus */
+let prev='';
+if(typeof step==='function'){const st=step;step=function(){const r=st.apply(this,arguments);try{if(GS==='over'&&prev!=='over'){setTimeout(()=>{scan();pump();},3200);}prev=GS;}catch(e){E(e);}return r;};}
+for(const nm of['toSelect','toTitle']){try{const fn0=window[nm]||eval(nm);if(typeof fn0==='function'){const w=function(){const r=fn0.apply(this,arguments);try{setTimeout(()=>{scan();pump();},600);}catch(e){}return r;};if(nm==='toSelect')toSelect=w;else toTitle=w;}}catch(e){}}
 })();
 
 </script>
