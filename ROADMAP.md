@@ -86,3 +86,5 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Sato: every normal a different airbag trick (recoil, trip, bumper, backfire...)
 - [x] Bara normals use feathers (Quill Tip, Ground Quill, Tail Hammer); Chris normals (Body Shot, Low Kick, Bull Rush armour, Stomp, Blood Up); Yurei ghost normals (Grave Hand, Wisp Ring, Over the Shoulder, Haunt); Shi's Death Touch borrows the rival's own Neutral B
 - [x] Kal: Premonition replaces Focus; Sata: nanite kit (Swarm, Blade, Reform, Trap) replaces the Samus-style kit; Kongu: baseball kit (Fastball, Slide, Bat Copter, Home Run Swing) replaces the DK-style kit; Sai: Copy Catch replaces Double Shot
+- [x] Okane: flesh normals quick, gold normals slow and unstoppable; Twine: every normal uses her arm tip; Kichi: chain normals with reach (Chain Wheel, Anchor); Sarah: Shadow Swap replaces the duplicate Shadow Step teleport
+- Move-set rework series done (20 fighters). Further reworks to come from playtest feedback.

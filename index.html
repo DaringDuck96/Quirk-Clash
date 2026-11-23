@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-2127';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-2136';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18247,6 +18247,89 @@ if(SI){const SC='#ffd24a';
 
 if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&!f.dead&&!f.gone&&typeof X!=='undefined'&&X)for(const fn of draws)fn(f);}catch(e){E(e);try{X.globalAlpha=1;}catch(x){}}return r;};}
 /* entity world-draw hooks for the new entities need the stock entity painter to know them: EK draw is used directly */
+})();
+
+/* rework5.js — last batch of move-set reworks:
+   Okane (two sets of normals: quick flesh slaps, slow unstoppable gold blows), Twine (every normal uses the tip on her arms),
+   Kichi (his plain normals become chain attacks with reach), Sarah (Shadow Swap replaces her Shadow Step teleport). */
+(function(){
+const RW={err:null,n:{}};window.REWORK5=RW;const E=e=>{RW.err=RW.err||String(e&&e.stack||e).slice(0,400);};const cnt=k=>{RW.n[k]=(RW.n[k]||0)+1;};
+const C=id=>CH.find(c=>c.id===id);const OK=C('okane'),TW=C('twine'),KI=C('kichi'),SR=C('sarah');
+const foesOf=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&!(typeof TEAMS_ON==='function'&&TEAMS_ON()&&o.team===f.team));
+const IP=f=>(typeof interpPos==='function'?interpPos(f):f);
+const intg=o=>typeof intangible==='function'&&intangible(o);
+const NORMS=['jab1','jab2','jab3','jab','ftilt','utilt','dtilt','dash','nair','fair','bair','uair','dair','fsmash','usmash','dsmash'];
+const isNorm=k=>NORMS.includes(k);
+const draws=[];const onDraw=fn=>draws.push(fn);
+const GT=(id,i,s)=>{try{if(typeof GTXT!=='undefined'){const G=GTXT[id]||(GTXT[id]=[]);G[i]=s;}}catch(e){}};
+
+/* =================== OKANE: flesh is quick, gold is unstoppable =================== */
+if(OK){const GD='#ffd84a';
+  OK.fmv=OK.fmv||{};const G=OK.fmv.gold=OK.fmv.gold||{};
+  for(const k of NORMS){const d=OK.mv[k];if(!d||!d.hits||!d.hits.length)continue;
+    if(!G[k])G[k]=Object.assign({},d,{s:d.s+2,r:d.r+2,bp:Object.assign({},d.bp||{},{armor:1,f0:1,f1:d.s+d.a+2}),rw5:'gold',hits:d.hits.map(h=>Object.assign({},h,{bkb:(h.bkb||3)+.5}))});
+    OK.mv[k]=Object.assign({},d,{s:Math.max(2,d.s-1),r:Math.max(6,d.r-2),rw5:'flesh'});}
+  onDraw(f=>{if(f.C!==OK||!f.mv||!f.mv.d||f.mv.d.rw5!=='gold')return;const m=f.mv,d=m.d;if(m.t<d.s||m.t>d.s+d.a)return;const p=IP(f);const h=d.hits[0]&&d.hits[0].b[0];if(!h)return;
+    X.globalAlpha=.55;wring(p.x+f.face*h[0],p.y+h[1],h[2]+2,GD,2);X.globalAlpha=1;if(FR%2===0)part(p.x+f.face*h[0],p.y+h[1],0,-.5,10,GD,2,0);});
+  OK.nrm=['Flesh normals: QUICK — Each one comes out a frame sooner and recovers faster.','Gold normals: BULLION — Two frames slower, but nothing stops them and they launch harder.','Forward smash: GOLD FIST — Solid gold. Does not flinch.'];
+  OK.na='Normals: two sets. As flesh his strikes are quick, contemptuous slaps (a frame faster to start and faster to recover). Gilded, every normal turns to solid gold: two frames slower, but no hit can stop it, it launches harder, and gold hits do 20% more. GILDED (Down-B) switches between them while the gold meter lasts. Impact: MIDAS TOUCH — his hits gild the rival for three seconds.';
+}
+
+/* =================== TWINE: every normal uses the tip on her arms =================== */
+if(TW){const TIP=[{n:'NEEDLE',dm:.96,kb:.98,col:'#d8dce8'},{n:'KNOT',dm:1.18,kb:1.15,col:'#ff8ac0'},{n:'HOOK',dm:1,kb:.78,col:'#ffd24a',pull:1}];
+  const tipOf=f=>TIP[(f.cycN||0)%3];
+  const own=k=>isNorm(k)&&!['ftilt','fsmash'].includes(k);   /* those two already change with the tip */
+  {const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(a&&a.C===TW&&!(o&&o.proj)&&a.mv&&own(a.mv.k))m*=tipOf(a).dm;}catch(e){E(e);}return m;};}
+  {const km=kbMod;kbMod=function(a,t,h,o){let m=km.apply(this,arguments);try{if(a&&a.C===TW&&!(o&&o.proj)&&a.mv&&own(a.mv.k))m*=tipOf(a).kb;}catch(e){E(e);}return m;};}
+  {const ah=applyHit;applyHit=function(t,h,dirX,a,o){const hp=t?t.dmg:0;const r=ah.apply(this,arguments);try{if(a&&a.C===TW&&t&&t!==a&&t.dmg>hp&&!(o&&o.proj)&&a.mv&&own(a.mv.k)&&tipOf(a).pull){const d=Math.sign(a.x-t.x)||1;t.lx=(t.lx||0)*.3+d*2.6;cnt('hookPull');}}catch(e){E(e);}return r;};}
+  onDraw(f=>{if(f.C!==TW||!f.mv||!f.mv.d||!own(f.mv.k))return;const m=f.mv,d=m.d;if(m.t<d.s-1||m.t>d.s+d.a+2)return;const h=d.hits&&d.hits[0]&&d.hits[0].b[0];if(!h)return;const p=IP(f),T=tipOf(f);
+    const x1=p.x+f.face*h[0],y1=p.y+h[1];wl('#c86090',p.x+f.face*6,p.y-36,x1,y1,1);
+    if(T.n==='NEEDLE'){wl('#9aa0b0',x1-f.face*5,y1,x1+f.face*4,y1,2);wp('#ffffff',x1+f.face*4,y1);}
+    else if(T.n==='KNOT'){wdisc(x1,y1,5,'#c84070');wdisc(x1-1,y1-1,3,T.col);}
+    else{wl('#c8a040',x1,y1,x1,y1-6,2);wl('#c8a040',x1,y1-6,x1+f.face*4,y1-6,2);}});
+  TW.na='Normals: every one is thrown with her yarn arms, and what is on the end of them changes it. NEEDLE: lighter and quicker. KNOT: 18% more damage and harder launches. HOOK: shorter launches that drag the rival back toward her. Her forward tilt, forward smash and Yarn Punch reach across the stage and change with the tip as before. Down B changes the tip.';
+  TW.trait='YARN ARMS — three arm tips on Down B, and every normal uses them: NEEDLE (fast and longest), KNOT (slow and heavy), HOOK (drags the rival toward her). Aim any long punch with up or down as she winds up.';
+}
+
+/* =================== KICHI: chains on his plain normals =================== */
+if(KI){const CHN='#a8acb8';
+  const reach=(k,mul,o)=>{const d=KI.mv[k];if(!d||!d.hits)return;d.rw5='chain';for(const h of d.hits){for(const b of h.b){b[0]*=mul;b[2]*=1.1;}if(o)Object.assign(h,o);}};
+  reach('jab1',1.45);reach('jab2',1.45);reach('jab3',1.5);reach('dtilt',1.5,{ang:20});reach('usmash',1);reach('dsmash',1.3);
+  {const d=KI.mv.usmash;if(d&&d.hits)for(const h of d.hits)for(const b of h.b){b[1]*=1.35;b[2]*=1.1;}}
+  {const d=KI.mv.nair;if(d&&d.hits){d.rw5='chain';const h0=d.hits[0];d.hits=[Object.assign({},h0,{b:[[24,-32,11],[-24,-32,11],[0,-32,14]],dmg:h0.dmg*.3,ri:4,bkb:1.2,kbg:0})];d.finisher=Object.assign({},h0,{b:[[26,-32,13],[-26,-32,13]],dmg:h0.dmg*.5});}}
+  {const d=KI.mv.dair;if(d&&d.hits){d.rw5='anchor';for(const h of d.hits){h.ang=-80;h.dmg*=1.08;for(const b of h.b){b[1]+=8;b[2]*=1.15;}}}}
+  onDraw(f=>{if(f.C!==KI||!f.mv||!f.mv.d)return;const m=f.mv,d=m.d;if(!d.rw5||m.t<d.s-1||m.t>d.s+d.a+2)return;const p=IP(f);
+    for(const h of d.hits.slice(0,1))for(const b of h.b){const x1=p.x+f.face*b[0],y1=p.y+b[1],x0=p.x+f.face*6,y0=p.y-34,n=Math.max(2,Math.round(Math.hypot(x1-x0,y1-y0)/6));
+      for(let i=1;i<=n;i++){const u=i/n;wring(x0+(x1-x0)*u,y0+(y1-y0)*u,2,CHN,1);}if(d.rw5==='anchor'){wtri('#6a6e7a',x1-6,y1-2,x1+6,y1-2,x1,y1+7);}}});
+  KI.nrm=['Jab and down tilt: CHAIN JAB / LOW CHAIN — Half again the reach.','Neutral air: CHAIN WHEEL — Chains whirl on both sides, hitting several times.','Down air: ANCHOR — A weighted chain end, straight down: spikes.'];
+  KI.na='Normals: chain whips with long reach. His jab, down tilt and down smash reach half again as far; neutral air whirls chains on both sides; up smash throws a chain high overhead; down air drops a chain anchor that spikes. His grab is a chain lasso that reaches a third of the stage. Impact: SHACKLE — A rival he hits is chained to him for two seconds and cannot get more than a short distance away.';
+}
+
+/* =================== SARAH: SHADOW SWAP replaces Shadow Step =================== */
+if(SR){const SH='#3a2a5a',SL='#8a6ad8';
+  const old=SR.mv.sB||{};SR.mv.sB=Object.assign({},old,{an:'castDown',beh:'srSwap',hits:[],s:6,a:1,r:12,bp:undefined,cd:20});delete SR.mv.sB.bp;delete SR.mv.sB.sweet;delete SR.mv.sB.finisher;
+  const mineShadow=f=>ENT.find(e=>e.alive&&e.k==='shswap'&&e.owner===f);
+  BEH.srSwap={tick(f,m){if(m.t!==m.d.s)return;const e=mineShadow(f);
+    if(e){const ox=f.x,oy=f.y;burst(f.x,f.y-24,12,[SH,SL],2,16);f.x=e.x;f.y=e.y;f.vx=0;f.vy=Math.min(f.vy,0);f.inv=Math.max(f.inv||0,10);e.alive=false;burst(f.x,f.y-24,14,[SH,SL,'#ffffff'],2.4,16);
+      for(const o of foesOf(f)){if(intg(o))continue;if((o.x-ox)*(f.x-ox)>0&&Math.abs(o.x-ox)<Math.abs(f.x-ox)&&Math.abs(o.y-f.y)<40){f.face=Math.sign(o.x-f.x)||f.face;o.face=-f.face;cnt('swapBehind');}}
+      try{sfx('warp');}catch(x){}cnt('swap');return;}
+    const g=f.ground?f.ground.y:surfY(f.x,f.y);if(g===null){/* in the air: the shadow drops straight to the floor below */}
+    ENT.push({k:'shswap',owner:f,face:f.face,t:0,alive:true,life:150,x:f.x+f.face*14,y:g!==null?g:f.y,vx:f.face*5.2,vy:0,g:0,r:0,dmg:0,hits:{},oa:1,spd:5.2});cnt('shadowOut');try{sfx('pop');}catch(x){}}};
+  EK.shswap={upd(e){const f=e.owner;if(!f||f.dead||f.gone){e.alive=false;return;}
+    if(e.t<34){const nx=e.x+e.vx,y=surfY(nx,e.y-6);if(y!==null&&Math.abs(y-e.y)<10){e.x=nx;e.y=y;}else e.vx=0;}
+    for(const o of foesOf(f)){if(intg(o)||!o.ground||e.hits[o.id])continue;if(Math.abs(o.x-e.x)<14&&Math.abs(o.y-e.y)<6){e.hits[o.id]=1;applyHit(o,{dmg:6,bkb:3.8,kbg:.035,ang:85,fx:[SL,'#ffffff']},e.face,f,{force:1});cnt('shadowTrip');}}},
+    draw(e){const a=e.life<40?(e.t%4<2?.3:.6):.75;X.globalAlpha=a;wr(SH,e.x-11,e.y-2,22,3);wr(SL,e.x-8,e.y-3,16,1);wdisc(e.x,e.y-1,3,SH);X.globalAlpha=1;}};
+  SR.sp[1]='Shadow Swap (send her shadow out, press again to swap places with it)';
+  GT('sarah',1,'Sends her shadow sliding along the floor ahead of her; anyone it passes under is tripped up. Press Side-B again while it is out and she swaps places with it. Swap past a rival and she comes out behind them, facing their back.');
+}
+
+/* =================== CPUs =================== */
+{const ai=aiInput;aiInput=function(f){const I=ai.apply(this,arguments)||{};try{if(!f||f.dead||f.gone||GS!=='play'||f.mv||f.st==='hit')return I;const o=typeof opp==='function'?opp(f):null;if(!o||o.dead)return I;
+    if(f.C===SR){const e=ENT.find(x=>x.alive&&x.k==='shswap'&&x.owner===f);const dx=o.x-f.x,r=rnd(),t=((f.lvl||5)-1)/8;
+      if(e){if((e.x-o.x)*(f.x-o.x)<0&&Math.abs(e.x-o.x)<50&&r<.3+.4*t){I.B=1;I.A=0;I.x=f.face;I.y=0;cnt('aiSwap');}}
+      else if(f.ground&&Math.abs(dx)>60&&Math.abs(dx)<200&&!(f.cds&&f.cds.sB>FR)&&r<.01+.02*t){if(f.face!==Math.sign(dx))I.x=Math.sign(dx)*.3;else{I.B=1;I.A=0;I.x=f.face;I.y=0;cnt('aiShadow');}}}}catch(e){E(e);}return I;};}
+
+if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&!f.dead&&!f.gone&&typeof X!=='undefined'&&X)for(const fn of draws)fn(f);}catch(e){E(e);try{X.globalAlpha=1;}catch(x){}}return r;};}
 })();
 
 </script>
