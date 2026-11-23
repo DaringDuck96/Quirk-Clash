@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1920';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1949';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -17200,16 +17200,33 @@ if(typeof aiInput==='function'){const ai=aiInput;aiInput=function(f){const r=ai.
 if(typeof dmgMod!=='function'||typeof kbMod!=='function'||typeof update!=='function')return;
 const B5={on:true,err:null,n:{}};window.BAL5=B5;const E=e=>{B5.err=B5.err||String(e&&e.stack||e).slice(0,300);};
 const T={
+  /* pass 1 (3,600-match run) */
   toguchi:{sB:{dm:.85,kg:-.10}},
   conor:{usmash:{kg:-.12},fsmash:{dm:.92}},
-  soran:{fsmash:{dm:.92}},
-  makiko:{fsmash:{kb:1.12},usmash:{kb:1.12}},
-  bryson:{dash:{dm:1.10},ftilt:{dm:1.10}},
-  ali:{ftilt:{dm:1.08},utilt:{dm:1.08},dtilt:{dm:1.08},nair:{dm:1.08},fair:{dm:1.08},bair:{dm:1.08},uair:{dm:1.08},dair:{dm:1.08}},
-  sai:{fsmash:{dm:1.10},nB:{dm:1.10}},
   keanu:{fsmash:{kb:1.08}},
-  hazmat:{fsmash:{kb:1.08}}};
+  hazmat:{fsmash:{kb:1.08}},
+  sai:{fsmash:{dm:1.10},nB:{dm:1.10}},
+  /* pass 1 + pass 2 (4,000-match run, outliers re-checked over 150 matches each) */
+  soran:{fsmash:{dm:.88,kb:.93},nB:{dm:.82}},                                   /* 81% / 64%: projectile and forward smash */
+  makiko:{fsmash:{kb:1.12,dm:1.10},usmash:{kb:1.12,dm:1.10},nB:{dm:1.12}},      /* 35% / 33% */
+  bryson:{dash:{dm:1.10},ftilt:{dm:1.10},fsmash:{dm:1.10},usmash:{dm:1.10},sB:{dm:1.10},fair:{dm:1.10},bair:{dm:1.10},nair:{dm:1.10}},   /* 35% / 44%: deals the least damage of anyone */
+  ali:{ftilt:{dm:1.08},utilt:{dm:1.08},dtilt:{dm:1.08},nair:{dm:1.08},fair:{dm:1.08},bair:{dm:1.08},uair:{dm:1.08},dair:{dm:1.08},
+       fsmash:{dm:1.10,kb:1.12},dash:{dm:1.10},usmash:{dm:1.08}},            /* 30% / 39%: forward smash almost never KOd */
+  /* pass 2: nerfs */
+  tenmetsu:{dB:{dm:.80},fsmash:{kb:.95}},                                    /* 69% / 68%: the down special teleport did 47% of all his damage */
+  emi:{dair:{dm:.85,kb:.90},uair:{kb:.95},bair:{kb:.95},fair:{kb:.95}},                                   /* 75% / 69% */
+  riku:{fsmash:{kb:.92},sB:{dm:.88}},                                         /* 72% / 70% */
+  ichigo:{sB:{dm:.90,kb:.92},fsmash:{kb:.94},nB:{dm:.90}},                     /* 69% / 63% */
+  maya:{dB:{kb:.80},fsmash:{dm:.86},usmash:{kb:.94}},                                         /* 68% / 70%: down special was her top KO move */
+  /* pass 2: buffs */
+  shuko:{fsmash:{dm:1.10,kb:1.10},usmash:{dm:1.10,kb:1.10},nB:{dm:1.15},fair:{dm:1.10},bair:{dm:1.10},dash:{dm:1.10}},                     /* 35% / 33% */
+  sata:{nair:{dm:1.10},fair:{dm:1.10},bair:{dm:1.10,kb:1.10},uair:{dm:1.10,kb:1.08},dair:{dm:1.10},usmash:{kb:1.12},fsmash:{dm:1.10,kb:1.10},nB:{dm:1.12},sB:{dm:1.12}},   /* 36% / 34% */
+  takeshi:{usmash:{kb:1.12,dm:1.06},fsmash:{kb:1.12,dm:1.06},dair:{kb:1.10},bair:{kb:1.10}}, /* 37% / 34%: lots of damage, few KOs */
+  maho:{usmash:{kb:1.10},sB:{kb:1.10},bair:{kb:1.10},fsmash:{kb:1.10}},      /* 38% / 34%: lots of damage, few KOs */
+  gomi:{fsmash:{dm:1.08},usmash:{dm:1.08},bair:{dm:1.10},fair:{dm:1.10},dash:{dm:1.10},jab3:{dm:1.10}}};   /* 36% / 41% */
 B5.table=T;
+/* Sata: heavy and the slowest runner of the mid-weights; a little more run speed (3.9 -> 4.25) */
+try{const S=CH.find(c=>c.id==='sata');if(S&&S.st&&!S._b5){S._b5=1;S.st.run=Math.max(S.st.run,4.25);}}catch(e){E(e);}
 /* Hazmat: forward smash launches sideways (40 degrees instead of 86) so it can KO off the side, and comes out faster (13 frames, was 16) */
 try{const H=CH.find(c=>c.id==='hazmat');if(H)for(const M of[H.mv,H.hmv]){const d=M&&M.fsmash;if(!d||d._b5)continue;d._b5=1;d.s=Math.min(d.s,13);if(d.hits&&d.hits[0])d.hits[0].ang=40;}}catch(e){E(e);}
 const rule=(a,h,o)=>{if(!B5.on||!a||!a.C)return null;const R=T[a.C.id];if(!R)return null;let k=null;

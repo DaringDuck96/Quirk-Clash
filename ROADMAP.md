@@ -67,7 +67,7 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Training: 1/2 and 1/4 speed (pause menu)
 
 ## Round 5: next up
-- [~] Balance pass 1 done (Toguchi, Conor, Soran nerfed; Bryson, Ali, Sai, Keanu buffed; Makiko got Sandman Spiral and sleep-on-arrival Dream Step, Hazmat a faster sideways forward smash). Still to do: second pass on the other flagged fighters, Bryson, and teaching Makiko's CPU to use her sleep setups
+- [x] Balance pass 1 and 2 done. Pass 2 (4,000-match run, outliers re-checked at 150 matches): nerfed Emi, Riku, Tenmetsu, Maya, Soran, Ichigo; buffed Makiko, Ali, Gomi, Maho, Takeshi, Bryson, Shuko, Sata. Everyone re-tested now sits about 40-62%. Shuko and Sata are still the lowest (about 40%): next candidates if a pass 3 happens
 - [x] Smarter CPUs at every level: no deliberate mistakes; ledge trapping, ledge-option reads, off-stage edge-guards, recovery mix-ups, Makiko sleep setups (level = reaction speed and consistency)
 - [ ] Classic mode: a themed six-match route per fighter with its own opponents and stages, a boss, and a difficulty setting
 - [x] Results screen with stats: KOs, falls, self-destructs, damage dealt / taken, longest combo, plus Smash-style awards (19 kinds, every player gets at least one)
