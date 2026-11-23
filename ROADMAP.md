@@ -65,3 +65,12 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Training: launch line after each hit (red where it would KO)
 - [x] Training: frame advantage on hit and on shield
 - [x] Training: 1/2 and 1/4 speed (pause menu)
+
+## Round 5: next up
+- [ ] Balance pass: big win-rate run, then tune only clear outliers one fighter at a time (no blanket scaling)
+- [ ] Smarter high-level CPUs: off-stage edge-guarding, covering ledge options, mixed-up recoveries and ledge getups
+- [ ] Classic mode: a themed six-match route per fighter with its own opponents and stages, a boss, and a difficulty setting
+- [ ] Results screen with stats: KOs, falls, self-destructs, damage dealt / taken, longest combo
+- [ ] Controls settings: button remapping, tap jump on/off, right stick tilts or smashes (tilts by default), shield options (check what exists)
+- [ ] Gameplay-update trailer showing the new hit effects, star KOs, Heroic Orb and training tools
+- [ ] Tune the recent feel changes from playtest feedback (hit sounds, shake, launch speed, edge stops)
