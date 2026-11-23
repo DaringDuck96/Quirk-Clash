@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1631';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1920';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -17440,6 +17440,130 @@ if(typeof step==='function'){const st=step;let prev='';step=function(){const r=s
 /* "how to unlock" text */
 {const nd=SKINS2.need;SKINS2.need=function(C,L){try{if(L&&L.req&&L.req.t==='adDmg'){const s=SKINS2.stat(C.id),k=Math.max(0,Math.ceil(L.req.n-(s.adDmg||0)));return k.toLocaleString('en-US')+'% more damage (any mode)';}}catch(e){}return nd.apply(this,arguments);};}
 if(window.SKINBAN){/* banner wording */}
+})();
+
+/* results.js — fuller results screen: self-destructs and longest combo in the stats, plus Smash-style awards for every player.
+   Tracks per match (on each fighter, so it resets every match): self-destructs, longest true combo, ledge grabs, dodges,
+   parries, shield time, air time, ground distance, taunts, smash attacks landed, projectile hits, meteor hits. */
+(function(){
+if(typeof update!=='function'||typeof applyHit!=='function'||typeof ko!=='function'||typeof showResults!=='function')return;
+const RS={err:null,on:true,last:null};window.RESULTS=RS;const E=e=>{RS.err=RS.err||String(e&&e.stack||e).slice(0,300);};
+const R=f=>f.rs||(f.rs={sd:0,combo:0,ledge:0,dodge:0,parry:0,shield:0,air:0,dist:0,taunt:0,smash:0,proj:0,meteor:0,_st:'',_mv:null});
+const live=()=>typeof GS!=='undefined'&&GS==='play';
+
+/* self-destruct: a fall with no rival hit in the last 10 seconds (the game's own KO-credit rule) */
+{const k0=ko;ko=function(f){let sd=false,fa=f&&f.falls;try{sd=!!f&&!f.dead&&!f.gone&&!(f.lastBy&&FR-f.lastHurt<600&&F.includes(f.lastBy)&&f.lastBy!==f);}catch(e){}
+  const r=k0.apply(this,arguments);try{if(sd&&f.falls>fa)R(f).sd++;}catch(e){E(e);}return r;};}
+
+/* hits: combos (each hit on a rival still in hitstun from the same attacker extends it), smash attacks, projectiles, meteors, parries */
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){let hp=0,stun=false,nfx=0;try{hp=t?t.dmg:0;stun=!!t&&(t.hitstun>0||t.st==='hit');nfx=FXL.length;}catch(e){}
+  const res=ah.apply(this,arguments);
+  try{if(t&&a&&a!==t&&F.includes(a)){
+      if(t.dmg>hp+.01){const rt=R(t),ra=R(a);
+        const key=(o&&o.proj)?h:a.mv;   /* a multi-hit move or projectile counts once, like the hits of one attack */
+        const tick=!key||(o&&o.force&&o.proj);   /* poison, burn, lingering fields and other effect ticks neither start nor extend a combo */
+        if(!tick){if(stun&&rt._cbBy===a&&FR-rt._cbF<120){if(key!==rt._cbK)rt._cbN++;}else{rt._cbN=1;rt._cbBy=a;}rt._cbK=key;rt._cbF=FR;}
+        if(rt._cbN>ra.combo)ra.combo=rt._cbN;
+        const k=a.mv&&a.mv.k||'';if(!(o&&o.proj)&&/smash$/.test(k)&&t.dmg-hp>=6)ra.smash++;
+        if(o&&o.proj)ra.proj++;
+        const ang=h&&h.ang;if(ang!==undefined&&ang>=250&&ang<=290&&!t.ground)ra.meteor++;}
+      else{for(let i=nfx;i<FXL.length;i++)if(FXL[i]&&FXL[i].k==='parry'){R(t).parry++;break;}}}}catch(e){E(e);}return res;};}
+
+/* per-frame habits */
+{const up=update;update=function(f,I){const r=up.apply(this,arguments);
+  try{if(live()&&f&&!f.dead&&!f.gone&&F.includes(f)){const s=R(f),st=f.st;
+      if(st!==s._st){if(st==='ledge')s.ledge++;else if(st==='roll'||st==='spot'||st==='airdodge')s.dodge++;s._st=st;}
+      const mk=f.mv&&f.mv.k;if(f.mv!==s._mv){if(mk==='taunt')s.taunt++;s._mv=f.mv;}
+      if(st==='shield')s.shield++;
+      if(!f.ground&&st!=='ledge')s.air++;else if(f.ground)s.dist+=Math.abs(f.vx||0);}}catch(e){E(e);}return r;};}
+
+/* ---------- awards ---------- */
+const pl=(n,w)=>n+' '+w+(n===1?'':'s');const fmtT=n=>(n/60).toFixed(1)+' s';
+const AW=[ /* [title, what it means, value fn, smallest value that counts, 'max'|'min', how to show the value] */
+  ['COMBO KING','Longest combo',x=>R(x).combo,4,'max',v=>pl(v,'hit')],
+  ['HEAVY HITTER','Strongest single hit',x=>x.best||0,16,'max',v=>v.toFixed(1)+'%'],
+  ['KO MACHINE','Most KOs',x=>x.kos,2,'max',v=>pl(v,'KO')],
+  ['LEDGE LOVER','Most ledge grabs',x=>R(x).ledge,3,'max',v=>pl(v,'grab')],
+  ['PARRY PRO','Most perfect parries',x=>R(x).parry,1,'max',v=>v===1?'1 parry':v+' parries'],
+  ['METEOR MASTER','Most spikes landed',x=>R(x).meteor,1,'max',v=>pl(v,'spike')],
+  ['SMASH SPECIALIST','Most smash attacks landed',x=>R(x).smash,3,'max',v=>v===1?'1 smash':v+' smashes'],
+  ['SHARPSHOOTER','Most projectile hits',x=>R(x).proj,6,'max',v=>pl(v,'hit')],
+  ['HIT MACHINE','Most hits landed',x=>x.hitsN||0,25,'max',v=>pl(v,'hit')],
+  ['ESCAPE ARTIST','Most rolls and dodges',x=>R(x).dodge,10,'max',v=>pl(v,'dodge')],
+  ['IRON WALL','Longest time shielding',x=>R(x).shield,300,'max',fmtT],
+  ['SKY WALKER','Most time in the air',x=>R(x).air,1200,'max',fmtT],
+  ['MARATHON RUNNER','Most ground covered',x=>R(x).dist,2500,'max',v=>Math.round(v/32)+' m'],
+  ['SHOW-OFF','Most taunts',x=>R(x).taunt,1,'max',v=>pl(v,'taunt')],
+  ['PUNCHING BAG','Most damage taken',x=>x.taken||0,150,'max',v=>Math.round(v)+'%'],
+  ['SELF-DESTRUCTOR','Most self-destructs',x=>R(x).sd,1,'max',v=>v+' SD'],
+  ['UNTOUCHABLE','Least damage taken',x=>x.taken||0,-1,'min',v=>Math.round(v)+'%'],
+  ['PACIFIST','Fewest hits landed',x=>x.hitsN||0,-1,'min',v=>pl(v,'hit')],
+  ['CLUTCH','Won on the last stock',x=>(x.place===1&&!x.gone&&x.stocks===1&&(MATCH.stocks||1)>1)?1:0,1,'max',()=>''],
+];
+function awards(list){const out=new Map(list.map(x=>[x,[]]));if(list.length<2)return out;
+  const cand=[];AW.forEach((a,ai)=>{const vals=list.map(a[2]);const best=a[4]==='max'?Math.max(...vals):Math.min(...vals);
+    if(a[4]==='max'&&best<a[3])return;if(a[4]==='min'&&vals.filter(v=>v===best).length>1)return;
+    if(a[4]==='min'&&a[0]==='UNTOUCHABLE'&&list.every(x=>(x.taken||0)>120))return;
+    const who=list.filter((x,i)=>vals[i]===best);if(who.length!==1)return;const x=who[0];
+    const others=vals.filter(v=>v!==best),gap=others.length?Math.abs(best-(a[4]==='max'?Math.max(...others):Math.min(...others)))/Math.max(1,Math.abs(best)):1;
+    cand.push({x,t:a[0],d:a[1],v:a[5](best),score:ai*.02-gap});});
+  cand.sort((p,q)=>p.score-q.score);
+  for(const pass of[1,2])for(const c of cand){const got=out.get(c.x);if(got.length>=pass||got.includes(c))continue;if(pass===1&&got.length)continue;got.push(c);}
+  /* everyone gets something: fall back to a participation award with their best number */
+  for(const x of list){const got=out.get(x);if(!got.length){const s=R(x);const opts=[['TEAM PLAYER','Stayed in the fight',(x.hitsN||0)+' hits'],['WARMING UP','Next time for sure',Math.round(x.dealt||0)+'% dealt']];const o=(x.hitsN||0)>5?opts[0]:opts[1];got.push({x,t:o[0],d:o[1],v:o[2]});}}
+  return out;}
+RS.awards=awards;
+
+{const st=document.createElement('style');st.textContent='.awl{display:grid;gap:3px;justify-items:center;margin-top:4px;max-width:170px}'
+ +'.awc{font:800 11px/1.1 Rubik,system-ui,sans-serif;letter-spacing:1px;padding:4px 8px 3px;border-radius:7px;background:#1a1530;border:2px solid var(--gold,#ffd400);color:#ffd400;text-align:center;animation:awpop .4s cubic-bezier(.2,1.6,.4,1) both}'
+ +'.awc small{display:block;font:600 10px/1.2 Rubik,system-ui,sans-serif;letter-spacing:.3px;color:#e8e4f4;margin-top:1px}'
+ +'.awgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;width:100%;max-width:760px}'
+ +'.awp{border:2px solid var(--line,#444);border-radius:12px;padding:8px;background:rgba(20,16,36,.75);display:grid;gap:5px;justify-items:center}'
+ +'.awp>b{font-family:var(--display,Rubik);font-size:19px;letter-spacing:.5px}.awp .awc{width:100%;box-sizing:border-box}'
+ +'.sraw{position:absolute;top:3%;right:4%;left:auto;max-width:47%;z-index:4;display:grid;gap:4px;justify-items:end;opacity:0;transform:translateY(-10px);transition:opacity .3s .25s,transform .3s .25s}'
+ +'.sres[data-s="2"] .sraw{opacity:1;transform:none}.sraw .awc{animation:none;max-width:100%;text-align:right;box-shadow:3px 3px 0 rgba(0,0,0,.5);font-size:clamp(8px,1vw,13px)}.sraw .awc small{font-size:clamp(7px,.85vw,11px)}'
+ +'.sres .sr-stats div{padding-top:3px;padding-bottom:2px}'
+ +'@media(max-width:700px),(max-height:460px){.sraw{top:3%;right:4%;max-width:50%;gap:3px}.sraw .awc{font-size:8px;padding:3px 4px 2px;letter-spacing:.3px;text-align:center;justify-self:stretch}.sraw .awc small{display:none}}'
+ +'@keyframes awpop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}'
+ +'@media(max-width:640px){.awl{max-width:120px}.awc{font-size:9.5px;padding:3px 5px 2px}.awc small{font-size:8.5px}}';document.head.appendChild(st);}
+const chip=(c,i)=>{const d=document.createElement('div');d.className='awc';d.style.animationDelay=(.35+i*.18)+'s';d.textContent=c.t;const s=document.createElement('small');s.textContent=c.v?c.d+' · '+c.v:c.d;d.appendChild(s);return d;};
+const who=x=>{try{return ptag(x)+' '+x.C.sn;}catch(e){return x.C.sn;}};
+
+function decorate(box){const list=F.filter(f=>f&&f.C&&!f.C.hidden),A=awards(list);RS.last=[...A].map(([x,c])=>[who(x),c.map(k=>k.t+' ('+k.v+')')]);
+  /* the Smash-style results screen (winner splash, then a column per player) */
+  if(box.classList.contains('sres')){const w=winner,teams=typeof TEAMS_ON==='function'&&TEAMS_ON();
+    const PL=x=>teams?(x.team===w.team?1:2):(x.place||1);const rank=list.slice().sort((a,b)=>PL(a)-PL(b)||b.kos-a.kos);
+    /* victory quotes are dialogue: only the hippo keeps his */
+    if(w&&w.C&&w.C.id!=='hippo')box.querySelectorAll('.sr-who q,.vq').forEach(q=>q.remove());
+    const cols=box.querySelectorAll('.sr-col');const best={sd:Math.min(...rank.map(x=>R(x).sd)),combo:Math.max(...rank.map(x=>R(x).combo))};
+    cols.forEach((col,i)=>{const x=rank[i];if(!x)return;const sts=col.querySelector('.sr-stats');
+      if(sts&&!sts._rs){sts._rs=1;const add=(lab,v,top)=>{const d=document.createElement('div'),sp=document.createElement('span'),b=document.createElement('b');sp.textContent=lab;b.textContent=v;if(top&&rank.length>1)b.className='top';d.appendChild(sp);d.appendChild(b);const st=[...sts.children].find(c=>/Stocks left/.test(c.textContent));sts.insertBefore(d,st||null);};
+        add('Self-destructs',String(R(x).sd),R(x).sd===best.sd);add('Longest combo',R(x).combo>1?R(x).combo+' hits':'—',R(x).combo===best.combo&&best.combo>1);}
+      const inn=col.querySelector('.sr-in')||col;if(!inn.querySelector('.sraw')){const l=document.createElement('div');l.className='sraw';(A.get(x)||[]).forEach((c,k)=>l.appendChild(chip(c,k)));inn.appendChild(l);}});
+    return;}
+  const body=box.querySelector('.podbody');
+  if(body){const rank=F.slice().sort((a,b)=>(a.place||1)-(b.place||1)),order=[1,0,2,3].filter(i=>rank[i]).map(i=>rank[i]);
+    const fix=()=>{try{
+      const cols=body.querySelectorAll('.podcol');if(cols.length===order.length)cols.forEach((col,i)=>{if(col.querySelector('.awl'))return;const l=document.createElement('div');l.className='awl';(A.get(order[i])||[]).forEach((c,k)=>l.appendChild(chip(c,k)));col.appendChild(l);});
+      const t=body.querySelector('table.podstats');if(t&&!t._rs){t._rs=1;const rows=t.querySelectorAll('tr');
+        const add=(tr,tag,txt)=>{const c=document.createElement(tag);c.textContent=txt;tr.appendChild(c);};
+        add(rows[0],'th','Self-destructs');add(rows[0],'th','Longest combo');rank.forEach((x,i)=>{const tr=rows[i+1];if(!tr)return;add(tr,'td',R(x).sd);add(tr,'td',R(x).combo>1?R(x).combo+' hits':'—');});}
+      }catch(e){E(e);}};
+    new MutationObserver(fix).observe(body,{childList:true});fix();
+    const tabs=box.querySelector('.trow');if(tabs&&!tabs.querySelector('.awtab')){const b=document.createElement('button');b.textContent='AWARDS';b.className='awtab';
+      b.onclick=()=>{tabs.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');try{sfx('pop');}catch(e){}body.innerHTML='';body.appendChild(grid(rank,A));};tabs.appendChild(b);}
+    return;}
+  /* other results screens (teams, plain): extend each stats line and add an awards grid */
+  const tb=box.querySelector('.stats');if(!tb)return;
+  const rowsBy=[...tb.children];const sorted=F.slice();rowsBy.forEach(r=>{const b=r.querySelector('b'),sp=r.querySelector('span');if(!b||!sp)return;const x=sorted.find(f=>b.textContent.endsWith(f.C.sn)&&b.textContent.includes(ptag(f)));if(x)sp.textContent+=' · '+R(x).sd+' SD · combo '+(R(x).combo||0);});
+  const g=grid(F.slice(),A);g.style.margin='8px auto 0';tb.after(g);}
+function grid(list,A){const g=document.createElement('div');g.className='awgrid';list.forEach(x=>{const p=document.createElement('div');p.className='awp';p.style.borderColor=x.col||x.C.col;const n=document.createElement('b');n.textContent=who(x);n.style.color=x.col||x.C.col;p.appendChild(n);(A.get(x)||[]).forEach((c,k)=>p.appendChild(chip(c,k)));g.appendChild(p);});return g;}
+
+{const sr=showResults;showResults=function(){const r=sr.apply(this,arguments);
+  try{if(!RS.on||typeof MODE==='undefined')return r;if(MODE==='survival'||MODE==='campaign'||MODE==='training')return r;
+    const go=()=>{const box=document.querySelector('#overlay .res');if(box&&!box.classList.contains('cres')&&!box._rs3&&F.length>=2){box._rs3=1;decorate(box);}};
+    /* the staged results screen builds itself right after this returns: wait for it */
+    setTimeout(()=>{try{go();}catch(e){E(e);}},0);}catch(e){E(e);}return r;};}
 })();
 
 </script>

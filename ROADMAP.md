@@ -70,7 +70,7 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [~] Balance pass 1 done (Toguchi, Conor, Soran nerfed; Bryson, Ali, Sai, Keanu buffed; Makiko got Sandman Spiral and sleep-on-arrival Dream Step, Hazmat a faster sideways forward smash). Still to do: second pass on the other flagged fighters, Bryson, and teaching Makiko's CPU to use her sleep setups
 - [x] Smarter CPUs at every level: no deliberate mistakes; ledge trapping, ledge-option reads, off-stage edge-guards, recovery mix-ups, Makiko sleep setups (level = reaction speed and consistency)
 - [ ] Classic mode: a themed six-match route per fighter with its own opponents and stages, a boss, and a difficulty setting
-- [ ] Results screen with stats: KOs, falls, self-destructs, damage dealt / taken, longest combo
+- [x] Results screen with stats: KOs, falls, self-destructs, damage dealt / taken, longest combo, plus Smash-style awards (19 kinds, every player gets at least one)
 - [ ] Controls settings: button remapping, tap jump on/off, right stick tilts or smashes (tilts by default), shield options (check what exists)
-- [ ] Gameplay-update trailer showing the new hit effects, star KOs, Heroic Orb and training tools
+- [x] Gameplay trailer: the World Premiere trailer (204 s, cut to the theme song)
 - [ ] Tune the recent feel changes from playtest feedback (hit sounds, shake, launch speed, edge stops)
