@@ -67,7 +67,7 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Training: 1/2 and 1/4 speed (pause menu)
 
 ## Round 5: next up
-- [ ] Balance pass: big win-rate run, then tune only clear outliers one fighter at a time (no blanket scaling)
+- [~] Balance pass 1 done (Toguchi, Conor, Soran nerfed; Makiko, Bryson, Ali, Sai, Keanu, Hazmat buffed); Makiko, Bryson, Hazmat still low; second pass pending
 - [ ] Smarter high-level CPUs: off-stage edge-guarding, covering ledge options, mixed-up recoveries and ledge getups
 - [ ] Classic mode: a themed six-match route per fighter with its own opponents and stages, a boss, and a difficulty setting
 - [ ] Results screen with stats: KOs, falls, self-destructs, damage dealt / taken, longest combo

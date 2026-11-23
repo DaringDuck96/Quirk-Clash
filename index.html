@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1510';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1546';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -17168,6 +17168,33 @@ if(typeof overlay2D==='function'){const ov=overlay2D;overlay2D=function(){const 
 /* CPUs go for the orb */
 if(typeof aiInput==='function'){const ai=aiInput;aiInput=function(f){const r=ai.apply(this,arguments)||{};try{const o=I2.orb;if(o&&f&&!f.dead&&f.fsm<100&&f.st!=='hit'){const t=(clamp(f.lvl||1,1,9)-1)/8,dx=o.x-f.x,dy=o.y-(f.y-30),d=Math.hypot(dx,dy);
     if(d<260&&rnd()<.35+.5*t){r.x=Math.sign(dx);if(dy<-50&&f.ground&&!(f.pi&&f.pi.J))r.J=1;if(d<46&&!(f.pi&&f.pi.A)){r.A=1;r.x=Math.abs(dx)>14?Math.sign(dx):0;r.y=dy<-24?-1:0;}}}}catch(e){E(e);}return r;};}
+})();
+
+/* balance5.js — balance patch from the 3,600-match CPU run. Targeted: one or two moves per fighter, nothing blanket.
+   dm = damage multiplier, kb = whole-knockback multiplier, kg = change to the damage-scaling (growth) part of knockback only.
+   Projectiles count as the move that spawned them. */
+(function(){
+if(typeof dmgMod!=='function'||typeof kbMod!=='function'||typeof update!=='function')return;
+const B5={on:true,err:null,n:{}};window.BAL5=B5;const E=e=>{B5.err=B5.err||String(e&&e.stack||e).slice(0,300);};
+const T={
+  toguchi:{sB:{dm:.85,kg:-.10}},
+  conor:{usmash:{kg:-.12},fsmash:{dm:.92}},
+  soran:{fsmash:{dm:.92}},
+  makiko:{fsmash:{kb:1.12},usmash:{kb:1.12}},
+  bryson:{dash:{dm:1.10},ftilt:{dm:1.10}},
+  ali:{ftilt:{dm:1.08},utilt:{dm:1.08},dtilt:{dm:1.08},nair:{dm:1.08},fair:{dm:1.08},bair:{dm:1.08},uair:{dm:1.08},dair:{dm:1.08}},
+  sai:{fsmash:{dm:1.10},nB:{dm:1.10}},
+  keanu:{fsmash:{kb:1.08}},
+  hazmat:{fsmash:{kb:1.08}}};
+B5.table=T;
+const rule=(a,h,o)=>{if(!B5.on||!a||!a.C)return null;const R=T[a.C.id];if(!R)return null;let k=null;
+  if(o&&o.proj){k=h&&h._bk;}else k=a.mv&&a.mv.k;return k&&R[k]||null;};
+{const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{const r=rule(a,h,o);if(r&&r.dm){m*=r.dm;B5.n[a.C.id]=(B5.n[a.C.id]||0)+1;}}catch(e){E(e);}return m;};}
+{const km=kbMod;kbMod=function(a,t,h,o){let m=km.apply(this,arguments);try{const r=rule(a,h,o);if(r){if(r.kb)m*=r.kb;
+    if(r.kg&&h&&t){const bkb=h.bkb||0,gr=(h.kbg||0)*t.dmg*(.7+(h.dmg||0)/20),share=gr/Math.max(.001,bkb+gr);m*=1+r.kg*share;}}}catch(e){E(e);}return m;};}
+/* tag projectiles with the move that spawned them */
+{const up=update;update=function(f,I){const n0=ENT.length,k=f&&f.mv&&f.mv.k;const r=up.apply(this,arguments);
+  try{if(f&&T[f.C&&f.C.id]){for(let i=n0;i<ENT.length;i++){const e=ENT[i];if(e&&e.owner===f&&e._bk===undefined)e._bk=k||(f.mv&&f.mv.k)||null;}}}catch(e){E(e);}return r;};}
 })();
 
 </script>
