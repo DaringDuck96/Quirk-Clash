@@ -10610,7 +10610,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-1604';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-1608';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -16358,8 +16358,8 @@ if(MK){const fx=['#c8a8ff','#ffb8e0'],PU='#9a7aff',PI2='#ffb8e0';
   nair:m('spin',5,16,12,hit([[0,-32,20]],1.6,1.2,0,60,{ri:4}),{finisher:hit([[0,-32,22]],4,4,.05,45),ll:7,nm:'DREAM SPIN'}),
   dair:m('dairSt',14,3,20,hit([[0,-4,12]],12,3.6,.075,-82),{ll:14,nm:'NIGHTFALL'})});
  MK._aik={nB:'far',sB:'near',dB:'near'};
- MK.sp=["Dream Orb (hold B to grow a ball of dream energy, release to throw it)","Daze Swirl (a swirl in front of her: reflects projectiles and spins rivals around)","Dream Step (teleports in any direction)","Sandman Spiral (a hypnotic spiral in front of her that puts rivals to sleep)"];
- setGT('makiko',['Hold B to grow a ball of dream energy, then let go to throw it. The longer she holds, the bigger, harder and faster it is. In the air she floats while she charges.','A swirl of dream right in front of her. It sends projectiles back, and any rival it hits is spun round to face the other way.','Vanishes and reappears a short distance away in whichever direction you hold.','Spins a hypnotic spiral right in front of her. Whoever it catches falls asleep, as long as a stun lasts. Her attacks hit sleeping rivals harder.']);
+ MK.sp=["Dream Orb (hold B to grow a ball of dream energy, release to throw it)","Daze Swirl (a swirl in front of her: reflects projectiles and spins rivals around)","Dream Step (teleports in the direction you hold; rivals near where she reappears fall asleep)","Sandman Spiral (a hypnotic spiral in front of her that puts rivals to sleep)"];
+ setGT('makiko',['Hold B to grow a ball of dream energy, then let go to throw it. The longer she holds, the bigger, harder and faster it is. In the air she floats while she charges.','A swirl of dream right in front of her. It sends projectiles back, and any rival it hits is spun round to face the other way.','Vanishes and reappears a short distance away in whichever direction you hold. Any rival right where she reappears falls asleep.','Spins a hypnotic spiral right in front of her. Whoever it catches falls asleep, as long as a stun lasts. Her attacks hit sleeping rivals harder.']);
  MK.trait='DREAM WALKER — her hits make rivals drowsy, and the fifth in a row puts them to sleep. Sleep she causes is short (never more than a second and a half). Sandman Spiral puts anyone it catches to sleep, and her attacks hit sleeping rivals harder.';
  /* Sandman Spiral: sleep lasts as long as a stun (70 frames); it is not shortened like her other sleeps */
  const ah=applyHit;applyHit=function(t,h,dirX,a,o){
@@ -16373,6 +16373,17 @@ if(MK){const fx=['#c8a8ff','#ffb8e0'],PU='#9a7aff',PI2='#ffb8e0';
  const asleep=t=>t&&t.st==='dizzy'&&t.sleepT>0;
  {const d0=dmgMod;dmgMod=function(a,t,h,o){let v=d0.apply(this,arguments);try{if(a&&mine(a,MK)&&a!==t&&asleep(t)){v*=1.2;use('sleepHit');}}catch(e){}return v;};}
  {const k0=kbMod;kbMod=function(a,t,h,o){let v=k0.apply(this,arguments);try{if(a&&mine(a,MK)&&a!==t&&asleep(t))v*=1.25;}catch(e){}return v;};}
+ /* Dream Step: aims with the last direction held during startup, and wherever she reappears, rivals close by fall asleep */
+ {const up=update;update=function(f,I){let px=0,py=0,ok=false;try{if(mine(f,MK)&&f.mv&&f.mv.k==='uB'){const m2=f.mv,d=m2.d;ok=true;px=f.x;py=f.y;
+     if(I&&Math.hypot(I.x||0,I.y||0)>.3){m2.v._dir=[I.x,I.y];}
+     else if(I&&m2.v._dir&&m2.t<=d.s){I=Object.assign({},I,{x:m2.v._dir[0],y:m2.v._dir[1]});arguments[1]=I;}}}catch(e){E(e);}
+   const r=up.apply(this,arguments);
+   try{if(ok&&!f.dead&&Math.hypot(f.x-px,f.y-py)>40&&!(f._mkStepF===FR)){f._mkStepF=FR;const cx=f.x,cy=f.y-30,R=40;
+       for(const o of foes(f)){if(intangible(o)||o.holder||o.dead||o.gone)continue;if(!inR(o,cx,cy,R))continue;
+         const res=applyHit(o,{dmg:2,bkb:1.2,kbg:0,ang:70,eff:'sleep',fx},Math.sign(o.x-cx)||f.face,f,{});
+         if(res==='hit'&&o.st==='dizzy'&&o.sleepT>0){o.dz=70;o.sleepT=70;o._mkS=1;use('stepSleep');}}
+       FXL.push({k:'ring',x:cx,y:cy,t:0,col:PI2,r0:R*.5,life:16});FXL.push({k:'ring',x:cx,y:cy,t:-3,col:PU,r0:R*.3,life:16});burst(cx,cy,14,[PU,PI2,W],2.2,18);}}catch(e){E(e);}
+   return r;};}
  /* the spiral */
  {const ov=overlay2D;overlay2D=function(){ov.apply(this,arguments);try{for(const f of F){if(!mine(f,MK)||f.dead||f.gone||!f.mv||f.mv.k!=='dB')continue;const m2=f.mv,d=m2.d,t=m2.t-d.s+2;if(t<0||t>d.a+8)continue;
    const p=t/(d.a+8),cx=f.x+f.face*40,cy=f.y-36,R=8+26*Math.min(1,t/6),al=t>d.a?1-(t-d.a)/8:1;X.save();X.lineCap='round';
