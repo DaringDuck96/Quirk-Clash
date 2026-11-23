@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-2232';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-2244';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18407,6 +18407,78 @@ for(const id of['soran','hake']){const C=CH.find(c=>c.id===id);if(!C)continue;
   if(typeof C.trait==='string')C.trait=C.trait.replace('Two fighters at once.','One brother on screen at a time; the other joins in for the relay specials.');}
 try{if(typeof GTXT!=='undefined')for(const id of['soran','hake']){const G=GTXT[id];if(!G)continue;if(G[3])G[3]='Tags out: the other brother takes over. Soran hits harder; Hakegatsu is tougher. Damage and stocks are shared.';
   if(G[0])G[0]=G[0].replace(' Alone, you warp to it yourself.','');if(G[2])G[2]=G[2].replace(' Much shorter when you are split up.','');}}catch(e){}
+})();
+
+/* rework6.js — three counters replaced with something to DO:
+   Chuckles: BAD JOKE (hurts himself to get funnier; the shriek staggers anyone close; his next hit is the punchline),
+   Zabu: PIGGYBACK (leaps onto a rival's back and drums on them until thrown off),
+   Aya: GEODE (grows a crystal that stops projectiles; any of her attacks shatters it into flying shards). */
+(function(){
+const RW={err:null,n:{}};window.REWORK6=RW;const E=e=>{RW.err=RW.err||String(e&&e.stack||e).slice(0,400);};const cnt=k=>{RW.n[k]=(RW.n[k]||0)+1;};
+const C=id=>CH.find(c=>c.id===id);const CU=C('chuckles'),ZA=C('zabu'),AY=C('aya');
+const foesOf=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&!(typeof TEAMS_ON==='function'&&TEAMS_ON()&&o.team===f.team));
+const IP=f=>(typeof interpPos==='function'?interpPos(f):f);const intg=o=>typeof intangible==='function'&&intangible(o);
+const rebuild=(Cx,k,o)=>{const old=Cx.mv[k]||{};const d=Object.assign({},old,o);for(const q in o)if(o[q]===undefined)delete d[q];delete d.sweet;delete d.finisher;Cx.mv[k]=d;return d;};
+const GT=(id,i,s)=>{try{if(typeof GTXT!=='undefined'){const G=GTXT[id]||(GTXT[id]=[]);G[i]=s;}}catch(e){}};
+const draws=[];const onDraw=fn=>draws.push(fn);
+const nearest=(f,max)=>{let b=null,bd=max||1e9;for(const o of foesOf(f)){if(intg(o))continue;const d=Math.hypot(o.x-f.x,o.y-f.y);if(d<bd){bd=d;b=o;}}return b;};
+
+/* =================== CHUCKLES: BAD JOKE =================== */
+if(CU){const PU='#c060ff';
+  rebuild(CU,'dB',{an:'roar',beh:'chJoke',hits:[],s:12,a:1,r:22,cd:240,counter:undefined,bp:undefined});
+  BEH.chJoke={tick(f,m){if(m.t!==m.d.s)return;f.dmg=Math.min(999,f.dmg+6);f._punchT=FR+180;
+    for(const o of foesOf(f)){if(intg(o))continue;if(Math.hypot(o.x-f.x,o.y-f.y)<80)applyHit(o,{dmg:4,bkb:3.6,kbg:.02,ang:70,eff:'stun',fx:[PU,'#ffffff']},o.x>=f.x?1:-1,f,{force:1});}
+    for(let i=0;i<3;i++)FXL.push({k:'ring',x:f.x,y:f.y-34,t:-i*3,col:PU,r0:10+i*14,life:16});try{sfx('power');}catch(e){}cnt('joke');}};
+  {const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(a&&a.C===CU&&a._punchT>FR&&t&&t!==a&&!(a.mv&&a.mv.k==='dB')){m*=1.25;a._punchT=0;cnt('punchline');}}catch(e){E(e);}return m;};}
+  onDraw(f=>{if(f.C!==CU||!(f._punchT>FR))return;const p=IP(f);if(FR%5===0)part(p.x+rnd()*20-10,p.y-60,0,-.7,14,PU,2,0);});
+  CU.sp[3]='Bad Joke (hurts himself 6%; the shriek staggers anyone close; next hit +25%)';
+  GT('chuckles',3,'Tells himself a joke so bad it hurts: he takes 6% (which feeds INSANITY), and the shriek of laughter staggers anyone close to him. His next hit within three seconds is the punchline: 25% more.');
+}
+
+/* =================== ZABU: PIGGYBACK =================== */
+if(ZA){const ZC='#f4b030';
+  rebuild(ZA,'dB',{an:'tailSpin',beh:'zbPig',hits:[],s:6,a:22,r:14,cd:240,counter:undefined,bp:undefined});
+  const end=(f,hop)=>{const p=f._pig;f._pig=null;if(!p)return;f.st='air';f.ground=null;f.vy=hop?-6.5:-2;f.vx=-(p.o.face||1)*2.6;f.jumps=Math.max(f.jumps||0,1);f.helpless=false;cnt('pigOff');};
+  BEH.zbPig={tick(f,m){const d=m.d,v=m.v;if(m.t<d.s){f.vx*=.8;return;}
+    if(!v.go){v.go=1;const o=nearest(f,180);v.o=o;f.face=o?(Math.sign(o.x-f.x)||f.face):f.face;f.ground=null;f.vy=-4.6;f.vx=f.face*6.2;cnt('pigLeap');}
+    if(m.t<=d.s+d.a){for(const o of foesOf(f)){if(intg(o)||o.st==='ledge'||o.holder)continue;const R=hurtR(o);if(f.x>R[0]-8&&f.x<R[0]+R[2]+8&&f.y>R[1]-6&&f.y<R[1]+R[3]+14){
+        f._pig={o,t:0};f.mv=null;f.st='air';applyHit(o,{dmg:3,bkb:1,kbg:0,ang:80,fx:[ZC,'#ffffff']},f.face,f,{force:1});try{sfx('hit');}catch(e){}cnt('pigOn');return;}}}}};
+  {const up=update;update=function(f,I){if(f&&f._pig){try{const p=f._pig,o=p.o;p.t++;
+        const off=!o||o.dead||o.gone||o.st==='respawn'||o.st==='ledge'||f.st==='hit'||p.t>70||(o.st==='air'&&o.vy<-4&&p.t>12)||!groundBelow(o.x,o.y+2)&&o.y>STAGE.main.y+20;
+        if(off){end(f,true);}else{f.x=o.x-(o.face||1)*5;f.y=o.y-42;f.vx=f.vy=0;f.face=o.face||f.face;f.ground=null;f.st='air';f.mv=null;
+          if(p.t%18===0){applyHit(o,{dmg:1.2,bkb:.4,kbg:0,ang:80,fx:[ZC,'#ffffff']},f.face,f,{force:1});cnt('pigHit');}return;}}catch(e){E(e);f._pig=null;}}
+    return up.apply(this,arguments);};}
+  {const rs=respawn;respawn=function(f){const r=rs.apply(this,arguments);try{if(f)f._pig=null;}catch(e){}return r;};}
+  ZA.sp[3]='Piggyback (leaps onto a rival\'s back and drums on them)';
+  GT('zabu',3,'Leaps at the nearest rival. If he lands on them he rides on their back for just over a second, drumming on them (each hit also swipes their shield). They can throw him off by jumping, or anyone else can knock him off. He hops off with a jump to spare.');
+}
+
+/* =================== AYA: GEODE =================== */
+if(AY){const CR='#c8a0ff';
+  rebuild(AY,'dB',{an:'castDown',beh:'ayGeode',hits:[],s:10,a:1,r:18,cd:120,counter:undefined,bp:undefined});
+  BEH.ayGeode={tick(f,m){if(m.t!==m.d.s)return;for(const e of ENT)if(e.k==='geode'&&e.owner===f)e.alive=false;
+    const x=f.x+f.face*30,y=surfY(x,f.y-8);ENT.push({k:'geode',owner:f,face:f.face,t:0,alive:true,life:480,x,y:y!==null&&Math.abs(y-f.y)<60?y:f.y,vx:0,vy:0,g:0,r:0,dmg:0,hits:{},oa:1});try{sfx('ice');}catch(e){}cnt('geode');}};
+  const shatter=(e,f)=>{e.alive=false;burst(e.x,e.y-14,24,[CR,'#ffffff','#7ae0ff'],3.4,22);try{sfx('boom');}catch(x){}
+    for(const o of foesOf(f)){if(intg(o))continue;if(Math.hypot(o.x-e.x,(o.y-20)-(e.y-14))<72)applyHit(o,{dmg:9,bkb:4.6,kbg:.06,ang:50,fx:[CR,'#ffffff']},o.x>=e.x?1:-1,f,{force:1});}cnt('shatter');};
+  EK.geode={upd(e){const f=e.owner;if(!f)return;
+      for(const p of ENT){if(!p.alive||!p.proj||p===e||p.owner===f)continue;if(Math.abs(p.x-e.x)<14&&p.y>e.y-34&&p.y<e.y+2){p.alive=false;burst(p.x,p.y,8,[CR,'#ffffff'],2,12);cnt('geodeBlock');}}
+      const m=f.mv;if(m&&m.d&&m.d.hits&&m.d.hits.length&&m.t>=m.d.s&&m.t<=m.d.s+m.d.a&&m.k!=='dB'){for(const h of m.d.hits)for(const b of h.b){const x=f.x+f.face*b[0],y=f.y+b[1];if(Math.abs(x-e.x)<b[2]+12&&y>e.y-40-b[2]&&y<e.y+b[2]){shatter(e,f);return;}}}},
+    draw(e){if(e.life<40&&e.t%4<2)return;const h=Math.min(30,e.t*5);wpoly('#6a4aa8',[e.x-12,e.y,e.x-8,e.y-h*.7,e.x-2,e.y-h,e.x+5,e.y-h*.8,e.x+12,e.y]);wpoly(CR,[e.x-7,e.y,e.x-4,e.y-h*.6,e.x,e.y-h*.85,e.x+4,e.y-h*.6,e.x+7,e.y]);wl('#ffffff',e.x-2,e.y-h*.7,e.x-1,e.y-4,1);}};
+  AY.sp[3]='Geode (a crystal that stops shots; her attacks shatter it)';
+  GT('aya',3,'Grows a crystal geode on the floor in front of her for eight seconds. It stops projectiles. Hit it with any of her attacks and it shatters, flinging shards that hit everyone around it for 9%. One geode at a time.');
+}
+
+/* =================== CPUs =================== */
+{const ai=aiInput;aiInput=function(f){const I=ai.apply(this,arguments)||{};try{if(!f||f.dead||f.gone||GS!=='play'||f.mv||f.st==='hit'||f._pig)return I;const o=typeof opp==='function'?opp(f):null;if(!o||o.dead)return I;
+    const dx=o.x-f.x,adx=Math.abs(dx),t=((f.lvl||5)-1)/8,r=rnd(),cd=f.cds&&f.cds.dB>FR;if(cd)return I;
+    /* the generic picker no longer gets a counter here; keep its random Down-B presses for these three out */
+    if((f.C===CU||f.C===ZA||f.C===AY)&&I.B&&I.y>.5){I.B=0;I.y=0;}
+    if(f.C===CU){if(f.ground&&adx<70&&f.dmg<70&&r<.003+.004*t){I.B=1;I.A=0;I.x=0;I.y=1;cnt('aiJoke');}}
+    else if(f.C===ZA){if(adx>40&&adx<150&&Math.abs(o.y-f.y)<40&&r<.004+.008*t){if(f.face!==Math.sign(dx))I.x=Math.sign(dx)*.3;else{I.B=1;I.A=0;I.x=0;I.y=1;cnt('aiPig');}}}
+    else if(f.C===AY){const g=ENT.find(e=>e.alive&&e.k==='geode'&&e.owner===f);if(!g&&f.ground&&adx>120&&r<.008+.01*t){if(f.face!==Math.sign(dx))I.x=Math.sign(dx)*.3;else{I.B=1;I.A=0;I.x=0;I.y=1;cnt('aiGeode');}}
+      else if(g&&Math.abs(g.x-f.x)<44&&Math.hypot(o.x-g.x,o.y-g.y)<70&&r<.2+.3*t){if(f.face!==Math.sign(g.x-f.x))I.x=Math.sign(g.x-f.x)*.3;else{I.A=1;I.B=0;I.x=0;I.y=0;cnt('aiShatter');}}}}catch(e){E(e);}return I;};}
+
+if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&!f.dead&&!f.gone&&typeof X!=='undefined'&&X)for(const fn of draws)fn(f);}catch(e){E(e);try{X.globalAlpha=1;}catch(x){}}return r;};}
 })();
 
 </script>
