@@ -51,17 +51,17 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Smash charge flashes and glows, with a burst at full charge
 - [x] Star KOs and screen KOs on some top KOs (blast-zone burst was already in)
 
-## Round 4: Ultimate feel, part 2
+## Round 4 (done): Ultimate feel, part 2
 - [x] Hitlag shake: the fighter who was hit shakes through the freeze; the attacker trembles slightly
 - [x] Shield pokes: hits on a body part outside a shrunken or tilted shield go through
 - [x] Match-ending hit: longer freeze, darker background with speed lines before GAME! (final-stock zoom was already in)
 - [x] Short-hop aerials at 0.85x damage: checked, already in
-- [ ] Jump + attack together = short-hop aerial
-- [ ] Shield + attack grabs in every state Ultimate allows (check)
-- [ ] Hit sounds in consistent tiers (light / medium / heavy / KO crunch)
-- [ ] Per-element hit sparks and sounds (slash, burn, shock, freeze)
-- [ ] Smash Ball item, with a meter / ball / both rule
-- [ ] Item throwing in any direction, air drops and catches (check what's there)
-- [ ] Training: launch trajectory line after a hit
-- [ ] Training: frame advantage on hit and on shield
-- [ ] Training: half and quarter speed
+- [x] Jump + attack together = short-hop aerial: checked, already in
+- [x] Shield + attack grabs from idle, walk, run (dash grab) and crouch, and is an air grab in the air: checked, already in
+- [x] Hit sounds in tiers: light / medium / heavy / KO crunch (synthesized)
+- [x] Hit sparks and sounds by family: slash, fire, shock, ice, water, poison, dark, holy (blunt keeps the classic spark)
+- [x] Heroic Orb (original design): rule Heroic Finale = METER / HEROIC ORB / BOTH / OFF; CPUs chase it
+- [x] Items: Grab + direction throws any held item (flick = smash throw), Z-drop in the air, catch thrown items with A
+- [x] Training: launch line after each hit (red where it would KO)
+- [x] Training: frame advantage on hit and on shield
+- [x] Training: 1/2 and 1/4 speed (pause menu)
