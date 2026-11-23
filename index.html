@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1123-2105';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1123-2113';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18013,6 +18013,98 @@ if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f)
     else if(f.C===KU){if(!(o._owl&&o._owl.by===f&&o._owl.until>FR)&&adx>140&&adx<420&&!cd('nB')&&r<.01+.02*t){face();sp(0,0);cnt('aiMark');}
       else if(!f.ground&&dy>30&&dy<220&&adx<90&&!cd('dB')&&r<.03+.05*t){sp(0,1);cnt('aiTalon');}}
     else if(f.C===TO){if(o.st==='shield'&&adx<44&&r<.08+.1*t){face();sp(0,0);cnt('aiHeartShield');}}}catch(e){E(e);}return I;};}
+})();
+
+/* rework3.js — second batch of move-set reworks:
+   Bara (normals that use his feathers), Chris (normals that box like a brawler with a healing factor),
+   Yurei (ghost normals that set up backstabs), Shi (Death Touch actually borrows the rival's own Neutral B). */
+(function(){
+const RW={err:null,n:{}};window.REWORK3=RW;const E=e=>{RW.err=RW.err||String(e&&e.stack||e).slice(0,400);};const cnt=k=>{RW.n[k]=(RW.n[k]||0)+1;};
+const C=id=>CH.find(c=>c.id===id);const BA=C('bara'),CR=C('chris'),YU=C('yurei'),SH=C('shi');
+const foesOf=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&!(typeof TEAMS_ON==='function'&&TEAMS_ON()&&o.team===f.team));
+const IP=f=>(typeof interpPos==='function'?interpPos(f):f);
+const tag=(Cx,k,t)=>{const d=Cx&&Cx.mv[k];if(d)d.rw3=t;return d;};
+const draws=[];const onDraw=fn=>draws.push(fn);
+/* hit hooks: after-hit callbacks keyed by the attacker's current move tag */
+const POST={},PRE={};
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){let pre=null;try{const tg=a&&a.mv&&a.mv.d&&a.mv.d.rw3;if(tg&&PRE[tg]&&!(o&&o.proj))pre=PRE[tg](a,t,h,o);}catch(e){E(e);}
+  const hp=t?t.dmg:0;const r=ah.apply(this,arguments);
+  try{const tg=a&&a.mv&&a.mv.d&&a.mv.d.rw3;if(tg&&POST[tg]&&t&&t!==a&&!(o&&o.proj)&&t.dmg>hp)POST[tg](a,t,h,o,pre);}catch(e){E(e);}return r;};}
+
+/* =================== BARA: his normals spend and use feathers =================== */
+if(BA){const Q=()=>window.BARAQ;const SL='#d8e0ee';
+  const plantFloor=(f,x)=>{const q=Q();if(!q)return false;const y=surfY(x,f.y-10);if(y===null||Math.abs(y-f.y)>70)return false;q.STUCK.push({x,y,owner:f,until:FR+540,a:-1.2-rnd()*.7});return true;};
+  const embed=(f,t)=>{const E2=(t._emb||[]).filter(e=>e.until>FR);if(E2.length>=6)return false;E2.push({by:f,until:FR+600,a:rnd()*1.2-.6,o:rnd()*20-10});t._emb=E2;return true;};
+  const spend=f=>{if(f.qf===undefined)f.qf=12;if(f.qf<=0)return false;f.qf--;return true;};
+  /* forward tilt: a hit at the tip leaves the feather in the rival */
+  tag(BA,'ftilt','baTip');POST.baTip=(a,t)=>{if(Math.abs(t.x-a.x)>30&&spend(a)&&embed(a,t))cnt('ftiltEmbed');};
+  /* down tilt: the low cut leaves a feather in the floor at the tip — somewhere for Shadow Step to go */
+  tag(BA,'dtilt','baPlant');
+  /* down air: the tail fan drives a feather into the floor below him */
+  tag(BA,'dair','baDrop');
+  /* back air: the tail fan hammers every feather already in the rival deeper: 1.5% more for each */
+  tag(BA,'bair','baHammer');PRE.baHammer=(a,t)=>{const n=(t._emb||[]).filter(e=>e.until>FR&&e.by===a).length;if(n){t.dmg+=1.5*n;a.dealt=(a.dealt||0)+1.5*n;burst(t.x,t.y-30,4+n*2,[SL,'#ff4a5a'],2,14);cnt('hammer');}return n;};
+  {const up=update;update=function(f,I){const r=up.apply(this,arguments);try{if(f&&f.C===BA&&f.mv&&f.mv.d){const m=f.mv,d=m.d,t=d.rw3;if(m.t>=d.s&&!m._rw3){m._rw3=1;
+      if(t==='baPlant'&&spend(f)){if(plantFloor(f,f.x+f.face*40))cnt('dtiltPlant');else f.qf++;}
+      else if(t==='baDrop'&&!f.ground&&spend(f)){if(plantFloor(f,f.x+f.face*4))cnt('dairPlant');else f.qf++;}}}}catch(e){E(e);}return r;};}
+  BA.nrm=['Forward tilt: QUILL TIP — A hit at the tip leaves the feather in the rival.','Down tilt: GROUND QUILL — Plants a feather in the floor ahead: a Shadow Step target.','Back air: TAIL HAMMER — Drives every feather in the rival deeper: 1.5% more for each.'];
+  BA.na='Normals: quick, exact cuts with a steel feather held like a short blade, and his tail fan behind him. Forward tilt leaves a feather in the rival if the tip hits; down tilt and down air plant feathers in the floor (Shadow Step targets); back air hammers every feather in a rival deeper. Each costs a quill from his tail (twelve, one regrows every second and a half).';
+}
+
+/* =================== CHRIS: a brawler's normals =================== */
+if(CR){
+  /* forward tilt: BODY SHOT — holds the rival a moment longer and fills HEAL faster */
+  tag(CR,'ftilt','crBody');POST.crBody=(a,t)=>{t.hitstun=(t.hitstun||0)+6;a.hg=Math.min(100,(a.hg||0)+6);txtIcon(t);cnt('bodyShot');};
+  /* down tilt: LOW KICK — sweeps the legs, rivals go down flat */
+  {const d=tag(CR,'dtilt','crLow');if(d)for(const h of d.hits){h.ang=6;h.bkb+=.8;}}
+  POST.crLow=(a,t)=>{t.hitstun=(t.hitstun||0)+4;cnt('lowKick');};
+  /* dash attack: BULL RUSH — head down: small hits do not stop it */
+  {const d=CR.mv.dash;if(d){d.bp=Object.assign({},d.bp||{},{armor:1,f0:2,f1:d.s+d.a});tag(CR,'dash','crBull');}}
+  /* down air: STOMP — on a grounded rival he bounces off their head */
+  tag(CR,'dair','crStomp');POST.crStomp=(a,t)=>{if(!a.ground){a.vy=-6.4;a.jumps=Math.max(a.jumps||0,1);cnt('stomp');}};
+  /* BLOOD UP: his blood is up when he is hurt — normals do 10% more while he is at 80% or more */
+  {const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(a&&a.C===CR&&!(o&&o.proj)&&a.dmg>=80&&a.mv&&/^(jab|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair|fsmash|usmash|dsmash)/.test(a.mv.k)){m*=1.1;cnt('bloodUp');}}catch(e){E(e);}return m;};}
+  onDraw(f=>{if(f.C!==CR||f.dmg<80||FR%6)return;const p=IP(f);part(p.x+rnd()*14-7,p.y-40-rnd()*20,0,-.6,12,'#ff5a4a',2,0);});
+  CR.nrm=['Forward tilt: BODY SHOT — Holds the rival a beat longer and fills HEAL faster.','Dash attack: BULL RUSH — Head down: small hits do not stop it.','Down air: STOMP — Bounces off their head; he gets a jump back.'];
+  CR.na='Normals: scrappy, close-range boxing and kicks. Body Shot (forward tilt) holds the rival longer and fills HEAL faster; Low Kick (down tilt) sweeps them flat; Bull Rush (dash attack) shrugs off small hits; Stomp (down air) bounces off a rival and gives him a jump back. BLOOD UP: at 80% or more his normals do 10% more. Tap A for a light tilt, hold A for the heavy version, and cancel anything that lands into a special. Every hit he lands fills his HEAL gauge; a full gauge turns Down-B into Walk It Off.';
+}
+function txtIcon(t){try{FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:'#ffb060',r0:8,life:12});}catch(e){}}
+
+/* =================== YUREI: ghost normals that set up backstabs =================== */
+if(YU){const GH='#bfe8ff';
+  /* down tilt: GRAVE HAND — a ghostly hand comes up through the floor a step ahead and pops the rival up */
+  {const d=tag(YU,'dtilt','yuHand');if(d){d.hits=[Object.assign({},d.hits[0],{b:[[38,-10,11],[38,-26,9]],ang:82,bkb:(d.hits[0].bkb||3)+.4})];}}
+  /* neutral air: WISP RING — spirits circle her, hitting several times */
+  {const d=tag(YU,'nair','yuWisp');if(d){const h0=d.hits[0];d.hits=[Object.assign({},h0,{dmg:h0.dmg*.32,ri:4,bkb:1.2,kbg:0})];d.finisher=Object.assign({},h0,{dmg:h0.dmg*.45,b:[[0,-34,h0.b[0][2]*1.1]]});}}
+  /* back air: OVER THE SHOULDER — always counts as a backstab */
+  tag(YU,'bair','yuShoulder');
+  {const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(a&&a.C===YU&&a.mv&&a.mv.d&&a.mv.d.rw3==='yuShoulder'&&!(o&&o.proj)){m*=1.3;cnt('shoulder');}}catch(e){E(e);}return m;};}
+  /* dash attack: HAUNT — she drifts straight through the rival and cuts from behind (a backstab) */
+  tag(YU,'dash','yuHaunt');
+  {const up=update;update=function(f,I){try{if(f&&f.C===YU&&f.mv&&f.mv.d&&f.mv.d.rw3==='yuHaunt'&&f.mv.t===f.mv.d.s-2){for(const o of foesOf(f)){const dx=(o.x-f.x)*f.face;if(dx>4&&dx<60&&Math.abs(o.y-f.y)<30&&!(typeof intangible==='function'&&intangible(o))){
+        burst(f.x,f.y-30,10,[GH,'#ffffff'],2,14);f.x=o.x+f.face*20;f.face=-f.face;o.face=-f.face;f.inv=Math.max(f.inv||0,4);burst(f.x,f.y-30,10,[GH,'#ffffff'],2,14);cnt('haunt');break;}}}}catch(e){E(e);}return up.apply(this,arguments);};}
+  onDraw(f=>{if(f.C!==YU||!f.mv||!f.mv.d)return;const m=f.mv,d=m.d,p=IP(f);if(m.t<d.s-1||m.t>d.s+d.a+3)return;
+    if(d.rw3==='yuHand'){const x=p.x+f.face*38,k=Math.min(1,(m.t-d.s+2)/3),h=22*k;X.globalAlpha=.75;wr(GH,x-3,p.y-h,6,h);for(let i=0;i<4;i++)wr(GH,x-4+i*2.4,p.y-h-5,1.6,5);wdisc(x,p.y-h,4,'#ffffff');X.globalAlpha=1;}
+    if(d.rw3==='yuWisp'){X.globalAlpha=.7;for(let i=0;i<5;i++){const a=FR*.3+i*TAU/5;wdisc(p.x+Math.cos(a)*18,p.y-34+Math.sin(a)*14,3,i%2?GH:'#ffffff');}X.globalAlpha=1;}});
+  YU.nrm=['Down tilt: GRAVE HAND — A hand rises through the floor a step ahead.','Back air: OVER THE SHOULDER — Always counts as a backstab.','Dash attack: HAUNT — Drifts through the rival and cuts from behind.'];
+  YU.na='Normals: quick cuts with a curved dagger, and ghost tricks. Dash attack drifts straight through the rival and cuts from behind; back air always counts as a backstab; down tilt sends a hand up through the floor a step ahead; neutral air is a ring of wisps that hits several times. Any hit from behind does 30% more.';
+}
+
+/* =================== SHI: Death Touch borrows the rival's own Neutral B =================== */
+if(SH){const GR='#9aff9a';
+  const usable=d=>!!d&&((d.hits&&d.hits.length)||d.spawn||d.beh);
+  /* filling a rival's Death Marks (five) lets him borrow their Neutral B for two uses */
+  {const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah.apply(this,arguments);try{if(a&&a.C===SH&&t&&t!==a&&t.C&&t.C!==SH&&t.dmk&&t.dmk.n>=5&&t.dmk.until>FR){
+      const cur=a._borrow;if(!cur||cur.ci!==t.ci||cur.uses<2){const src=(typeof resolveDef==='function')?null:null;const d=t.C.mv&&t.C.mv.nB;if(usable(d)){a._borrow={ci:t.ci,uses:2,col:t.col||t.C.col,sn:t.C.sn};FXL.push({k:'ring',x:a.x,y:a.y-40,t:0,col:GR,r0:14,life:20});burst(t.x,t.y-30,12,[GR,'#ffffff'],2.4,18);cnt('borrow');}}}}catch(e){E(e);}return r;};}
+  {const rd=resolveDef;resolveDef=function(f,key){try{if(f&&f.C===SH&&key==='nB'&&f._borrow&&f._borrow.uses>0&&!(f.copyT>0)){const B=CH[f._borrow.ci];const d=B&&B.mv&&B.mv.nB;if(usable(d)){const dd=(typeof scaled==='function')?scaled(d,.9):d;return{d:dd,mc:-1};}}}catch(e){E(e);}return rd.apply(this,arguments);};}
+  {const sm=startMove;startMove=function(f,key){const r=sm.apply(this,arguments);try{if(r&&f&&f.C===SH&&key==='nB'&&f._borrow&&f._borrow.uses>0){f._borrow.uses--;cnt('borrowUse');if(f._borrow.uses<=0)f._borrow=null;}}catch(e){E(e);}return r;};}
+  {const rs=respawn;respawn=function(f){const r=rs.apply(this,arguments);try{if(f&&f.C===SH)f._borrow=null;}catch(e){}return r;};}
+  onDraw(f=>{if(f.C!==SH||!f._borrow)return;const p=IP(f),y=p.y-88;wdisc(p.x,y,6,'#0c0820');wdisc(p.x,y,4.5,f._borrow.col||GR);for(let i=0;i<f._borrow.uses;i++)wdisc(p.x-3+i*6,y+9,1.6,GR);});
+  SH.sp=['Death Touch (borrows a rival\'s Neutral B; otherwise fire, then ice)','Grave Step (short teleport into a cut)','Borrowed Wings','Last Rites (weak below 100%; a finishing blow above it)'];
+  if(typeof GTXT!=='undefined'){const G=GTXT.shi||(GTXT.shi=[]);G[0]='Fill a rival\'s Death Marks (five hits) and he borrows their own Neutral B: the next two times he presses B he uses it, at 90% power (their colour floats over his head, with a dot for each use). With nothing borrowed he uses an ability he collected: fire, then ice.';}
+}
+
+if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){const r=df.apply(this,arguments);try{if(f&&!f.dead&&!f.gone&&!f.invis&&typeof X!=='undefined'&&X)for(const fn of draws)fn(f);}catch(e){E(e);try{X.globalAlpha=1;}catch(x){}}return r;};}
 })();
 
 </script>

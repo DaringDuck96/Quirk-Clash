@@ -84,5 +84,5 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Kurai: Owl Eyes mark and Talon Dive command grab replace the glaive spin and the counter
 - [x] Tori: Heart Palm (charged, hits through shields), Phase Dash spins rivals round, Emerge buries
 - [x] Sato: every normal a different airbag trick (recoil, trip, bumper, backfire...)
-- [ ] Next candidates: Kal/Kurai overlap check, Bara and Chris normals, Yurei, Shi
+- [x] Bara normals use feathers (Quill Tip, Ground Quill, Tail Hammer); Chris normals (Body Shot, Low Kick, Bull Rush armour, Stomp, Blood Up); Yurei ghost normals (Grave Hand, Wisp Ring, Over the Shoulder, Haunt); Shi's Death Touch borrows the rival's own Neutral B
 
