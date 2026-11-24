@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1124-1819';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1124-1827';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -19011,6 +19011,104 @@ try{
       'GREATER SPELLS — B B B B: Meteor (60). B B B A: Chain Lightning, two strikes (50). B B A B: Binding Roots (40). B B A A: Haste, faster for eight seconds (45). B A B B: Blizzard around him (50). B A B A: Hex, confuses (40). B A A B: Mirror Image, takes one hit for him (45). B A A A: Arcane Nova, a huge burst (55).';
     G[1]='Magic Missile: four glowing darts that home in on rivals (24 mana).';
     if(G[3])G[3]=G[3]+' (32 mana)';}
+}catch(e){E(e);}
+})();
+
+/* chrisadr.js — Chris rework: ADRENALINE. His body regenerates, but only while his blood is up.
+   One gauge (0-100) fills from damage he deals (1 per 1%) AND damage he takes (0.6 per 1%).
+   50+ BLOOD UP: regenerates 0.5% a second while he is in the fight (dealt or took damage in the last 4 s), hits +10%.
+   100 RUSH: hits +15% and nothing under 8% makes him flinch, for 6 s.
+   Down-B SECOND WIND spends the gauge (a third at least) to heal up to 16% at once.
+   Trade-heavy normals; Overhand banks the hit it absorbs into the punch; Ground and Pound down throw; Trash Talk taunts. */
+(function(){
+const C=CH.find(c=>c.id==='chris');if(!C)return;
+const CA={err:null,n:{}};window.CHRISA=CA;const E=e=>{CA.err=CA.err||String(e&&e.stack||e).slice(0,300);};const cnt=k=>{CA.n[k]=(CA.n[k]||0)+1;};
+const ok=f=>f&&f.C===C&&!f.form&&!(f.copyT>0);
+const RED='#ff5a4a',GN='#7af0a0',GOLD='#ffd060';
+const say=(f,s,col,life)=>FXL.push({k:'txt',s,x:f.x,y:f.y-90,t:0,life:life||40,col:col||RED});
+const G=f=>f.hg||0;const setG=(f,v)=>{const was=G(f);f.hg=Math.max(0,Math.min(100,v));if(was<100&&f.hg>=100){f.crRush=FR+360;say(f,'RUSH!',RED,44);try{sfx('power');}catch(e){}FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:RED,r0:10,life:20});cnt('rush');}
+  else if(was<50&&f.hg>=50){say(f,'BLOOD UP',RED,34);cnt('bloodUp');}};
+const rush=f=>f.crRush>FR;
+
+/* ---------------- moves ---------------- */
+const setD=(k,dm,o)=>{const d=C.mv[k];if(!d||!d.hits)return;d.hits=d.hits.map((h,i)=>Object.assign({},h,{dmg:Array.isArray(dm)?dm[i]:dm},o||{}));};
+try{
+  setD('jab1',3);setD('jab2',3);setD('jab3',5);
+  setD('ftilt',10);setD('utilt',8,{ang:80});setD('dtilt',6);setD('dash',10);
+  setD('usmash',17);setD('dsmash',[15,15]);
+  setD('nair',8);setD('fair',11);setD('bair',12.5);setD('uair',9);
+  setD('fthrow',9);setD('bthrow',11);setD('uthrow',8,{ang:90});
+  setD('nB',5);setD('nB2',6);setD('nB3',10);
+  if(C.mv.bthrow)C.mv.bthrow.hits=C.mv.bthrow.hits.map(h=>Object.assign({},h,{kbg:(h.kbg||.06)*1.08}));
+  if(C.mv.utilt)C.mv.utilt.nm='CHIN CHECK';
+  if(C.mv.fair){C.mv.fair.nm='HAYMAKER';C.mv.fair.qn='A big swinging punch that carries him upward, once per jump.';}
+  if(C.mv.bair){C.mv.bair.nm='MULE KICK';}
+  if(C.mv.jab3)C.mv.jab3.nm='HEADBUTT';
+  const dt=C.mv.dthrow;if(dt&&dt.th){const th=dt.th.slice();th[0]='GROUND AND POUND';th[3]='punch';th[4]=[3,2.4];th[5]=[2,70,5,.06];th[6]=Object.assign({},th[6]||{},{self:0});th[7]='Pins them and pounds away: three punches and a last one that pops them up. Fills a lot of Adrenaline.';C.mv.dthrow=Object.assign({},dt,{th});}
+  /* SECOND WIND */
+  C.mv.sw={an:'eat',s:14,a:1,r:20,hits:[],beh:'crSW',fx:[GN,'#ffffff'],lim:'none',nm:'SECOND WIND'};
+  if(C.hmv&&C.mv.sw)C.hmv.sw=C.mv.sw;
+}catch(e){E(e);}
+BEH.crSW={tick(f,m){if(m.t===m.d.s&&!m.v.done){m.v.done=1;const g=G(f),heal=16*g/100;f.dmg=Math.max(0,f.dmg-heal);f.crRush=0;setG(f,0);f.crArmT=FR+60;
+  say(f,'SECOND WIND',GN,40);FXL.push({k:'txt',s:'-'+heal.toFixed(0)+'%',x:f.x,y:f.y-74,t:0,life:34,col:GN});for(let i=0;i<2;i++)FXL.push({k:'ring',x:f.x,y:f.y-30,t:-i*4,col:GN,r0:10+i*10,life:18});try{sfx('power');}catch(e){}cnt('secondWind');}}};
+
+/* ---------------- Down-B is Second Wind (needs a third of the gauge) ---------------- */
+{const sm=startMove;startMove=function(f,key){try{if(ok(f)&&key==='dB'){if(G(f)<34){if(FR-(f._crNo||-99)>40){f._crNo=FR;say(f,'NOT YET','#a0a0b8',26);}return false;}return sm.call(this,f,'sw');}
+    /* Trash Talk: any taunt (taunts are the one place he talks) */
+    if(ok(f)&&/^taunt/.test(key)&&GS==='play'){const r=sm.apply(this,arguments);if(r){const L=['THAT ALL YOU GOT?','OW. RUDE.',"THAT'LL GROW BACK.",'I FELT THAT ONE.','NOT THE FACE.','STAY DOWN. OR DON\'T.','IS THAT IT?','I HEAL, YOU KNOW.'];say(f,L[Math.floor(rnd()*L.length)],'#f0c860',60);
+        if(FR-(f._crTT||-999)>=300){f._crTT=FR;setG(f,G(f)+8);f._crLast=FR;cnt('trashTalk');}}return r;}}catch(e){E(e);}
+  return sm.apply(this,arguments);};}
+
+/* ---------------- the gauge, armour, Overhand's banked hit ---------------- */
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){
+  const ca=a&&ok(a)&&a!==t,ct=t&&ok(t)&&a!==t;let ga=0,gt=0,iron0,ironMv0,mendA;
+  if(ca){ga=G(a);mendA=a.mendT;a.mendT=FR+2;}          /* keeps the old HEAL fill out */
+  if(ct){gt=G(t);iron0=t.C.iron;ironMv0=t.C.ironMv;
+    const m=t.mv;const overhand=m&&m.k==='fsmash'&&m.d&&m.t<m.d.s&&!m.v.ab;
+    if(overhand){t.C.iron=999;t.C.ironMv=0;}else if(rush(t)||t.crArmT>FR){t.C.iron=8;t.C.ironMv=0;}}
+  const pre=t?t.dmg:0;let r;
+  try{r=ah.apply(this,arguments);}finally{
+    try{if(ca){a.mendT=mendA;}if(ct){t.C.iron=iron0;t.C.ironMv=ironMv0;}}catch(e){}}
+  try{const dd=t?Math.max(0,t.dmg-pre):0;
+    if(ca&&(r==='hit'||r==='armor')&&dd>0){let add=dd;if(a.mv&&a.mv.k==='ftilt')add+=4;if(a.mv&&a.mv.k==='jab3')add+=4;if(a.mv&&a.mv.k==='dthrow')add+=10;setG(a,ga+add);a._crLast=FR;}
+    else if(ca)a.hg=ga;
+    if(ct&&dd>0){setG(t,gt+dd*.6);t._crLast=FR;const m=t.mv;if(m&&m.k==='fsmash'&&m.d&&m.t<m.d.s&&!m.v.ab){m.v.ab=dd;FXL.push({k:'ring',x:t.x,y:t.y-30,t:0,col:GOLD,r0:8,life:12});cnt('overhandAbsorb');}}
+  }catch(e){E(e);}
+  return r;};}
+/* damage: drop the old 80%+ Blood Up, add the Adrenaline bonuses and Overhand's banked hit */
+{const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(a&&ok(a)&&t!==a){
+    if(!(o&&o.proj)&&a.dmg>=80&&a.mv&&/^(jab|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair|fsmash|usmash|dsmash)/.test(a.mv.k))m/=1.1;
+    m*=rush(a)?1.15:G(a)>=50?1.1:1;
+    if(a.mv&&a.mv.k==='fsmash'&&a.mv.v.ab&&h&&h.dmg){m*=1+.5*a.mv.v.ab/h.dmg;if(!a.mv.v.abUsed){a.mv.v.abUsed=1;cnt('overhandPayback');}}}}catch(e){E(e);}return m;};}
+
+/* ---------------- regeneration, Rush ending, no off-taunt chatter ---------------- */
+{const up=update;update=function(f,I){const r=up.apply(this,arguments);try{if(f&&ok(f)&&!f.dead&&f.st!=='respawn'){
+    f._qT=FR+100000;f.mendT=0;                        /* old mid-fight quips and old mending are off */
+    if(G(f)>=50&&FR-(f._crLast||-9999)<240&&f.dmg>0){f.dmg=Math.max(0,f.dmg-.5/60);if(FR%10===0)part(f.x+rnd()*16-8,f.y-12-rnd()*40,0,-.6,16,GN,2,0);CA.n.regen=(CA.n.regen||0)+.5/60;}
+    if(f.crRush&&f.crRush<=FR&&G(f)>=100){f.crRush=0;setG(f,70);}
+    if(rush(f)&&FR%4===0)part(f.x+rnd()*18-9,f.y-20-rnd()*36,0,-.9,12,RED,2,0);}}catch(e){E(e);}return r;};}
+{const rs=respawn;respawn=function(f){const r=rs.apply(this,arguments);try{if(f&&f.C===C){f.hg=0;f.crRush=0;f.crArmT=0;f._crLast=-9999;}}catch(e){}return r;};}
+
+/* ---------------- HUD gauge ---------------- */
+if(typeof hudMeterOf==='function'){const hm=hudMeterOf;hudMeterOf=function(f){try{if(f&&f.C===C&&!f.form){const g=G(f);
+    return{l:rush(f)?'RUSH':g>=50?'BLOOD UP':'ADRENALINE',t:'bar',v:g/100,col:rush(f)?RED:g>=50?'#e04a3a':'#a03a3a',full:RED,lc:rush(f)?RED:g>=50?'#ff8a7a':null,marks:[.34,.5]};}}catch(e){}return hm.apply(this,arguments);};}
+
+/* ---------------- CPU ---------------- */
+{const ai=aiInput;aiInput=function(f){const I=ai.apply(this,arguments)||{};try{if(!f||!ok(f)||f.ctrl!=='cpu'||GS!=='play'||f.dead)return I;
+    if(I.B&&(I.y||0)>.5){const o=typeof opp==='function'?opp(f):null,dx=o?Math.abs(o.x-f.x):999;if(G(f)<34||f.dmg<20||dx<70){I.B=0;I.y=0;}}
+    if(!f.mv&&f.ground&&!(f.hitstun>0)){const o=typeof opp==='function'?opp(f):null,dx=o?Math.abs(o.x-f.x):999;
+      if(((G(f)>=90&&f.dmg>=40)||(G(f)>=50&&f.dmg>=90))&&dx>100&&rnd()<.05){I.B=1;I.y=1;I.x=0;I.A=0;}}}catch(e){E(e);}return I;};}
+
+/* ---------------- words ---------------- */
+try{
+  C.sp=['One-Two-Boot (B, B, B: a jab-cross, a knee, then a flip kick; each part only comes out if the last one landed)','Spin Kick (a travelling spin that hits many times; works in the air)','Rising Uppercut (hits several times; far stronger with its true input)','Second Wind (spends his Adrenaline to heal up to 16% at once)'];
+  if(typeof C.trait==='string')C.trait=C.trait.replace(/HEALING FACTOR:[^.]*\.[^.]*\.[^.]*\./,'ADRENALINE: fills from damage he deals AND damage he takes. At half he is BLOOD UP: he regenerates while he stays in the fight and hits 10% harder. Full, he RUSHES: 15% harder and small hits do not flinch him. Second Wind (Down-B) spends it to heal.');
+  C.na='Normals: trade-heavy brawling. Jab ends in a headbutt; Body Shot (forward tilt) holds them and fills extra Adrenaline; Chin Check (up tilt) pops them up; Low Kick (down tilt) trips; Bull Rush (dash attack) shrugs off small hits; Overhand (forward smash) takes a hit during its wind-up and adds half of it to the punch; Haymaker (forward air) and Mule Kick (back air) kill off-stage; Stomp (down air) bounces him off a head. Ground and Pound (down throw) fills a lot of Adrenaline. Tap A for a light tilt, hold A for the heavy version, and cancel anything that lands into a special.';
+  C.weak='No projectile, and he only regenerates while he stays in the fight: back off and it stops.';
+  C.tip='Stay in their face. Taking hits fills Adrenaline too; spend it with Second Wind before a big hit lands.';
+  C.nrm=['Forward smash: OVERHAND — Takes a hit during the wind-up and adds half of it to the punch.','Down throw: GROUND AND POUND — Fills a lot of Adrenaline.','Taunt: TRASH TALK — Fills a little Adrenaline (once every five seconds).'];
+  if(typeof GTXT!=='undefined'&&GTXT.chris){const Gx=GTXT.chris;Gx[0]='One-Two-Boot. B is a fast jab-cross (5%). If it lands, B again is a knee that pops the rival up (6%); if that lands, B a third time is a flip kick that launches (10%). Miss any part and the string ends.';
+    Gx[3]='Second Wind: a deep breath that spends his whole Adrenaline gauge to heal at once, up to 16% when it is full, and for a second small hits do not flinch him. Needs at least a third of the gauge.';}
 }catch(e){E(e);}
 })();
 
