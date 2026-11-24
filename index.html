@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1124-1738';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1124-1806';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18868,6 +18868,147 @@ try{
   C.weak='Light. Her shot and her ball take time to set up, and Facet Focus needs a well-timed press.';
   C.tip='Shoot crystals from range, head the ball over shields, and land Facet Focus before you go in.';
   C.nrm=['Forward smash: HERO LUNGE — Hits in front and behind.','Down air: CHAIR STOMP — Both feet down: spikes.','Back throw: DROP KICK — Her strongest throw.'];
+}catch(e){E(e);}
+})();
+
+/* maho2.js — Maho's INCANTATIONS. Neutral B starts an incantation: B, then up to three more presses of A or B, each within
+   a short window. When the presses stop (or after the fourth), the spell for that sequence is cast. 15 spells:
+   cantrips (1-2 runes), spells (3 runes) and greater spells (4 runes). Mana now spends faster and comes back ONLY from
+   damage his non-spell attacks deal. Side B is Magic Missile (four homing darts). */
+(function(){
+const C=CH.find(c=>c.id==='maho');if(!C)return;
+const MH={err:null,n:{},WIN:13};window.MAHO2=MH;const E=e=>{MH.err=MH.err||String(e&&e.stack||e).slice(0,300);};const cnt=k=>{MH.n[k]=(MH.n[k]||0)+1;};
+const say=(f,s,col,life)=>FXL.push({k:'txt',s,x:f.x,y:f.y-92,t:0,life:life||40,col:col||'#ffe060'});
+const foes=f=>F.filter(o=>o!==f&&!o.dead&&!o.gone&&o.st!=='respawn'&&!(f.team!==undefined&&o.team===f.team));
+const near=(f,max,x,y)=>{let b=null,bd=max||1e9;const px=x===undefined?f.x:x,py=y===undefined?f.y:y;for(const o of foes(f)){const d=Math.hypot(o.x-px,o.y-py);if(d<bd){bd=d;b=o;}}return b;};
+const gm=f=>f.gm||(f.gm={});const isMaho=f=>f&&f.C===C&&!(f.copyT>0);
+const PU='#b06aff',GO='#ffe060';
+['mhorb','mhmet','mhhex'].forEach(k=>PROJ.add(k));
+
+/* ---------------- spell effects ---------------- */
+EK.mhorb={upd(e){e.y+=Math.sin(e.t*.12)*.6;e.vx*=.995;},draw(e){wdisc(e.x,e.y,e.r+1,'#2a1850');wdisc(e.x,e.y,e.r,'#9a8aff');wdisc(e.x-2,e.y-2,e.r*.45,'#e8e0ff');if(e.t%5===0)FXL.push({k:'txt',s:'z',x:e.x+4,y:e.y-10,t:0,life:20,col:'#c8b8ff'});}};
+EK.mhgust={draw(e){const d=Math.sign(e.vx)||1;for(let i=0;i<4;i++){const y=e.y-12+i*8,x=e.x-d*((e.t*3+i*7)%18);wl('#d8f0ff',x-d*10,y,x+d*6,y-2,1);}}};
+EK.mhhex={init(e,f){e.target=typeof opp==='function'?opp(f):null;},upd(e){if(EK.homing&&EK.homing.upd)EK.homing.upd(e);},draw(e){const a=e.t*.3;wdisc(e.x,e.y,e.r,'#3a2a8a');for(let i=0;i<3;i++){const q=a+i*2.09;wl('#7aa0ff',e.x,e.y,e.x+Math.cos(q)*e.r*1.6,e.y+Math.sin(q)*e.r*1.6,1);}wdisc(e.x,e.y,2,'#ffffff');},
+  onHit(e,t){e.alive=false;t.confT=Math.max(t.confT||0,240);}};
+EK.mhmet={init(e,f,s){const o=near(f,600),tx=o?o.x:f.x+f.face*160,g=groundBelow(tx,(o?o.y:f.y)-4),ty=g?g.y:(o?o.y:f.y);e.x=tx-f.face*170;e.y=ty-280;e.vx=(tx-e.x)/42;e.vy=(ty-e.y)/42;e.g=0;e.life=60;},
+  upd(e){const y=surfY(e.x,e.y-10);if(y!==null&&e.y>=y-6&&e.t>10){e.y=y-6;explodeE(e);}if(e.t%2===0)part(e.x-Math.sign(e.vx)*6,e.y-6,-e.vx*.2,-.5,14,rnd()<.5?'#ff6a1a':'#ffd040',2,0);},
+  draw(e){wdisc(e.x,e.y,e.r+2,'#ff6a1a');wdisc(e.x,e.y,e.r,'#5a3a2a');wdisc(e.x-3,e.y-3,e.r*.5,'#8a6a4a');}};
+EK.mhstrike={init(e,f){const o=near(f,420);e.tg=o;e.x=o?o.x:f.x+f.face*140;const g=groundBelow(e.x,(o?o.y:f.y)-4);e.gy=g?g.y:(o?o.y:f.y);e.y=e.gy-26;e.oa=1;e.act=[24,30];e.life=34;},
+  upd(e){if(e.t<14&&e.tg&&!e.tg.dead){e.x=e.tg.x;const g=groundBelow(e.x,e.tg.y-4);e.gy=g?g.y:e.tg.y;e.y=e.gy-26;}if(e.t===24){try{sfx('zap');}catch(x){}if(!RM)shakeA=Math.max(shakeA,3);}},
+  draw(e){if(e.t<24){X.save();X.globalAlpha=.5+.4*Math.sin(e.t*.6);wring(e.x,e.gy-2,10+e.t*.4,'#ffe060',2);X.restore();}else if(e.t<=30){let x=e.x,y=e.gy-420;for(let i=0;i<10;i++){const nx=e.x+(rnd()*16-8),ny=y+42;wl('#ffffff',x,y,nx,ny,3);wl('#ffe060',x,y,nx,ny,1);x=nx;y=ny;}wdisc(e.x,e.gy-10,14,'#fff4c0');}}};
+EK.mhchain={init(e,f){e.oa=1;e.dmg=0;e.life=34;e.L=[];},
+  upd(e){const f=e.owner;const zap=(a,b)=>{e.L.push({x0:a.x,y0:a.y-34,x1:b.x,y1:b.y-34,t:e.t});applyHit(b,{dmg:9,bkb:3.6,kbg:.05,ang:62,eff:'para',fx:['#ffe060','#ffffff']},Math.sign(b.x-a.x)||f.face,f,{proj:1});try{sfx('zap');}catch(x){}};
+    if(e.t===2){const o=near(f,360);if(o){e.A=o;zap(f,o);}else e.alive=false;}
+    if(e.t===22&&e.A){let b=null,bd=360;for(const o of foes(f)){if(o===e.A)continue;const d=Math.hypot(o.x-e.A.x,o.y-e.A.y);if(d<bd){bd=d;b=o;}}zap(e.A,b||e.A);}},
+  draw(e){for(const l of e.L){if(e.t-l.t>6)continue;let x=l.x0,y=l.y0;for(let i=1;i<=6;i++){const nx=l.x0+(l.x1-l.x0)*i/6+(i<6?rnd()*10-5:0),ny=l.y0+(l.y1-l.y0)*i/6+(i<6?rnd()*10-5:0);wl('#ffffff',x,y,nx,ny,2);wl('#ffe060',x,y,nx,ny,1);x=nx;y=ny;}}}};
+EK.mhroot={init(e,f){const o=near(f,220);const tx=o&&o.ground?o.x:f.x+f.face*90;const g=groundBelow(tx,(o?o.y:f.y)-4);e.x=tx;e.gy=g?g.y:f.y;e.y=e.gy-12;e.oa=1;e.act=o&&o.ground?[10,16]:[10,80];e.life=e.act[1]+6;},
+  draw(e){const h=Math.min(22,e.t*2.4);for(const s of[-8,-3,3,8]){wl('#3a7a2a',e.x+s,e.gy,e.x+s*1.4,e.gy-h,2);wl('#7ac04a',e.x+s*1.4,e.gy-h,e.x+s*1.1,e.gy-h-4,1);}}};
+EK.mhbliz={init(e,f){e.oa=1;e.life=150;e.ri=22;},upd(e){const o=e.owner;e.x=o.x;e.y=o.y-30;if(e.t%2===0){const a=rnd()*Math.PI*2,r=rnd()*e.r;part(e.x+Math.cos(a)*r,e.y+Math.sin(a)*r*.7,rnd()-.5,.6,16,rnd()<.5?'#ffffff':'#bfe8ff',2,0);}},
+  draw(e){X.save();X.globalAlpha=.18;wdisc(e.x,e.y,e.r,'#bfe8ff');X.restore();wring(e.x,e.y,e.r,'#e8f8ff',1);}};
+
+const P=(f,spec)=>spawnEnt(f,spec);
+const BOOK={
+  B:   {n:'SPARK',c:GO,cost:6,rec:12,fn:f=>P(f,{k:'gp',sh:'star',c:GO,vx:6.5,life:36,r:5,dmg:4,bkb:2.4,kbg:.03,ang:35})},
+  BB:  {n:'MAGIC BOLT',c:PU,cost:12,rec:14,fn:f=>P(f,{k:'gp',sh:'blade',c:PU,vx:8,life:50,r:6,dmg:7,bkb:3.4,kbg:.05,ang:38})},
+  BA:  {n:'GUST',c:'#d8f0ff',cost:12,rec:14,fn:f=>P(f,{k:'mhgust',vx:5.5,life:22,r:20,dmg:3,bkb:6.6,kbg:.02,ang:15})},
+  BBB: {n:'FIREBALL',c:'#ff7a20',cost:30,rec:20,fn:f=>P(f,{k:'fireball',vx:3.6,life:110,r:11,dmg:16,bkb:5.2,kbg:.075,ang:42,eff:'burn'})},
+  BBA: {n:'SLEEP ORB',c:'#9a8aff',cost:30,rec:20,fn:f=>P(f,{k:'mhorb',vx:2.2,life:160,r:9,dmg:4,bkb:2,kbg:.02,ang:70,eff:'sleep'})},
+  BAB: {n:'ICE SHARD',c:'#8fe4ff',cost:25,rec:18,fn:f=>P(f,{k:'shard',vx:8.2,life:50,r:6,dmg:9,bkb:3.6,kbg:.05,ang:35,eff:'freeze'})},
+  BAA: {n:'LIGHTNING',c:GO,cost:35,rec:20,fn:f=>P(f,{k:'mhstrike',dmg:14,bkb:5,kbg:.068,ang:85,r:18})},
+  BBBB:{n:'METEOR',c:'#ff6a1a',cost:60,rec:28,fn:f=>P(f,{k:'mhmet',dmg:22,bkb:6,kbg:.08,ang:50,r:13,eff:'burn'})},
+  BBBA:{n:'CHAIN LIGHTNING',c:GO,cost:50,rec:26,fn:f=>P(f,{k:'mhchain'})},
+  BBAB:{n:'BINDING ROOTS',c:'#7ac04a',cost:40,rec:24,fn:f=>P(f,{k:'mhroot',dmg:5,bkb:1,kbg:0,ang:90,r:16,eff:'root'})},
+  BBAA:{n:'HASTE',c:'#9affea',cost:45,rec:16,fn:f=>{f.mhHaste=FR+480;FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:'#9affea',r0:10,life:20});}},
+  BABB:{n:'BLIZZARD',c:'#bfe8ff',cost:50,rec:24,fn:f=>P(f,{k:'mhbliz',r:72,dmg:2.6,bkb:1.6,kbg:.012,ang:65})},
+  BABA:{n:'HEX',c:'#7aa0ff',cost:40,rec:22,fn:f=>P(f,{k:'mhhex',vx:3.2,life:130,r:7,dmg:3,bkb:2,kbg:.02,ang:60,hm:1})},
+  BAAB:{n:'MIRROR IMAGE',c:'#e8d8ff',cost:45,rec:18,fn:f=>{f.mhImg=FR+600;burst(f.x,f.y-30,14,['#e8d8ff','#ffffff'],2,16);}},
+  BAAA:{n:'ARCANE NOVA',c:'#ff80ff',cost:55,rec:30,fn:f=>{for(const o of foes(f)){if(Math.hypot(o.x-f.x,(o.y-30)-(f.y-30))<80)applyHit(o,{dmg:18,bkb:5.6,kbg:.075,ang:55,fx:['#ff80ff','#ffffff']},Math.sign(o.x-f.x)||f.face,f,{proj:1});}
+    for(let i=0;i<3;i++)FXL.push({k:'ring',x:f.x,y:f.y-30,t:-i*3,col:i%2?'#ffffff':'#ff80ff',r0:16+i*18,life:18});burst(f.x,f.y-30,30,['#ff80ff','#ffffff','#b06aff'],4,22);try{sfx('boom');}catch(x){}if(!RM)shakeA=Math.max(shakeA,5);}}};
+MH.BOOK=BOOK;
+
+/* ---------------- the incantation ---------------- */
+const INC={an:'castQ',s:200,a:1,r:1,hits:[],beh:'mhInc',fx:[PU,GO],lim:'none'};
+const oldNB=C.mv.nB;
+C.mv.nB=Object.assign({},INC,{mo:oldNB&&oldNB.mo,ux:oldNB&&oldNB.ux,hf:oldNB&&oldNB.hf,qn:'B, then up to three more presses of A or B: each sequence is a different spell.'});
+if(C.hmv&&C.hmv.nB)C.hmv.nB=C.mv.nB;
+const cast=(f,m)=>{const v=m.v,sp=BOOK[v.seq]||BOOK.B;v.cast=1;f.lastA=f.lastB=-999;
+  if(isMaho(f)){const g=gm(f);if(g.mp===undefined)g.mp=100;
+    if(g.mp<sp.cost){say(f,'NO MANA','#9aa0c0',30);burst(f.x+f.face*14,f.y-40,6,['#9aa0c0','#ffffff'],1.2,10);try{sfx('tick');}catch(x){}v.end=FR+16;cnt('fizzle');return;}
+    const full=g.mp>=100;g.mp-=sp.cost;if(full){g.ocT=FR+150;say(f,'OVERCAST!','#ff80ff',40);}}
+  try{sp.fn(f);}catch(e){E(e);}say(f,sp.n,sp.c,36);try{sfx('power');}catch(x){}burst(f.x+f.face*14,f.y-40,8,[sp.c,'#ffffff'],1.6,12);v.end=FR+sp.rec;cnt(v.seq);};
+BEH.mhInc={tick(f,m,I){const v=m.v;
+  if(m.t===0||v.seq===undefined){v.seq='B';v.last=FR;}
+  if(v.cast){if(FR>=v.end)endMove(f);return;}
+  f.vx*=.85;if(!f.ground)f.vy=Math.min(f.vy,2);
+  const p=f.pi||{};if(m.t>0&&v.seq.length<4){if(p.bP){v.seq+='B';v.last=FR;try{sfx('tick');}catch(x){}}else if(p.aP){v.seq+='A';v.last=FR;try{sfx('tick');}catch(x){}}}
+  if(v.seq.length>=4||FR-v.last>MH.WIN)cast(f,m);}};
+/* Maho starts it directly so the old fixed spell cost is not charged */
+{const sm=startMove;startMove=function(f,key){try{if(isMaho(f)&&key==='nB'){if(f.mv)return false;f.mv={k:'nB',d:C.mv.nB,t:0,hit:{},charging:false,chargeT:0,v:{},trail:[]};f.st='move';f.stT=0;cnt('incant');return true;}}catch(e){E(e);}
+  const r=sm.apply(this,arguments);
+  try{if(r&&isMaho(f)&&(key==='sB'||key==='dB')){const g=gm(f);g.mp=Math.max(0,(g.mp||0)-(key==='sB'?4:6));}}catch(e){E(e);}return r;};}
+
+/* ---------------- Side B: Magic Missile, four darts ---------------- */
+try{if(oldNB&&oldNB.spawn){const sp=oldNB.spawn.map(q=>[q[0],Object.assign({},q[1],{n:4})]);C.mv.sB=Object.assign({},oldNB,{spawn:sp,qn:'Four homing darts.'});delete C.mv.sB.chg;}}catch(e){E(e);}
+
+/* ---------------- mana: refills only from damage his non-spell attacks deal ---------------- */
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){
+  /* Mirror Image takes one hit for him */
+  try{if(t&&isMaho(t)&&t.mhImg>FR&&a&&a!==t&&!(o&&o.force)){t.mhImg=0;const d=a?Math.sign(t.x-a.x)||t.face:t.face;burst(t.x,t.y-30,16,['#e8d8ff','#ffffff'],2.4,16);t.x+=d*46;const m=STAGE.main;if(t.ground)t.x=Math.max(m.x+6,Math.min(m.x+m.w-6,t.x));say(t,'MIRROR!','#e8d8ff',30);try{sfx('warp');}catch(x){}cnt('mirrorSave');return 'miss';}}catch(e){E(e);}
+  const mah=a&&isMaho(a)&&a!==t,g=mah?gm(a):null,mp0=g?(g.mp===undefined?100:g.mp):0,pre=t?t.dmg:0;
+  const r=ah.apply(this,arguments);
+  try{if(mah){const spell=(o&&o.proj)||(a.mv&&/^[nsud]B$/.test(a.mv.k));if(r==='hit'&&!spell){const dd=Math.max(0,t.dmg-pre);g.mp=Math.min(100,mp0+dd*1.6);}else g.mp=mp0;}}catch(e){E(e);}
+  return r;};}
+
+/* ---------------- Haste ---------------- */
+{const up=update;update=function(f,I){const r=up.apply(this,arguments);try{if(f&&f.mhHaste>FR&&!(f.hitstun>0)){if(f.st==='run'||f.st==='walk'||f.st==='air'||f.st==='dash')f.x+=f.vx*.25;const m=f.mv;if(m&&m.k!=='nB'&&m.d&&m.t>m.d.s+m.d.a&&FR%2===0)m.t++;if(FR%4===0)part(f.x-f.face*8,f.y-20-rnd()*30,-f.face,0,10,'#9affea',1,0);}}catch(e){E(e);}return r;};}
+{const rs=respawn;respawn=function(f){const r=rs.apply(this,arguments);try{if(f&&f.C===C){f.mhHaste=0;f.mhImg=0;}}catch(e){}return r;};}
+
+/* ---------------- drawing: runes over his head, the mirror image ---------------- */
+if(typeof drawFighter==='function'){const df=drawFighter;drawFighter=function(f){
+  try{if(f&&f.C===C&&f.mhImg>FR&&f.buf&&!f.dead&&!f.gone&&typeof X!=='undefined'&&X){const B=f.buf,L=lookOf(f),sc=(L.size||1);X.save();X.globalAlpha=.32+.1*Math.sin(FR*.2);X.translate(Math.round(f.x-f.face*18),Math.round(f.y));X.scale(f.face*sc/RS,sc/RS);X.drawImage(B.cv,-B.ox,-B.oy);X.restore();}}catch(e){E(e);try{X.globalAlpha=1;}catch(x){}}
+  const r=df.apply(this,arguments);
+  try{const m=f&&f.mv;if(f&&f.C===C&&m&&m.d&&m.d.beh==='mhInc'&&!m.v.cast&&m.v.seq&&typeof X!=='undefined'&&X){const p=(typeof interpPos==='function')?interpPos(f):f,s=m.v.seq,n=4,y=p.y-96;
+    for(let i=0;i<n;i++){const x=p.x+(i-1.5)*13;if(i<s.length){if(s[i]==='B'){wpoly('#3a2a10',[x-6,y,x,y-7,x+6,y,x,y+7]);wpoly(GO,[x-5,y,x,y-6,x+5,y,x,y+6]);}else{wdisc(x,y,6,'#2a1850');wdisc(x,y,5,PU);wdisc(x,y,2,'#ffffff');}}else wring(x,y,4,'#5a5a78',1);}
+    const left=1-Math.min(1,(FR-m.v.last)/MH.WIN);wl('#ffffff',p.x-26,y+11,p.x-26+52*left,y+11,1);}}catch(e){E(e);}
+  return r;};}
+
+/* ---------------- CPU ---------------- */
+const pick=(f)=>{const o=typeof opp==='function'?opp(f):null,g=gm(f),mp=g.mp===undefined?100:g.mp;if(!o)return 'BB';const dx=Math.abs(o.x-f.x),dy=o.y-f.y,r=rnd();
+  const can=k=>BOOK[k].cost<=mp;
+  if(o.dmg>=100&&can('BBBB')&&dx>60&&r<.5)return 'BBBB';
+  if(dx<85&&Math.abs(dy)<60&&o.dmg>=60&&can('BAAA')&&r<.6)return 'BAAA';
+  if(f.dmg>=110&&!(f.mhImg>FR)&&can('BAAB')&&r<.5)return 'BAAB';
+  if(dx>200&&can('BBAA')&&!(f.mhHaste>FR)&&r<.3)return 'BBAA';
+  if(dx<90&&Math.abs(dy)<50&&can('BABB')&&r<.35)return 'BABB';
+  if(dx<200&&o.ground&&can('BBAB')&&r<.25)return 'BBAB';
+  if(dx<260&&can('BABA')&&r<.25)return 'BABA';
+  if(dx<90&&Math.abs(dy)<50&&can('BBA'))return 'BBA';
+  if((dy<-70||dx>240)&&can('BAA'))return 'BAA';
+  if(o.dmg>=90&&dx<280&&can('BBB'))return 'BBB';
+  if(dx<240&&can('BBBA')&&r<.3)return 'BBBA';
+  if(dx<70&&can('BA')&&r<.5)return 'BA';
+  if(dx<170&&can('BAB'))return 'BAB';
+  if(can('BB'))return 'BB';return 'B';};
+{const ai=aiInput;aiInput=function(f){const I=ai.apply(this,arguments)||{};try{if(!f||!isMaho(f)||f.ctrl!=='cpu'||GS!=='play'||f.dead)return I;const m=f.mv;
+    if(m&&m.d&&m.d.beh==='mhInc'&&!m.v.cast){if(!m.v.cpuSeq){m.v.cpuSeq=pick(f);m.v.cpuI=1;m.v.cpuT=FR;}I.A=0;I.B=0;I.x=0;I.y=0;I.J=0;I.S=0;
+      const s=m.v.cpuSeq;if(m.v.cpuI<s.length&&FR-m.v.cpuT>=4){if(s[m.v.cpuI]==='B')I.B=1;else I.A=1;m.v.cpuI++;m.v.cpuT=FR;}return I;}
+    /* start an incantation now and then, more when there is mana to spend */
+    if(!m&&f.st!=='hit'&&!(f.hitstun>0)){const g=gm(f),mp=g.mp===undefined?100:g.mp,o=typeof opp==='function'?opp(f):null;const dx=o?Math.abs(o.x-f.x):0,lv=((f.lvl||5)-1)/8;
+      if(o&&mp>=25&&(dx>90||(dx<80&&mp>=50&&rnd()<.25))&&rnd()<(.012+.02*lv)*(mp/100)){I.B=1;I.A=0;I.x=0;I.y=0;cnt('cpuIncant');}}}catch(e){E(e);}return I;};}
+
+/* ---------------- words ---------------- */
+try{
+  C.gim='MANA — spells cost mana and come back ONLY from damage his regular attacks deal (about 1.6 mana for every 1% dealt). Casting at full mana OVERCASTS for 35% more damage.';
+  if(typeof C.trait==='string')C.trait=C.trait.replace(/GIMMICK: MANA[^]*?OVERCASTS for 35% more damage\./,'GIMMICK: '+C.gim);
+  C.sp=['Incantation (B, then up to three more A/B presses: 15 spells)','Magic Missile (four homing darts)','Misty Step (leaves blinding mist)','Shield (blocks hits, reflects projectiles)'];
+  C.tip='Spell runes: press B, then A or B up to three more times. Short incantations are cheap; four-rune ones are huge. Land regular hits to refill mana.';
+  if(typeof GTXT!=='undefined'){const G=GTXT.maho||(GTXT.maho=[]);
+    G[0]='INCANTATION: press B, then up to three more presses of A or B (each within about a fifth of a second). When you stop, the spell for that sequence is cast; the runes show over his head. '+
+      'CANTRIPS — B: Spark (6 mana). B B: Magic Bolt (12). B A: Gust, shoves rivals away (12). '+
+      'SPELLS — B B B: Fireball, explodes and burns (30). B B A: Sleep Orb (30). B A B: Ice Shard, freezes (25). B A A: Lightning, strikes the nearest rival from above (35). '+
+      'GREATER SPELLS — B B B B: Meteor (60). B B B A: Chain Lightning, two strikes (50). B B A B: Binding Roots (40). B B A A: Haste, faster for eight seconds (45). B A B B: Blizzard around him (50). B A B A: Hex, confuses (40). B A A B: Mirror Image, takes one hit for him (45). B A A A: Arcane Nova, a huge burst (55).';
+    G[1]='Magic Missile: four glowing darts that home in on rivals (24 mana).';
+    if(G[3])G[3]=G[3]+' (32 mana)';}
 }catch(e){E(e);}
 })();
 
