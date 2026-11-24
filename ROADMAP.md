@@ -106,3 +106,5 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Unlockables screen: Costumes / Fighters / Stages tabs, plus a code box that redeems unlock codes (codes stored only as one-way fingerprints). Fixed a loop in the unlock checks that could freeze the game when fighters were unlocked out of order.
 - [x] NEGATIVE MODE costume for every fighter (95): black skin, glowing white hair, clothes and gear; each fighter earns theirs by KOing 10 level 9 CPUs out of their last stock
 - [x] Menu theme loops seamlessly: decoded once and played from memory (no MP3 gap), intro plays once then loops 0:10.81 to 3:17.11 on a matching, beat-aligned point with a short blended seam
+- [x] Synth music overhaul: new engine (reverb, tempo delay, compressor, sidechain duck, layered drum kits, stage ambience) and all 27 tracks rewritten with longer arrangements (intro, A/B plus new C/D sections), each themed to its stage and kept to its original melody; loudness balanced across tracks, no clipping
+- [x] Random fighter also picks a random costume from the ones unlocked for that fighter
