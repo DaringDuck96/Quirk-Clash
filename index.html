@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1124-1806';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1124-1819';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18722,6 +18722,8 @@ try{for(const C of CH){if(!C)continue;for(const M of[C.mv,C.hmv,...Object.values
    heaviest-hitting heavy at the bottom of the roster. Final values set directly: he stays slow, hard-hitting and easy to
    launch for a heavy, but no longer flies like a middleweight. Tested at about 46% (was 37-39% on the same matches). */
 (function(){const C=CH.find(c=>c.id==='shiki');if(C){C.atkM=.74;C.defKb=1.28;}})();
+/* Sanshou: the same stacking as Shiki (damage x0.75, knockback taken x1.30). Tested about 48% (was 37% on the same matches). */
+(function(){const C=CH.find(c=>c.id==='sanshou');if(C){C.atkM=.78;C.defKb=1.22;}})();
 
 /* aya2.js — Aya: two crystal drawbacks softened: Swift deals 15% less (was 25%), Break 30% less (was 40%).
    (A CPU crystal-picking rule was tried and dropped: every version made her weaker in CPU matches.) */
