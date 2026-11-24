@@ -94,3 +94,4 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Soran & Hakegatsu: one brother on screen at a time (Down-B swaps); the other appears only for relay specials; no echoes, no splitting
 - [x] Counters replaced: Chuckles Bad Joke, Zabu Piggyback, Aya Geode
 - [x] Animation polish: own poses for 23 reworked moves (Kongu's claps, slaps, stomp, spin; Hari's harpoon, piston, fence plant; Sata's blade and swarm; Kurai's stare and talon dive; Kal, Chuckles, Zabu, Tori, Sai)
+- [x] Animation pass: swinging limbs travel on a curve into the hit with a little follow-through; 12 new versions of the cast / punch / uppercut / cast-up poses (quick, heavy, flourish) chosen by fighting style across 428 moves
