@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1124-0223';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1124-0232';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -18579,6 +18579,69 @@ const SEEN=new Set();const FLAIR={cast:'castF',punch:'punchK',uppercut:'uppercut
 for(const C of CH){if(!C||!C.mv)continue;const st=C.style;const kind=QUICK.has(st)?'Q':HEAVY.has(st)?'H':(hsh(C.id)%3===0?null:'F');if(!kind)continue;
   for(const M of[C.mv,C.hmv,...Object.values(C.fmv||{})]){if(!M)continue;for(const k in M){const d=M[k];if(!d||!d.an||!['cast','punch','uppercut','castUp'].includes(d.an))continue;if(/^(taunt|qa)/.test(k))continue;
       if(SEEN.has(d))continue;SEEN.add(d);const nm=kind==='F'?FLAIR[d.an]:d.an+kind;if(!ANIM[nm])continue;d.an=nm;A2.var[nm]=(A2.var[nm]||0)+1;}}}
+})();
+
+/* anims3.js — 1. HIT REACTIONS BY STRENGTH: a light hit is a quick flinch, a medium one a proper recoil, a weak hit on the
+                  ground a skid with the feet planted, a spike a head-first drop, and a launching hit an arched "launch" pose
+                  that then spins out (faster the harder the hit). Pushed from behind, they lurch forward instead of back.
+               2. POSE VARIANTS for the next five most-shared poses (cast down, forward slash, rising slash, low slash, sweep),
+                  quick / heavy / flourish, chosen by fighting style the same way as the last pass.
+   Looks only: no hitbox, timing, knockback or damage changes. */
+(function(){
+if(typeof poseOf!=='function'||typeof ANIM==='undefined'||typeof mergeP!=='function')return;
+const A3={err:null,on:true,n:{},var:{}};window.ANIM3=A3;const E=e=>{A3.err=A3.err||String(e&&e.stack||e).slice(0,300);};
+const cnt=k=>{A3.n[k]=(A3.n[k]||0)+1;};
+
+/* ---------- 1. hit reactions ---------- */
+const RP={
+  FLINCH:{tl:-.16,hd:-.32,py:1,aF:[11,-47],aB:[4,-45],lF:[7,-1.5],lB:[-7,-1.5],wa:-1.2},
+  FLINCH_AIR:{tl:-.16,hd:-.32,aF:[11,-47],aB:[4,-45],lF:[7,-6],lB:[-6,-3],wa:-1.2},
+  SKID:{tl:-.32,py:4,hd:-.22,lF:[13,-1.5],lB:[-9,-1.5],aF:[6,-42],aB:[-15,-44],wa:-1.6},
+  RECOIL:{tl:-.5,py:-1,hd:-.38,aF:[-3,-57],aB:[-17,-49],lF:[10,-9],lB:[-6,-2],wa:-2.2},
+  SNAP:{tl:-.68,py:-1,hd:-.5,aF:[-8,-58],aB:[-20,-50],lF:[12,-10],lB:[-5,-3],wa:-2.4},
+  LAUNCH:{tl:-.72,hd:-.55,aF:[-8,-64],aB:[-22,-56],lF:[15,-15],lB:[-3,-9],wa:-2.6},
+  SPIKE:{tl:.6,hd:.35,aF:[8,-64],aB:[-4,-62],lF:[2,-22],lB:[-8,-18],wa:-1.8}};
+/* pushed the way they face (hit from behind): lean forward instead of back */
+const fwd=p=>{p.tl=-p.tl*.8;p.hd=-(p.hd||0)*.8;if(p.aF)p.aF=[p.aF[0]+10,p.aF[1]+6];if(p.aB)p.aB=[p.aB[0]+12,p.aB[1]+6];return p;};
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){const r=ah.apply(this,arguments);
+  try{if(t&&t.st==='hit'&&!t.frozen){const kb=Math.hypot(t.lx||0,t.ly||0);t._hk=kb;t._hs0=t.hitstun;t._hT=FR;
+      t._hfw=Math.abs(t.lx||0)>.3&&Math.sign(t.lx)===t.face;t._hsp=(t.ly||0)>1.5&&t.ly>Math.abs(t.lx||0);t._hsl=t._slid===FR;
+      t._hspd=Math.min(.5,Math.max(.24,.16+kb*.018));cnt(t.tumble?'tumble':t._hsp?'spike':t._hsl?'skid':kb<4?'flinch':'recoil');}}catch(e){E(e);}return r;};}
+{const po=poseOf;poseOf=function(f){const p=po.apply(this,arguments);if(!A3.on||!f||f.st!=='hit'||f._hT===undefined||f.frozen>0||f.st==='held')return p;
+  try{const stc=STANCE[f.L.stance||'guard'];const age=Math.max(0,(f._hs0||0)-(f.hitstun||0)),kb=f._hk||0;let q;
+    if(f.tumble){if(age<7){q=mergeP(stc,RP.LAUNCH);q.rot=0;}else{q=mergeP(stc,PZ.TUMBLE);q.rot=-((age-7)*(f._hspd||.32))%TAU;}if(f._hfw&&age<7)fwd(q);return q;}
+    if(f._hsp){q=mergeP(stc,RP.SPIKE);q.rot=0;return q;}
+    if(f._hsl&&f.ground){q=mergeP(stc,RP.SKID);q.rot=0;}
+    else if(kb<4){q=mergeP(stc,f.ground?RP.FLINCH:RP.FLINCH_AIR);q.rot=0;}
+    else{q=age<3?mergeP(stc,RP.SNAP):mergeP(stc,RP.RECOIL);q.rot=0;
+      /* ease back toward the plain hurt pose as the hitstun runs out */
+      const left=f.hitstun||0;if(left<6&&typeof lerpPose==='function'){const h=mergeP(stc,PZ.HURT);h.rot=0;q=lerpPose(h,q,left/6);q.rot=0;}}
+    if(f._hfw)fwd(q);return q;}catch(e){E(e);return p;}};}
+
+/* ---------- 2. pose variants ---------- */
+const V=(base,W,H,Ex)=>{const B=ANIM[base]||{};const o={W,H,lim:B.lim};if(B.lim2)o.lim2=B.lim2;if(Ex)o.E=Ex;else if(B.E)o.E=B.E;return o;};
+Object.assign(ANIM,{
+  castDownQ:V('castDown',{aF:[8,-50],aB:[4,-50]},{aF:[18,-8],aB:[12,-10],py:6,tl:.4}),
+  castDownH:V('castDown',{aF:[-2,-76],aB:[-6,-74],py:-4,tl:-.2,lF:[8,-10]},{aF:[18,-2],aB:[14,-2],py:12,tl:.75,lF:[14,-1.5],lB:[-10,-1.5]}),
+  castDownF:V('castDown',{aF:[14,-60],aB:[-14,-62],py:-2,tl:-.1},{aF:[20,-6],aB:[-6,-30],py:8,tl:.5}),
+  slashFQ:V('slashF',{aF:[2,-44],wa:-1.4,tl:-.05},{aF:[20,-38],wa:.05,tl:.28,px:3,lF:[11,-1.5]},{aF:[16,-32],wa:.6}),
+  slashFH:V('slashF',{aF:[-12,-58],wa:-3,tl:-.3,py:1,lF:[10,-1.5],lB:[-12,-1.5]},{aF:[22,-30],wa:.4,tl:.55,px:7,py:2,lF:[18,-1.5],lB:[-14,-1.5]},{aF:[14,-20],wa:1.2,tl:.4}),
+  slashFF:V('slashF',{aF:[-10,-34],wa:2.6,tl:-.2},{aF:[21,-40],wa:.12,tl:.32,px:4,lF:[13,-1.5]},{aF:[12,-50],wa:-.9}),
+  slashUpQ:V('slashUp',{aF:[14,-34],wa:.3,py:2},{aF:[6,-60],wa:-1.5,tl:-.08},{aF:[0,-58],wa:-2}),
+  slashUpH:V('slashUp',{aF:[20,-20],wa:1.1,py:7,tl:.3},{aF:[4,-68],wa:-1.9,tl:-.2,py:-3,lF:[6,-8]},{aF:[-10,-62],wa:-3}),
+  slashUpF:V('slashUp',{aF:[-6,-30],wa:2.2,py:4,tl:.15},{aF:[4,-66],wa:-1.6,tl:-.15,aB:[-14,-48]},{aF:[-12,-56],wa:-3.2,aB:[-16,-44]}),
+  slashLowQ:V('slashLow',{py:4,aF:[2,-32],wa:2},{py:6,aF:[19,-17],wa:.15,tl:.24}),
+  slashLowH:V('slashLow',{py:9,aF:[-10,-36],wa:3,tl:.1},{py:11,aF:[22,-12],wa:-.05,tl:.45,lF:[16,-1.5],lB:[-12,-1.5]}),
+  slashLowF:V('slashLow',{py:6,aF:[-4,-40],wa:3.2,aB:[10,-36]},{py:9,aF:[20,-14],wa:.1,tl:.32,aB:[-14,-32],lF:[15,-1.5],lB:[-12,-1.5]}),
+  sweepQ:V('sweep',{py:7,aF:[4,-28],aB:[-4,-28],tl:.15},{py:9,lF:[20,-3],lB:[-20,-3],aF:[10,-30],aB:[-10,-30]}),
+  sweepH:V('sweep',{py:10,aF:[6,-22],aB:[-6,-22],tl:.3},{py:12,lF:[25,-2],lB:[-24,-2],aF:[18,-28],aB:[-18,-28],tl:.08}),
+  sweepF:V('sweep',{py:8,aF:[8,-30],aB:[-2,-24],tl:.25},{py:10,lF:[24,-4],lB:[-22,-3],aF:[4,-14],aB:[-16,-38],tl:-.06})});
+const QUICK=new Set(['rapid','blitz','flurry','sharp','aerialist','poker']),HEAVY=new Set(['heavy','smasher','commit','launch','grind']);
+const hsh=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))|0;return Math.abs(h);};
+const KINDS=['castDown','slashF','slashUp','slashLow','sweep'];const SEEN=new Set();
+for(const C of CH){if(!C||!C.mv)continue;const st=C.style;const kind=QUICK.has(st)?'Q':HEAVY.has(st)?'H':(hsh(C.id)%3===0?null:'F');if(!kind)continue;
+  for(const M of[C.mv,C.hmv,...Object.values(C.fmv||{})]){if(!M)continue;for(const k in M){const d=M[k];if(!d||!d.an||!KINDS.includes(d.an))continue;if(/^(taunt|qa)/.test(k))continue;
+      if(SEEN.has(d))continue;SEEN.add(d);const nm=d.an+kind;if(!ANIM[nm])continue;d.an=nm;A3.var[nm]=(A3.var[nm]||0)+1;}}}
 })();
 
 </script>

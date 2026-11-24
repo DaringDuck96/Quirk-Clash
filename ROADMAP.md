@@ -95,3 +95,4 @@ Saved list of everything we want to make the game feel more like Smash Ultimate.
 - [x] Counters replaced: Chuckles Bad Joke, Zabu Piggyback, Aya Geode
 - [x] Animation polish: own poses for 23 reworked moves (Kongu's claps, slaps, stomp, spin; Hari's harpoon, piston, fence plant; Sata's blade and swarm; Kurai's stare and talon dive; Kal, Chuckles, Zabu, Tori, Sai)
 - [x] Animation pass: swinging limbs travel on a curve into the hit with a little follow-through; 12 new versions of the cast / punch / uppercut / cast-up poses (quick, heavy, flourish) chosen by fighting style across 428 moves
+- [x] Hit reactions by strength: flinch (light), skid (weak hit on the ground), recoil (medium), forward lurch (hit from behind), head-first drop (spikes), arched launch then spin-out (launching hits, faster spin the harder the hit); 15 new versions of the cast-down / forward slash / rising slash / low slash / sweep poses by fighting style
