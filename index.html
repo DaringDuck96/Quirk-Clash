@@ -10645,7 +10645,7 @@ try{const ct=curTarget;curTarget=function(el){const t=el&&el.closest?el.closest(
 (function(){
 const LIB='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',PREFIX='pu-quirk-clash-v1-',MAXG=3;
 const qs=new URLSearchParams(location.search),TEST=qs.has('nettest');
-const BUILD='1124-2032';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
+const BUILD='1124-2130';const NET={build:BUILD,role:null,room:'',guests:[],stream:null,status:'',on:false};window.NET=NET;
 const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
 const css=E('style');css.textContent=
  '#netgate,#netpanel,#netview{position:fixed;inset:0;z-index:900;display:grid;place-items:center;background:rgba(6,6,10,.94);font-family:var(--display,sans-serif);color:#fff;padding:16px;box-sizing:border-box}'+
@@ -19553,6 +19553,126 @@ const r0=rollRandom;rollRandom=function(){const r=r0.apply(this,arguments);
       for(let i=0;i<C.looks.length;i++){const L=C.looks[i];if(!L||L.hide||L.alt)continue;try{if(SKINS2.allowed(n,i))ok.push(i);}catch(e){}}
       if(ok.length){SEL.skin[n]=ok[Math.floor(Math.random()*ok.length)];try{PREV4[n]=null;}catch(e){}RS.n++;}}}catch(e){RS.err=String(e);}
   return r;};
+})();
+
+/* taipool.js — Tai rework: the VITAL POOL. A 0-100 gauge of healing energy.
+   Fills 1 per 1% he deals and 0.5 per 1% he takes. No more idle regeneration or heal-on-every-hit: he heals by spending it.
+   Neutral-B VITAL SPARK: tap = orb; hold = charge a big piercing orb (spends up to 30, up to ~18%) that heals teammates it passes.
+   Side-B SIPHON PALM: heals half the damage, the rest goes into the Pool; with a full Pool it is OVERLOAD PALM (spends 50, kills).
+   Up-B SECOND WIND: with 15 Pool it spends it for more height, heals him 3% and pushes rivals away with a ring.
+   Down-B TRIAGE: hold to turn Pool into healing (1 Pool = 0.5%) for himself, or for a teammate beside him. Open to hits meanwhile.
+   Forward smash DEFIBRILLATOR: with 50+ Pool it spends 20 for more knockback and a short stun. Normals hit 10% harder. */
+(function(){
+const C=CH.find(c=>c.id==='tai');if(!C)return;
+const TP={err:null,n:{}};window.TAIPOOL=TP;const E=e=>{TP.err=TP.err||String(e&&e.stack||e).slice(0,300);};const cnt=(k,v)=>{TP.n[k]=(TP.n[k]||0)+(v===undefined?1:v);};
+const ok=f=>f&&f.C===C&&!f.form&&!(f.copyT>0);
+const GN='#7aff9a',WH='#ffffff',YL='#fff27a';
+const say=(f,s,col,life)=>FXL.push({k:'txt',s,x:f.x,y:f.y-90,t:0,life:life||40,col:col||GN});
+const P=f=>f.vp||0;
+const setP=(f,v)=>{const was=P(f);f.vp=Math.max(0,Math.min(100,v));if(was<100&&f.vp>=100){say(f,'POOL FULL',WH,40);FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:GN,r0:10,life:20});try{sfx('power');}catch(e){}cnt('full');}};
+const isAlly=(a,b)=>{try{return a!==b&&a.team!=null&&a.team===b.team&&((typeof SEL!=='undefined'&&!!SEL.teams)||(typeof MODE!=='undefined'&&MODE==='survival'));}catch(e){return false;}};
+const heal=(t,amt,col)=>{if(!t||amt<=0||t.dmg<=0)return 0;const h=Math.min(t.dmg,amt);t.dmg-=h;return h;};
+const NORM=/^(jab|ftilt|utilt|dtilt|dash|nair|fair|bair|uair|dair|fsmash|usmash|dsmash|ledgeAtk|getupAtk)/;
+
+/* ---------------- moves ---------------- */
+C.regen=0;C.lifesteal=0;
+try{
+  const nB=C.mv.nB;C.mv.nB=Object.assign({},nB,{spawn:null,beh:'tpSpark',nm:'VITAL SPARK'});
+  const uB=C.mv.uB;C.mv.uB=Object.assign({},uB,{onStart:null,nm:'SECOND WIND'});
+  C.mv.sB=Object.assign({},C.mv.sB,{nm:'SIPHON PALM'});
+  C.mv.triage={an:'eat',s:8,a:1,r:14,hits:[],beh:'tpTri',fx:[GN,WH],nm:'TRIAGE',lim:'none'};
+  if(C.mv.fsmash){C.mv.fsmash=Object.assign({},C.mv.fsmash,{nm:'DEFIBRILLATOR'});}
+  const dt=C.mv.dthrow;if(dt&&dt.th){const th=dt.th.slice();th[0]='BLOOD DRAW';th[6]=Object.assign({},th[6]||{});delete th[6].tickHeal;th[7]='Draws on the rival with four pulses. Each one fills his Vital Pool twice as much as a normal hit.';C.mv.dthrow=Object.assign({},dt,{th});}
+}catch(e){E(e);}
+
+const vitalSpec=pw=>({k:'gp',sh:'orb',c:GN,vx:5+pw*1.5,life:60+pw*24,r:6+pw*8,dmg:6+pw*12,bkb:3+pw*3.5,kbg:.04+pw*.035,ang:35,tpHeal:pw>0?2+pw*6:0});
+BEH.tpSpark={tick(f,m,I){const d=m.d;if(m.v.fired)return;
+  if(m.t===d.s-1&&!m.v.rel){const c=m.v.c||0;if(I&&I.B&&c<60&&P(f)>0){m.v.c=c+1;setP(f,P(f)-.5);m.t--;f.vx*=.85;
+      if(c%4===0)part(f.x+f.face*20+rnd()*14-7,f.y-38+rnd()*14-7,(f.x+f.face*20-(f.x+f.face*20+rnd()*14-7))*.05,0,12,c%8?GN:WH,2,0);
+      if(c===59){FXL.push({k:'ring',x:f.x+f.face*20,y:f.y-38,t:0,col:WH,r0:6,life:12});}return;}
+    m.v.rel=1;}
+  if(m.t===d.s){m.v.fired=1;const pw=Math.min(1,(m.v.c||0)/60);const e=spawnEnt(f,vitalSpec(pw));if(e&&pw>.3)e.multi=1;if(pw>.3){cnt('bigSpark');try{sfx('power');}catch(x){}}else cnt('spark');}}};
+BEH.tpTri={start(f,m){m.v.n=0;},tick(f,m,I){const d=m.d;if(m.t!==d.s)return;f.vx*=.8;
+  let tgt=f;if(typeof F!=='undefined')for(const o of F){if(o!==f&&!o.dead&&!o.gone&&isAlly(f,o)&&o.dmg>0&&Math.abs(o.x-f.x)<64&&Math.abs(o.y-f.y)<60){tgt=o;break;}}
+  const want=(m.v.n<10||(I&&I.B))&&m.v.n<240&&P(f)>0&&tgt.dmg>0;
+  if(!want){if(m.v.n>0){const hv=m.v.h||0;if(hv>=.5)FXL.push({k:'txt',s:'-'+hv.toFixed(0)+'%',x:tgt.x,y:tgt.y-74,t:0,life:34,col:GN});}return;}
+  m.v.n++;setP(f,P(f)-.5);const h=heal(tgt,.25);m.v.h=(m.v.h||0)+h;cnt('triage',h);if(tgt!==f)cnt('triageAlly',h);
+  if(m.v.n%5===0)part(tgt.x+rnd()*20-10,tgt.y-10-rnd()*40,0,-.8,18,m.v.n%10?GN:WH,2,0);
+  if(m.v.n%24===1)FXL.push({k:'ring',x:tgt.x,y:tgt.y-30,t:0,col:GN,r0:8,life:16});
+  m.t--;}};
+
+/* ---------------- specials: Down-B is Triage; Pool-powered versions ---------------- */
+{const sm=startMove;startMove=function(f,key){try{if(ok(f)){
+    if(key==='dB')return sm.call(this,f,'triage');
+    const r=sm.apply(this,arguments);if(!r||!f.mv)return r;const m=f.mv;
+    if(key==='sB'&&P(f)>=100){setP(f,P(f)-50);m.v.over=1;say(f,'OVERLOAD',WH,36);FXL.push({k:'ring',x:f.x,y:f.y-30,t:0,col:WH,r0:8,life:16});cnt('overload');}
+    else if(key==='uB'&&P(f)>=15){setP(f,P(f)-15);m.v.sw=1;const d=m.d;if(d&&d.bp)m.d=Object.assign({},d,{bp:Object.assign({},d.bp,{vy:(d.bp.vy||-10)*1.16})});cnt('secondWind');}
+    else if(key==='fsmash'&&P(f)>=50){setP(f,P(f)-20);m.v.defib=1;say(f,'CHARGED',YL,30);cnt('defib');}
+    return r;}}catch(e){E(e);}
+  return sm.apply(this,arguments);};}
+
+/* ---------------- the Pool: filling, cancelling old heals, Siphon, Defibrillator stun ---------------- */
+{const ah=applyHit;applyHit=function(t,h,dirX,a,o){
+  const ta=a&&ok(a)&&a!==t,tt=t&&ok(t)&&a!==t;const preA=ta?a.dmg:0,preT=t?t.dmg:0;
+  const r=ah.apply(this,arguments);
+  try{const dd=t?Math.max(0,t.dmg-preT):0;
+    if(ta){if(a.dmg<preA)a.dmg=preA;              /* the old lifesteal and heal-on-hit are gone */
+      if((r==='hit'||r==='armor')&&dd>0&&!isAlly(a,t)){const m=a.mv,k=m&&m.k;
+        if(k==='sB'&&!(o&&o.proj)){const hv=heal(a,dd*.5);setP(a,P(a)+dd-hv);cnt('siphonHeal',hv);if(hv>=1)FXL.push({k:'txt',s:'-'+hv.toFixed(0)+'%',x:a.x,y:a.y-74,t:0,life:30,col:GN});}
+        else setP(a,P(a)+dd*(k==='dthrow'?2:1));
+        if(k==='fsmash'&&m.v.defib&&!m.v.stunned&&r==='hit'){m.v.stunned=1;t.hitstun=(t.hitstun||0)+16;burst(t.x,t.y-30,10,[YL,WH],2,14);FXL.push({k:'txt',s:'CLEAR!',x:t.x,y:t.y-80,t:0,life:30,col:YL});cnt('defibHit');}}}
+    if(tt&&dd>0)setP(t,P(t)+dd*.5);
+  }catch(e){E(e);}
+  return r;};}
+{const dm=dmgMod;dmgMod=function(a,t,h,o){let m=dm.apply(this,arguments);try{if(a&&ok(a)&&t!==a&&a.mv){const k=a.mv.k;
+    if(!(o&&o.proj)&&NORM.test(k))m*=1.1;
+    if(k==='fsmash'&&a.mv.v.defib)m*=1.15;
+    if(k==='sB'&&a.mv.v.over)m*=1.6;}}catch(e){E(e);}return m;};}
+{const km=kbMod;kbMod=function(a,t,h,o){let m=km.apply(this,arguments);try{if(a&&ok(a)&&t!==a&&a.mv&&!(o&&o.proj)){const k=a.mv.k;
+    if(k==='fsmash'&&a.mv.v.defib)m*=1.25;
+    if(k==='sB'&&a.mv.v.over)m*=1.5;}}catch(e){E(e);}return m;};}
+
+/* ---------------- per frame: Second Wind ring, spark heals teammates, no idle healing ---------------- */
+{const up=update;update=function(f,I){const r=up.apply(this,arguments);try{if(f&&ok(f)&&!f.dead&&f.st!=='respawn'){
+    if(f.vp===undefined)f.vp=0;
+    const m=f.mv;if(m&&m.k==='uB'&&m.v.sw&&!m.v.ring&&m.t>=m.d.s){m.v.ring=1;const hv=heal(f,3);cnt('swHeal',hv);
+      for(let i=0;i<2;i++)FXL.push({k:'ring',x:f.x,y:f.y-30,t:-i*4,col:i?WH:GN,r0:12+i*14,life:18});
+      for(const t of F){if(t===f||t.dead||t.gone)continue;const dx=t.x-f.x,dy=(t.y-30)-(f.y-30);if(Math.hypot(dx,dy)>78)continue;
+        if(isAlly(f,t)){heal(t,3);continue;}
+        try{applyHit(t,{dmg:2,bkb:5.5,kbg:.03,ang:55,fx:[GN,WH],b:[[0,-30,40]]},dx>=0?1:-1,f,{proj:1});cnt('swPush');}catch(e){E(e);}}}}}
+  catch(e){E(e);}return r;};}
+{const st=step;step=function(){const r=st.apply(this,arguments);try{if(typeof ENT!=='undefined')for(const e of ENT){const s=e.spec;if(!e.alive||!s||!s.tpHeal||!e.owner||!ok(e.owner))continue;
+    const hd=e._tpH||(e._tpH={});for(const t of F){if(t.dead||t.gone||hd[t.id]||!isAlly(e.owner,t))continue;if(Math.hypot(t.x-e.x,(t.y-30)-e.y)<e.r+22){hd[t.id]=1;const hv=heal(t,s.tpHeal);if(hv>0){FXL.push({k:'txt',s:'-'+hv.toFixed(0)+'%',x:t.x,y:t.y-74,t:0,life:30,col:GN});cnt('sparkAlly',hv);}}}}}catch(e){E(e);}return r;};}
+{const rs=respawn;respawn=function(f){const r=rs.apply(this,arguments);try{if(f&&f.C===C)f.vp=0;}catch(e){}return r;};}
+
+/* ---------------- HUD ---------------- */
+if(typeof hudMeterOf==='function'){const hm=hudMeterOf;hudMeterOf=function(f){try{if(f&&f.C===C&&!f.form){const p=P(f);
+    return{l:p>=100?'POOL FULL':'VITAL POOL',t:'bar',v:p/100,col:p>=100?WH:p>=50?'#a0ffb8':GN,full:WH,lc:p>=100?WH:null,marks:[.15,.5]};}}catch(e){}return hm.apply(this,arguments);};}
+
+/* ---------------- CPU ---------------- */
+{const ai=aiInput;aiInput=function(f){const I=ai.apply(this,arguments)||{};try{if(!f||!ok(f)||f.ctrl!=='cpu'||GS!=='play'||f.dead)return I;
+    const o=typeof opp==='function'?opp(f):null,dx=o?Math.abs(o.x-f.x)+Math.abs(o.y-f.y)*.5:999,m=f.mv;
+    if(m&&m.k==='triage'){I.B=(dx>150&&P(f)>0&&f.dmg>0)?1:0;return I;}
+    if(m&&m.k==='nB'&&!m.v.rel){I.B=(dx>190&&P(f)>=10&&(m.v.c||0)<45)?1:0;return I;}
+    if(I.B&&(I.y||0)>.5&&!(P(f)>=20&&f.dmg>=15&&dx>160)){I.B=0;I.y=0;}
+    if(!m&&f.ground&&!(f.hitstun>0)&&P(f)>=40&&f.dmg>=30&&dx>230&&rnd()<.05){I.B=1;I.y=1;I.x=0;I.A=0;}
+    if(!m&&f.ground&&!(f.hitstun>0)&&P(f)>=100&&dx<90&&o&&o.dmg>=70&&rnd()<.15){I.B=1;I.y=0;I.x=o.x>f.x?1:-1;I.A=0;}}catch(e){E(e);}return I;};}
+
+/* ---------------- words ---------------- */
+try{
+  C.d='Holds a pool of healing energy, filled by fighting, that he can spend on himself, on anyone beside him, or on hitting harder.';
+  C.sp=['Vital Spark (tap: orb; hold: a big piercing orb that spends Pool and heals teammates it passes)','Siphon Palm (heals half the damage, the rest fills the Pool; with a full Pool it is Overload Palm)','Second Wind (with 15 Pool: higher, heals 3% and pushes rivals away)','Triage (hold: turns Pool into healing for him or a teammate beside him)'];
+  if(typeof C.trait==='string')C.trait=C.trait.replace('Heals a little with every hit he lands, on top of slow regeneration.','VITAL POOL: fills as he deals damage (half as fast when he takes it). Spend it to heal, charge orbs, boost Second Wind and Overload Palm, and power up Defibrillator.');
+  C.na='Normals: steady strikes, 10% harder than before. Defibrillator (forward smash) spends 20 Pool when he has 50 or more for extra knockback and a short stun. Blood Draw (down throw) fills the Pool twice as fast. Neutral air: PULSE, a ring of energy on both sides.';
+  C.nrm=['Forward smash: DEFIBRILLATOR — With 50+ Pool, spends 20 for more knockback and a short stun.','Down throw: BLOOD DRAW — Fills the Vital Pool twice as fast.','Neutral air: PULSE — A ring of energy on both sides.'];
+  C.weak='No healing at all unless he spends Pool, and Triage leaves him open.';
+  C.tip='Fight to fill the Pool, then cash it in: heal with Triage when you have space, or save 100 for Overload Palm.';
+  if(typeof GTXT!=='undefined'&&GTXT.tai){const G=GTXT.tai;
+    G[0]='Vital Spark. Tap for a quick orb of vital energy. Hold to charge: it spends up to 30 Pool and becomes a big orb that passes through rivals (up to 18%) and heals teammates it touches.';
+    G[1]='Siphon Palm. A lunging palm that heals him for half the damage it deals; the other half goes into the Vital Pool. With a full Pool it becomes Overload Palm: it spends 50 and hits hard enough to kill.';
+    G[2]='Second Wind. A rising strike. With 15 Pool he spends it to rise higher, heal 3%, and push nearby rivals away with a ring of energy.';
+    G[3]='Triage. Hold B to turn the Vital Pool into healing: every point heals half a percent, for him or for a teammate beside him. He cannot move while he does it.';}
+}catch(e){E(e);}
 })();
 
 </script>
